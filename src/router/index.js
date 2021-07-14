@@ -6,9 +6,20 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'index',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/base/Login.vue'),
+  },
+  {
+    path: '/',
     component: () => import('@/components/layout/Layout.vue'),
     children: [
+      {
+        path: 'index',
+        component: () => import('@/views/base/Index.vue'),
+      },
       {
         path: 'contract',
         component: () => import('@/views/contract/Index.vue'),
@@ -35,12 +46,29 @@ const routes = [
       },
     ]
   },
+  {
+    path: '*',
+    redirect: '/index',
+  }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.login) {
+    if (!JSON.parse(window.localStorage.getItem("Au"))) {
+      next({
+        path: '/'
+      })
+    }
+    next()
+  }else{
+    next()
+  }
 })
 
 export default router

@@ -2,31 +2,28 @@
   <v-form ref="form" v-model="valid" lazy-validation>
     <v-card class="mx-auto">
       <v-card-subtitle>
-        <v-select
-          v-model="forms.areaId"
-          item-text="text"
-          item-value="value"
-          :items="areaList"
-          label="区域"
-          required
-        ></v-select>
-
-        <v-text-field
-          v-model="forms.year"
-          :counter="4"
-          :rules="rules.yearRules"
-          label="年份"
-          required
-        ></v-text-field>
-
-        <v-select
-          v-model="forms.userId"
-          item-text="text"
-          item-value="value"
-          :items="userList"
-          label="业务员"
-          required
-        ></v-select>
+        <v-row>
+          <v-col cols="4">
+            <v-select
+              v-model="forms.areaId"
+              item-text="text"
+              item-value="value"
+              :items="areaList"
+              label="区域"
+              required
+            ></v-select
+          ></v-col>
+          <v-col cols="4">
+            <v-select
+              v-model="forms.userId"
+              item-text="text"
+              item-value="value"
+              :items="userList"
+              label="业务员"
+              required
+            ></v-select
+          ></v-col>
+        </v-row>
 
         <v-radio-group v-model="forms.customerType" row>
           <template v-slot:label>
@@ -62,65 +59,69 @@
           </v-col>
         </v-row>
 
-        <v-text-field
-          v-if="forms.customerType == 2"
-          v-model="forms.customerCompanyName"
-          :counter="10"
-          :rules="nameRules"
-          label="客户单位"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-if="forms.customerType == 2"
-          v-model="forms.customerCompanyName"
-          :counter="10"
-          :rules="nameRules"
-          label="客户课题组"
-          required
-        ></v-text-field>
-
-        <v-text-field
-          v-if="forms.customerType == 2"
-          v-model="forms.customerResearchGroupName"
-          :rules="emailRules"
-          label="客户名称"
-          required
-        ></v-text-field>
-
-        <v-menu
-          ref="menu"
-          v-model="dateMenu"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
+        <v-row v-if="forms.customerType == 2">
+          <v-col cols="4">
             <v-text-field
-              v-model="forms.contractDeliveryDate"
-              label="合同交货日期"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            locale="zh-cn"
-            v-model="forms.date"
-            min="2000-01-01"
-            @change="$refs.menu.save(forms.date)"
-          ></v-date-picker>
-        </v-menu>
+              v-model="forms.customerCompanyName"
+              :counter="10"
+              label="客户单位"
+              required
+            ></v-text-field
+          ></v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="forms.customerCompanyName"
+              :counter="10"
+              label="客户课题组"
+              required
+            ></v-text-field
+          ></v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="forms.customerResearchGroupName"
+              label="客户名称"
+              required
+            ></v-text-field
+          ></v-col>
+        </v-row>
 
-        <v-select
-          v-model="forms.signingCompanyId"
-          :items="signingCompanyList"
-          item-text="text"
-          item-value="value"
-          label="签订单位"
-          required
-        ></v-select>
+        <v-row>
+          <v-col cols="4">
+            <v-menu
+              ref="menu"
+              v-model="dateMenu"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="forms.contractDeliveryDate"
+                  label="合同交货日期"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="zh-cn"
+                v-model="forms.date"
+                min="2000-01-01"
+                @change="$refs.menu.save(forms.date)"
+              ></v-date-picker> </v-menu
+          ></v-col>
+          <v-col cols="4">
+            <v-select
+              v-model="forms.signingCompanyId"
+              :items="signingCompanyList"
+              item-text="text"
+              item-value="value"
+              label="签订单位"
+              required
+            ></v-select
+          ></v-col>
+        </v-row>
 
         <v-radio-group v-model="forms.invoiceType" row>
           <template v-slot:label>
@@ -161,6 +162,7 @@
 import productDataTable from "../product/ProductDataTable";
 
 export default {
+  props: [],
   components: {
     productDataTable,
   },
@@ -201,7 +203,6 @@ export default {
     dateMenu: false,
     forms: {
       areaId: "",
-      year: "",
       userId: "",
       customerType: "1",
       customerCompanyId: "",
@@ -224,19 +225,11 @@ export default {
         (v) => /[0-9]+/.test(v) || "年份必须为数字",
       ],
     },
-    nameRules: [
-      (v) => !!v || "Name is required",
-      (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
-    ],
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
   }),
-  methods:{
-    uploadForms(){
-       this.$emit('getContractBase',this.forms)
-    }
+  methods: {
+    uploadForms() {
+      this.$emit("getContractBase", this.forms);
+    },
   },
   computed: {},
 };

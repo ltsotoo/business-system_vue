@@ -1,12 +1,13 @@
+  
 <template>
-  <div>
-    <v-navigation-drawer app color="#7bbfea">
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer" app color="#7bbfea">
       <v-list>
-        <v-list-item>
+        <!-- <v-list-item>
           <v-list-item-avatar>
             <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
-        </v-list-item>
+        </v-list-item> -->
 
         <v-list-item link>
           <v-list-item-content>
@@ -35,18 +36,20 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main>
+    <v-main class="blue-grey lighten-5">
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
       <router-view />
     </v-main>
-  </div>
+  </v-app>
 </template>
 
 <script>
 export default {
   data: () => ({
+    drawer: null,
     selectedItem: 0,
     items: [
-      { text: "首页", icon: "mdi-folder", url: "/" },
+      { text: "首页", icon: "mdi-folder", url: "/index" },
       { text: "合同管理", icon: "mdi-folder", url: "/contract" },
       { text: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
       { text: "产品管理", icon: "mdi-star", url: "/product" },

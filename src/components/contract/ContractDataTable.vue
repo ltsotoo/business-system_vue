@@ -2,7 +2,6 @@
   <v-data-table
     :headers="headers"
     :items="data"
-    :items-per-page="5"
     class="elevation-1"
     hide-default-footer
   >
@@ -15,6 +14,7 @@
 
 <script>
 export default {
+  props: {},
   data: () => ({
     headers: [
       {
@@ -57,10 +57,6 @@ export default {
       },
     ],
   }),
-  methods: {
-    editItem(item) {
-      
-    },
-  },
+  methods: {},
 };
 </script>

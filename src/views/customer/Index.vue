@@ -7,10 +7,10 @@
             <v-select :items="items" label="区域"></v-select>
           </v-col>
           <v-col cols="3">
-            <v-text-field label="客户单位"></v-text-field>
+            <v-select :items="items" label="客户单位"></v-select>
           </v-col>
           <v-col cols="3">
-            <v-text-field label="课题组"></v-text-field>
+            <v-select :items="items" label="课题组"></v-select>
           </v-col>
           <v-col cols="2">
             <v-text-field label="姓名"></v-text-field>
