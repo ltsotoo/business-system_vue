@@ -1,15 +1,16 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="data"
-    class="elevation-1"
-    hide-default-footer
-  >
-    <template v-slot:item.actions>
-      <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
-      <v-icon small> mdi-delete </v-icon>
-    </template>
-  </v-data-table>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="data"
+      class="elevation-1"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
+        <v-icon small> mdi-delete </v-icon>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>

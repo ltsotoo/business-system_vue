@@ -7,7 +7,7 @@
             <v-row no-gutters justify="center">
               <v-col>
                 <v-toolbar-title
-                  :class="[`text-h4`, active && `mb-${margin}`]"
+                  :class="[`text-h4`]"
                   >中研环科管理系统</v-toolbar-title
                 >
               </v-col>
@@ -20,7 +20,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="firstname"
+                      v-model="form.phone"
                       :counter="10"
                       label="手机号"
                       required
@@ -30,7 +30,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="firstname"
+                      v-model="form.pwd"
                       :counter="10"
                       label="密码"
                       required
@@ -40,7 +40,7 @@
                 <v-row>
                   <v-col cols="8">
                     <v-text-field
-                      v-model="firstname"
+                      v-model="form.code"
                       :counter="10"
                       label="验证码"
                       required
@@ -71,6 +71,13 @@
 import {getImgCode} from "../../api/base"
 
 export default {
+  data:() => ({
+    form:{
+      phone:"",
+      pwd:"",
+      code:""
+    }
+  }),
   methods:{
     getImageCode(){
       getImgCode().then(res => {

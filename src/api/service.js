@@ -1,11 +1,11 @@
 import axios from "axios"
-import Message from '../components/message/index'
+import Message from '../components/base/message/index'
 
 axios.defaults.withCredentials = true
 
 const service = axios.create({
     //公共路由
-    baseURL:'http://localhost:8080/api',
+    baseURL:'https://www.fastmock.site/mock/57a96119947a3da2587589de85bee347/zyhk',
     //请求最大响应时间
     timeout:9000
 })
