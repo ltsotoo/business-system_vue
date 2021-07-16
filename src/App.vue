@@ -16,7 +16,6 @@ export default {
 
 <style scoped>
 #app{
-  /* background: url('/photo/bg.jpg') center */
   background: linear-gradient(270deg, #36D1DC 0%,#5B86E5 100%);
 }
 </style>
