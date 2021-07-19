@@ -3,12 +3,6 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app color="#7bbfea">
       <v-list>
-        <!-- <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-          </v-list-item-avatar>
-        </v-list-item> -->
-
         <v-list-item link>
           <v-list-item-content>
             <v-list-item-title class="text-h5"> 开发者 </v-list-item-title>
@@ -37,7 +31,10 @@
     </v-navigation-drawer>
 
     <v-main class="blue-grey lighten-5">
-      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        @click="drawer = !drawer"
+        v-if="!drawer"
+      ></v-app-bar-nav-icon>
       <router-view />
     </v-main>
   </v-app>
@@ -49,10 +46,11 @@ export default {
     drawer: null,
     selectedItem: 0,
     items: [
-      { text: "首页", icon: "mdi-folder", url: "/index" },
+      { text: "首页", icon: "mdi-home", url: "/index" },
       { text: "合同管理", icon: "mdi-folder", url: "/contract" },
       { text: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
-      { text: "产品管理", icon: "mdi-star", url: "/product" },
+      { text: "产品管理", icon: "mdi-cube", url: "/product" },
+      { text: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
     ],
   }),
 };

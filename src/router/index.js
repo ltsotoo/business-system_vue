@@ -44,6 +44,14 @@ const routes = [
         path: 'product/entry',
         component: () => import('@/views/product/EntryProduct.vue'),
       },
+      {
+        path: 'supplier',
+        component: () => import('@/views/supplier/Index.vue'),
+      },
+      {
+        path: 'supplier/entry',
+        component: () => import('@/views/supplier/EntrySupplier.vue'),
+      },
     ]
   },
   {

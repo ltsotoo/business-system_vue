@@ -1,19 +1,19 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="form" v-model="valid" lazy-validation>
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
           <v-col cols="6">
             <v-text-field
               v-model="data.name"
-              label="姓名"
+              label="供应商名称"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="6">
             <v-text-field
               v-model="data.address"
-              label="办公地址"
+              label="地址"
               required
             ></v-text-field
           ></v-col>
@@ -22,21 +22,11 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="data.companyName"
-              label="公司"
+              v-model="data.linkmanName"
+              label="联系人姓名"
               required
             ></v-text-field
           ></v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-model="data.companyName"
-              label="课题组"
-              required
-            ></v-text-field
-          ></v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model="data.phone"
@@ -44,6 +34,9 @@
               required
             ></v-text-field
           ></v-col>
+        </v-row>
+
+        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model="data.wxCode"
@@ -51,25 +44,14 @@
               required
             ></v-text-field
           ></v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model="data.email"
+              :rules="emailRules"
               label="电子邮箱"
               required
             ></v-text-field
           ></v-col>
-          <!-- <v-col cols="6">
-            <v-select
-              v-model="data.areaId"
-              :items="items"
-              :rules="[(v) => !!v || 'Item is required']"
-              label="所属区域"
-              required
-            ></v-select
-          ></v-col> -->
         </v-row>
       </v-card-subtitle>
     </v-card>
@@ -78,22 +60,16 @@
 
 <script>
 export default {
-  props: ['openId'],
   data: () => ({
     data: {
       id: "",
       name: "",
       address: "",
-      companyName: "",
-      researchGroup: "",
+      linkmanName: "",
       phone: "",
       wxCode: "",
       email: "",
-      areaId: "",
     },
   }),
-  created(){
-    this.data.id = this.openId
-  }
 };
 </script>

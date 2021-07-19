@@ -13,6 +13,13 @@
                 label="选择类型"
               ></v-select>
             </v-col>
+            <v-col cols="3">
+              <v-select
+                v-model="productSerchForms.productType"
+                :items="productTypeList"
+                label="选择类型"
+              ></v-select>
+            </v-col>
             <v-col cols="4">
               <v-text-field
                 v-model="productSerchForms.productName"

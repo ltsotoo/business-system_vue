@@ -4,7 +4,13 @@
     :items="data"
     :items-per-page="5"
     class="elevation-1"
-    hide-default-footer
+    :server-items-length="options.total"
+    :footer-props="{
+      itemsPerPageOptions: [5, 10, 20],
+    }"
+    :loading="options.loading"
+    :options.sync="options"
+    @update:page="getData"
   >
     <template v-slot:item.actions>
       <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
@@ -18,16 +24,16 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "产品编号",
+        text: "ID",
         align: "start",
         sortable: false,
-        value: "productId",
+        value: "id",
       },
-      { text: "产品名称", value: "productName", sortable: false },
-      { text: "产品品牌", value: "productBrand", sortable: false },
-      { text: "产品规格", value: "productSpecification", sortable: false },
-      { text: "厂家来源", value: "productVendor" },
-      { text: "库存数量", value: "productNumber" },
+      { text: "产品名称", value: "name", sortable: false },
+      { text: "产品品牌", value: "brand", sortable: false },
+      { text: "产品规格", value: "specification", sortable: false },
+      { text: "厂家来源", value: "vendor" },
+      { text: "库存数量", value: "number" },
       { text: "单位", value: "unit", sortable: false },
       { text: "采购/生产价格(元)", value: "purchasedPrice" },
       { text: "标准价格(元)", value: "standardPrice" },
@@ -36,14 +42,20 @@ export default {
       { text: "备注", value: "remark", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
+    options: {
+      loading: false,
+      total: 100,
+      page: 1,
+      itemsPerPage: 5,
+    },
     data: [
       {
-        productId: "0001",
-        productName: "产品1",
-        productBrand: "品牌1",
-        productSpecification: "规格XXX",
-        productVendor: "XX厂",
-        productNumber: 1,
+        id: "0001",
+        name: "产品1",
+        brand: "品牌1",
+        specification: "规格XXX",
+        vendor: "XX厂",
+        number: 1,
         unit: "台",
         purchasedPrice: 8000,
         standardPrice: 10000,
@@ -54,6 +66,7 @@ export default {
     ],
   }),
   methods: {
+    getData() {},
     editItem(item) {},
   },
 };

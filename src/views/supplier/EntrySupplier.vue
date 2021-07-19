@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <customerForms />
+    <supplierForms />
     <v-row style="margin-top: 10px" justify="center">
       <v-btn x-large color="success" @click="submit"> 提交 </v-btn>
     </v-row>
@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import customerForms from "@/components/customer/CustomerForms";
+import supplierForms from "@/components/supplier/SupplierForms";
 
 export default {
   components: {
-    customerForms,
+    supplierForms,
   },
   methods: {
     submit() {},
