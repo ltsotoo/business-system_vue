@@ -18,6 +18,7 @@
         <v-icon small @click="openDeleteDialog(item.id)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
+
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
         <v-card-title class="text-h5">您确定删除该位客户吗?</v-card-title>
@@ -30,6 +31,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
@@ -37,7 +39,7 @@
       persistent
     >
       <customerForms :openId="options.openId" />
-      <v-card style="margin-top:1px">
+      <v-card style="margin-top: 1px">
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="editItem">确定</v-btn>
@@ -51,7 +53,7 @@
 </template>
 
 <script>
-import customerForms from "./CustomerForms.vue";
+import customerForms from "./CustomerForms";
 
 export default {
   components: {

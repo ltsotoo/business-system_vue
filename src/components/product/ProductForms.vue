@@ -1,18 +1,18 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" lazy-validation>
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
           <v-col cols="4"
             ><v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="类别1"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4"
             ><v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="类别2"
               required
             ></v-text-field
@@ -22,21 +22,21 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model="data.name"
+              v-model="object.name"
               label="产品名称"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.address"
+              v-model="object.address"
               label="产品品牌"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.companyName"
+              v-model="object.companyName"
               label="产品规格"
               required
             ></v-text-field
@@ -45,21 +45,21 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model="data.companyName"
+              v-model="object.companyName"
               label="生产厂商"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.phone"
+              v-model="object.phone"
               label="库存数量"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.wxCode"
+              v-model="object.wxCode"
               label="单位"
               required
             ></v-text-field
@@ -68,28 +68,28 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="采购价格(元)"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="销售价格(元)"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="供货周期"
               required
             ></v-text-field
           ></v-col>
         </v-row>
 
-        <v-textarea label="备注" v-model="data.email" hint="tips"></v-textarea>
+        <v-textarea label="备注" v-model="object.email" hint="tips"></v-textarea>
       </v-card-subtitle>
     </v-card>
   </v-form>
@@ -97,8 +97,9 @@
 
 <script>
 export default {
+  props: ["openId"],
   data: () => ({
-    data: {
+    object: {
       id: "",
       name: "",
       address: "",
@@ -110,5 +111,8 @@ export default {
       areaId: "",
     },
   }),
+  created() {
+    this.object.id = this.openId;
+  },
 };
 </script>

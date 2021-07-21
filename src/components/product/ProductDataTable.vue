@@ -1,26 +1,64 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="data"
-    :items-per-page="5"
-    class="elevation-1"
-    :server-items-length="options.total"
-    :footer-props="{
-      itemsPerPageOptions: [5, 10, 20],
-    }"
-    :loading="options.loading"
-    :options.sync="options"
-    @update:page="getData"
-  >
-    <template v-slot:item.actions>
-      <v-icon small class="mr-2" @click="showItem(item)"> mdi-pencil </v-icon>
-      <v-icon small> mdi-delete </v-icon>
-    </template>
-  </v-data-table>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="object"
+      :items-per-page="5"
+      class="elevation-1"
+      :server-items-length="options.total"
+      :footer-props="{
+        itemsPerPageOptions: [5, 10, 20],
+      }"
+      :loading="options.loading"
+      :options.sync="options"
+      @update:page="getObject"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon small @click="openEditDialog(item.id)"> mdi-pencil </v-icon>
+        <v-icon small @click="openDeleteDialog(item.id)"> mdi-delete </v-icon>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
+      <v-card>
+        <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="options.editDialog"
+      v-if="options.editDialog"
+      max-width="800px"
+      persistent
+    >
+      <productForms :openId="options.openId" />
+      <v-card style="margin-top: 1px">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="editItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
+import productForms from "./ProductForms";
+
 export default {
+  components: {
+    productForms,
+  },
   data: () => ({
     headers: [
       {
@@ -47,8 +85,11 @@ export default {
       total: 100,
       page: 1,
       itemsPerPage: 5,
+      openId: null,
+      editDialog: false,
+      deleteDialog: false,
     },
-    data: [
+    object: [
       {
         id: "0001",
         name: "产品1",
@@ -66,8 +107,32 @@ export default {
     ],
   }),
   methods: {
-    getData() {},
-    editItem(item) {},
+    getObject() {},
+    openEditDialog(id) {
+      this.options.openId = id;
+      this.options.editDialog = true;
+    },
+    closeEditDialog() {
+      this.options.openId = null;
+      this.options.editDialog = false;
+    },
+    editItem() {
+      this.options.openId = null;
+      this.options.editDialog = false;
+    },
+    openDeleteDialog(id) {
+      this.options.openId = id;
+      this.options.deleteDialog = true;
+    },
+    closeDeleteDialog() {
+      this.options.openId = null;
+      this.options.deleteDialog = false;
+    },
+    deleteItem() {
+      //删除操作
+      this.options.openId = null;
+      this.options.deleteDialog = false;
+    },
   },
 };
 </script>

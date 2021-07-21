@@ -1,12 +1,8 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
-    <contractBaseForms ref="contractBase" />
-    <v-card style="margin-top: 10px">
-      <v-card-subtitle>
-        <productDataTable />
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+  <div>
+    <contractBaseForms :openId="openId" ref="contractBase" />
+    <productDataTable style="margin-top: 1px"/>
+  </div>
 </template>
 
 <script>
@@ -18,6 +14,7 @@ export default {
     contractBaseForms,
     productDataTable,
   },
+  props: ['openId'],
   data: () => ({}),
 };
 </script>

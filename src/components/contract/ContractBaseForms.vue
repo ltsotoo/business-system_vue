@@ -5,7 +5,7 @@
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="forms.areaId"
+              v-model="object.areaId"
               item-text="text"
               item-value="value"
               :items="areaList"
@@ -15,7 +15,7 @@
           ></v-col>
           <v-col cols="4">
             <v-select
-              v-model="forms.userId"
+              v-model="object.userId"
               item-text="text"
               item-value="value"
               :items="userList"
@@ -25,7 +25,7 @@
           ></v-col>
         </v-row>
 
-        <v-radio-group v-model="forms.customerType" row>
+        <v-radio-group v-model="object.customerType" row>
           <template v-slot:label>
             <div>客户类型</div>
           </template>
@@ -33,7 +33,7 @@
           <v-radio label="未录入客户" value="2"></v-radio>
         </v-radio-group>
 
-        <v-row align="center" v-if="forms.customerType == 1">
+        <v-row align="center" v-if="object.customerType == 1">
           <v-col class="d-flex" cols="4">
             <v-select
               :items="customerCompanyList"
@@ -59,10 +59,10 @@
           </v-col>
         </v-row>
 
-        <v-row v-if="forms.customerType == 2">
+        <v-row v-if="object.customerType == 2">
           <v-col cols="4">
             <v-text-field
-              v-model="forms.customerCompanyName"
+              v-model="object.customerCompanyName"
               :counter="10"
               label="客户单位"
               required
@@ -70,7 +70,7 @@
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="forms.customerCompanyName"
+              v-model="object.customerCompanyName"
               :counter="10"
               label="客户课题组"
               required
@@ -78,7 +78,7 @@
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="forms.customerResearchGroupName"
+              v-model="object.customerResearchGroupName"
               label="客户名称"
               required
             ></v-text-field
@@ -97,7 +97,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="forms.contractDeliveryDate"
+                  v-model="object.contractDeliveryDate"
                   label="合同交货日期"
                   readonly
                   v-bind="attrs"
@@ -106,14 +106,14 @@
               </template>
               <v-date-picker
                 locale="zh-cn"
-                v-model="forms.date"
+                v-model="object.date"
                 min="2000-01-01"
-                @change="$refs.menu.save(forms.date)"
+                @change="$refs.menu.save(object.date)"
               ></v-date-picker> </v-menu
           ></v-col>
           <v-col cols="4">
             <v-select
-              v-model="forms.signingCompanyId"
+              v-model="object.signingCompanyId"
               :items="signingCompanyList"
               item-text="text"
               item-value="value"
@@ -123,7 +123,7 @@
           ></v-col>
         </v-row>
 
-        <v-radio-group v-model="forms.invoiceType" row>
+        <v-radio-group v-model="object.invoiceType" row>
           <template v-slot:label>
             <div>开票类型</div>
           </template>
@@ -134,13 +134,13 @@
         </v-radio-group>
 
         <v-textarea
-          v-if="forms.invoiceType != 1"
+          v-if="object.invoiceType != 1"
           label="开票内容"
-          v-model="forms.invoiceContent"
+          v-model="object.invoiceContent"
           hint="tips"
         ></v-textarea>
 
-        <v-radio-group v-model="forms.contractType" row>
+        <v-radio-group v-model="object.contractType" row>
           <template v-slot:label>
             <div style="color: red">特殊合同</div>
           </template>
@@ -150,7 +150,7 @@
 
         <v-textarea
           label="备注"
-          v-model="forms.remark"
+          v-model="object.remark"
           hint="tips"
         ></v-textarea>
       </v-card-subtitle>
@@ -162,12 +162,19 @@
 import productDataTable from "../product/ProductDataTable";
 
 export default {
-  props: [],
+  props: ["openId"],
   components: {
     productDataTable,
   },
   data: () => ({
     valid: true,
+    rules: {
+      yearRules: [
+        (v) => !!v || "年份必须输入",
+        (v) => (v && v.length == 4) || "年份必须为4位数字",
+        (v) => /[0-9]+/.test(v) || "年份必须为数字",
+      ],
+    },
     areaList: [
       { text: "区域1", value: "1" },
       { text: "区域2", value: "2" },
@@ -201,7 +208,8 @@ export default {
       { text: "公司3", value: "3" },
     ],
     dateMenu: false,
-    forms: {
+    object: {
+      id:"",
       areaId: "",
       userId: "",
       customerType: "1",
@@ -218,17 +226,14 @@ export default {
       contractType: "2",
       remark: "",
     },
-    rules: {
-      yearRules: [
-        (v) => !!v || "年份必须输入",
-        (v) => (v && v.length == 4) || "年份必须为4位数字",
-        (v) => /[0-9]+/.test(v) || "年份必须为数字",
-      ],
-    },
   }),
+  created() {
+    this.object.id = this.openId;
+    console.log("ContractBaseForms=====:"+this.object.id)
+  },
   methods: {
-    uploadForms() {
-      this.$emit("getContractBase", this.forms);
+    uploadObject() {
+      this.$emit("getContractBase", this.object);
     },
   },
   computed: {},

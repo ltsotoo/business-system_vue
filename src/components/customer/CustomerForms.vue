@@ -5,14 +5,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="data.name"
+              v-model="object.name"
               label="姓名"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="data.address"
+              v-model="object.address"
               label="办公地址"
               required
             ></v-text-field
@@ -22,14 +22,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="data.companyName"
+              v-model="object.companyName"
               label="公司"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="data.companyName"
+              v-model="object.companyName"
               label="课题组"
               required
             ></v-text-field
@@ -39,14 +39,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="data.phone"
+              v-model="object.phone"
               label="联系电话"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="data.wxCode"
+              v-model="object.wxCode"
               label="微信号"
               required
             ></v-text-field
@@ -56,14 +56,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="data.email"
+              v-model="object.email"
               label="电子邮箱"
               required
             ></v-text-field
           ></v-col>
           <!-- <v-col cols="6">
             <v-select
-              v-model="data.areaId"
+              v-model="object.areaId"
               :items="items"
               :rules="[(v) => !!v || 'Item is required']"
               label="所属区域"
@@ -80,7 +80,7 @@
 export default {
   props: ['openId'],
   data: () => ({
-    data: {
+    object: {
       id: "",
       name: "",
       address: "",
@@ -93,7 +93,7 @@ export default {
     },
   }),
   created(){
-    this.data.id = this.openId
+    this.object.id = this.openId
   }
 };
 </script>
