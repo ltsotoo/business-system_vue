@@ -2,7 +2,8 @@
 	<transition name="message-fade">
 		<div class="message" :class="typeClass" role="alert" v-show="visible">
 			<p class="message__content">
-				<v-icon large :color="color" small=true>{{icon}}</v-icon>  &nbsp;{{message}}
+				<!-- <v-icon :color="color" :small="small">{{icon}}</v-icon>  &nbsp;{{message}} -->
+				&nbsp;{{message}}
 			</p>
 		</div>
 	</transition>
@@ -14,6 +15,7 @@
 
 		data() {
 			return {
+				small:true,
 				visible: false,
 				duration: 2000,
 				message: '',

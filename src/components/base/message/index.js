@@ -6,14 +6,14 @@ let MessageConstructor = Vue.extend(Main)
 let instance
 let instances = []
 let seed = 1
-const Message = function (options,color,icon,typeClass) {
+const Message = function (options, color, icon, typeClass) {
   options = options || {}
   if (typeof options === 'string') {
     options = {
       message: options,
-	  color:color,
-	  icon:icon,
-	  typeClass:typeClass
+      color: color,
+      icon: icon,
+      typeClass: typeClass
     }
   }
   let id = 'message_' + seed++
@@ -30,11 +30,11 @@ const Message = function (options,color,icon,typeClass) {
   return instance.vm
 }
 
-Message.success = function(option){
-	Message(option,"#67c23a","beenhere","message--success")
+Message.success = function (option) {
+  Message(option, "#67c23a", "mdi-check", "message--success")
 }
-Message.error = function(option){
-	Message(option,"#CC0033","mdi-backspace","message--error")
+Message.error = function (option) {
+  Message(option, "#CC0033", "mdi-backspace", "message--error")
 }
 
 Message.close = function (id) {

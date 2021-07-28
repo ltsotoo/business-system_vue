@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" lazy-validation>
+  <v-form ref="form">
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
@@ -48,14 +48,14 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model="object.supplierId"
+              v-model.number="object.supplierId"
               label="供应商"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="object.number"
+              v-model.number="object.number"
               label="库存数量"
               required
             ></v-text-field
@@ -71,14 +71,14 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model="object.purchasedPrice"
+              v-model.number="object.purchasedPrice"
               label="采购价格(元)"
               required
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="object.standardPrice"
+              v-model.number="object.standardPrice"
               label="销售价格(元)"
               required
             ></v-text-field
