@@ -2,39 +2,63 @@
   <v-container>
     <v-card>
       <v-card-subtitle>
-        <v-row align="baseline">
-          <v-col cols="1">
-            <v-select :items="items" label="产品类别1"></v-select>
-          </v-col>
-          <v-col cols="1">
-            <v-select :items="items" label="产品类别2"></v-select>
-          </v-col>
-          <v-col cols="2">
-            <v-text-field label="产品名称"></v-text-field>
-          </v-col>
-          <v-col cols="2">
+        <v-form ref="queryForm">
+          <v-row align="baseline">
+            <v-col cols="1">
+              <v-select
+                v-model="queryObject.sourceType"
+                :items="sourceTypeItems"
+                item-text="name"
+                item-value="ID"
+                label="来源"
+              ></v-select>
+            </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="queryObject.subtype"
+                :items="subtypeItems"
+                item-text="name"
+                item-value="ID"
+                label="子类别"
+              ></v-select>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                label="产品名称"
+                v-model="queryObject.name"
+              ></v-text-field>
+            </v-col>
+            <!-- <v-col cols="2">
             <v-text-field label="厂商名称"></v-text-field>
-          </v-col>
-          <v-col cols="2">
-            <v-text-field label="规格"></v-text-field>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn rounded color="primary" dark> 查询 </v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn rounded color="primary" dark> 重置 </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-divider vertical></v-divider>
-          <v-col cols="auto">
-            <v-btn rounded color="green" dark @click="goToEntry"> 录入 </v-btn>
-          </v-col>
-        </v-row>
+          </v-col> -->
+            <v-col cols="2">
+              <v-text-field
+                label="规格"
+                v-model="queryObject.specification"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn rounded color="primary" dark @click="resetQueryForm">
+                重置
+              </v-btn>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-divider vertical></v-divider>
+            <v-col cols="auto">
+              <v-btn rounded color="green" dark @click="goToEntry">
+                录入
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-subtitle>
     </v-card>
     <v-row style="margin-top: 10px">
       <v-col>
-        <productDataTable />
+        <productDataTable :queryObject="queryObject" ref="productDataTable" />
       </v-col>
     </v-row>
   </v-container>
@@ -42,16 +66,60 @@
 
 <script>
 import productDataTable from "@/components/product/ProductDataTable";
+import {
+  querySystemDictionaryValuesByKeyId,
+  querySystemDictionaryValuesByParentId,
+} from "@/api/system";
+
 export default {
   components: {
     productDataTable,
   },
   data: () => ({
-    items: ["Foo", "Bar", "Fizz", "Buzz"],
+    sourceTypeItems: [],
+    subtypeItems: [],
+    sourceTypeName: "",
+    queryObject: {
+      sourceType: null,
+      subtype: null,
+      name: "",
+      specification: "",
+    },
   }),
+  created() {
+    this.getProductSoureTypeItems();
+  },
   methods: {
+    getProductSoureTypeItems() {
+      querySystemDictionaryValuesByKeyId(1).then((res) => {
+        this.sourceTypeItems = res.data;
+      });
+    },
+    getSubtypeItems(parentId) {
+      querySystemDictionaryValuesByParentId(parentId).then((res) => {
+        this.subtypeItems = res.data;
+      });
+    },
+    query() {
+      this.$refs.productDataTable.getObject();
+    },
+    resetQueryForm() {
+      this.$refs.queryForm.reset();
+      this.$refs.productDataTable.getObject();
+    },
     goToEntry() {
+      // alert(this.queryObject.sourceType);
       this.$router.replace("/product/entry");
+    },
+  },
+  watch: {
+    "queryObject.sourceType": {
+      handler: function (val) {
+        this.queryObject.subtype = null;
+        if (val != null) {
+          this.getSubtypeItems(val);
+        }
+      },
     },
   },
 };

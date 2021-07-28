@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <productForms />
+    <productForms ref="productForms" />
     <v-row style="margin-top: 10px" justify="center">
       <v-btn x-large color="success" @click="submit"> 提交 </v-btn>
     </v-row>
@@ -15,7 +15,9 @@ export default {
     productForms,
   },
   methods: {
-    submit() {},
+    submit() {
+      this.$refs.productForms.entryObject();
+    },
   },
 };
 </script>

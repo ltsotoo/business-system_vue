@@ -1,13 +1,14 @@
 import axios from "axios"
 import Message from '../components/base/message/index'
 
-axios.defaults.withCredentials = true
+// 让请求在浏览器中允许跨域携带cookie
+// axios.defaults.withCredentials = true
 
 const service = axios.create({
     //公共路由
-    baseURL:'https://www.fastmock.site/mock/57a96119947a3da2587589de85bee347/zyhk',
+    baseURL: 'http://localhost:8088/api/v1',
     //请求最大响应时间
-    timeout:9000
+    timeout: 9000
 })
 
 //请求拦截器
@@ -26,13 +27,17 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
-            return Promise.resolve(response.data)
+            if (response.data.status === 666) {
+                return Promise.resolve(response.data)
+            }else{
+                Message.error("【"+response.data.message+"】请刷新页面!");
+                return Promise.reject(response)
+            }
         } else {
             return Promise.reject(response)
         }
     }, error => {
         if (400 <= error.response.status < 500) {
-            // alert("用户信息过期，请重新登陆")
             Message.error(`用户信息过期，请重新登陆`)
             localStorage.removeItem("token")
             setTimeout(() => {
