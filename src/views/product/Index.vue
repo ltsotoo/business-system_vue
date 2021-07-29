@@ -67,9 +67,9 @@
 <script>
 import productDataTable from "@/components/product/ProductDataTable";
 import {
-  querySystemDictionaryValuesByKeyId,
-  querySystemDictionaryValuesByParentId,
-} from "@/api/system";
+  querySystemDictionaryValuesByKeyID,
+  querySystemDictionaryValuesByParentID,
+} from "@/api/base";
 
 export default {
   components: {
@@ -91,12 +91,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      querySystemDictionaryValuesByKeyId(1).then((res) => {
+      querySystemDictionaryValuesByKeyID(1).then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(parentId) {
-      querySystemDictionaryValuesByParentId(parentId).then((res) => {
+    getSubtypeItems(sourTypeID) {
+      querySystemDictionaryValuesByParentID(sourTypeID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -108,7 +108,6 @@ export default {
       this.$refs.productDataTable.getObject();
     },
     goToEntry() {
-      // alert(this.queryObject.sourceType);
       this.$router.replace("/product/entry");
     },
   },

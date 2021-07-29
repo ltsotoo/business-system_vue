@@ -1,4 +1,4 @@
-import request from './service'
+import request from './system_axios'
 
 export const entryEmployee = (employee) => {
     return request({

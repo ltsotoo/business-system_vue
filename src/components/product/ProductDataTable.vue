@@ -12,12 +12,44 @@
       :loading="options.loading"
       :options.sync="options"
       @update:page="getObject"
+      @update:items-per-page="getObject"
+      @click:row="openViewDialog"
     >
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon small @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.viewDialog"
+      v-if="options.viewDialog"
+      max-width="800px"
+    >
+      <productForms :openId="options.openId" :openType="options.openType" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="options.editDialog"
+      v-if="options.editDialog"
+      max-width="800px"
+      persistent
+    >
+      <productForms
+        :openId="options.openId"
+        ref="productForms"
+        :refreshDataTable="getObject"
+      />
+      <v-card style="margin-top: 1px">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="editItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
@@ -27,24 +59,6 @@
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog
-      v-model="options.editDialog"
-      v-if="options.editDialog"
-      max-width="800px"
-      persistent
-    >
-      <productForms :openId="options.openId" ref="productForms" />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -75,7 +89,7 @@ export default {
       },
       { text: "品牌", value: "brand", sortable: false },
       { text: "规格", value: "specification", sortable: false },
-      { text: "供应商", value: "supplierId", sortable: false },
+      { text: "供应商", value: "supplierID", sortable: false },
       { text: "库存数量", value: "number", sortable: false },
       { text: "单位", value: "unit", sortable: false },
       { text: "采购/生产价格(元)", value: "purchasedPrice", sortable: false },
@@ -91,6 +105,8 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openId: null,
+      openType: null,
+      viewDialog: false,
       editDialog: false,
       deleteDialog: false,
     },
@@ -108,9 +124,24 @@ export default {
         this.queryObject
       ).then((res) => {
         this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
         this.options.total = res.total;
         this.object = res.data;
       });
+    },
+    openViewDialog(item, other) {
+      setTimeout(() => {
+        if (
+          this.options.editDialog == false &&
+          this.options.deleteDialog == false
+        ) {
+          this.options.openId = item.ID;
+          this.options.openType = 1;
+          this.options.viewDialog = true;
+        }
+      }, 66);
     },
     openEditDialog(id) {
       this.options.openId = id;
@@ -123,7 +154,6 @@ export default {
     editItem() {
       this.$refs.productForms.editObject();
       this.options.openId = null;
-      this.getObject();
       this.options.editDialog = false;
     },
     openDeleteDialog(id) {
@@ -135,19 +165,11 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      //删除操作
       delProduct(this.options.openId).then((res) => {
         this.options.openId = null;
         this.getObject();
         this.options.deleteDialog = false;
       });
-    },
-  },
-  watch: {
-    "options.itemsPerPage": {
-      handler: function (val) {
-        this.getObject();
-      },
     },
   },
 };

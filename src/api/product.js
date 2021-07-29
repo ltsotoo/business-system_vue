@@ -1,4 +1,4 @@
-import request from './service'
+import request from './system_axios'
 
 export const entryProduct = (product) => {
     {
@@ -38,12 +38,12 @@ export const queryProduct = (id) => {
     }
 }
 
-export const queryProducts = (pageSize, pageNo,queryForm) => {
+export const queryProducts = (pageSize, pageNo,queryObject) => {
     {
         return request({
             url: '/products',
             method: 'POST',
-            data:queryForm,
+            data:queryObject,
             params: {
                 "pageSize": pageSize,
                 "pageNo": pageNo,

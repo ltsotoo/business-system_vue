@@ -10,6 +10,7 @@
               item-text="name"
               item-value="ID"
               label="来源"
+              :disabled="readonly"
             ></v-select>
           </v-col>
           <v-col cols="4">
@@ -19,6 +20,7 @@
               item-text="name"
               item-value="ID"
               label="子类别"
+              :disabled="readonly"
             ></v-select
           ></v-col>
         </v-row>
@@ -27,44 +29,44 @@
             <v-text-field
               v-model="object.name"
               label="名称"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.brand"
               label="品牌"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.specification"
               label="规格"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
         </v-row>
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model.number="object.supplierId"
+              v-model.number="object.supplierID"
               label="供应商"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.number"
               label="库存数量"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.unit"
               label="单位"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
         </v-row>
@@ -73,21 +75,21 @@
             <v-text-field
               v-model.number="object.purchasedPrice"
               label="采购价格(元)"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.standardPrice"
               label="销售价格(元)"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.deliveryCycle"
               label="供货周期"
-              required
+              :readonly="readonly"
             ></v-text-field
           ></v-col>
         </v-row>
@@ -95,7 +97,7 @@
         <v-textarea
           label="备注"
           v-model="object.remarks"
-          hint="tips"
+          :readonly="readonly"
         ></v-textarea>
       </v-card-subtitle>
     </v-card>
@@ -105,12 +107,24 @@
 <script>
 import { entryProduct, editProduct, queryProduct } from "@/api/product";
 import {
-  querySystemDictionaryValuesByKeyId,
-  querySystemDictionaryValuesByParentId,
-} from "@/api/system";
+  querySystemDictionaryValuesByKeyID,
+  querySystemDictionaryValuesByParentID,
+} from "@/api/base";
 
 export default {
-  props: ["openId"],
+  props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
+    openId: {
+      type: Number,
+    },
+    refreshDataTable: {
+      type: Function,
+      default: null,
+    },
+  },
   data: () => ({
     sourceTypeItems: [],
     subtypeItems: [],
@@ -121,7 +135,7 @@ export default {
       name: "",
       brand: "",
       specification: "",
-      supplierId: null,
+      supplierID: null,
       number: null,
       unit: "",
       purchasedPrice: null,
@@ -133,20 +147,23 @@ export default {
   created() {
     this.getProductSoureTypeItems();
     if (this.openId != null) {
-      queryProduct(this.openId).then((res) => {
-        this.object = res.data;
-      });
+      this.getObject();
     }
   },
   methods: {
     getProductSoureTypeItems() {
-      querySystemDictionaryValuesByKeyId(1).then((res) => {
+      querySystemDictionaryValuesByKeyID(1).then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
     getSubtypeItems(parentId) {
-      querySystemDictionaryValuesByParentId(parentId).then((res) => {
+      querySystemDictionaryValuesByParentID(parentId).then((res) => {
         this.subtypeItems = res.data;
+      });
+    },
+    getObject() {
+      queryProduct(this.openId).then((res) => {
+        this.object = res.data;
       });
     },
     entryObject() {
@@ -157,7 +174,19 @@ export default {
     editObject() {
       editProduct(this.object).then((res) => {
         this.$message.success("成功了");
+        if (this.refreshDataTable) {
+          this.refreshDataTable();
+        }
       });
+    },
+  },
+  computed: {
+    readonly() {
+      if (this.openType == 0) {
+        return false;
+      } else {
+        return true;
+      }
     },
   },
   watch: {

@@ -12,12 +12,35 @@
       :loading="options.loading"
       :options.sync="options"
       @update:page="getObject"
+      @update:items-per-page="getObject"
     >
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="openEditDialog(item.id)"> mdi-pencil </v-icon>
-        <v-icon small @click="openDeleteDialog(item.id)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.editDialog"
+      v-if="options.editDialog"
+      max-width="800px"
+      persistent
+    >
+      <customerForms
+        :openId="options.openId"
+        ref="customerForms"
+        :refreshDataTable="getObject"
+      />
+      <v-card style="margin-top: 1px">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="editItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
@@ -31,49 +54,35 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      v-model="options.editDialog"
-      v-if="options.editDialog"
-      max-width="800px"
-      persistent
-    >
-      <customerForms :openId="options.openId" />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import customerForms from "./CustomerForms";
+import { delCustomer, queryCustomers } from "@/api/customer";
 
 export default {
   components: {
     customerForms,
   },
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     headers: [
       {
-        text: "ID",
+        text: "姓名",
         align: "start",
         sortable: false,
-        value: "id",
+        value: "name",
       },
-      { text: "客户姓名", value: "name", sortable: false },
-      { text: "公司", value: "companyName", sortable: false },
-      { text: "课题组", value: "researchGroup", sortable: false },
+      { text: "公司", value: "companyID", sortable: false },
+      { text: "课题组", value: "researchGroupID", sortable: false },
       { text: "联系电话", value: "phone", sortable: false },
-      { text: "微信号", value: "wxCode", sortable: false },
+      { text: "微信号", value: "wechatID", sortable: false },
       { text: "电子邮箱", value: "email", sortable: false },
-      { text: "区域", value: "areaId" },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
@@ -85,24 +94,28 @@ export default {
       editDialog: false,
       deleteDialog: false,
     },
-    object: [
-      {
-        id: 1,
-        name: "客户1号",
-        companyName: "公司1号",
-        researchGroup: "课题组1号",
-        phone: "123456789",
-        wxCode: "123444444",
-        email: "XXX@XXX.com",
-        areaId: "1",
-      },
-    ],
+    object: [],
   }),
+  created() {
+    this.getObject();
+  },
   methods: {
-    getObject() {},
+    getObject() {
+      this.options.loading = true;
+      queryCustomers(
+        this.options.itemsPerPage,
+        this.options.page,
+        this.queryObject
+      ).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        this.object = res.data;
+      });
+    },
     openEditDialog(id) {
-      // this.editedIndex = this.data.indexOf(item);
-      // this.editedItem = Object.assign({}, item);
       this.options.openId = id;
       this.options.editDialog = true;
     },
@@ -111,6 +124,7 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
+      this.$refs.customerForms.editObject();
       this.options.openId = null;
       this.options.editDialog = false;
     },
@@ -123,9 +137,11 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      //删除操作
-      this.options.openId = null;
-      this.options.deleteDialog = false;
+      delCustomer(this.options.openId).then((res) => {
+        this.options.openId = null;
+        this.getObject();
+        this.options.deleteDialog = false;
+      });
     },
   },
 };
