@@ -25,8 +25,9 @@
       v-model="options.viewDialog"
       v-if="options.viewDialog"
       max-width="800px"
+      @click:outside="closeViewDialog"
     >
-      <productForms :openId="options.openId" :openType="options.openType" />
+      <productForms :openID="options.openID" :openType="options.openType" />
     </v-dialog>
 
     <v-dialog
@@ -36,9 +37,9 @@
       persistent
     >
       <productForms
-        :openId="options.openId"
+        :openID="options.openID"
         ref="productForms"
-        :refreshDataTable="getObject"
+        :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
         <v-card-actions>
@@ -95,7 +96,8 @@ export default {
       { text: "采购/生产价格(元)", value: "purchasedPrice", sortable: false },
       { text: "标准价格(元)", value: "standardPrice", sortable: false },
       { text: "供货周期", value: "deliveryCycle", sortable: false },
-      { text: "类别", value: "type", sortable: false },
+      { text: "来源", value: "sourceType", sortable: false },
+      { text: "子类别", value: "subtype", sortable: false },
       { text: "备注", value: "remarks", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
@@ -104,7 +106,7 @@ export default {
       total: 1,
       page: 1,
       itemsPerPage: 10,
-      openId: null,
+      openID: null,
       openType: null,
       viewDialog: false,
       editDialog: false,
@@ -137,36 +139,41 @@ export default {
           this.options.editDialog == false &&
           this.options.deleteDialog == false
         ) {
-          this.options.openId = item.ID;
+          this.options.openID = item.ID;
           this.options.openType = 1;
           this.options.viewDialog = true;
         }
       }, 66);
     },
+    closeViewDialog() {
+      this.options.openID = null;
+      this.options.openType = null;
+    },
     openEditDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     editItem() {
       this.$refs.productForms.editObject();
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     openDeleteDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delProduct(this.options.openId).then((res) => {
-        this.options.openId = null;
+      delProduct(this.options.openID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.options.openID = null;
         this.getObject();
         this.options.deleteDialog = false;
       });

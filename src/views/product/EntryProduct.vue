@@ -1,8 +1,15 @@
 <template>
   <v-container>
-    <productForms ref="productForms" />
+    <productForms ref="productForms" :parentFun="updateSubmitBtnDisable" />
     <v-row style="margin-top: 10px" justify="center">
-      <v-btn x-large color="success" @click="submit"> 提交 </v-btn>
+      <v-btn
+        x-large
+        color="success"
+        @click="submit"
+        :disabled="submitBtnDisable"
+      >
+        提交
+      </v-btn>
     </v-row>
   </v-container>
 </template>
@@ -14,9 +21,16 @@ export default {
   components: {
     productForms,
   },
+  data: () => ({
+    submitBtnDisable: false,
+  }),
   methods: {
     submit() {
+      this.updateSubmitBtnDisable(true);
       this.$refs.productForms.entryObject();
+    },
+    updateSubmitBtnDisable(status) {
+      this.submitBtnDisable = status;
     },
   },
 };

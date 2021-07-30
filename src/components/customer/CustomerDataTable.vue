@@ -27,9 +27,9 @@
       persistent
     >
       <customerForms
-        :openId="options.openId"
+        :openID="options.openID"
         ref="customerForms"
-        :refreshDataTable="getObject"
+        :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
         <v-card-actions>
@@ -87,10 +87,10 @@ export default {
     ],
     options: {
       loading: false,
-      total: 100,
+      total: 0,
       page: 1,
-      itemsPerPage: 5,
-      openId: null,
+      itemsPerPage: 10,
+      openID: null,
       editDialog: false,
       deleteDialog: false,
     },
@@ -116,29 +116,30 @@ export default {
       });
     },
     openEditDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     editItem() {
       this.$refs.customerForms.editObject();
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     openDeleteDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delCustomer(this.options.openId).then((res) => {
-        this.options.openId = null;
+      delCustomer(this.options.openID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.options.openID = null;
         this.getObject();
         this.options.deleteDialog = false;
       });

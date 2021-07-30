@@ -2,33 +2,48 @@
   <v-container>
     <v-card>
       <v-card-subtitle>
-        <v-row align="baseline">
-          <v-col cols="2">
-            <v-text-field label="供应商名称"></v-text-field>
-          </v-col>
-          <v-col cols="2">
-            <v-text-field label="联系人姓名"></v-text-field>
-          </v-col>
-          <v-col cols="2">
-            <v-text-field label="联系电话"></v-text-field>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn rounded color="primary" dark> 查询 </v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn rounded color="primary" dark> 重置 </v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-divider vertical></v-divider>
-          <v-col cols="auto">
-            <v-btn rounded color="green" dark @click="goToEntry"> 录入 </v-btn>
-          </v-col>
-        </v-row>
+        <v-form ref="queryForm">
+          <v-row align="baseline">
+            <v-col cols="2">
+              <v-text-field
+                label="名称"
+                v-model="queryObject.name"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                label="联系人"
+                v-model="queryObject.linkman"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                label="联系电话"
+                v-model="queryObject.phone"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn rounded color="primary" dark @click="resetQueryForm">
+                重置
+              </v-btn>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-divider vertical></v-divider>
+            <v-col cols="auto">
+              <v-btn rounded color="green" dark @click="goToEntry">
+                录入
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-subtitle>
     </v-card>
     <v-row style="margin-top: 10px">
       <v-col>
-        <supplierDataTable />
+        <supplierDataTable :queryObject="queryObject" ref="supplierDataTable" />
       </v-col>
     </v-row>
   </v-container>
@@ -40,8 +55,21 @@ export default {
   components: {
     supplierDataTable,
   },
-  data: () => ({}),
+  data: () => ({
+    queryObject: {
+      name: "",
+      linkman: "",
+      phone: "",
+    },
+  }),
   methods: {
+    query() {
+      this.$refs.supplierDataTable.getObject();
+    },
+    resetQueryForm() {
+      this.$refs.queryForm.reset();
+      this.$refs.supplierDataTable.getObject();
+    },
     goToEntry() {
       this.$router.replace("/supplier/entry");
     },

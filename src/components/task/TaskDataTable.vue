@@ -3,6 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="object"
+      :items-per-page="5"
       class="elevation-1"
       :server-items-length="options.total"
       :footer-props="{
@@ -15,30 +16,28 @@
       @click:row="openViewDialog"
     >
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon small @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="options.viewDialog"
       v-if="options.viewDialog"
-      max-width="1440px"
-      @click:outside="closeViewDialog"
+      max-width="800px"
     >
-      <contractForms :openID="options.openID" :openType="options.openType" />
+      <productForms :openID="options.openID" :openType="options.openType" />
     </v-dialog>
 
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      min-width="800px"
-      max-width="1200px"
+      max-width="800px"
       persistent
     >
-      <contractForms
+      <productForms
         :openID="options.openID"
-        ref="contractForms"
+        ref="productForms"
         :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
@@ -54,7 +53,7 @@
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该位合同吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -68,12 +67,12 @@
 </template>
 
 <script>
-import contractForms from "./ContractForms";
-import { delContract, queryContracts } from "@/api/contract";
+import productForms from "../product/ProductForms";
+import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
-    contractForms,
+    productForms,
   },
   props: {
     queryObject: {
@@ -83,27 +82,22 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "合同编号",
+        text: "名称",
         align: "start",
         sortable: false,
-        value: "No",
+        value: "name",
       },
-      { text: "区域", value: "areaID", sortable: false },
-      { text: "业务员", value: "employeeID", sortable: false },
-      { text: "客户", value: "customerID", sortable: false },
-      { text: "合同交货日期", value: "estimatedDeliveryDate", sortable: false },
-      { text: "实际交货日期", value: "endDeliveryDate", sortable: false },
-      { text: "开票类型", value: "invoiceType", sortable: false },
-      { text: "开票内容", value: "invoiceContent", sortable: false },
-      { text: "特殊合同", value: "isSpecial", sortable: false },
-      { text: "总金额(元)", value: "totalAmount", sortable: false },
-      { text: "状态", value: "status", sortable: false },
-      { text: "备注", value: "remarks", sortable: false },
+      { text: "品牌", value: "brand", sortable: false },
+      { text: "规格", value: "specification", sortable: false },
+      { text: "库存数量", value: "number", sortable: false },
+      { text: "单位", value: "unit", sortable: false },
+      { text: "标准价格(元)", value: "standardPrice", sortable: false },
+      { text: "供货周期", value: "deliveryCycle", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
-      total: 0,
+      total: 1,
       page: 1,
       itemsPerPage: 10,
       openID: null,
@@ -120,7 +114,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryContracts(
+      queryProducts(
         this.options.itemsPerPage,
         this.options.page,
         this.queryObject
@@ -145,22 +139,16 @@ export default {
         }
       }, 66);
     },
-    closeViewDialog() {
-      this.options.openID = null;
-      this.options.openType = null;
-    },
     openEditDialog(id) {
       this.options.openID = id;
-      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openID = null;
-      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.customerForms.editObject();
+      this.$refs.productForms.editObject();
       this.options.openID = null;
       this.options.editDialog = false;
     },
@@ -173,7 +161,7 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delContract(this.options.openID).then((res) => {
+      delProduct(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
         this.options.openID = null;
         this.getObject();

@@ -12,12 +12,35 @@
       :loading="options.loading"
       :options.sync="options"
       @update:page="getObject"
+      @update:items-per-page="getObject"
     >
       <template v-slot:item.actions="{ item }">
-        <v-icon small @click="openEditDialog(item.id)"> mdi-pencil </v-icon>
-        <v-icon small @click="openDeleteDialog(item.id)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.editDialog"
+      v-if="options.editDialog"
+      max-width="800px"
+      persistent
+    >
+      <supplierForms
+        :openID="options.openID"
+        ref="supplierForms"
+        :parentFun="getObject"
+      />
+      <v-card style="margin-top: 1px">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="editItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
@@ -31,98 +54,95 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      v-model="options.editDialog"
-      v-if="options.editDialog"
-      max-width="800px"
-      persistent
-    >
-      <supplierForms :openId="options.openId" />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import supplierForms from "./SupplierForms";
+import { delSupplier, querySuppliers } from "@/api/supplier";
 
 export default {
   components: {
     supplierForms,
   },
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     headers: [
       {
-        text: "ID",
+        text: "名称",
         align: "start",
         sortable: false,
-        value: "id",
+        value: "name",
       },
-      { text: "供应商名称", value: "name", sortable: false },
       { text: "地址", value: "address", sortable: false },
-      { text: "联系人姓名", value: "linkmanName", sortable: false },
+      { text: "联系人", value: "linkman", sortable: false },
       { text: "联系电话", value: "phone", sortable: false },
-      { text: "微信号", value: "wxCode", sortable: false },
-      { text: "电子邮箱", value: "email", sortable: false },
+      { text: "微信号", value: "wechatID", sortable: false },
+      { text: "邮箱", value: "email", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
-      total: 100,
+      total: 0,
       page: 1,
-      itemsPerPage: 5,
-      openId: null,
+      itemsPerPage: 10,
+      openID: null,
       editDialog: false,
       deleteDialog: false,
     },
-    object: [
-      {
-        id:1,
-        customerId: "001",
-        name: "供应商1号",
-        address: "地址1号",
-        linkmanName: "联系人1号",
-        phone: "123456789",
-        wxCode: "123444444",
-        email: "XXX@XXX.com",
-      },
-    ],
+    object: [],
   }),
+  created() {
+    this.getObject();
+  },
   methods: {
-    getObject() {},
+    getObject() {
+      this.options.loading = true;
+      querySuppliers(
+        this.options.itemsPerPage,
+        this.options.page,
+        this.queryObject
+      ).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        this.object = res.data;
+      });
+    },
     openEditDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     editItem() {
-      this.options.openId = null;
+      this.$refs.supplierForms.editObject();
+      this.options.openID = null;
       this.options.editDialog = false;
     },
     openDeleteDialog(id) {
-      this.options.openId = id;
+      this.options.openID = id;
       this.options.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.options.openId = null;
+      this.options.openID = null;
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      //删除操作
-      this.options.openId = null;
-      this.options.deleteDialog = false;
+      delSupplier(this.options.openID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.options.openID = null;
+        this.getObject();
+        this.options.deleteDialog = false;
+      });
     },
   },
 };

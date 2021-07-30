@@ -73,10 +73,10 @@ export default {
       type: Number,
       default: 0,
     },
-    openId: {
+    openID: {
       type: Number,
     },
-    refreshDataTable: {
+    parentFun: {
       type: Function,
       default: null,
     },
@@ -96,7 +96,7 @@ export default {
   }),
   created() {
     this.getCompanyItems();
-    if (this.openId != null) {
+    if (this.openID != null) {
       this.getObject();
     }
   },
@@ -112,20 +112,23 @@ export default {
       });
     },
     getObject() {
-      queryCustomer(this.openId).then((res) => {
+      queryCustomer(this.openID).then((res) => {
         this.object = res.data;
       });
     },
     entryObject() {
       entryCustomer(this.object).then((res) => {
-        this.$message.success("成功了");
+        this.$message.success("录入成功了!");
+        if (this.parentFun) {
+          this.parentFun(false);
+        }
       });
     },
     editObject() {
       editCustomer(this.object).then((res) => {
-        this.$message.success("成功了");
-        if (this.refreshDataTable) {
-          this.refreshDataTable();
+        this.$message.success("编辑成功了!");
+        if (this.parentFun) {
+          this.parentFun();
         }
       });
     },

@@ -162,7 +162,20 @@
 import productDataTable from "../product/ProductDataTable";
 
 export default {
-  props: ["openId"],
+  props: {
+    openType: {
+      //0:录入 1:编辑
+      type: Number,
+      default: 0,
+    },
+    openID: {
+      type: Number,
+    },
+    parentFun: {
+      type: Function,
+      default: null,
+    },
+  },
   components: {
     productDataTable,
   },
@@ -175,41 +188,15 @@ export default {
         (v) => /[0-9]+/.test(v) || "年份必须为数字",
       ],
     },
-    areaList: [
-      { text: "区域1", value: "1" },
-      { text: "区域2", value: "2" },
-      { text: "区域3", value: "3" },
-      { text: "区域4", value: "4" },
-      { text: "区域5", value: "5" },
-    ],
-    userList: [
-      { text: "用户1", value: "1" },
-      { text: "用户2", value: "2" },
-      { text: "用户3", value: "3" },
-    ],
-    customerCompanyList: [
-      { text: "客户公司1", value: "1" },
-      { text: "客户公司2", value: "2" },
-      { text: "客户公司3", value: "3" },
-    ],
-    customerResearchGroupList: [
-      { text: "客户公司课题组1", value: "1" },
-      { text: "客户公司课题组2", value: "2" },
-      { text: "客户公司课题组3", value: "3" },
-    ],
-    customerList: [
-      { text: "客户1", value: "1" },
-      { text: "客户2", value: "2" },
-      { text: "客户3", value: "3" },
-    ],
-    signingCompanyList: [
-      { text: "公司1", value: "1" },
-      { text: "公司2", value: "2" },
-      { text: "公司3", value: "3" },
-    ],
+    areaList: [],
+    userList: [],
+    customerCompanyList: [],
+    customerResearchGroupList: [],
+    customerList: [],
+    signingCompanyList: [],
     dateMenu: false,
     object: {
-      id:"",
+      id: "",
       areaId: "",
       userId: "",
       customerType: "1",
@@ -228,8 +215,7 @@ export default {
     },
   }),
   created() {
-    this.object.id = this.openId;
-    console.log("ContractBaseForms=====:"+this.object.id)
+    this.object.id = this.openID;
   },
   methods: {
     uploadObject() {
