@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {getImgCode} from "../../api/base"
+import {getImgCode} from "../../api/system"
 
 export default {
   data:() => ({

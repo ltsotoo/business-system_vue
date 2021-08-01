@@ -5,9 +5,9 @@
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="object.sourceType"
+              v-model="object.sourceTypeID"
               :items="sourceTypeItems"
-              item-text="name"
+              item-text="text"
               item-value="ID"
               label="来源"
               :disabled="readonly"
@@ -15,9 +15,9 @@
           </v-col>
           <v-col cols="4">
             <v-select
-              v-model="object.subtype"
+              v-model="object.subtypeID"
               :items="subtypeItems"
-              item-text="name"
+              item-text="text"
               item-value="ID"
               label="子类别"
               :disabled="readonly"
@@ -106,10 +106,7 @@
 
 <script>
 import { entryProduct, editProduct, queryProduct } from "@/api/product";
-import {
-  querySystemDictionaryValuesByKeyID,
-  querySystemDictionaryValuesByParentID,
-} from "@/api/base";
+import { queryDictionaries } from "@/api/dictionary";
 
 export default {
   props: {
@@ -129,8 +126,8 @@ export default {
     sourceTypeItems: [],
     subtypeItems: [],
     object: {
-      sourceType: null,
-      subtype: null,
+      sourceTypeID: null,
+      subtypeID: null,
       ID: "",
       name: "",
       brand: "",
@@ -152,12 +149,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      querySystemDictionaryValuesByKeyID(1).then((res) => {
+      queryDictionaries("product_source_type").then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(parentId) {
-      querySystemDictionaryValuesByParentID(parentId).then((res) => {
+    getSubtypeItems(sourceType) {
+      queryDictionaries("product_subtype", sourceType).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -185,7 +182,7 @@ export default {
   },
   computed: {
     readonly() {
-      if (this.openType == 0) {
+      if (this.openType === 0) {
         return false;
       } else {
         return true;
@@ -193,9 +190,11 @@ export default {
     },
   },
   watch: {
-    "object.sourceType": {
+    "object.sourceTypeID": {
       handler: function (val) {
-        this.object.subtype = null;
+        if (this.openType === 0) {
+          this.object.subtypeID = null;
+        }
         if (val != null) {
           this.getSubtypeItems(val);
         }

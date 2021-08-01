@@ -68,13 +68,16 @@
 
 <script>
 import productForms from "../product/ProductForms";
-import { delProduct, queryProducts } from "@/api/product";
+import { delTask, queryTasksByContractID } from "@/api/task";
 
 export default {
   components: {
     productForms,
   },
   props: {
+    openID: {
+      type: Number,
+    },
     queryObject: {
       type: Object,
     },
@@ -82,17 +85,20 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "名称",
+        text: "合同ID",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "contractID",
       },
-      { text: "品牌", value: "brand", sortable: false },
-      { text: "规格", value: "specification", sortable: false },
+      { text: "产品ID", value: "productID", sortable: false },
+      { text: "数量", value: "specification", sortable: false },
       { text: "库存数量", value: "number", sortable: false },
       { text: "单位", value: "unit", sortable: false },
-      { text: "标准价格(元)", value: "standardPrice", sortable: false },
-      { text: "供货周期", value: "deliveryCycle", sortable: false },
+      { text: "状态", value: "status", sortable: false },
+      { text: "技术负责人ID", value: "technicianManID", sortable: false },
+      { text: "采购负责人ID", value: "purchaseManID", sortable: false },
+      { text: "库存负责人ID", value: "inventoryManID", sortable: false },
+      { text: "发货人员ID", value: "shipmentManID", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
@@ -100,8 +106,6 @@ export default {
       total: 1,
       page: 1,
       itemsPerPage: 10,
-      openID: null,
-      openType: null,
       viewDialog: false,
       editDialog: false,
       deleteDialog: false,
@@ -114,11 +118,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryProducts(
-        this.options.itemsPerPage,
-        this.options.page,
-        this.queryObject
-      ).then((res) => {
+      queryTasksByContractID(this.openID).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {
           this.options.page = 1;
@@ -161,7 +161,7 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delProduct(this.options.openID).then((res) => {
+      delTask(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
         this.options.openID = null;
         this.getObject();

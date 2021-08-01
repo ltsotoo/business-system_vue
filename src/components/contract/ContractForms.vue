@@ -9,56 +9,57 @@
       <v-card style="margin-top: 10px">
         <v-card-subtitle>
           <p :class="`text-h6`" class="text--primary">产品搜索条件：</p>
-          <v-row align="baseline">
-            <v-col cols="3">
-              <v-select
-                v-model="productSerchForms.productType"
-                :items="productTypeList"
-                label="选择类型"
-              ></v-select>
-            </v-col>
-            <v-col cols="3">
-              <v-select
-                v-model="productSerchForms.productType"
-                :items="productTypeList"
-                label="选择类型"
-              ></v-select>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="productSerchForms.productName"
-                label="产品名称"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn rounded color="primary" dark @click="productSerch">
-                查询
-              </v-btn>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn
-                rounded
-                color="primary"
-                dark
-                @click="productSearchCriteriaReset"
-              >
-                重置
-              </v-btn>
-            </v-col>
-          </v-row>
+          <v-form ref="queryForm">
+            <v-row align="baseline">
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.sourceTypeID"
+                  :items="sourceTypeItems"
+                  item-text="text"
+                  item-value="ID"
+                  label="来源"
+                ></v-select>
+              </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.subtypeID"
+                  :items="subtypeItems"
+                  item-text="text"
+                  item-value="ID"
+                  label="子类别"
+                ></v-select>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="queryObject.name"
+                  label="产品名称"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn rounded color="primary" dark @click="getProducts">
+                  查询
+                </v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn rounded color="primary" dark @click="resetQueryForm">
+                  重置
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
           <p :class="`text-h6`" class="text--primary">产品列表：查询结果</p>
-          <productDataTable />
+          <productDataTable ref="productDataTable"/>
           <p :class="`text-h6`" class="text--primary" style="margin-top: 20px">
             已选择产品列表：
           </p>
           <div>
-            <productDataTable />
+            <!-- <taskDataTable ref="taskDataTable"/> -->
           </div>
         </v-card-subtitle>
       </v-card>
     </div>
     <div v-else>
-      <taskDataTable style="margin-top: 1px" />
+      <taskDataTable style="margin-top: 1px" ref="taskDataTable" :openID="openID"/>
     </div>
   </div>
 </template>
@@ -67,6 +68,7 @@
 import contractBaseForms from "./ContractBaseForms";
 import productDataTable from "../product/ProductDataTable";
 import taskDataTable from "../task/TaskDataTable";
+import { queryDictionaries } from "@/api/dictionary";
 
 export default {
   components: {
@@ -85,27 +87,43 @@ export default {
     },
   },
   data: () => ({
-    signingCompanyList: [
-      { text: "公司1", value: "1" },
-      { text: "公司2", value: "2" },
-      { text: "公司3", value: "3" },
-    ],
-    productTypeList: [
-      { text: "类型A", value: "1" },
-      { text: "类型B", value: "2" },
-      { text: "类型C", value: "3" },
-    ],
-    productSerchForms: {
-      productType: "1",
-      productName: "",
+    sourceTypeItems: [],
+    subtypeItems: [],
+    queryObject: {
+      sourceTypeID: null,
+      subtypeID: null,
+      name: "",
     },
   }),
-  created() {},
+  created() {
+    this.getProductSoureTypeItems();
+  },
   methods: {
-    productSerch() {},
-    productSearchCriteriaReset() {
-      this.productSerchForms.productType = null;
-      this.productSerchForms.productName = "";
+    getProductSoureTypeItems() {
+      queryDictionaries("product_source_type").then((res) => {
+        this.sourceTypeItems = res.data;
+      });
+    },
+    getSubtypeItems(sourceType) {
+      queryDictionaries("product_subtype", sourceType).then((res) => {
+        this.subtypeItems = res.data;
+      });
+    },
+    getProducts() {},
+    resetQueryForm() {
+      this.$refs.queryForm.reset();
+      this.$refs.productDataTable.getObject();
+    },
+  },
+  watch: {
+    "queryObject.sourceTypeID": {
+      handler: function (val) {
+        this.subtypeItems = [];
+        this.queryObject.subtypeID = null;
+        if (val != null) {
+          this.getSubtypeItems(val);
+        }
+      },
     },
   },
 };

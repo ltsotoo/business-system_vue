@@ -6,18 +6,18 @@
           <v-row align="baseline">
             <v-col cols="1">
               <v-select
-                v-model="queryObject.sourceType"
+                v-model="queryObject.sourceTypeID"
                 :items="sourceTypeItems"
-                item-text="name"
+                item-text="text"
                 item-value="ID"
                 label="来源"
               ></v-select>
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.subtype"
+                v-model="queryObject.subtypeID"
                 :items="subtypeItems"
-                item-text="name"
+                item-text="text"
                 item-value="ID"
                 label="子类别"
               ></v-select>
@@ -66,10 +66,7 @@
 
 <script>
 import productDataTable from "@/components/product/ProductDataTable";
-import {
-  querySystemDictionaryValuesByKeyID,
-  querySystemDictionaryValuesByParentID,
-} from "@/api/base";
+import { queryDictionaries } from "@/api/dictionary";
 
 export default {
   components: {
@@ -80,8 +77,8 @@ export default {
     subtypeItems: [],
     sourceTypeName: "",
     queryObject: {
-      sourceType: null,
-      subtype: null,
+      sourceTypeID: null,
+      subtypeID: null,
       name: "",
       specification: "",
     },
@@ -91,12 +88,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      querySystemDictionaryValuesByKeyID(1).then((res) => {
+      queryDictionaries("product_source_type").then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(sourTypeID) {
-      querySystemDictionaryValuesByParentID(sourTypeID).then((res) => {
+    getSubtypeItems(sourceType) {
+      queryDictionaries("product_subtype", sourceType).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -112,9 +109,10 @@ export default {
     },
   },
   watch: {
-    "queryObject.sourceType": {
+    "queryObject.sourceTypeID": {
       handler: function (val) {
-        this.queryObject.subtype = null;
+        this.subtypeItems = [];
+        this.queryObject.subtypeID = null;
         if (val != null) {
           this.getSubtypeItems(val);
         }

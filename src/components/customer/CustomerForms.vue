@@ -145,7 +145,9 @@ export default {
   watch: {
     "object.companyID": {
       handler: function (val) {
-        this.object.researchGroupID = null;
+        if (this.openType === 0) {
+          this.object.researchGroupID = null;
+        }
         if (val != null) {
           this.getResearchGroupsByCompanyID(val);
         }

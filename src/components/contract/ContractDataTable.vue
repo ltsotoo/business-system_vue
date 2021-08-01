@@ -33,11 +33,12 @@
       v-model="options.editDialog"
       v-if="options.editDialog"
       min-width="800px"
-      max-width="1200px"
+      max-width="1440px"
       persistent
     >
       <contractForms
         :openID="options.openID"
+        :openType="options.openType"
         ref="contractForms"
         :parentFun="getObject"
       />

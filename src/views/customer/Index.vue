@@ -8,7 +8,7 @@
               <v-select
                 v-model="queryObject.areaID"
                 :items="areaItems"
-                item-text="name"
+                item-text="text"
                 item-value="ID"
                 label="区域"
               ></v-select>
@@ -57,7 +57,7 @@
     </v-card>
     <v-row style="margin-top: 10px">
       <v-col>
-        <customerDataTable :queryObject="queryObject" ref="customerDataTable"/>
+        <customerDataTable :queryObject="queryObject" ref="customerDataTable" />
       </v-col>
     </v-row>
   </v-container>
@@ -65,7 +65,7 @@
 
 <script>
 import customerDataTable from "@/components/customer/CustomerDataTable";
-import { queryAreas } from "@/api/base";
+import { queryDictionaries } from "@/api/dictionary";
 import { queryCompanys, queryResearchGroupsByCompanyID } from "@/api/customer";
 
 export default {
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     getAreas() {
-      queryAreas().then((res) => {
+      queryDictionaries("system_area").then((res) => {
         this.areaItems = res.data;
       });
     },
@@ -117,6 +117,7 @@ export default {
   watch: {
     "queryObject.companyID": {
       handler: function (val) {
+        this.researchGroups = [];
         this.queryObject.researchGroupID = null;
         if (val != null) {
           this.getResearchGroupsByCompanyID(val);

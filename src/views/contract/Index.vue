@@ -8,7 +8,7 @@
               <v-select
                 v-model="queryObject.areaID"
                 :items="areaItems"
-                item-text="name"
+                item-text="text"
                 item-value="ID"
                 label="区域"
               ></v-select>
@@ -45,7 +45,7 @@
     </v-card>
     <v-row style="margin-top: 10px">
       <v-col>
-        <contractDataTable :queryObject="queryObject" ref="customerDataTable" />
+        <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
       </v-col>
     </v-row>
   </v-container>
@@ -53,7 +53,7 @@
 
 <script>
 import contractDataTable from "@/components/contract/ContractDataTable";
-import { queryAreas } from "@/api/base";
+import { queryDictionaries } from "@/api/dictionary";
 export default {
   components: {
     contractDataTable,
@@ -71,16 +71,16 @@ export default {
   },
   methods: {
     getAreas() {
-      queryAreas().then((res) => {
+      queryDictionaries("system_area").then((res) => {
         this.areaItems = res.data;
       });
     },
     query() {
-      this.$refs.customerDataTable.getObject();
+      this.$refs.contractDataTable.getObject();
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();
-      this.$refs.customerDataTable.getObject();
+      this.$refs.contractDataTable.getObject();
     },
     goToEntry() {
       this.$router.replace("/contract/entry");
