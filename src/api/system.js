@@ -7,3 +7,11 @@ export const getImgCode = () => {
         responseType: "blob"
     })
 }
+
+export const login = (queryObject) => {
+    return request({
+        url: '/login',
+        method: 'POST',
+        data:queryObject,
+    })
+}

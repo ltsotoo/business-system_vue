@@ -4,7 +4,7 @@
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">
-            <v-col cols="1">
+            <v-col cols="2">
               <v-select
                 v-model="queryObject.sourceTypeID"
                 :items="sourceTypeItems"
@@ -22,16 +22,13 @@
                 label="子类别"
               ></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="产品名称"
                 v-model="queryObject.name"
               ></v-text-field>
             </v-col>
-            <!-- <v-col cols="2">
-            <v-text-field label="厂商名称"></v-text-field>
-          </v-col> -->
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="规格"
                 v-model="queryObject.specification"

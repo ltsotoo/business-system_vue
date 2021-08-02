@@ -6,8 +6,7 @@
           <v-card-title>
             <v-row no-gutters justify="center">
               <v-col>
-                <v-toolbar-title
-                  :class="[`text-h4`]"
+                <v-toolbar-title :class="[`text-h4`]"
                   >中研环科管理系统</v-toolbar-title
                 >
               </v-col>
@@ -20,30 +19,24 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="form.phone"
-                      :counter="10"
+                      v-model="queryObject.phone"
                       label="手机号"
-                      required
                     ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col>
                     <v-text-field
-                      v-model="form.pwd"
-                      :counter="10"
+                      v-model="queryObject.password"
                       label="密码"
-                      required
                     ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="8">
                     <v-text-field
-                      v-model="form.code"
-                      :counter="10"
+                      v-model="queryObject.code"
                       label="验证码"
-                      required
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
@@ -55,7 +48,7 @@
                 </v-row>
                 <v-row no-gutters justify="center">
                   <v-col cols="2" align="center">
-                    <v-btn block @click="getImageCode"> 登录 </v-btn>
+                    <v-btn block @click="userLogin"> 登录 </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
@@ -68,22 +61,26 @@
 </template>
 
 <script>
-import {getImgCode} from "../../api/system"
+import { login } from "@/api/system";
 
 export default {
-  data:() => ({
-    form:{
-      phone:"",
-      pwd:"",
-      code:""
-    }
+  data: () => ({
+    queryObject: {
+      phone: "",
+      password: "",
+      code: "",
+    },
   }),
-  methods:{
-    getImageCode(){
-      getImgCode().then(res => {
-
-      })
-    }
-  }
+  methods: {
+    userLogin() {
+      login(this.queryObject).then((res) => {
+        localStorage.setItem("name",res.data.name)
+        this.goToIndex()
+      });
+    },
+    goToIndex() {
+      this.$router.replace("/index");
+    },
+  },
 };
 </script>

@@ -31,7 +31,7 @@ service.interceptors.response.use(
             if (response.data.status === 666) {
                 return Promise.resolve(response.data)
             }else{
-                Message.error("【"+response.data.message+"】请刷新页面!");
+                Message.error(response.data.message);
                 return Promise.reject(response)
             }
         } else {

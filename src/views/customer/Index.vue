@@ -13,7 +13,7 @@
                 label="区域"
               ></v-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <v-select
                 v-model="queryObject.companyID"
                 :items="companyItems"
@@ -22,16 +22,16 @@
                 label="公司"
               ></v-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <v-select
                 v-model="queryObject.researchGroupID"
-                :items="researchGroups"
+                :items="researchGroupItems"
                 item-text="name"
                 item-value="ID"
                 label="课题组"
               ></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="姓名"
                 v-model="queryObject.name"
@@ -45,6 +45,7 @@
                 重置
               </v-btn>
             </v-col>
+            <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
               <v-btn rounded color="green" dark @click="goToEntry">
@@ -75,7 +76,7 @@ export default {
   data: () => ({
     areaItems: [],
     companyItems: [],
-    researchGroups: [],
+    researchGroupItems: [],
     queryObject: {
       areaID: null,
       companyID: null,
@@ -98,9 +99,9 @@ export default {
         this.companyItems = res.data;
       });
     },
-    getResearchGroupsByCompanyID(companyID) {
+    getResearchGroupItemsByCompanyID(companyID) {
       queryResearchGroupsByCompanyID(companyID).then((res) => {
-        this.researchGroups = res.data;
+        this.researchGroupItems = res.data;
       });
     },
     query() {
@@ -117,10 +118,10 @@ export default {
   watch: {
     "queryObject.companyID": {
       handler: function (val) {
-        this.researchGroups = [];
+        this.researchGroupItems = [];
         this.queryObject.researchGroupID = null;
         if (val != null) {
-          this.getResearchGroupsByCompanyID(val);
+          this.getResearchGroupItemsByCompanyID(val);
         }
       },
     },

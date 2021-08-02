@@ -3,16 +3,30 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app color="#7bbfea">
       <v-list>
-        <v-list-item link>
-          <v-list-item-content>
-            <v-list-item-title class="text-h5"> 开发者 </v-list-item-title>
-            <v-list-item-subtitle>john@vuetifyjs.com</v-list-item-subtitle>
-          </v-list-item-content>
-
-          <v-list-item-action>
-            <v-icon>mdi-menu-down</v-icon>
-          </v-list-item-action>
-        </v-list-item>
+        <v-list-item-group>
+          <v-list-group>
+            <template v-slot:activator>
+              <v-list-item-content>
+                <v-list-item-title
+                  class="text-h5 text-center"
+                  v-text="object.name"
+                ></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <v-list-item :to="userItem.settingUrl">
+              <v-list-item-icon>
+                <v-icon v-text="userItem.settingIcon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content> 设置 </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon v-text="userItem.exitIcon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content> 退出 </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+        </v-list-item-group>
       </v-list>
       <v-divider></v-divider>
       <v-list rounded>
@@ -43,8 +57,17 @@
 <script>
 export default {
   data: () => ({
+    object: {
+      name: "",
+      email: "",
+    },
     drawer: null,
     selectedItem: 0,
+    userItem: {
+      settingIcon: "mdi-cog-outline",
+      settingUrl: "/login",
+      exitIcon: "mdi-run",
+    },
     items: [
       { text: "首页", icon: "mdi-home", url: "/index" },
       { text: "合同管理", icon: "mdi-folder", url: "/contract" },
@@ -53,5 +76,9 @@ export default {
       { text: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
     ],
   }),
+  created() {
+    this.object.name = localStorage.getItem("name");
+    this.object.email = localStorage.getItem("name");
+  },
 };
 </script>

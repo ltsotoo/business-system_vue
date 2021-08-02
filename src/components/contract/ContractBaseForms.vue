@@ -1,95 +1,113 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form">
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="object.areaId"
+              v-model="object.areaID"
               item-text="text"
-              item-value="value"
-              :items="areaList"
+              item-value="ID"
+              :items="areaItems"
               label="区域"
-              required
             ></v-select
           ></v-col>
           <v-col cols="4">
             <v-select
-              v-model="object.userId"
-              item-text="text"
-              item-value="value"
-              :items="userList"
+              v-model="object.employeeID"
+              item-text="name"
+              item-value="ID"
+              :items="employeeItems"
               label="业务员"
-              required
             ></v-select
           ></v-col>
         </v-row>
 
-        <v-radio-group v-model="object.customerType" row>
+        <v-radio-group v-model="object.isEntryCustomer" row>
           <template v-slot:label>
             <div>客户类型</div>
           </template>
-          <v-radio label="已录入客户" value="1"></v-radio>
-          <v-radio label="未录入客户" value="2"></v-radio>
+          <v-radio label="已录入客户" :value="true"></v-radio>
+          <v-radio label="未录入客户" :value="false"></v-radio>
         </v-radio-group>
 
-        <v-row align="center" v-if="object.customerType == 1">
+        <v-row align="center" v-if="object.isEntryCustomer == true">
           <v-col class="d-flex" cols="4">
             <v-select
-              :items="customerCompanyList"
-              label="客户单位"
-              required
+              v-model="object.customer.companyID"
+              item-text="name"
+              item-value="ID"
+              :items="companyItems"
+              label="客户公司"
             ></v-select>
           </v-col>
 
           <v-col class="d-flex" cols="4">
             <v-select
-              :items="customerResearchGroupList"
+              v-model="object.customer.researchGroupID"
+              item-text="name"
+              item-value="ID"
+              :items="researchGroupItems"
               label="客户课题组"
-              required
             ></v-select>
           </v-col>
 
           <v-col class="d-flex" cols="4">
             <v-select
-              :items="customerList"
+              v-model="object.customer.name"
+              item-text="name"
+              item-value="ID"
+              :items="customerItems"
               label="客户名称"
-              required
             ></v-select>
           </v-col>
         </v-row>
 
-        <v-row v-if="object.customerType == 2">
-          <v-col cols="4">
+        <v-row v-if="object.isEntryCustomer == false">
+          <v-col cols="3">
             <v-text-field
-              v-model="object.customerCompanyName"
-              :counter="10"
-              label="客户单位"
-              required
-            ></v-text-field
-          ></v-col>
-          <v-col cols="4">
+              v-model="object.customer.companyID"
+              label="客户公司"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="3">
             <v-text-field
-              v-model="object.customerCompanyName"
-              :counter="10"
+              v-model="object.customer.researchGroupID"
               label="客户课题组"
-              required
-            ></v-text-field
-          ></v-col>
-          <v-col cols="4">
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="3">
             <v-text-field
-              v-model="object.customerResearchGroupName"
+              v-model="object.customer.name"
               label="客户名称"
-              required
-            ></v-text-field
-          ></v-col>
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="3">
+            <v-text-field
+              v-model="object.customer.phone"
+              label="客户电话"
+            ></v-text-field>
+          </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="4">
+            <v-select
+              v-model="object.contractUnitID"
+              :items="contractUnitItems"
+              item-text="text"
+              item-value="ID"
+              label="签订单位"
+            ></v-select
+          ></v-col>
+
+          <v-col cols="4">
             <v-menu
-              ref="menu"
-              v-model="dateMenu"
+              ref="contractDateMenu"
+              v-model="contractDateMenu"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -97,7 +115,33 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="object.contractDeliveryDate"
+                  v-model="object.contractDate"
+                  label="签订日期"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="zh-cn"
+                v-model="object.contractDate"
+                min="2000-01-01"
+                @change="$refs.contractDateMenu.save(object.contractDate)"
+              ></v-date-picker></v-menu
+          ></v-col>
+
+          <v-col cols="4">
+            <v-menu
+              ref="estimatedDeliveryDateMenu"
+              v-model="estimatedDeliveryDateMenu"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="object.estimatedDeliveryDate"
                   label="合同交货日期"
                   readonly
                   v-bind="attrs"
@@ -106,53 +150,42 @@
               </template>
               <v-date-picker
                 locale="zh-cn"
-                v-model="object.date"
+                v-model="object.estimatedDeliveryDate"
                 min="2000-01-01"
-                @change="$refs.menu.save(object.date)"
-              ></v-date-picker> </v-menu
-          ></v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.signingCompanyId"
-              :items="signingCompanyList"
-              item-text="text"
-              item-value="value"
-              label="签订单位"
-              required
-            ></v-select
+                @change="
+                  $refs.estimatedDeliveryDateMenu.save(
+                    object.estimatedDeliveryDate
+                  )
+                "
+              ></v-date-picker></v-menu
           ></v-col>
         </v-row>
 
-        <v-radio-group v-model="object.invoiceType" row>
+        <v-radio-group v-model.number="object.invoiceType" row>
           <template v-slot:label>
             <div>开票类型</div>
           </template>
-          <v-radio label="不开发票" value="1"></v-radio>
-          <v-radio label="普票" value="2"></v-radio>
-          <v-radio label="专票" value="3"></v-radio>
-          <v-radio label="形式发票" value="4"></v-radio>
+          <v-radio label="不开发票" :value="1"></v-radio>
+          <v-radio label="普票" :value="2"></v-radio>
+          <v-radio label="专票" :value="3"></v-radio>
+          <v-radio label="形式发票" :value="4"></v-radio>
         </v-radio-group>
 
         <v-textarea
           v-if="object.invoiceType != 1"
           label="开票内容"
           v-model="object.invoiceContent"
-          hint="tips"
         ></v-textarea>
 
-        <v-radio-group v-model="object.contractType" row>
+        <v-radio-group v-model.number="object.isSpecial" row>
           <template v-slot:label>
             <div style="color: red">特殊合同</div>
           </template>
-          <v-radio label="是" value="1"></v-radio>
-          <v-radio label="否" value="2"></v-radio>
+          <v-radio label="是" :value="true"></v-radio>
+          <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
 
-        <v-textarea
-          label="备注"
-          v-model="object.remark"
-          hint="tips"
-        ></v-textarea>
+        <v-textarea label="备注" v-model="object.remarks"></v-textarea>
       </v-card-subtitle>
     </v-card>
   </v-form>
@@ -160,11 +193,14 @@
 
 <script>
 import productDataTable from "../product/ProductDataTable";
+import { queryDictionaries } from "@/api/dictionary";
+import { queryCompanys, queryResearchGroupsByCompanyID } from "@/api/customer";
+import { queryEmployees } from "@/api/employee";
 
 export default {
   props: {
     openType: {
-      //0:录入 1:编辑
+      //0:录入 1:查看 2:编辑
       type: Number,
       default: 0,
     },
@@ -180,48 +216,83 @@ export default {
     productDataTable,
   },
   data: () => ({
-    valid: true,
-    rules: {
-      yearRules: [
-        (v) => !!v || "年份必须输入",
-        (v) => (v && v.length == 4) || "年份必须为4位数字",
-        (v) => /[0-9]+/.test(v) || "年份必须为数字",
-      ],
-    },
-    areaList: [],
-    userList: [],
-    customerCompanyList: [],
-    customerResearchGroupList: [],
-    customerList: [],
-    signingCompanyList: [],
-    dateMenu: false,
+    areaItems: [],
+    employeeItems: [],
+    companyItems: [],
+    researchGroupItems: [],
+    customerItems: [],
+    contractUnitItems: [],
+    contractDateMenu: false,
+    estimatedDeliveryDateMenu: false,
     object: {
-      id: "",
-      areaId: "",
-      userId: "",
-      customerType: "1",
-      customerCompanyId: "",
-      customerCompanyName: "",
-      customerResearchGroupId: "",
-      customerResearchGroupName: "",
-      customerId: "",
-      customerName: "",
-      signingCompanyId: "",
-      contractDeliveryDate: "",
-      invoiceType: "1",
+      ID: null,
+      No: "",
+      areaID: null,
+      employeeID: null,
+      isEntryCustomer: true,
+      contractDate: null,
+      contractUnitID: null,
+      estimatedDeliveryDate: "",
+      endDeliveryDate: "",
+      invoiceType: 1,
       invoiceContent: "",
-      contractType: "2",
-      remark: "",
+      isSpecial: false,
+      remarks: "",
+      status: null,
+
+      customer: {
+        name: "",
+        companyID: null,
+        researchGroupID: null,
+        phone: "",
+        wechatID: "",
+        email: "",
+      },
     },
   }),
   created() {
-    this.object.id = this.openID;
+    this.getAreaItems();
+    this.getEmployeeItems();
+    this.getContractUnitItems();
+    this.getCompanyItems();
   },
   methods: {
-    uploadObject() {
-      this.$emit("getContractBase", this.object);
+    getAreaItems() {
+      queryDictionaries("system_area").then((res) => {
+        this.areaItems = res.data;
+      });
+    },
+    getEmployeeItems() {
+      queryEmployees().then((res) => {
+        this.employeeItems = res.data;
+      });
+    },
+    getCompanyItems() {
+      queryCompanys().then((res) => {
+        this.companyItems = res.data;
+      });
+    },
+    getResearchGroupItemsByCompanyID(companyID) {
+      queryResearchGroupsByCompanyID(companyID).then((res) => {
+        this.researchGroupItems = res.data;
+      });
+    },
+    getContractUnitItems() {
+      queryDictionaries("system_contract_unit").then((res) => {
+        this.contractUnitItems = res.data;
+      });
     },
   },
-  computed: {},
+  watch: {
+    "object.customer.companyID": {
+      handler: function (val) {
+        this.researchGroupItems = [];
+        this.object.customer.researchGroupID = null;
+        if (val != null) {
+          this.getResearchGroupItemsByCompanyID(val);
+        }
+      },
+    },
+  },
 };
 </script>

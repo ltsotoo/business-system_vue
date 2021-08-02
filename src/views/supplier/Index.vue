@@ -4,19 +4,19 @@
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="名称"
                 v-model="queryObject.name"
               ></v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="联系人"
                 v-model="queryObject.linkman"
               ></v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 label="联系电话"
                 v-model="queryObject.phone"

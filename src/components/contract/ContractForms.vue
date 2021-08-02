@@ -48,7 +48,7 @@
             </v-row>
           </v-form>
           <p :class="`text-h6`" class="text--primary">产品列表：查询结果</p>
-          <productDataTable ref="productDataTable"/>
+          <productDataTable ref="productDataTable" :queryObject="queryObject"/>
           <p :class="`text-h6`" class="text--primary" style="margin-top: 20px">
             已选择产品列表：
           </p>
@@ -59,7 +59,11 @@
       </v-card>
     </div>
     <div v-else>
-      <taskDataTable style="margin-top: 1px" ref="taskDataTable" :openID="openID"/>
+      <taskDataTable
+        style="margin-top: 1px"
+        ref="taskDataTable"
+        :openID="openID"
+      />
     </div>
   </div>
 </template>
@@ -109,7 +113,9 @@ export default {
         this.subtypeItems = res.data;
       });
     },
-    getProducts() {},
+    getProducts() {
+      this.$refs.productDataTable.getObject();
+    },
     resetQueryForm() {
       this.$refs.queryForm.reset();
       this.$refs.productDataTable.getObject();
