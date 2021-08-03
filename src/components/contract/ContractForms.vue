@@ -48,12 +48,17 @@
             </v-row>
           </v-form>
           <p :class="`text-h6`" class="text--primary">产品列表：查询结果</p>
-          <productDataTable ref="productDataTable" :queryObject="queryObject"/>
+          <productDataTable
+            ref="productDataTable"
+            :queryObject="queryObject"
+            :openType="2"
+            :parentFun="addProductForCart"
+          />
           <p :class="`text-h6`" class="text--primary" style="margin-top: 20px">
             已选择产品列表：
           </p>
           <div>
-            <!-- <taskDataTable ref="taskDataTable"/> -->
+            <contractCartDataTable ref="contractCartDataTable" />
           </div>
         </v-card-subtitle>
       </v-card>
@@ -70,6 +75,7 @@
 
 <script>
 import contractBaseForms from "./ContractBaseForms";
+import contractCartDataTable from "./ContractCartDataTable";
 import productDataTable from "../product/ProductDataTable";
 import taskDataTable from "../task/TaskDataTable";
 import { queryDictionaries } from "@/api/dictionary";
@@ -77,6 +83,7 @@ import { queryDictionaries } from "@/api/dictionary";
 export default {
   components: {
     contractBaseForms,
+    contractCartDataTable,
     productDataTable,
     taskDataTable,
   },
@@ -103,6 +110,9 @@ export default {
     this.getProductSoureTypeItems();
   },
   methods: {
+    addProductForCart(product) {
+      this.$refs.contractCartDataTable.addProduct(product);
+    },
     getProductSoureTypeItems() {
       queryDictionaries("product_source_type").then((res) => {
         this.sourceTypeItems = res.data;

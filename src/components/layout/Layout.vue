@@ -19,7 +19,7 @@
               </v-list-item-icon>
               <v-list-item-content> 设置 </v-list-item-content>
             </v-list-item>
-            <v-list-item>
+            <v-list-item @click="exit">
               <v-list-item-icon>
                 <v-icon v-text="userItem.exitIcon"></v-icon>
               </v-list-item-icon>
@@ -80,5 +80,11 @@ export default {
     this.object.name = localStorage.getItem("name");
     this.object.email = localStorage.getItem("name");
   },
+  methods:{
+    exit(){
+      localStorage.removeItem("name")
+      this.$router.replace("/login");
+    }
+  }
 };
 </script>

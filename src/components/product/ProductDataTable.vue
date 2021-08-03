@@ -15,11 +15,29 @@
       @update:items-per-page="getObject"
       @click:row="openViewDialog"
     >
-      <template v-slot:item.actions="{ item }">
-        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+      <template v-slot:[`item.actions`]="{ item }">
+        <div v-if="openType == 2">
+          <v-icon @click="openAddDialog(item)"> mdi-plus-thick </v-icon>
+        </div>
+        <div v-else>
+          <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+          <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        </div>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.addDialog"
+      v-if="options.addDialog"
+      max-width="400px"
+      persistent
+    >
+      <productAddForCart
+        :closeFun="closeAddDialog"
+        :product="options.addItem"
+        :parentFun="closeAddDialogForAdd"
+      />
+    </v-dialog>
 
     <v-dialog
       v-model="options.viewDialog"
@@ -69,15 +87,26 @@
 
 <script>
 import productForms from "./ProductForms";
+import productAddForCart from "./ProductAddForCart";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
     productForms,
+    productAddForCart,
   },
   props: {
+    openType: {
+      //0:产品录入 1:合同录入
+      type: Number,
+      default: 0,
+    },
     queryObject: {
       type: Object,
+    },
+    parentFun: {
+      type: Function,
+      default: null,
     },
   },
   data: () => ({
@@ -108,6 +137,8 @@ export default {
       itemsPerPage: 10,
       openID: null,
       openType: null,
+      addDialog: false,
+      addItem: {},
       viewDialog: false,
       editDialog: false,
       deleteDialog: false,
@@ -133,11 +164,26 @@ export default {
         this.object = res.data;
       });
     },
+    openAddDialog(item) {
+      this.options.addItem = item;
+      this.options.addDialog = true;
+    },
+    closeAddDialog() {
+      this.options.addItem = {};
+      this.options.addDialog = false;
+    },
+    closeAddDialogForAdd(item) {
+      item.totalPrice = item.number * item.price
+      this.parentFun(item);
+      this.options.addItem = {};
+      this.options.addDialog = false;
+    },
     openViewDialog(item, other) {
       setTimeout(() => {
         if (
           this.options.editDialog == false &&
-          this.options.deleteDialog == false
+          this.options.deleteDialog == false &&
+          this.options.addDialog == false
         ) {
           this.options.openID = item.ID;
           this.options.openType = 1;
