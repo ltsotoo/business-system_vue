@@ -5,7 +5,7 @@ export const entryCustomer = (customer) => {
         return request({
             url: '/customer',
             method: 'POST',
-            data:customer
+            data: customer
         })
     }
 }
@@ -24,7 +24,7 @@ export const editCustomer = (customer) => {
         return request({
             url: '/customer',
             method: 'PUT',
-            data:customer
+            data: customer
         })
     }
 }
@@ -38,12 +38,12 @@ export const queryCustomer = (id) => {
     }
 }
 
-export const queryCustomers = (pageSize, pageNo,queryObject) => {
+export const queryCustomers = (pageSize, pageNo, queryObject) => {
     {
         return request({
             url: '/customers',
             method: 'POST',
-            data:queryObject,
+            data: queryObject,
             params: {
                 "pageSize": pageSize,
                 "pageNo": pageNo,
@@ -61,13 +61,26 @@ export const queryCompanys = () => {
     }
 }
 
-export const queryResearchGroupsByCompanyID = (companyID) =>{
+export const queryResearchGroupsByCompanyID = (companyID) => {
     {
         return request({
             url: '/researchGroupsByCompanyID',
             method: 'GET',
             params: {
                 "companyID": companyID,
+            }
+        })
+    }
+}
+
+export const queryCustomersByCompanyIDAndResearchGroupID = (companyID, researchGroupID) => {
+    {
+        return request({
+            url: '/customersByCompanyIDAndResearchGroupID',
+            method: 'GET',
+            params: {
+                "companyID": companyID,
+                "researchGroupID": researchGroupID,
             }
         })
     }

@@ -79,6 +79,7 @@ import contractCartDataTable from "./ContractCartDataTable";
 import productDataTable from "../product/ProductDataTable";
 import taskDataTable from "../task/TaskDataTable";
 import { queryDictionaries } from "@/api/dictionary";
+import { entryContract } from "@/api/contract";
 
 export default {
   components: {
@@ -96,10 +97,15 @@ export default {
     openID: {
       type: Number,
     },
+    parentFun: {
+      type: Function,
+      default: null,
+    },
   },
   data: () => ({
     sourceTypeItems: [],
     subtypeItems: [],
+    object: {},
     queryObject: {
       sourceTypeID: null,
       subtypeID: null,
@@ -129,6 +135,16 @@ export default {
     resetQueryForm() {
       this.$refs.queryForm.reset();
       this.$refs.productDataTable.getObject();
+    },
+    entryObject() {
+      this.object = this.$refs.contractBaseForms.object;
+      this.object.tasks = this.$refs.contractCartDataTable.object;
+      entryContract(this.object).then((res) => {
+        this.$message.success("录入成功了!");
+        if (this.parentFun) {
+          this.parentFun(false);
+        }
+      });
     },
   },
   watch: {

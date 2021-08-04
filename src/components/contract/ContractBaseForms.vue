@@ -54,7 +54,7 @@
 
           <v-col class="d-flex" cols="4">
             <v-select
-              v-model="object.customer.name"
+              v-model="object.customerID"
               item-text="name"
               item-value="ID"
               :items="customerItems"
@@ -194,7 +194,11 @@
 <script>
 import productDataTable from "../product/ProductDataTable";
 import { queryDictionaries } from "@/api/dictionary";
-import { queryCompanys, queryResearchGroupsByCompanyID } from "@/api/customer";
+import {
+  queryCompanys,
+  queryResearchGroupsByCompanyID,
+  queryCustomersByCompanyIDAndResearchGroupID,
+} from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 
 export default {
@@ -226,10 +230,11 @@ export default {
     estimatedDeliveryDateMenu: false,
     object: {
       ID: null,
-      No: "",
+      no: "",
       areaID: null,
       employeeID: null,
       isEntryCustomer: true,
+      customerID: null,
       contractDate: null,
       contractUnitID: null,
       estimatedDeliveryDate: "",
@@ -277,6 +282,14 @@ export default {
         this.researchGroupItems = res.data;
       });
     },
+    getCustomerItemsByCompanyIDAndResearchGroupID(companyID, researchGroupID) {
+      queryCustomersByCompanyIDAndResearchGroupID(
+        companyID,
+        researchGroupID
+      ).then((res) => {
+        this.customerItems = res.data;
+      });
+    },
     getContractUnitItems() {
       queryDictionaries("system_contract_unit").then((res) => {
         this.contractUnitItems = res.data;
@@ -287,9 +300,23 @@ export default {
     "object.customer.companyID": {
       handler: function (val) {
         this.researchGroupItems = [];
+        this.customerItems = [];
         this.object.customer.researchGroupID = null;
+        this.customerID = null;
         if (val != null) {
           this.getResearchGroupItemsByCompanyID(val);
+        }
+      },
+    },
+    "object.customer.researchGroupID": {
+      handler: function (val) {
+        this.customerItems = [];
+        this.customerID = null;
+        if (val != null) {
+          this.getCustomerItemsByCompanyIDAndResearchGroupID(
+            this.object.customer.companyID,
+            val
+          );
         }
       },
     },

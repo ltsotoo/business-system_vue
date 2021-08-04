@@ -117,7 +117,7 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      this.object = this.object.filter((t) => t.ID != this.options.openID);
+      this.object = this.object.filter((t) => t.productID != this.options.openID);
       this.options.openID = null;
       this.options.deleteDialog = false;
     },
