@@ -3,7 +3,7 @@
     <v-card>
       <v-card-subtitle>
         <v-row>
-          <v-col cols="auto">
+          <v-col xs="6">
             <v-card class="mx-auto" outlined color="#FFB6C1" :elevation="1">
               <v-list-item three-line>
                 <v-list-item-content>
@@ -21,7 +21,7 @@
               </v-list-item>
             </v-card>
           </v-col>
-          <v-col cols="auto">
+          <v-col xs="6">
             <v-card class="mx-auto" outlined color="#00BFFF" :elevation="1">
               <v-list-item three-line>
                 <v-list-item-content>
@@ -39,7 +39,7 @@
               </v-list-item>
             </v-card>
           </v-col>
-          <v-col cols="auto">
+          <v-col xs="6">
             <v-card class="mx-auto" outlined color="#FFA500" :elevation="1">
               <v-list-item three-line>
                 <v-list-item-content>
@@ -57,7 +57,7 @@
               </v-list-item>
             </v-card>
           </v-col>
-          <v-col cols="auto">
+          <v-col xs="6">
             <v-card class="mx-auto" outlined color="green" :elevation="1">
               <v-list-item three-line>
                 <v-list-item-content>
