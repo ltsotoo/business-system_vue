@@ -74,8 +74,9 @@ export default {
   methods: {
     userLogin() {
       login(this.queryObject).then((res) => {
-        localStorage.setItem("name",res.data.name)
-        this.goToIndex()
+        localStorage.setItem("name", res.data.name);
+        localStorage.setItem("ID", res.data.ID);
+        this.goToIndex();
       });
     },
     goToIndex() {

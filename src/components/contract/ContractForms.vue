@@ -4,6 +4,7 @@
       :openID="openID"
       :openType="openType"
       ref="contractBaseForms"
+      v-if="(openType == 0) || object.ID"
     />
     <div v-if="openType == 0">
       <v-card style="margin-top: 10px">
@@ -67,7 +68,10 @@
       <taskDataTable
         style="margin-top: 1px"
         ref="taskDataTable"
+        :openType="openType"
         :openID="openID"
+        :parentObject="object.tasks"
+        v-if="(openType == 0) || object.tasks"
       />
     </div>
   </div>
@@ -79,7 +83,7 @@ import contractCartDataTable from "./ContractCartDataTable";
 import productDataTable from "../product/ProductDataTable";
 import taskDataTable from "../task/TaskDataTable";
 import { queryDictionaries } from "@/api/dictionary";
-import { entryContract } from "@/api/contract";
+import { queryContract, entryContract } from "@/api/contract";
 
 export default {
   components: {
@@ -114,11 +118,11 @@ export default {
   }),
   created() {
     this.getProductSoureTypeItems();
+    if (this.openType == 1) {
+      this.getObject();
+    }
   },
   methods: {
-    addProductForCart(product) {
-      this.$refs.contractCartDataTable.addProduct(product);
-    },
     getProductSoureTypeItems() {
       queryDictionaries("product_source_type").then((res) => {
         this.sourceTypeItems = res.data;
@@ -128,6 +132,14 @@ export default {
       queryDictionaries("product_subtype", sourceType).then((res) => {
         this.subtypeItems = res.data;
       });
+    },
+    getObject() {
+      queryContract(this.openID).then((res) => {
+        this.object = res.data;
+      });
+    },
+    addProductForCart(product) {
+      this.$refs.contractCartDataTable.addProduct(product);
     },
     getProducts() {
       this.$refs.productDataTable.getObject();

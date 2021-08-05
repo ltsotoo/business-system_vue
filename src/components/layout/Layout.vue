@@ -65,7 +65,7 @@ export default {
     selectedItem: 0,
     userItem: {
       settingIcon: "mdi-cog-outline",
-      settingUrl: "/login",
+      settingUrl: "/my",
       exitIcon: "mdi-run",
     },
     items: [

@@ -77,10 +77,16 @@ export default {
   props: {
     openID: {
       type: Number,
+      default: 0,
+    },
+    openType: {
+      type: Number,
+      default: 0,
     },
     queryObject: {
       type: Object,
     },
+    parentObject: {},
   },
   data: () => ({
     headers: [
@@ -113,7 +119,11 @@ export default {
     object: [],
   }),
   created() {
-    this.getObject();
+    if (this.openType == 1) {
+      this.object = this.parentObject;
+    } else {
+      this.getObject();
+    }
   },
   methods: {
     getObject() {
