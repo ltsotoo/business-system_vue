@@ -4,7 +4,8 @@
       :openID="openID"
       :openType="openType"
       ref="contractBaseForms"
-      v-if="(openType == 0) || object.ID"
+      v-if="openType == 0 || object.ID"
+      :parentObject="object"
     />
     <div v-if="openType == 0">
       <v-card style="margin-top: 10px">
@@ -71,7 +72,7 @@
         :openType="openType"
         :openID="openID"
         :parentObject="object.tasks"
-        v-if="(openType == 0) || object.tasks"
+        v-if="object.tasks"
       />
     </div>
   </div>
@@ -118,7 +119,7 @@ export default {
   }),
   created() {
     this.getProductSoureTypeItems();
-    if (this.openType == 1) {
+    if (this.openType > 0) {
       this.getObject();
     }
   },

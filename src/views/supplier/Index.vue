@@ -8,18 +8,21 @@
               <v-text-field
                 label="名称"
                 v-model="queryObject.name"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="联系人"
                 v-model="queryObject.linkman"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="联系电话"
                 v-model="queryObject.phone"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="auto">

@@ -8,21 +8,24 @@
               <v-select
                 v-model="queryObject.areaID"
                 :items="areaItems"
-                item-text="text"
+                item-text="name"
                 item-value="ID"
                 label="区域"
+                clearable
               ></v-select>
             </v-col>
             <v-col cols="4">
               <v-text-field
                 label="合同编号:"
                 v-model="queryObject.no"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="客户单位："
                 v-model="queryObject.companyName"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -53,7 +56,7 @@
 
 <script>
 import contractDataTable from "@/components/contract/ContractDataTable";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryAreas } from "@/api/oadrp";
 export default {
   components: {
     contractDataTable,
@@ -71,7 +74,7 @@ export default {
   },
   methods: {
     getAreas() {
-      queryDictionaries("system_area").then((res) => {
+      queryAreas().then((res) => {
         this.areaItems = res.data;
       });
     },

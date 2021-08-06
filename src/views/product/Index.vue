@@ -11,6 +11,7 @@
                 item-text="text"
                 item-value="ID"
                 label="来源"
+                clearable
               ></v-select>
             </v-col>
             <v-col cols="2">
@@ -20,18 +21,21 @@
                 item-text="text"
                 item-value="ID"
                 label="子类别"
+                clearable
               ></v-select>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="产品名称"
                 v-model="queryObject.name"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="规格"
                 v-model="queryObject.specification"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="auto">

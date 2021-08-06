@@ -61,26 +61,13 @@ export const queryCompanys = () => {
     }
 }
 
-export const queryResearchGroupsByCompanyID = (companyID) => {
+export const queryCompanysByAreaID = (areaID) => {
     {
         return request({
-            url: '/researchGroupsByCompanyID',
+            url: '/companysByAreaID',
             method: 'GET',
             params: {
-                "companyID": companyID,
-            }
-        })
-    }
-}
-
-export const queryCustomersByCompanyIDAndResearchGroupID = (companyID, researchGroupID) => {
-    {
-        return request({
-            url: '/customersByCompanyIDAndResearchGroupID',
-            method: 'GET',
-            params: {
-                "companyID": companyID,
-                "researchGroupID": researchGroupID,
+                "areaID": areaID,
             }
         })
     }

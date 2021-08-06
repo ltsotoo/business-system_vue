@@ -28,6 +28,7 @@
     >
       <customerForms
         :openID="options.openID"
+        :openType="options.openType"
         ref="customerForms"
         :parentFun="getObject"
       />
@@ -79,7 +80,7 @@ export default {
         value: "name",
       },
       { text: "公司", value: "companyID", sortable: false },
-      { text: "课题组", value: "researchGroupID", sortable: false },
+      { text: "课题组", value: "researchGroup", sortable: false },
       { text: "联系电话", value: "phone", sortable: false },
       { text: "微信号", value: "wechatID", sortable: false },
       { text: "电子邮箱", value: "email", sortable: false },
@@ -91,6 +92,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openID: null,
+      openType: null,
       editDialog: false,
       deleteDialog: false,
     },
@@ -117,10 +119,12 @@ export default {
     },
     openEditDialog(id) {
       this.options.openID = id;
+      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openID = null;
+      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {

@@ -28,6 +28,7 @@
     >
       <supplierForms
         :openID="options.openID"
+        :openType="options.openType"
         ref="supplierForms"
         :parentFun="getObject"
       />
@@ -91,6 +92,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openID: null,
+      openType: null,
       editDialog: false,
       deleteDialog: false,
     },
@@ -117,10 +119,12 @@ export default {
     },
     openEditDialog(id) {
       this.options.openID = id;
+      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openID = null;
+      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {

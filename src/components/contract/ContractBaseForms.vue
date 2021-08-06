@@ -6,12 +6,12 @@
           <v-col cols="4">
             <v-select
               v-model="object.areaID"
-              item-text="text"
+              item-text="name"
               item-value="ID"
               :items="areaItems"
               label="区域"
-            ></v-select
-          ></v-col>
+            ></v-select>
+          </v-col>
           <v-col cols="4">
             <v-select
               v-model="object.employeeID"
@@ -19,11 +19,14 @@
               item-value="ID"
               :items="employeeItems"
               label="业务员"
-            ></v-select
-          ></v-col>
+            ></v-select>
+          </v-col>
         </v-row>
 
-        <v-radio-group v-model="object.isEntryCustomer" row>
+        <v-radio-group
+          v-model="object.isEntryCustomer"
+          row
+        >
           <template v-slot:label>
             <div>客户类型</div>
           </template>
@@ -31,67 +34,77 @@
           <v-radio label="未录入客户" :value="false"></v-radio>
         </v-radio-group>
 
-        <v-row align="center" v-if="object.isEntryCustomer == true">
-          <v-col class="d-flex" cols="4">
+        <v-row v-if="openType > 0">
+          <v-col cols="4">
             <v-select
-              v-model="object.customer.companyID"
+              v-model="object.companyID"
               item-text="name"
               item-value="ID"
               :items="companyItems"
               label="客户公司"
             ></v-select>
           </v-col>
-
-          <v-col class="d-flex" cols="4">
-            <v-select
-              v-model="object.customer.researchGroupID"
-              item-text="name"
-              item-value="ID"
-              :items="researchGroupItems"
-              label="客户课题组"
-            ></v-select>
-          </v-col>
-
-          <v-col class="d-flex" cols="4">
-            <v-select
-              v-model="object.customerID"
-              item-text="name"
-              item-value="ID"
-              :items="customerItems"
-              label="客户名称"
-            ></v-select>
-          </v-col>
-        </v-row>
-
-        <v-row v-if="object.isEntryCustomer == false">
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.customer.companyID"
-              label="客户公司"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.customer.researchGroupID"
-              label="客户课题组"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="3">
+          <v-col cols="4">
             <v-text-field
               v-model="object.customer.name"
               label="客户名称"
             ></v-text-field>
           </v-col>
-
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.customer.phone"
-              label="客户电话"
-            ></v-text-field>
-          </v-col>
         </v-row>
+
+        <div v-else>
+          <v-row align="center" v-if="object.isEntryCustomer == true">
+            <v-col class="d-flex" cols="4">
+              <v-select
+                v-model="object.customer.companyID"
+                item-text="name"
+                item-value="ID"
+                :items="companyItems"
+                label="客户公司"
+              ></v-select>
+            </v-col>
+
+            <v-col class="d-flex" cols="4">
+              <v-select
+                v-model="object.customerID"
+                item-text="name"
+                item-value="ID"
+                :items="customerItems"
+                label="客户名称"
+              ></v-select>
+            </v-col>
+          </v-row>
+
+          <v-row v-if="object.isEntryCustomer == false">
+            <v-col cols="3">
+              <v-select
+                v-model="object.customer.companyID"
+                item-text="name"
+                item-value="ID"
+                :items="companyItems"
+                label="客户公司"
+              ></v-select>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.customer.name"
+                label="客户名称"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.customer.researchGroup"
+                label="客户课题组"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.customer.phone"
+                label="客户电话"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </div>
 
         <v-row>
           <v-col cols="4">
@@ -103,7 +116,6 @@
               label="签订单位"
             ></v-select
           ></v-col>
-
           <v-col cols="4">
             <v-menu
               ref="contractDateMenu"
@@ -129,7 +141,6 @@
                 @change="$refs.contractDateMenu.save(object.contractDate)"
               ></v-date-picker></v-menu
           ></v-col>
-
           <v-col cols="4">
             <v-menu
               ref="estimatedDeliveryDateMenu"
@@ -193,12 +204,9 @@
 
 <script>
 import productDataTable from "../product/ProductDataTable";
+import { queryAreas } from "@/api/oadrp";
 import { queryDictionaries } from "@/api/dictionary";
-import {
-  queryCompanys,
-  queryResearchGroupsByCompanyID,
-  queryCustomersByCompanyIDAndResearchGroupID,
-} from "@/api/customer";
+import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 
 export default {
@@ -215,6 +223,7 @@ export default {
       type: Function,
       default: null,
     },
+    parentObject: {},
   },
   components: {
     productDataTable,
@@ -223,7 +232,6 @@ export default {
     areaItems: [],
     employeeItems: [],
     companyItems: [],
-    researchGroupItems: [],
     customerItems: [],
     contractUnitItems: [],
     contractDateMenu: false,
@@ -245,25 +253,26 @@ export default {
       remarks: "",
       status: null,
 
+      area: {},
+      employee: {},
       customer: {
-        name: "",
         companyID: null,
-        researchGroupID: null,
-        phone: "",
-        wechatID: "",
-        email: "",
       },
+      contractUnit: {},
     },
   }),
   created() {
+    if (this.openType > 0) {
+      this.object = this.parentObject;
+      this.object.companyID = this.parentObject.customer.companyID;
+    }
     this.getAreaItems();
     this.getEmployeeItems();
     this.getContractUnitItems();
-    this.getCompanyItems();
   },
   methods: {
     getAreaItems() {
-      queryDictionaries("system_area").then((res) => {
+      queryAreas().then((res) => {
         this.areaItems = res.data;
       });
     },
@@ -272,21 +281,13 @@ export default {
         this.employeeItems = res.data;
       });
     },
-    getCompanyItems() {
-      queryCompanys().then((res) => {
+    getCompanyItemsByAreaID(areaID) {
+      queryCompanysByAreaID(areaID).then((res) => {
         this.companyItems = res.data;
       });
     },
-    getResearchGroupItemsByCompanyID(companyID) {
-      queryResearchGroupsByCompanyID(companyID).then((res) => {
-        this.researchGroupItems = res.data;
-      });
-    },
-    getCustomerItemsByCompanyIDAndResearchGroupID(companyID, researchGroupID) {
-      queryCustomersByCompanyIDAndResearchGroupID(
-        companyID,
-        researchGroupID
-      ).then((res) => {
+    getCustomerItemsByCompanyID(companyID) {
+      queryCustomers(0, 0, { companyID }).then((res) => {
         this.customerItems = res.data;
       });
     },
@@ -297,26 +298,23 @@ export default {
     },
   },
   watch: {
-    "object.customer.companyID": {
+    "object.areaID": {
       handler: function (val) {
-        this.researchGroupItems = [];
+        this.companyItems = [];
         this.customerItems = [];
-        this.object.customer.researchGroupID = null;
-        this.customerID = null;
+        this.object.customer.companyID = null;
+        this.object.customerID = null;
         if (val != null) {
-          this.getResearchGroupItemsByCompanyID(val);
+          this.getCompanyItemsByAreaID(val);
         }
       },
     },
-    "object.customer.researchGroupID": {
+    "object.customer.companyID": {
       handler: function (val) {
         this.customerItems = [];
-        this.customerID = null;
+        this.object.customerID = null;
         if (val != null) {
-          this.getCustomerItemsByCompanyIDAndResearchGroupID(
-            this.object.customer.companyID,
-            val
-          );
+          this.getCustomerItemsByCompanyID(val);
         }
       },
     },

@@ -3,7 +3,14 @@
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="6" v-if="openType > 0">
+            <v-text-field
+              v-model="object.company.name"
+              label="公司"
+              disabled
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6" v-else>
             <v-select
               v-model="object.companyID"
               :items="companyItems"
@@ -13,29 +20,22 @@
             ></v-select>
           </v-col>
           <v-col cols="6">
-            <v-select
-              v-model="object.researchGroupID"
-              :items="researchGroups"
-              item-text="name"
-              item-value="ID"
-              label="课题组"
-            ></v-select
-          ></v-col>
+            <v-text-field
+              v-model="object.name"
+              label="姓名"
+              :disabled="openType == 2"
+            ></v-text-field>
+          </v-col>
         </v-row>
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.name"
-              label="姓名"
-              required
-            ></v-text-field
-          ></v-col>
+              v-model="object.researchGroup"
+              label="课题组"
+            ></v-text-field>
+          </v-col>
           <v-col cols="6">
-            <v-text-field
-              v-model="object.phone"
-              label="电话"
-              required
-            ></v-text-field
+            <v-text-field v-model="object.phone" label="电话"></v-text-field
           ></v-col>
         </v-row>
         <v-row>
@@ -43,15 +43,10 @@
             <v-text-field
               v-model="object.wechatID"
               label="微信号"
-              required
             ></v-text-field
           ></v-col>
           <v-col cols="6">
-            <v-text-field
-              v-model="object.email"
-              label="电子邮箱"
-              required
-            ></v-text-field
+            <v-text-field v-model="object.email" label="电子邮箱"></v-text-field
           ></v-col>
         </v-row>
       </v-card-subtitle>
@@ -62,7 +57,6 @@
 <script>
 import {
   queryCompanys,
-  queryResearchGroupsByCompanyID,
   queryCustomer,
   entryCustomer,
   editCustomer,
@@ -83,12 +77,11 @@ export default {
   },
   data: () => ({
     companyItems: [],
-    researchGroups: [],
     object: {
       id: "",
       name: "",
-      companyID: "",
-      researchGroupID: "",
+      companyID: null,
+      researchGroup: "",
       phone: "",
       wechatID: "",
       email: "",
@@ -104,11 +97,6 @@ export default {
     getCompanyItems() {
       queryCompanys().then((res) => {
         this.companyItems = res.data;
-      });
-    },
-    getResearchGroupsByCompanyID(companyID) {
-      queryResearchGroupsByCompanyID(companyID).then((res) => {
-        this.researchGroups = res.data;
       });
     },
     getObject() {
@@ -133,26 +121,7 @@ export default {
       });
     },
   },
-  computed: {
-    readonly() {
-      if (this.openType == 0) {
-        return false;
-      } else {
-        return true;
-      }
-    },
-  },
-  watch: {
-    "object.companyID": {
-      handler: function (val) {
-        if (this.openType === 0) {
-          this.object.researchGroupID = null;
-        }
-        if (val != null) {
-          this.getResearchGroupsByCompanyID(val);
-        }
-      },
-    },
-  },
+  computed: {},
+  watch: {},
 };
 </script>

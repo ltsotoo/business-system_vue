@@ -56,6 +56,7 @@
     >
       <productForms
         :openID="options.openID"
+        :openType="options.openType"
         ref="productForms"
         :parentFun="getObject"
       />
@@ -173,7 +174,7 @@ export default {
       this.options.addDialog = false;
     },
     closeAddDialogForAdd(item) {
-      item.totalPrice = item.number * item.price
+      item.totalPrice = item.number * item.price;
       this.parentFun(item);
       this.options.addItem = {};
       this.options.addDialog = false;
@@ -197,10 +198,12 @@ export default {
     },
     openEditDialog(id) {
       this.options.openID = id;
+      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openID = null;
+      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {

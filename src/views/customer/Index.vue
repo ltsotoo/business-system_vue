@@ -8,9 +8,10 @@
               <v-select
                 v-model="queryObject.areaID"
                 :items="areaItems"
-                item-text="text"
+                item-text="name"
                 item-value="ID"
                 label="区域"
+                clearable
               ></v-select>
             </v-col>
             <v-col cols="2">
@@ -20,21 +21,21 @@
                 item-text="name"
                 item-value="ID"
                 label="公司"
+                clearable
               ></v-select>
             </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="queryObject.researchGroupID"
-                :items="researchGroupItems"
-                item-text="name"
-                item-value="ID"
+            <v-col cols="3">
+              <v-text-field
                 label="课题组"
-              ></v-select>
+                v-model="queryObject.researchGroup"
+                clearable
+              ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="姓名"
                 v-model="queryObject.name"
+                clearable
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -66,8 +67,8 @@
 
 <script>
 import customerDataTable from "@/components/customer/CustomerDataTable";
-import { queryDictionaries } from "@/api/dictionary";
-import { queryCompanys, queryResearchGroupsByCompanyID } from "@/api/customer";
+import { queryAreas } from "@/api/oadrp";
+import { queryCompanysByAreaID } from "@/api/customer";
 
 export default {
   components: {
@@ -76,32 +77,25 @@ export default {
   data: () => ({
     areaItems: [],
     companyItems: [],
-    researchGroupItems: [],
     queryObject: {
       areaID: null,
       companyID: null,
-      researchGroupID: null,
+      researchGroup: "",
       name: "",
     },
   }),
   created() {
     this.getAreas();
-    this.getCompanyItems();
   },
   methods: {
     getAreas() {
-      queryDictionaries("system_area").then((res) => {
+      queryAreas().then((res) => {
         this.areaItems = res.data;
       });
     },
-    getCompanyItems() {
-      queryCompanys().then((res) => {
+    getCompanyItemsByAreaID(areaID) {
+      queryCompanysByAreaID(areaID).then((res) => {
         this.companyItems = res.data;
-      });
-    },
-    getResearchGroupItemsByCompanyID(companyID) {
-      queryResearchGroupsByCompanyID(companyID).then((res) => {
-        this.researchGroupItems = res.data;
       });
     },
     query() {
@@ -116,12 +110,12 @@ export default {
     },
   },
   watch: {
-    "queryObject.companyID": {
+    "queryObject.areaID": {
       handler: function (val) {
-        this.researchGroupItems = [];
-        this.queryObject.researchGroupID = null;
+        this.companyItems = [];
+        this.queryObject.companyID = null;
         if (val != null) {
-          this.getResearchGroupItemsByCompanyID(val);
+          this.getCompanyItemsByAreaID(val);
         }
       },
     },
