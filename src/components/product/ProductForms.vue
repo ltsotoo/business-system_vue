@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="form" :readonly="openType == 1">
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row v-if="openType > 0">
@@ -7,7 +7,6 @@
             <v-text-field
               label="来源"
               v-model="object.sourceType.text"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field>
           </v-col>
@@ -15,7 +14,6 @@
             <v-text-field
               label="子类别"
               v-model="object.subtype.text"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field>
           </v-col>
@@ -45,7 +43,6 @@
             <v-text-field
               v-model="object.name"
               label="名称"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field
           ></v-col>
@@ -53,7 +50,6 @@
             <v-text-field
               v-model="object.brand"
               label="品牌"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field
           ></v-col>
@@ -61,7 +57,6 @@
             <v-text-field
               v-model="object.specification"
               label="规格"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field
           ></v-col>
@@ -71,7 +66,6 @@
             <v-text-field
               label="供应商"
               v-model="object.supplier.name"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field>
           </v-col>
@@ -88,14 +82,12 @@
             <v-text-field
               v-model.number="object.number"
               label="库存数量"
-              :readonly="openType == 1"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.unit"
               label="单位"
-              :readonly="openType == 1"
               :disabled="openType == 2"
             ></v-text-field
           ></v-col>
@@ -105,30 +97,23 @@
             <v-text-field
               v-model.number="object.purchasedPrice"
               label="采购价格(元)"
-              :readonly="openType == 1"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.standardPrice"
               label="销售价格(元)"
-              :readonly="openType == 1"
             ></v-text-field
           ></v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.deliveryCycle"
               label="供货周期"
-              :readonly="openType == 1"
             ></v-text-field
           ></v-col>
         </v-row>
 
-        <v-textarea
-          label="备注"
-          v-model="object.remarks"
-          :readonly="openType == 1"
-        ></v-textarea>
+        <v-textarea label="备注" v-model="object.remarks"></v-textarea>
       </v-card-subtitle>
     </v-card>
   </v-form>

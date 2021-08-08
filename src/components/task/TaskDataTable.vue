@@ -15,7 +15,7 @@
       @update:items-per-page="getObject"
       @click:row="openViewDialog"
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }" v-if="openType == 2">
         <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
@@ -91,20 +91,19 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "合同ID",
+        text: "产品",
         align: "start",
         sortable: false,
-        value: "contractID",
+        value: "product.name",
       },
-      { text: "产品ID", value: "productID", sortable: false },
-      { text: "数量", value: "specification", sortable: false },
-      { text: "库存数量", value: "number", sortable: false },
+      { text: "数量", value: "number", sortable: false },
+      { text: "库存数量", value: "product.number", sortable: false },
       { text: "单位", value: "unit", sortable: false },
       { text: "状态", value: "status", sortable: false },
-      { text: "技术负责人ID", value: "technicianManID", sortable: false },
-      { text: "采购负责人ID", value: "purchaseManID", sortable: false },
-      { text: "库存负责人ID", value: "inventoryManID", sortable: false },
-      { text: "发货人员ID", value: "shipmentManID", sortable: false },
+      { text: "技术负责人", value: "technicianMan.name", sortable: false },
+      { text: "采购负责人", value: "purchaseMan.name", sortable: false },
+      { text: "库存负责人", value: "inventoryMan.name", sortable: false },
+      { text: "发货人员", value: "shipmentMan.name", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {

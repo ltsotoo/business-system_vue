@@ -14,7 +14,7 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
@@ -75,16 +75,16 @@ export default {
     headers: [
       {
         text: "名称",
-        align: "start",
+        align: "center",
         sortable: false,
         value: "name",
       },
-      { text: "地址", value: "address", sortable: false },
-      { text: "联系人", value: "linkman", sortable: false },
-      { text: "联系电话", value: "phone", sortable: false },
-      { text: "微信号", value: "wechatID", sortable: false },
-      { text: "邮箱", value: "email", sortable: false },
-      { text: "操作", value: "actions", sortable: false },
+      { text: "地址", align: "center", value: "address", sortable: false },
+      { text: "联系人", align: "center", value: "linkman", sortable: false },
+      { text: "联系电话", align: "center", value: "phone", sortable: false },
+      { text: "微信号", align: "center", value: "wechatID", sortable: false },
+      { text: "邮箱", align: "center", value: "email", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
@@ -129,8 +129,7 @@ export default {
     },
     editItem() {
       this.$refs.supplierForms.editObject();
-      this.options.openID = null;
-      this.options.editDialog = false;
+      this.closeEditDialog();
     },
     openDeleteDialog(id) {
       this.options.openID = id;
@@ -143,9 +142,8 @@ export default {
     deleteItem() {
       delSupplier(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
-        this.options.openID = null;
         this.getObject();
-        this.options.deleteDialog = false;
+        this.closeDeleteDialog();
       });
     },
   },

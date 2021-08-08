@@ -14,7 +14,7 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
@@ -75,16 +75,16 @@ export default {
     headers: [
       {
         text: "姓名",
-        align: "start",
+        align: "center",
         sortable: false,
         value: "name",
       },
-      { text: "公司", value: "companyID", sortable: false },
-      { text: "课题组", value: "researchGroup", sortable: false },
-      { text: "联系电话", value: "phone", sortable: false },
-      { text: "微信号", value: "wechatID", sortable: false },
-      { text: "电子邮箱", value: "email", sortable: false },
-      { text: "操作", value: "actions", sortable: false },
+      { text: "公司",align: "center", value: "company.name", sortable: false },
+      { text: "课题组",align: "center", value: "researchGroup", sortable: false },
+      { text: "联系电话",align: "center", value: "phone", sortable: false },
+      { text: "微信号",align: "center", value: "wechatID", sortable: false },
+      { text: "电子邮箱",align: "center", value: "email", sortable: false },
+      { text: "操作",align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="form" :readonly="openType == 1">
     <v-card class="mx-auto">
       <v-card-subtitle>
         <v-row>
@@ -23,10 +23,7 @@
           </v-col>
         </v-row>
 
-        <v-radio-group
-          v-model="object.isEntryCustomer"
-          row
-        >
+        <v-radio-group v-model="object.isEntryCustomer" row>
           <template v-slot:label>
             <div>客户类型</div>
           </template>
@@ -139,7 +136,8 @@
                 v-model="object.contractDate"
                 min="2000-01-01"
                 @change="$refs.contractDateMenu.save(object.contractDate)"
-              ></v-date-picker></v-menu
+                :readonly="openType == 1"
+              ></v-date-picker> </v-menu
           ></v-col>
           <v-col cols="4">
             <v-menu
@@ -168,6 +166,7 @@
                     object.estimatedDeliveryDate
                   )
                 "
+                :readonly="openType == 1"
               ></v-date-picker></v-menu
           ></v-col>
         </v-row>

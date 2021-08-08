@@ -14,7 +14,15 @@
       @update:items-per-page="getObject"
       @click:row="openViewDialog"
     >
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
+        <v-chip :color="compareColor(item.estimatedDeliveryDate)">
+          {{ item.estimatedDeliveryDate }}
+        </v-chip>
+      </template>
+      <template v-slot:[`item.isSpecial`]="{ item }">
+        {{ item.isSpecial == "true" ? "是" : "否" }}
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon small @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
         <v-icon small @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
@@ -85,22 +93,62 @@ export default {
     headers: [
       {
         text: "合同编号",
-        align: "start",
+        align: "center",
         sortable: false,
-        value: "No",
+        value: "no",
       },
-      { text: "区域", value: "areaID", sortable: false },
-      { text: "业务员", value: "employeeID", sortable: false },
-      { text: "客户", value: "customerID", sortable: false },
-      { text: "合同交货日期", value: "estimatedDeliveryDate", sortable: false },
-      { text: "实际交货日期", value: "endDeliveryDate", sortable: false },
-      { text: "开票类型", value: "invoiceType", sortable: false },
-      { text: "开票内容", value: "invoiceContent", sortable: false },
-      { text: "特殊合同", value: "isSpecial", sortable: false },
-      { text: "总金额(元)", value: "totalAmount", sortable: false },
-      { text: "状态", value: "status", sortable: false },
-      { text: "备注", value: "remarks", sortable: false },
-      { text: "操作", value: "actions", sortable: false },
+      { text: "区域", align: "center", value: "area.name", sortable: false },
+      {
+        text: "业务员",
+        align: "center",
+        value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "客户",
+        align: "center",
+        value: "customer.name",
+        sortable: false,
+      },
+      {
+        text: "合同交货日期",
+        align: "center",
+        value: "estimatedDeliveryDate",
+        sortable: false,
+      },
+      {
+        text: "实际交货日期",
+        align: "center",
+        value: "endDeliveryDate",
+        sortable: false,
+      },
+      {
+        text: "开票类型",
+        align: "center",
+        value: "invoiceType",
+        sortable: false,
+      },
+      {
+        text: "开票内容",
+        align: "center",
+        value: "invoiceContent",
+        sortable: false,
+      },
+      {
+        text: "特殊合同",
+        align: "center",
+        value: "isSpecial",
+        sortable: false,
+      },
+      {
+        text: "总金额(元)",
+        align: "center",
+        value: "totalAmount",
+        sortable: false,
+      },
+      { text: "状态", align: "center", value: "status", sortable: false },
+      { text: "备注", align: "center", value: "remarks", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
@@ -180,6 +228,19 @@ export default {
         this.getObject();
         this.options.deleteDialog = false;
       });
+    },
+    compareColor(date) {
+      //替换为‘/’转译为中国时间，‘-’转译为UTC
+      date = date.replace(/-/g, "/");
+      var nowDate = new Date().getTime();
+      var parseDate = Date.parse(date);
+      if (nowDate > parseDate) {
+        return "red";
+      }
+      if (nowDate + 7 * 24 * 60 * 60 * 1000 > parseDate) {
+        return "orange";
+      }
+      return "green";
     },
   },
 };
