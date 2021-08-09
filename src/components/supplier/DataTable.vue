@@ -26,10 +26,10 @@
       max-width="800px"
       persistent
     >
-      <customerForms
+      <supplierForms
         :openID="options.openID"
         :openType="options.openType"
-        ref="customerForms"
+        ref="supplierForms"
         :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
@@ -45,7 +45,7 @@
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该位客户吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该位供应商吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -59,12 +59,12 @@
 </template>
 
 <script>
-import customerForms from "./CustomerForms";
-import { delCustomer, queryCustomers } from "@/api/customer";
+import supplierForms from "./Forms";
+import { delSupplier, querySuppliers } from "@/api/supplier";
 
 export default {
   components: {
-    customerForms,
+    supplierForms,
   },
   props: {
     queryObject: {
@@ -74,17 +74,17 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "姓名",
+        text: "名称",
         align: "center",
         sortable: false,
         value: "name",
       },
-      { text: "公司",align: "center", value: "company.name", sortable: false },
-      { text: "课题组",align: "center", value: "researchGroup", sortable: false },
-      { text: "联系电话",align: "center", value: "phone", sortable: false },
-      { text: "微信号",align: "center", value: "wechatID", sortable: false },
-      { text: "电子邮箱",align: "center", value: "email", sortable: false },
-      { text: "操作",align: "center", value: "actions", sortable: false },
+      { text: "地址", align: "center", value: "address", sortable: false },
+      { text: "联系人", align: "center", value: "linkman", sortable: false },
+      { text: "联系电话", align: "center", value: "phone", sortable: false },
+      { text: "微信号", align: "center", value: "wechatID", sortable: false },
+      { text: "邮箱", align: "center", value: "email", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
@@ -104,7 +104,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryCustomers(
+      querySuppliers(
         this.options.itemsPerPage,
         this.options.page,
         this.queryObject
@@ -128,9 +128,10 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.customerForms.editObject();
-      this.options.openID = null;
-      this.options.editDialog = false;
+      if (this.$refs.supplierForms.validateForm()) {
+        this.$refs.supplierForms.editObject();
+        this.closeEditDialog();
+      }
     },
     openDeleteDialog(id) {
       this.options.openID = id;
@@ -141,11 +142,10 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delCustomer(this.options.openID).then((res) => {
+      delSupplier(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
-        this.options.openID = null;
         this.getObject();
-        this.options.deleteDialog = false;
+        this.closeDeleteDialog();
       });
     },
   },

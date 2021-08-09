@@ -13,12 +13,27 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
+      @click:row="openViewDialog"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <div v-if="openType == 3">
+          <v-icon @click="transferItem(item)"> mdi-plus-thick </v-icon>
+        </div>
+        <div v-else>
+          <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+          <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        </div>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.viewDialog"
+      v-if="options.viewDialog"
+      max-width="800px"
+      @click:outside="closeViewDialog"
+    >
+      <productForms :openID="options.openID" :openType="options.openType" />
+    </v-dialog>
 
     <v-dialog
       v-model="options.editDialog"
@@ -26,10 +41,10 @@
       max-width="800px"
       persistent
     >
-      <supplierForms
+      <productForms
         :openID="options.openID"
         :openType="options.openType"
-        ref="supplierForms"
+        ref="productForms"
         :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
@@ -45,7 +60,7 @@
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该位供应商吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -59,16 +74,25 @@
 </template>
 
 <script>
-import supplierForms from "./SupplierForms";
-import { delSupplier, querySuppliers } from "@/api/supplier";
+import productForms from "./Forms";
+import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
-    supplierForms,
+    productForms,
   },
   props: {
+    openType: {
+      //0:录入 1:查看 2:编辑 3:合同录入
+      type: Number,
+      default: 0,
+    },
     queryObject: {
       type: Object,
+    },
+    parentFun: {
+      type: Function,
+      default: null,
     },
   },
   data: () => ({
@@ -79,20 +103,63 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "地址", align: "center", value: "address", sortable: false },
-      { text: "联系人", align: "center", value: "linkman", sortable: false },
-      { text: "联系电话", align: "center", value: "phone", sortable: false },
-      { text: "微信号", align: "center", value: "wechatID", sortable: false },
-      { text: "邮箱", align: "center", value: "email", sortable: false },
+      { text: "品牌", align: "center", value: "brand", sortable: false },
+      {
+        text: "规格",
+        align: "center",
+        value: "specification",
+        sortable: false,
+      },
+      {
+        text: "供应商",
+        align: "center",
+        value: "supplier.name",
+        sortable: false,
+      },
+      { text: "库存数量", align: "center", value: "number", sortable: false },
+      { text: "单位", align: "center", value: "unit", sortable: false },
+      {
+        text: "采购/生产价格(元)",
+        align: "center",
+        value: "purchasedPrice",
+        sortable: false,
+      },
+      {
+        text: "标准价格(元)",
+        align: "center",
+        value: "standardPrice",
+        sortable: false,
+      },
+      {
+        text: "供货周期",
+        align: "center",
+        value: "deliveryCycle",
+        sortable: false,
+      },
+      {
+        text: "来源",
+        align: "center",
+        value: "sourceType.text",
+        sortable: false,
+      },
+      {
+        text: "子类别",
+        align: "center",
+        value: "subtype.text",
+        sortable: false,
+      },
+      { text: "备注", align: "center", value: "remarks", sortable: false },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
-      total: 0,
+      total: 1,
       page: 1,
       itemsPerPage: 10,
       openID: null,
       openType: null,
+      isTransfer:false,
+      viewDialog: false,
       editDialog: false,
       deleteDialog: false,
     },
@@ -104,7 +171,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      querySuppliers(
+      queryProducts(
         this.options.itemsPerPage,
         this.options.page,
         this.queryObject
@@ -117,6 +184,30 @@ export default {
         this.object = res.data;
       });
     },
+    transferItem(item){
+      this.options.isTransfer = !this.options.isTransfer
+      this.$emit("child-event",item)
+    },
+    changeTransferStatus(){
+      this.options.isTransfer = !this.options.isTransfer
+    },
+    openViewDialog(item, other) {
+      setTimeout(() => {
+        if (
+          this.options.editDialog == false &&
+          this.options.deleteDialog == false &&
+          this.options.isTransfer == false
+        ) {
+          this.options.openID = item.ID;
+          this.options.openType = 1;
+          this.options.viewDialog = true;
+        }
+      }, 66);
+    },
+    closeViewDialog() {
+      this.options.openID = null;
+      this.options.openType = null;
+    },
     openEditDialog(id) {
       this.options.openID = id;
       this.options.openType = 2;
@@ -128,8 +219,10 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.supplierForms.editObject();
-      this.closeEditDialog();
+      if (this.$refs.productForms.validateForm()) {
+        this.$refs.productForms.editObject();
+        this.closeEditDialog();
+      }
     },
     openDeleteDialog(id) {
       this.options.openID = id;
@@ -140,7 +233,7 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delSupplier(this.options.openID).then((res) => {
+      delProduct(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
         this.getObject();
         this.closeDeleteDialog();

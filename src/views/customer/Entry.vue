@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <contractForms ref="contractForms" :parentFun="updateSubmitBtnDisable" />
+    <customerForms ref="customerForms" :parentFun="updateSubmitBtnDisable" />
     <v-row style="margin-top: 10px" justify="center">
       <v-btn
         x-large
@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import contractForms from "@/components/contract/ContractForms";
+import customerForms from "@/components/customer/Forms";
 
 export default {
   components: {
-    contractForms,
+    customerForms,
   },
   data: () => ({
     submitBtnDisable: false,
@@ -27,13 +27,11 @@ export default {
   methods: {
     submit() {
       this.updateSubmitBtnDisable(true);
-      this.$refs.contractForms.entryObject();
+      this.$refs.customerForms.entryObject();
     },
     updateSubmitBtnDisable(status) {
       this.submitBtnDisable = status;
     },
   },
-
-  computed: {},
 };
 </script>

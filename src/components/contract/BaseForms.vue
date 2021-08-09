@@ -23,31 +23,37 @@
           </v-col>
         </v-row>
 
-        <v-radio-group v-model="object.isEntryCustomer" row>
-          <template v-slot:label>
-            <div>客户类型</div>
-          </template>
-          <v-radio label="已录入客户" :value="true"></v-radio>
-          <v-radio label="未录入客户" :value="false"></v-radio>
-        </v-radio-group>
-
-        <v-row v-if="openType > 0">
-          <v-col cols="4">
-            <v-select
-              v-model="object.companyID"
-              item-text="name"
-              item-value="ID"
-              :items="companyItems"
-              label="客户公司"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model="object.customer.name"
-              label="客户名称"
-            ></v-text-field>
+        <v-row>
+          <v-col>
+            <v-radio-group v-model="object.isEntryCustomer" row>
+              <template v-slot:label>
+                <div>客户类型</div>
+              </template>
+              <v-radio label="已录入客户" :value="true"></v-radio>
+              <v-radio label="未录入客户" :value="false"></v-radio>
+            </v-radio-group>
           </v-col>
         </v-row>
+
+        <div v-if="openType == 1">
+          <v-row>
+            <v-col cols="4">
+              <v-select
+                v-model="object.companyID"
+                item-text="name"
+                item-value="ID"
+                :items="companyItems"
+                label="客户公司"
+              ></v-select>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-model="object.customer.name"
+                label="客户名称"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </div>
 
         <div v-else>
           <v-row align="center" v-if="object.isEntryCustomer == true">
@@ -111,8 +117,8 @@
               item-text="text"
               item-value="ID"
               label="签订单位"
-            ></v-select
-          ></v-col>
+            ></v-select>
+          </v-col>
           <v-col cols="4">
             <v-menu
               ref="contractDateMenu"
@@ -137,8 +143,9 @@
                 min="2000-01-01"
                 @change="$refs.contractDateMenu.save(object.contractDate)"
                 :readonly="openType == 1"
-              ></v-date-picker> </v-menu
-          ></v-col>
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
           <v-col cols="4">
             <v-menu
               ref="estimatedDeliveryDateMenu"
@@ -167,8 +174,9 @@
                   )
                 "
                 :readonly="openType == 1"
-              ></v-date-picker></v-menu
-          ></v-col>
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
         </v-row>
 
         <v-radio-group v-model.number="object.invoiceType" row>
@@ -184,7 +192,7 @@
         <v-textarea
           v-if="object.invoiceType != 1"
           label="开票内容"
-          v-model="object.invoiceContent"
+          v-model.trim="object.invoiceContent"
         ></v-textarea>
 
         <v-radio-group v-model.number="object.isSpecial" row>
@@ -195,14 +203,14 @@
           <v-radio label="否" :value="false"></v-radio>
         </v-radio-group>
 
-        <v-textarea label="备注" v-model="object.remarks"></v-textarea>
+        <v-textarea label="备注" v-model.trim="object.remarks"></v-textarea>
       </v-card-subtitle>
     </v-card>
   </v-form>
 </template>
 
 <script>
-import productDataTable from "../product/ProductDataTable";
+import productDataTable from "../product/DataTable";
 import { queryAreas } from "@/api/oadrp";
 import { queryDictionaries } from "@/api/dictionary";
 import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";

@@ -17,14 +17,14 @@
             <v-col cols="4">
               <v-text-field
                 label="合同编号:"
-                v-model="queryObject.no"
+                v-model.trim="queryObject.no"
                 clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="客户单位："
-                v-model="queryObject.companyName"
+                v-model.trim="queryObject.companyName"
                 clearable
               ></v-text-field>
             </v-col>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import contractDataTable from "@/components/contract/ContractDataTable";
+import contractDataTable from "@/components/contract/DataTable";
 import { queryAreas } from "@/api/oadrp";
 export default {
   components: {

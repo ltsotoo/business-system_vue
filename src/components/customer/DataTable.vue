@@ -13,21 +13,12 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
-      @click:row="openViewDialog"
     >
-      <template v-slot:[`item.actions`]="{ item }" v-if="openType == 2">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
-
-    <v-dialog
-      v-model="options.viewDialog"
-      v-if="options.viewDialog"
-      max-width="800px"
-    >
-      <productForms :openID="options.openID" :openType="options.openType" />
-    </v-dialog>
 
     <v-dialog
       v-model="options.editDialog"
@@ -35,9 +26,10 @@
       max-width="800px"
       persistent
     >
-      <productForms
+      <customerForms
         :openID="options.openID"
-        ref="productForms"
+        :openType="options.openType"
+        ref="customerForms"
         :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
@@ -53,7 +45,7 @@
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该位客户吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -67,67 +59,61 @@
 </template>
 
 <script>
-import productForms from "../product/Forms";
-import { delTask, queryTasksByContractID } from "@/api/task";
+import customerForms from "./Forms";
+import { delCustomer, queryCustomers } from "@/api/customer";
 
 export default {
   components: {
-    productForms,
+    customerForms,
   },
   props: {
-    openID: {
-      type: Number,
-      default: 0,
-    },
-    openType: {
-      type: Number,
-      default: 0,
-    },
     queryObject: {
       type: Object,
     },
-    parentObject: {},
   },
   data: () => ({
     headers: [
       {
-        text: "产品",
-        align: "start",
+        text: "姓名",
+        align: "center",
         sortable: false,
-        value: "product.name",
+        value: "name",
       },
-      { text: "数量", value: "number", sortable: false },
-      { text: "库存数量", value: "product.number", sortable: false },
-      { text: "单位", value: "unit", sortable: false },
-      { text: "状态", value: "status", sortable: false },
-      { text: "技术负责人", value: "technicianMan.name", sortable: false },
-      { text: "采购负责人", value: "purchaseMan.name", sortable: false },
-      { text: "库存负责人", value: "inventoryMan.name", sortable: false },
-      { text: "发货人员", value: "shipmentMan.name", sortable: false },
-      { text: "操作", value: "actions", sortable: false },
+      { text: "公司", align: "center", value: "company.name", sortable: false },
+      {
+        text: "课题组",
+        align: "center",
+        value: "researchGroup",
+        sortable: false,
+      },
+      { text: "联系电话", align: "center", value: "phone", sortable: false },
+      { text: "微信号", align: "center", value: "wechatID", sortable: false },
+      { text: "电子邮箱", align: "center", value: "email", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       loading: false,
-      total: 1,
+      total: 0,
       page: 1,
       itemsPerPage: 10,
-      viewDialog: false,
+      openID: null,
+      openType: null,
       editDialog: false,
       deleteDialog: false,
     },
     object: [],
   }),
   created() {
-    if (this.openType == 1) {
-      this.object = this.parentObject;
-    } else {
-      this.getObject();
-    }
+    this.getObject();
   },
   methods: {
     getObject() {
       this.options.loading = true;
-      queryTasksByContractID(this.openID).then((res) => {
+      queryCustomers(
+        this.options.itemsPerPage,
+        this.options.page,
+        this.queryObject
+      ).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {
           this.options.page = 1;
@@ -136,30 +122,21 @@ export default {
         this.object = res.data;
       });
     },
-    openViewDialog(item, other) {
-      setTimeout(() => {
-        if (
-          this.options.editDialog == false &&
-          this.options.deleteDialog == false
-        ) {
-          this.options.openID = item.productID;
-          this.options.openType = 1;
-          this.options.viewDialog = true;
-        }
-      }, 66);
-    },
     openEditDialog(id) {
       this.options.openID = id;
+      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openID = null;
+      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.productForms.editObject();
-      this.options.openID = null;
-      this.options.editDialog = false;
+      if (this.$refs.customerForms.validateForm()) {
+        this.$refs.customerForms.editObject();
+        this.closeEditDialog();
+      }
     },
     openDeleteDialog(id) {
       this.options.openID = id;
@@ -170,11 +147,10 @@ export default {
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delTask(this.options.openID).then((res) => {
+      delCustomer(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
-        this.options.openID = null;
         this.getObject();
-        this.options.deleteDialog = false;
+        this.closeDeleteDialog();
       });
     },
   },

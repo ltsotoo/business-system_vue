@@ -5,7 +5,7 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.name"
+              v-model.trim="object.name"
               label="供应商名称"
               :disabled="openType == 2"
               :rules="rules.name"
@@ -13,7 +13,7 @@
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="object.address"
+              v-model.trim="object.address"
               label="地址"
               :rules="rules.address"
             ></v-text-field>
@@ -23,14 +23,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.linkman"
+              v-model.trim="object.linkman"
               label="联系人姓名"
               :rules="rules.linkman"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="object.phone"
+              v-model.trim="object.phone"
               label="联系电话"
               :rules="rules.phone"
             ></v-text-field>
@@ -40,13 +40,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.wechatID"
+              v-model.trim="object.wechatID"
               label="微信号"
+              :rules="rules.wechatID"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="object.email"
+              v-model.trim="object.email"
               label="电子邮箱"
               :rules="rules.email"
             ></v-text-field>
@@ -98,20 +99,18 @@ export default {
       ],
       phone: [
         (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "电话的长度必须小于20个字符",
+        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
       ],
-      pattern: `/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/`,
+      wechatID: [
+        (v) =>
+          v.length == 0 || v.length <= 10 || "微信号的长度必须小于20个字符",
+      ],
       email: [
-        (v) => (v && v.length <= 20 && v.length > 0 && rules.pattern.test(v)) || "电话的长度必须小于20个字符",
+        (v) =>
+          v.length == 0 ||
+          /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
+          "邮箱格式错误",
       ],
-      // email: (value) => {
-      //   if (value == "") {
-      //     return;
-      //   }
-      //   const pattern =
-      //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      //   return pattern.test(value) || "邮箱格式错误";
-      // },
     },
   }),
   created() {
@@ -126,7 +125,7 @@ export default {
       });
     },
     entryObject() {
-      if (this.$refs.form.validate()) {
+      if (this.validateForm()) {
         entrySupplier(this.object).then((res) => {
           this.$message.success("录入成功了！");
         });
@@ -142,6 +141,9 @@ export default {
           this.parentFun();
         }
       });
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
   computed: {},

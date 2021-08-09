@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <productForms ref="productForms" :parentFun="updateSubmitBtnDisable" />
+    <supplierForms ref="supplierForms" :parentFun="updateSubmitBtnDisable" />
     <v-row style="margin-top: 10px" justify="center">
       <v-btn
         x-large
@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import productForms from "@/components/product/ProductForms";
+import supplierForms from "@/components/supplier/Forms";
 
 export default {
   components: {
-    productForms,
+    supplierForms,
   },
   data: () => ({
     submitBtnDisable: false,
@@ -27,7 +27,7 @@ export default {
   methods: {
     submit() {
       this.updateSubmitBtnDisable(true);
-      this.$refs.productForms.entryObject();
+      this.$refs.supplierForms.entryObject();
     },
     updateSubmitBtnDisable(status) {
       this.submitBtnDisable = status;

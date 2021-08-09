@@ -27,14 +27,14 @@
             <v-col cols="3">
               <v-text-field
                 label="产品名称"
-                v-model="queryObject.name"
+                v-model.trim="queryObject.name"
                 clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="规格"
-                v-model="queryObject.specification"
+                v-model.trim="queryObject.specification"
                 clearable
               ></v-text-field>
             </v-col>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import productDataTable from "@/components/product/ProductDataTable";
+import productDataTable from "@/components/product/DataTable";
 import { queryDictionaries } from "@/api/dictionary";
 
 export default {

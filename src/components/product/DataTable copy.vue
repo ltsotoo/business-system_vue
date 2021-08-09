@@ -16,7 +16,7 @@
       @click:row="openViewDialog"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <div v-if="openType == 2">
+        <div v-if="openType == 3">
           <v-icon @click="openAddDialog(item)"> mdi-plus-thick </v-icon>
         </div>
         <div v-else>
@@ -32,7 +32,7 @@
       max-width="400px"
       persistent
     >
-      <productAddForCart
+      <addToCart
         :closeFun="closeAddDialog"
         :product="options.addItem"
         :parentFun="closeAddDialogForAdd"
@@ -87,18 +87,18 @@
 </template>
 
 <script>
-import productForms from "./ProductForms";
-import productAddForCart from "./ProductAddForCart";
+import productForms from "./Forms";
+import addToCart from "./AddToCart";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
     productForms,
-    productAddForCart,
+    addToCart,
   },
   props: {
     openType: {
-      //0:产品录入 1:合同录入
+      //0:录入 1:查看 2:编辑 3:合同录入
       type: Number,
       default: 0,
     },
@@ -242,9 +242,10 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.productForms.editObject();
-      this.options.openID = null;
-      this.options.editDialog = false;
+      if (this.$refs.productForms.validateForm()) {
+        this.$refs.productForms.editObject();
+        this.closeEditDialog();
+      }
     },
     openDeleteDialog(id) {
       this.options.openID = id;
@@ -257,9 +258,8 @@ export default {
     deleteItem() {
       delProduct(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
-        this.options.openID = null;
         this.getObject();
-        this.options.deleteDialog = false;
+        this.closeDeleteDialog();
       });
     },
   },

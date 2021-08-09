@@ -34,7 +34,10 @@
       max-width="1440px"
       @click:outside="closeViewDialog"
     >
-      <contractForms :openID="options.openID" :openType="options.openType" />
+      <contractViewForms
+        :openID="options.openID"
+        :openType="options.openType"
+      />
     </v-dialog>
 
     <v-dialog
@@ -44,7 +47,7 @@
       max-width="1440px"
       persistent
     >
-      <contractForms
+      <contractEditForms
         :openID="options.openID"
         :openType="options.openType"
         ref="contractForms"
@@ -77,12 +80,14 @@
 </template>
 
 <script>
-import contractForms from "./ContractForms";
+import contractViewForms from "./ViewForms";
+import contractEditForms from "./EditForms";
 import { delContract, queryContracts } from "@/api/contract";
 
 export default {
   components: {
-    contractForms,
+    contractViewForms,
+    contractEditForms
   },
   props: {
     queryObject: {
@@ -120,24 +125,6 @@ export default {
         text: "实际交货日期",
         align: "center",
         value: "endDeliveryDate",
-        sortable: false,
-      },
-      {
-        text: "开票类型",
-        align: "center",
-        value: "invoiceType",
-        sortable: false,
-      },
-      {
-        text: "开票内容",
-        align: "center",
-        value: "invoiceContent",
-        sortable: false,
-      },
-      {
-        text: "特殊合同",
-        align: "center",
-        value: "isSpecial",
         sortable: false,
       },
       {

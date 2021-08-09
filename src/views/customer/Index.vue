@@ -27,14 +27,14 @@
             <v-col cols="3">
               <v-text-field
                 label="课题组"
-                v-model="queryObject.researchGroup"
+                v-model.trim="queryObject.researchGroup"
                 clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="姓名"
-                v-model="queryObject.name"
+                v-model.trim="queryObject.name"
                 clearable
               ></v-text-field>
             </v-col>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import customerDataTable from "@/components/customer/CustomerDataTable";
+import customerDataTable from "@/components/customer/DataTable";
 import { queryAreas } from "@/api/oadrp";
 import { queryCompanysByAreaID } from "@/api/customer";
 

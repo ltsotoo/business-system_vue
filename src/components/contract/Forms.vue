@@ -4,7 +4,7 @@
       :openID="openID"
       :openType="openType"
       ref="contractBaseForms"
-      v-if="openType == 0 || object.ID"
+      v-if="openType == 0 || object.ID > 0"
       :parentObject="object"
     />
     <div v-if="openType == 0">
@@ -79,9 +79,9 @@
 </template>
 
 <script>
-import contractBaseForms from "./ContractBaseForms";
-import contractCartDataTable from "./ContractCartDataTable";
-import productDataTable from "../product/ProductDataTable";
+import contractBaseForms from "./BaseForms";
+import contractCartDataTable from "./CartDataTable";
+import productDataTable from "../product/DataTable";
 import taskDataTable from "../task/TaskDataTable";
 import { queryDictionaries } from "@/api/dictionary";
 import { queryContract, entryContract } from "@/api/contract";

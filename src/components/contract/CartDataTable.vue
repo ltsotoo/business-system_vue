@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import productForms from "../product/ProductForms";
+import productForms from "../product/Forms";
 
 export default {
   components: {

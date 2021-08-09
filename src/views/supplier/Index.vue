@@ -7,21 +7,21 @@
             <v-col cols="3">
               <v-text-field
                 label="名称"
-                v-model="queryObject.name"
+                v-model.trim="queryObject.name"
                 clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="联系人"
-                v-model="queryObject.linkman"
+                v-model.trim="queryObject.linkman"
                 clearable
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
                 label="联系电话"
-                v-model="queryObject.phone"
+                v-model.trim="queryObject.phone"
                 clearable
               ></v-text-field>
             </v-col>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import supplierDataTable from "@/components/supplier/SupplierDataTable";
+import supplierDataTable from "@/components/supplier/DataTable";
 export default {
   components: {
     supplierDataTable,

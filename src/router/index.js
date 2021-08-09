@@ -34,7 +34,7 @@ const routes = [
       },
       {
         path: 'contract/entry',
-        component: () => import('@/views/contract/EntryContract.vue'),
+        component: () => import('@/views/contract/Entry.vue'),
         meta: { login_require: true, title: "中研环科-合同管理-录入" },
       },
       {
@@ -44,7 +44,7 @@ const routes = [
       },
       {
         path: 'customer/entry',
-        component: () => import('@/views/customer/EntryCustomer.vue'),
+        component: () => import('@/views/customer/Entry.vue'),
         meta: { login_require: true, title: "中研环科-客户管理-录入" },
       },
       {
@@ -54,7 +54,7 @@ const routes = [
       },
       {
         path: 'product/entry',
-        component: () => import('@/views/product/EntryProduct.vue'),
+        component: () => import('@/views/product/Entry.vue'),
         meta: { login_require: true, title: "中研环科-产品管理-录入" },
       },
       {
@@ -64,7 +64,7 @@ const routes = [
       },
       {
         path: 'supplier/entry',
-        component: () => import('@/views/supplier/EntrySupplier.vue'),
+        component: () => import('@/views/supplier/Entry.vue'),
         meta: { login_require: true, title: "中研环科-供应商管理-录入" },
       },
     ]
