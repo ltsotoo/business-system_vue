@@ -26,7 +26,7 @@
               item-text="text"
               item-value="ID"
               label="来源"
-              :rules="rules.sourceType"
+              :rules="openType == 1 ? null : rules.sourceType"
             ></v-select>
           </v-col>
           <v-col cols="4">
@@ -36,7 +36,7 @@
               item-text="text"
               item-value="ID"
               label="子类别"
-              :rules="rules.subtype"
+              :rules="openType == 1 ? null : rules.subtype"
             ></v-select>
           </v-col>
         </v-row>
@@ -46,7 +46,7 @@
               v-model.trim="object.name"
               label="名称"
               :disabled="openType == 2"
-              :rules="rules.name"
+              :rules="openType == 1 ? null : rules.name"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
@@ -54,7 +54,7 @@
               v-model.trim="object.brand"
               label="品牌"
               :disabled="openType == 2"
-              :rules="rules.brand"
+              :rules="openType == 1 ? null : rules.brand"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
@@ -62,7 +62,7 @@
               v-model.trim="object.specification"
               label="规格"
               :disabled="openType == 2"
-              :rules="rules.specification"
+              :rules="openType == 1 ? null : rules.specification"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -81,14 +81,14 @@
               item-text="name"
               item-value="ID"
               label="供应商"
-              :rules="rules.supplier"
+              :rules="openType == 1 ? null : rules.supplier"
             ></v-select>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.number"
               label="库存数量"
-              :rules="rules.number"
+              :rules="openType == 1 ? null : rules.number"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
@@ -96,7 +96,7 @@
               v-model="object.unit"
               label="单位"
               :disabled="openType == 2"
-              :rules="rules.unit"
+              :rules="openType == 1 ? null : rules.unit"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -105,21 +105,21 @@
             <v-text-field
               v-model.number="object.purchasedPrice"
               label="采购价格(元)"
-              :rules="rules.purchasedPrice"
+              :rules="openType == 1 ? null : rules.purchasedPrice"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.standardPrice"
               label="销售价格(元)"
-              :rules="rules.standardPrice"
+              :rules="openType == 1 ? null : rules.standardPrice"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model="object.deliveryCycle"
               label="供货周期"
-              :rules="rules.deliveryCycle"
+              :rules="openType == 1 ? null : rules.deliveryCycle"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -128,7 +128,7 @@
             <v-textarea
               label="备注"
               v-model="object.remarks"
-              :rules="rules.remarks"
+              :rules="openType == 1 ? null : rules.remarks"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -140,7 +140,7 @@
 <script>
 import { entryProduct, editProduct, queryProduct } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
 
 export default {
   props: {
@@ -168,10 +168,10 @@ export default {
       brand: "",
       specification: "",
       supplierID: null,
-      number: null,
+      number: 0,
       unit: "",
-      purchasedPrice: null,
-      standardPrice: null,
+      purchasedPrice: 0,
+      standardPrice: 0,
       deliveryCycle: "",
       remarks: "",
 
@@ -190,8 +190,9 @@ export default {
         (v) => v.length == 0 || v.length <= 10 || "品牌的长度必须小于10个字符",
       ],
       specification: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "规格的长度必须小于20个字符",
+        // (v) => !!v || "必填项！",
+        // (v) => (v && v.length <= 20) || "规格的长度必须小于20个字符",
+        (v) => v.length == 0 || v.length <= 20 || "规格的长度必须小于20个字符",
       ],
       number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为数字"],
       unit: [
@@ -221,12 +222,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      queryDictionaries("product_source_type").then((res) => {
+      queryProductSourceType().then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(sourceType) {
-      queryDictionaries("product_subtype", sourceType).then((res) => {
+    getSubtypeItems(parentID) {
+      queryProductSubtype(parentID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -244,10 +245,15 @@ export default {
       if (this.validateForm()) {
         entryProduct(this.object).then((res) => {
           this.$message.success("录入成功了!");
+          if (this.parentFun) {
+            this.parentFun(false);
+          }
         });
-      }
-      if (this.parentFun) {
-        this.parentFun(false);
+      } else {
+        this.$message.error("信息填写异常，请检查后再提交！");
+        if (this.parentFun) {
+          this.parentFun(false);
+        }
       }
     },
     editObject() {

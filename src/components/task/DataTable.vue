@@ -16,7 +16,7 @@
       @click:row="openViewDialog"
     >
       <template v-slot:[`item.actions`]="{ item }" v-if="openType == 2">
-        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openEditDialog(item.productID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>

@@ -145,10 +145,15 @@ export default {
       if (this.validateForm()) {
         entryCustomer(this.object).then((res) => {
           this.$message.success("录入成功了!");
+          if (this.parentFun) {
+            this.parentFun(false);
+          }
         });
-      }
-      if (this.parentFun) {
-        this.parentFun(false);
+      } else {
+        this.$message.error("信息填写异常，请检查后再提交！")
+        if (this.parentFun) {
+          this.parentFun(false);
+        }
       }
     },
     editObject() {

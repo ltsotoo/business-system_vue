@@ -13,6 +13,7 @@
                     item-value="ID"
                     :items="areaItems"
                     label="区域"
+                    :rules="rules.areaID"
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
@@ -22,6 +23,7 @@
                     item-value="ID"
                     :items="employeeItems"
                     label="业务员"
+                    :rules="rules.employeeID"
                   ></v-select>
                 </v-col>
               </v-row>
@@ -46,6 +48,7 @@
                     item-value="ID"
                     :items="companyItems"
                     label="客户公司"
+                    :rules="rules.companyID"
                   ></v-select>
                 </v-col>
 
@@ -56,11 +59,12 @@
                     item-value="ID"
                     :items="customerItems"
                     label="客户名称"
+                    :rules="rules.customerID"
                   ></v-select>
                 </v-col>
               </v-row>
 
-              <v-row v-else>
+              <v-row v-if="object.isEntryCustomer == false">
                 <v-col cols="3">
                   <v-select
                     v-model="object.customer.companyID"
@@ -68,24 +72,28 @@
                     item-value="ID"
                     :items="companyItems"
                     label="客户公司"
+                    :rules="rules.companyID"
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户名称"
                     v-model="object.customer.name"
+                    :rules="rules.customerName"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户课题组"
                     v-model="object.customer.researchGroup"
+                    :rules="rules.customerResearchGroup"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户电话"
                     v-model="object.customer.phone"
+                    :rules="rules.customerPhone"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -98,6 +106,7 @@
                     item-value="ID"
                     :items="contractUnitItems"
                     label="签订单位"
+                    :rules="rules.contractUnitID"
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
@@ -116,6 +125,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :rules="rules.contractDate"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -142,6 +152,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :rules="rules.estimatedDeliveryDate"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -175,6 +186,7 @@
                     v-if="object.invoiceType != 1"
                     label="开票内容"
                     v-model.trim="object.invoiceContent"
+                    :rules="rules.invoiceContent"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -275,6 +287,16 @@
         </div>
       </v-card-subtitle>
     </v-card>
+    <v-row style="margin-top: 10px" justify="center">
+      <v-btn
+        x-large
+        color="success"
+        @click="entryObject"
+        :disabled="submitBtnDisable"
+      >
+        提交
+      </v-btn>
+    </v-row>
 
     <v-dialog v-model="cart.addDialog" max-width="400px" persistent>
       <v-card>
@@ -329,7 +351,7 @@
 <script>
 import productDataTable from "../product/DataTable";
 import { queryAreas } from "@/api/oadrp";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryContractUnits,queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
 import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 import { entryContract } from "@/api/contract";
@@ -371,6 +393,29 @@ export default {
       },
       contractUnit: {},
     },
+    rules: {
+      areaID: [(v) => !!v || "必填项！"],
+      employeeID: [(v) => !!v || "必填项！"],
+      companyID: [(v) => !!v || "必填项！"],
+      customerID: [(v) => !!v || "必填项！"],
+      contractUnitID: [(v) => !!v || "必填项！"],
+      contractDate: [(v) => !!v || "必填项！"],
+      estimatedDeliveryDate: [(v) => !!v || "必填项！"],
+      invoiceContent: [(v) => !!v || "必填项！"],
+
+      customerName: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
+      ],
+      customerResearchGroup: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 20) || "课题组的长度必须小于20个字符",
+      ],
+      customerPhone: [
+        (v) => !!v || "必填项！",
+        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
+      ],
+    },
     queryObject: {
       sourceTypeID: null,
       subtypeID: null,
@@ -398,6 +443,7 @@ export default {
       object: [],
       product: {},
     },
+    submitBtnDisable: false,
   }),
   created() {
     this.getAreaItems();
@@ -427,17 +473,17 @@ export default {
       });
     },
     getContractUnitItems() {
-      queryDictionaries("system_contract_unit").then((res) => {
+      queryContractUnits().then((res) => {
         this.contractUnitItems = res.data;
       });
     },
     getProductSoureTypeItems() {
-      queryDictionaries("product_source_type").then((res) => {
+      queryProductSourceType().then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(sourceType) {
-      queryDictionaries("product_subtype", sourceType).then((res) => {
+    getSubtypeItems(parentID) {
+      queryProductSubtype(parentID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -495,14 +541,24 @@ export default {
       );
       this.closeCartDeleteDialog();
     },
+    validateForm() {
+      return this.$refs.form.validate();
+    },
     entryObject() {
-      this.object.tasks = this.cart.object;
-      entryContract(this.object).then((res) => {
-        this.$message.success("录入成功了!");
-        if (this.parentFun) {
-          this.parentFun(false);
-        }
-      });
+      this.updateSubmitBtnDisable(true);
+      if (this.validateForm()) {
+        this.object.tasks = this.cart.object;
+        entryContract(this.object).then((res) => {
+          this.$message.success("录入成功了!");
+          this.updateSubmitBtnDisable(false);
+        });
+      } else {
+        this.$message.error("信息填写异常，请检查后再提交！");
+        this.updateSubmitBtnDisable(false);
+      }
+    },
+    updateSubmitBtnDisable(status) {
+      this.submitBtnDisable = status;
     },
   },
   watch: {

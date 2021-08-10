@@ -23,8 +23,8 @@
         {{ item.isSpecial == "true" ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon small @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
 
@@ -52,16 +52,8 @@
         :openType="options.openType"
         ref="contractForms"
         :parentFun="getObject"
+        :closeDialog="closeEditDialog"
       />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
@@ -87,7 +79,7 @@ import { delContract, queryContracts } from "@/api/contract";
 export default {
   components: {
     contractViewForms,
-    contractEditForms
+    contractEditForms,
   },
   props: {
     queryObject: {
@@ -134,7 +126,6 @@ export default {
         sortable: false,
       },
       { text: "状态", align: "center", value: "status", sortable: false },
-      { text: "备注", align: "center", value: "remarks", sortable: false },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
@@ -195,11 +186,6 @@ export default {
       this.options.openType = null;
       this.options.editDialog = false;
     },
-    editItem() {
-      this.$refs.customerForms.editObject();
-      this.options.openID = null;
-      this.options.editDialog = false;
-    },
     openDeleteDialog(id) {
       this.options.openID = id;
       this.options.deleteDialog = true;
@@ -211,9 +197,8 @@ export default {
     deleteItem() {
       delContract(this.options.openID).then((res) => {
         this.$message.success("删除成功了！");
-        this.options.openID = null;
         this.getObject();
-        this.options.deleteDialog = false;
+        this.closeDeleteDialog();
       });
     },
     compareColor(date) {

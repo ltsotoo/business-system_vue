@@ -158,7 +158,7 @@ export default {
       itemsPerPage: 10,
       openID: null,
       openType: null,
-      isTransfer:false,
+      isTransfer: false,
       viewDialog: false,
       editDialog: false,
       deleteDialog: false,
@@ -184,12 +184,12 @@ export default {
         this.object = res.data;
       });
     },
-    transferItem(item){
-      this.options.isTransfer = !this.options.isTransfer
-      this.$emit("child-event",item)
+    transferItem(item) {
+      this.options.isTransfer = !this.options.isTransfer;
+      this.$emit("child-event", item);
     },
-    changeTransferStatus(){
-      this.options.isTransfer = !this.options.isTransfer
+    changeTransferStatus() {
+      this.options.isTransfer = !this.options.isTransfer;
     },
     openViewDialog(item, other) {
       setTimeout(() => {

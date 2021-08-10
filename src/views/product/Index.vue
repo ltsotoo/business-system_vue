@@ -67,7 +67,7 @@
 
 <script>
 import productDataTable from "@/components/product/DataTable";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
 
 export default {
   components: {
@@ -89,12 +89,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      queryDictionaries("product_source_type").then((res) => {
+      queryProductSourceType().then((res) => {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(sourceType) {
-      queryDictionaries("product_subtype", sourceType).then((res) => {
+    getSubtypeItems(parentID) {
+      queryProductSubtype(parentID).then((res) => {
         this.subtypeItems = res.data;
       });
     },

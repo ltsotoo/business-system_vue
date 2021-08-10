@@ -1,9 +1,10 @@
-  <template>
+  
+<template>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app color="#7bbfea">
       <v-list>
         <v-list-item-group>
-          <v-list-group no-action>
+          <v-list-group>
             <template v-slot:activator>
               <v-list-item-content>
                 <v-list-item-title
@@ -36,33 +37,10 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+              <v-list-item-title v-text="item.text"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-      </v-list>
-
-      <v-list>
-        <v-list-group
-          v-for="item in itemsTest"
-          :key="item.title"
-          v-model="item.active"
-          :prepend-icon="item.action"
-          no-action
-          color="#6b473c"
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item v-for="child in item.items" :key="child.title" :to="child.url">
-            <v-list-item-content>
-              <v-list-item-title v-text="child.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -86,38 +64,27 @@ export default {
     drawer: null,
     selectedItem: 0,
     userItem: {
-      settingIcon: "mdi-account-edit",
+      settingIcon: "mdi-cog-outline",
       settingUrl: "/my",
       exitIcon: "mdi-run",
     },
     items: [
-      { title: "首页", icon: "mdi-home", url: "/index" },
-      { title: "合同管理", icon: "mdi-folder", url: "/contract" },
-      { title: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
-      { title: "产品管理", icon: "mdi-cube", url: "/product" },
-      { title: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
-    ],
-
-    itemsTest: [
-      {
-        action: "mdi-cog-outline",
-        items: [
-          { title: "合同单位设置", url: "/system/product" },
-          { title: "产品类型设置", url: "/index" },
-        ],
-        title: "系统设置",
-      },
+      { text: "首页", icon: "mdi-home", url: "/index" },
+      { text: "合同管理", icon: "mdi-folder", url: "/contract" },
+      { text: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
+      { text: "产品管理", icon: "mdi-cube", url: "/product" },
+      { text: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
     ],
   }),
   created() {
     this.object.name = localStorage.getItem("name");
     this.object.email = localStorage.getItem("name");
   },
-  methods: {
-    exit() {
-      localStorage.removeItem("name");
+  methods:{
+    exit(){
+      localStorage.removeItem("name")
       this.$router.replace("/login");
-    },
-  },
+    }
+  }
 };
 </script>

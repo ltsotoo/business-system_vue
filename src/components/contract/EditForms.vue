@@ -13,6 +13,7 @@
                     item-value="ID"
                     :items="areaItems"
                     label="区域"
+                    :rules="rules.areaID"
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
@@ -22,6 +23,7 @@
                     item-value="ID"
                     :items="employeeItems"
                     label="业务员"
+                    :rules="rules.employeeID"
                   ></v-select>
                 </v-col>
               </v-row>
@@ -46,6 +48,7 @@
                     item-value="ID"
                     :items="companyItems"
                     label="客户公司"
+                    :rules="rules.companyID"
                   ></v-select>
                 </v-col>
 
@@ -56,6 +59,7 @@
                     item-value="ID"
                     :items="customerItems"
                     label="客户名称"
+                    :rules="rules.customerID"
                   ></v-select>
                 </v-col>
               </v-row>
@@ -68,24 +72,28 @@
                     item-value="ID"
                     :items="companyItems"
                     label="客户公司"
+                    :rules="rules.companyID"
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户名称"
                     v-model="object.customer.name"
+                    :rules="rules.customerName"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户课题组"
                     v-model="object.customer.researchGroup"
+                    :rules="rules.customerResearchGroup"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
                     label="客户电话"
                     v-model="object.customer.phone"
+                    :rules="rules.customerPhone"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -98,6 +106,7 @@
                     item-value="ID"
                     :items="contractUnitItems"
                     label="签订单位"
+                    :rules="rules.contractUnitID"
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
@@ -116,6 +125,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :rules="rules.contractDate"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -142,6 +152,7 @@
                         readonly
                         v-bind="attrs"
                         v-on="on"
+                        :rules="rules.estimatedDeliveryDate"
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -175,6 +186,7 @@
                     v-if="object.invoiceType != 1"
                     label="开票内容"
                     v-model.trim="object.invoiceContent"
+                    :rules="rules.invoiceContent"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -204,18 +216,27 @@
     <taskDataTable
       style="margin-top: 1px"
       ref="taskDataTable"
-      :openType="1"
+      :openType="2"
       :openID="openID"
       :parentObject="object.tasks"
       v-if="object.tasks"
     />
+    <v-card style="margin-top: 1px">
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="error" rounded @click="editObject">确定</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" rounded @click="closeDialog">取消</v-btn>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
 <script>
-import taskDataTable from "../task/TaskDataTable";
+import taskDataTable from "../task/DataTable";
 import { queryAreas } from "@/api/oadrp";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryContractUnits } from "@/api/dictionary";
 import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 import { queryContract, editContract } from "@/api/contract";
@@ -228,6 +249,10 @@ export default {
       type: Number,
     },
     parentFun: {
+      type: Function,
+      default: null,
+    },
+    closeDialog: {
       type: Function,
       default: null,
     },
@@ -264,6 +289,29 @@ export default {
       },
       contractUnit: {},
     },
+    rules: {
+      areaID: [(v) => !!v || "必填项！"],
+      employeeID: [(v) => !!v || "必填项！"],
+      companyID: [(v) => !!v || "必填项！"],
+      customerID: [(v) => !!v || "必填项！"],
+      contractUnitID: [(v) => !!v || "必填项！"],
+      contractDate: [(v) => !!v || "必填项！"],
+      estimatedDeliveryDate: [(v) => !!v || "必填项！"],
+      invoiceContent: [(v) => !!v || "必填项！"],
+
+      customerName: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
+      ],
+      customerResearchGroup: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 20) || "课题组的长度必须小于20个字符",
+      ],
+      customerPhone: [
+        (v) => !!v || "必填项！",
+        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
+      ],
+    },
   }),
   created() {
     this.init();
@@ -287,9 +335,11 @@ export default {
         }).then((res) => {
           _this.customerItems = res.data;
         });
-        queryDictionaries("system_contract_unit").then((res) => {
-          this.contractUnitItems = res.data;
-        });
+        queryContractUnits().then(
+          (res) => {
+            this.contractUnitItems = res.data;
+          }
+        );
       });
     },
     getAreaItems() {
@@ -313,7 +363,7 @@ export default {
       });
     },
     getContractUnitItems() {
-      queryDictionaries("system_contract_unit").then((res) => {
+      queryContractUnits().then((res) => {
         this.contractUnitItems = res.data;
       });
     },
@@ -321,6 +371,19 @@ export default {
       queryContract(this.openID).then((res) => {
         this.object = res.data;
       });
+    },
+    editObject() {
+      if (this.validateForm()) {
+        editContract(this.object).then((res) => {
+          this.$message.success("编辑成功了!");
+          this.closeDialog();
+        });
+      } else {
+        this.$message.error("信息填写异常，请检查后再提交！");
+      }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

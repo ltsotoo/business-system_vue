@@ -21,7 +21,7 @@
               </v-col>
               <v-col cols="3">
                 <v-text-field
-                  v-model="object.employee.name"
+                  v-model="object.area.office.name"
                   label="办事处"
                   readonly
                 ></v-text-field>
@@ -38,7 +38,7 @@
             <v-row>
               <v-col cols="3">
                 <v-text-field
-                  v-model="object.customer.name"
+                  v-model="object.customer.company.name"
                   label="客户公司"
                   readonly
                 ></v-text-field>
@@ -86,14 +86,14 @@
             <v-row>
               <v-col cols="3">
                 <v-text-field
-                  v-model="object.invoiceType"
+                  v-model="text.invoiceType"
                   label="开票类型"
                   readonly
                 ></v-text-field>
               </v-col>
               <v-col cols="3">
                 <v-text-field
-                  v-model="object.invoiceType"
+                  v-model="text.isSpecial"
                   label="特殊合同"
                   readonly
                 ></v-text-field>
@@ -121,7 +121,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-if="object.remarks.length > 0">
               <v-col cols="12">
                 <v-textarea
                   v-model="object.remarks"
@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import taskDataTable from "../task/TaskDataTable";
+import taskDataTable from "../task/DataTable";
 import { queryContract } from "@/api/contract";
 export default {
   components: {
@@ -160,9 +160,18 @@ export default {
   data: () => ({
     object: {
       contractUnit: {},
-      area: {},
+      area: {
+        office: {},
+      },
       employee: {},
-      customer: {},
+      customer: {
+        company: {},
+      },
+    },
+    text: {
+      invoiceType: "",
+      isSpecial: "否",
+      status: "",
     },
   }),
   created() {
@@ -172,7 +181,27 @@ export default {
     getObject() {
       queryContract(this.openID).then((res) => {
         this.object = res.data;
+        this.changeText(res.data);
       });
+    },
+    changeText(data) {
+      switch (data.invoiceType) {
+        case 1:
+          this.text.invoiceType = "不开发票";
+          break;
+        case 2:
+          this.text.invoiceType = "普票";
+          break;
+        case 3:
+          this.text.invoiceType = "专票";
+          break;
+        case 4:
+          this.text.invoiceType = "形式发票";
+          break;
+      }
+      if (data.isSpecial == true) {
+        this.text.isSpecial = "是";
+      }
     },
   },
 };
