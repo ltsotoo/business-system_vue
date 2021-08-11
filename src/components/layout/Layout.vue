@@ -102,8 +102,8 @@ export default {
       {
         action: "mdi-cog-outline",
         items: [
-          { title: "合同单位设置", url: "/system/product" },
-          { title: "产品类型设置", url: "/index" },
+          { title: "合同设置", url: "/system/product" },
+          { title: "产品设置", url: "/index" },
         ],
         title: "系统设置",
       },

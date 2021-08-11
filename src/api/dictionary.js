@@ -1,11 +1,11 @@
 import request from './base'
 
-export const queryDictionarieTypeGroup = (module) => {
+export const QueryDictionaryTypes = (module) => {
     {
         return request({
-            url: '/dictionarieTextGroup',
+            url: '/dictionaryTypes',
             method: 'get',
-            params: {"module": module}
+            params: { "module": module }
         })
     }
 }
@@ -45,7 +45,15 @@ export const queryProductSubtype = (parentID) => {
         return request({
             url: '/dictionaries',
             method: 'get',
-            params: { "parentID":parentID,"module": "product", "name": "subtype" }
+            params: { "parentID": parentID }
         })
     }
+}
+
+export const createDictionary = (object) => {
+    return request({
+        url: '/dictionary',
+        method: 'POST',
+        data: object
+    })
 }

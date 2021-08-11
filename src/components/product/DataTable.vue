@@ -137,7 +137,7 @@ export default {
         sortable: false,
       },
       {
-        text: "来源",
+        text: "类型",
         align: "center",
         value: "sourceType.text",
         sortable: false,

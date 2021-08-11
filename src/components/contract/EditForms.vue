@@ -335,11 +335,9 @@ export default {
         }).then((res) => {
           _this.customerItems = res.data;
         });
-        queryContractUnits().then(
-          (res) => {
-            this.contractUnitItems = res.data;
-          }
-        );
+        queryContractUnits().then((res) => {
+          this.contractUnitItems = res.data;
+        });
       });
     },
     getAreaItems() {

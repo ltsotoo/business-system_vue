@@ -4,10 +4,14 @@
       :headers="headers"
       :items="object"
       class="elevation-1"
+      hide-default-header
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
       }"
     >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon> mdi-delete </v-icon>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -30,7 +34,6 @@ export default {
       },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
-    items: [],
     object: [],
   }),
   methods: {

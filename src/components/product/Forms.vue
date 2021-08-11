@@ -5,7 +5,7 @@
         <v-row v-if="openType > 0">
           <v-col cols="4">
             <v-text-field
-              label="来源"
+              label="类型"
               v-model="object.sourceType.text"
               :disabled="openType == 2"
             ></v-text-field>
@@ -25,7 +25,7 @@
               :items="sourceTypeItems"
               item-text="text"
               item-value="ID"
-              label="来源"
+              label="类型"
               :rules="openType == 1 ? null : rules.sourceType"
             ></v-select>
           </v-col>

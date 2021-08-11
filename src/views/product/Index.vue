@@ -10,7 +10,7 @@
                 :items="sourceTypeItems"
                 item-text="text"
                 item-value="ID"
-                label="来源"
+                label="类型"
                 clearable
               ></v-select>
             </v-col>
@@ -21,6 +21,7 @@
                 item-text="text"
                 item-value="ID"
                 label="子类别"
+                :disabled="sourceTypeItems.length == 0"
                 clearable
               ></v-select>
             </v-col>
