@@ -140,7 +140,7 @@
 <script>
 import { entryProduct, editProduct, queryProduct } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
-import { queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
+import { queryProductSourceType, queryProductSubtype } from "@/api/dictionary";
 
 export default {
   props: {
@@ -190,8 +190,6 @@ export default {
         (v) => v.length == 0 || v.length <= 10 || "品牌的长度必须小于10个字符",
       ],
       specification: [
-        // (v) => !!v || "必填项！",
-        // (v) => (v && v.length <= 20) || "规格的长度必须小于20个字符",
         (v) => v.length == 0 || v.length <= 20 || "规格的长度必须小于20个字符",
       ],
       number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为数字"],

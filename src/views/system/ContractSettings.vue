@@ -80,7 +80,7 @@ export default {
     addDialog: false,
     dictionaryType: {
       ID: null,
-      module: "product",
+      module: "contract",
     },
     dictionary: {
       ID: null,

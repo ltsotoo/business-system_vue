@@ -3,15 +3,6 @@
     <v-card-subtitle>
       <v-form>
         <v-row align="center">
-          <v-col cols="12" v-if="parentObj.parentID > 0">
-            <v-select
-              v-model="object.parentID"
-              :items="parentItems"
-              item-text="text"
-              item-value="ID"
-              label="父类"
-            ></v-select>
-          </v-col>
           <v-col cols="12">
             <v-text-field v-model.trim="object.text" label="名称">
             </v-text-field>
@@ -28,6 +19,7 @@
 </template>
 
 <script>
+import { createDictionary } from "@/api/dictionary";
 export default {
   props: {
     parentObj: {
@@ -41,7 +33,6 @@ export default {
     },
   },
   data: () => ({
-    parentItems: [],
     object: {
       parentID: null,
       dictionaryTypeID: 0,
@@ -49,15 +40,14 @@ export default {
     },
   }),
   created() {
-    this.object.dictionaryTypeID = this.parentObj.ID;
-    if (this.parentObj.parentID > 0) {
-      this.getParentItems();
-    }
+    this.object = this.parentObj;
   },
   methods: {
-    getParentItems() {},
     add() {
-      this.parentFun(this.object);
+      createDictionary(this.object).then((res) => {
+        this.$message.success("录入成功了！");
+        this.closeDialog();
+      });
     },
   },
 };

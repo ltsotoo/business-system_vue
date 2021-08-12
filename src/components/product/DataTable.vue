@@ -100,10 +100,15 @@ export default {
       {
         text: "名称",
         align: "center",
-        sortable: false,
         value: "name",
+        sortable: false,
       },
-      { text: "品牌", align: "center", value: "brand", sortable: false },
+      {
+        text: "品牌",
+        align: "center",
+        value: "brand",
+        sortable: false,
+      },
       {
         text: "规格",
         align: "center",
@@ -116,8 +121,18 @@ export default {
         value: "supplier.name",
         sortable: false,
       },
-      { text: "库存数量", align: "center", value: "number", sortable: false },
-      { text: "单位", align: "center", value: "unit", sortable: false },
+      {
+        text: "库存数量",
+        align: "center",
+        value: "number",
+        sortable: false,
+      },
+      {
+        text: "单位",
+        align: "center",
+        value: "unit",
+        sortable: false,
+      },
       {
         text: "采购/生产价格(元)",
         align: "center",
@@ -148,9 +163,20 @@ export default {
         value: "subtype.text",
         sortable: false,
       },
-      { text: "备注", align: "center", value: "remarks", sortable: false },
-      { text: "操作", align: "center", value: "actions", sortable: false },
+      {
+        text: "备注",
+        align: "center",
+        value: "remarks",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
     ],
+
     options: {
       loading: false,
       total: 1,

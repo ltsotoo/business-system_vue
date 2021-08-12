@@ -47,7 +47,7 @@
           v-for="item in itemsTest"
           :key="item.title"
           v-model="item.active"
-          :prepend-icon="item.action"
+          :prepend-icon="item.icon"
           no-action
           color="#6b473c"
         >
@@ -57,7 +57,11 @@
             </v-list-item-content>
           </template>
 
-          <v-list-item v-for="child in item.items" :key="child.title" :to="child.url">
+          <v-list-item
+            v-for="child in item.items"
+            :key="child.title"
+            :to="child.url"
+          >
             <v-list-item-content>
               <v-list-item-title v-text="child.title"></v-list-item-title>
             </v-list-item-content>
@@ -100,12 +104,12 @@ export default {
 
     itemsTest: [
       {
-        action: "mdi-cog-outline",
-        items: [
-          { title: "合同设置", url: "/system/product" },
-          { title: "产品设置", url: "/index" },
-        ],
+        icon: "mdi-cog-outline",
         title: "系统设置",
+        items: [
+          { title: "合同设置", url: "/system/contract" },
+          { title: "产品设置", url: "/system/product" },
+        ],
       },
     ],
   }),

@@ -68,9 +68,14 @@ const routes = [
         meta: { login_require: true, title: "中研环科-供应商管理-录入" },
       },
       {
+        path: 'system/contract',
+        component: () => import('@/views/system/ContractSettings.vue'),
+        meta: { login_require: true, title: "中研环科-系统设置-合同设置" },
+      },
+      {
         path: 'system/product',
         component: () => import('@/views/system/ProductSettings.vue'),
-        meta: { login_require: true, title: "中研环科-系统管理-产品设置" },
+        meta: { login_require: true, title: "中研环科-系统设置-产品设置" },
       },
     ]
   },

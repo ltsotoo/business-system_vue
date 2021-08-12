@@ -91,10 +91,15 @@ export default {
       {
         text: "合同编号",
         align: "center",
-        sortable: false,
         value: "no",
+        sortable: false,
       },
-      { text: "区域", align: "center", value: "area.name", sortable: false },
+      {
+        text: "区域",
+        align: "center",
+        value: "area.name",
+        sortable: false,
+      },
       {
         text: "业务员",
         align: "center",
@@ -125,8 +130,18 @@ export default {
         value: "totalAmount",
         sortable: false,
       },
-      { text: "状态", align: "center", value: "status", sortable: false },
-      { text: "操作", align: "center", value: "actions", sortable: false },
+      {
+        text: "状态",
+        align: "center",
+        value: "status",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
     ],
     options: {
       loading: false,
