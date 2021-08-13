@@ -1,10 +1,13 @@
 import request from './base'
 
-export const queryOffices = () => {
+export const queryOffices = (name) => {
     {
         return request({
             url: '/offices',
             method: 'GET',
+            params: {
+                "name": name
+            }
         })
     }
 }
@@ -23,8 +26,8 @@ export const queryAreasByOfficeID = (officeID) => {
         return request({
             url: '/areasByOfficeID',
             method: 'GET',
-            param: {
-                "officeID": fficeID
+            params: {
+                "officeID": officeID
             }
         })
     }
@@ -35,8 +38,8 @@ export const queryDepartmentsByOfficeID = (officeID) => {
         return request({
             url: '/departmentsByOfficeID',
             method: 'GET',
-            param: {
-                "officeID": fficeID
+            params: {
+                "officeID": officeID
             }
         })
     }

@@ -41,33 +41,6 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-
-      <v-list>
-        <v-list-group
-          v-for="item in itemsTest"
-          :key="item.title"
-          v-model="item.active"
-          :prepend-icon="item.icon"
-          no-action
-          color="#6b473c"
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="child in item.items"
-            :key="child.title"
-            :to="child.url"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="child.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
     </v-navigation-drawer>
 
     <v-main class="blue-grey lighten-5">
@@ -100,17 +73,8 @@ export default {
       { title: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
       { title: "产品管理", icon: "mdi-cube", url: "/product" },
       { title: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
-    ],
-
-    itemsTest: [
-      {
-        icon: "mdi-cog-outline",
-        title: "系统设置",
-        items: [
-          { title: "合同设置", url: "/system/contract" },
-          { title: "产品设置", url: "/system/product" },
-        ],
-      },
+      { title: "企业管理", icon: "mdi-domain", url: "/enterprise" },
+      { title: "系统设置", icon: "mdi-cog-outline", url: "/system" },
     ],
   }),
   created() {

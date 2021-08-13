@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card>
+        <v-card  :elevation=0>
           <v-card-subtitle>
             <v-form ref="form">
               <v-row align="baseline">
@@ -80,7 +80,7 @@ export default {
     addDialog: false,
     dictionaryType: {
       ID: null,
-      module: "contract",
+      module: "product",
     },
     dictionary: {
       ID: null,

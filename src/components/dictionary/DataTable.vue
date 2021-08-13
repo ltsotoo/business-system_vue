@@ -3,7 +3,6 @@
     <v-data-table
       :headers="headers"
       :items="object"
-      class="elevation-1"
       hide-default-header
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
