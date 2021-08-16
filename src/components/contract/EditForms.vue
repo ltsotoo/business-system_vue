@@ -237,7 +237,7 @@
 import taskDataTable from "../task/DataTable";
 import { queryAreas } from "@/api/oadrp";
 import { queryContractUnits } from "@/api/dictionary";
-import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";
+import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 import { queryContract, editContract } from "@/api/contract";
 export default {
@@ -324,7 +324,7 @@ export default {
         queryEmployees().then((res) => {
           this.employeeItems = res.data;
         });
-        queryCompanysByAreaID(_this.object.areaID).then((res) => {
+        queryCompanys({areaID:_this.object.areaID}).then((res) => {
           _this.companyItems = res.data;
         });
         queryAreas().then((res) => {
@@ -351,7 +351,7 @@ export default {
       });
     },
     getCompanyItemsByAreaID(areaID) {
-      queryCompanysByAreaID(areaID).then((res) => {
+      queryCompanys({areaID:areaID}).then((res) => {
         this.companyItems = res.data;
       });
     },

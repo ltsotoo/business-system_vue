@@ -1,5 +1,13 @@
 import request from './base'
 
+export const entryOffice = (office) => {
+    return request({
+        url: '/office',
+        method: 'POST',
+        data: office
+    })
+}
+
 export const queryOffices = (name) => {
     {
         return request({
@@ -12,35 +20,38 @@ export const queryOffices = (name) => {
     }
 }
 
-export const queryAreas = () => {
+export const entryArea = (area) => {
+    return request({
+        url: '/area',
+        method: 'POST',
+        data: area
+    })
+}
+
+export const queryAreas = (area) => {
     {
         return request({
             url: '/areas',
-            method: 'GET',
+            method: 'POST',
+            data: area
         })
     }
 }
 
-export const queryAreasByOfficeID = (officeID) => {
-    {
-        return request({
-            url: '/areasByOfficeID',
-            method: 'GET',
-            params: {
-                "officeID": officeID
-            }
-        })
-    }
+export const entryDepartment = (department) => {
+    return request({
+        url: '/department',
+        method: 'POST',
+        data: area
+    })
 }
 
-export const queryDepartmentsByOfficeID = (officeID) => {
+export const queryDepartments = (department) => {
     {
         return request({
-            url: '/departmentsByOfficeID',
-            method: 'GET',
-            params: {
-                "officeID": officeID
-            }
+            url: '/departments',
+            method: 'POST',
+            data: department
         })
     }
 }

@@ -9,14 +9,12 @@ export const delTask = (id) => {
     }
 }
 
-export const queryTasksByContractID = (contractID) => {
+export const queryTasks = (task) => {
     {
         return request({
-            url: '/tasksByContractID',
-            method: 'GET',
-            params: {
-                "contractID": contractID,
-            }
+            url: '/tasks',
+            method: 'POST',
+            data:task
         })
     }
 }

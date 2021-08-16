@@ -78,11 +78,7 @@
 </template>
 
 <script>
-import {
-  queryOffices,
-  queryDepartmentsByOfficeID,
-  queryRoles,
-} from "@/api/oadrp.js";
+import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
 import { queryEmployee } from "@/api/employee";
 export default {
   props: {
@@ -125,8 +121,8 @@ export default {
         this.officeItems = res.data;
       });
     },
-    getDepartmentItems(departmentID) {
-      queryDepartmentsByOfficeID(departmentID).then((res) => {
+    getDepartmentItems(officeID) {
+      queryDepartments({ officeID: officeID }).then((res) => {
         this.departmentItems = res.data;
       });
     },

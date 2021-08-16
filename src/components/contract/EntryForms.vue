@@ -352,7 +352,7 @@
 import productDataTable from "../product/DataTable";
 import { queryAreas } from "@/api/oadrp";
 import { queryContractUnits,queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
-import { queryCompanysByAreaID, queryCustomers } from "@/api/customer";
+import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
 import { entryContract } from "@/api/contract";
 export default {
@@ -463,7 +463,7 @@ export default {
       });
     },
     getCompanyItemsByAreaID(areaID) {
-      queryCompanysByAreaID(areaID).then((res) => {
+      queryCompanys({areaID:areaID}).then((res) => {
         this.companyItems = res.data;
       });
     },

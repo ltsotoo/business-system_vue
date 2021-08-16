@@ -68,7 +68,7 @@
 <script>
 import customerDataTable from "@/components/customer/DataTable";
 import { queryAreas } from "@/api/oadrp";
-import { queryCompanysByAreaID } from "@/api/customer";
+import { queryCompanys } from "@/api/customer";
 
 export default {
   components: {
@@ -94,7 +94,7 @@ export default {
       });
     },
     getCompanyItemsByAreaID(areaID) {
-      queryCompanysByAreaID(areaID).then((res) => {
+      queryCompanys({areaID:areaID}).then((res) => {
         this.companyItems = res.data;
       });
     },

@@ -52,23 +52,12 @@ export const queryCustomers = (pageSize, pageNo, queryObject) => {
     }
 }
 
-export const queryCompanys = () => {
+export const queryCompanys = (company) => {
     {
         return request({
             url: '/companys',
-            method: 'GET',
-        })
-    }
-}
-
-export const queryCompanysByAreaID = (areaID) => {
-    {
-        return request({
-            url: '/companysByAreaID',
-            method: 'GET',
-            params: {
-                "areaID": areaID,
-            }
+            method: 'POST',
+            data: company
         })
     }
 }

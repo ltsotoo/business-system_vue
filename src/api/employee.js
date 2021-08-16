@@ -15,10 +15,11 @@ export const queryEmployee = (id) => {
     })
 }
 
-export const queryEmployees = (pageSize, pageNo) => {
+export const queryEmployees = (employee,pageSize, pageNo) => {
     return request({
         url: '/employees',
-        method: 'get',
+        method: 'post',
+        data:employee,
         params: {
             "pageSize": pageSize,
             "PageNo": pageNo,

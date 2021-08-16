@@ -68,7 +68,7 @@
 
 <script>
 import productForms from "../product/Forms";
-import { delTask, queryTasksByContractID } from "@/api/task";
+import { delTask, queryTasks } from "@/api/task";
 
 export default {
   components: {
@@ -127,7 +127,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryTasksByContractID(this.openID).then((res) => {
+      queryTasks({contractID:this.openID}).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {
           this.options.page = 1;
