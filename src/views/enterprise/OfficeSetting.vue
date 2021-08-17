@@ -71,7 +71,12 @@
               </v-col>
               <v-spacer></v-spacer>
               <v-col cols="2">
-                <v-btn rounded color="green" dark @click="openOfficeAddDialog">
+                <v-btn
+                  rounded
+                  color="green"
+                  dark
+                  @click="openDepartmentAddDialog"
+                >
                   添加
                 </v-btn>
               </v-col>
@@ -120,12 +125,7 @@
               </v-col>
               <v-spacer></v-spacer>
               <v-col cols="2">
-                <v-btn
-                  rounded
-                  color="green"
-                  dark
-                  @click="openOfficeAddDialog"
-                >
+                <v-btn rounded color="green" dark @click="openOfficeAddDialog">
                   添加
                 </v-btn>
               </v-col>
@@ -154,16 +154,30 @@
     >
       <officeForms :closeDialog="closeOfficeAddDialog" />
     </v-dialog>
+
+    <v-dialog
+      v-model="department.addDialog"
+      max-width="400px"
+      persistent
+      v-if="department.addDialog"
+    >
+      <departmentForms
+        :officeID="office.selectID"
+        :closeDialog="closeDepartmentAddDialog"
+      />
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import officeForms from "@/components/office/Forms";
+import departmentForms from "@/components/department/Forms";
 import { queryOffices, queryDepartments } from "@/api/oadrp";
 import { queryEmployees } from "@/api/employee";
 export default {
   components: {
     officeForms,
+    departmentForms,
   },
   data: () => ({
     office: {
@@ -196,6 +210,7 @@ export default {
       items: [],
       selectID: null,
       selectItem: [],
+      addDialog: false,
     },
     employee: {
       headers: [
@@ -226,8 +241,9 @@ export default {
         this.office.items = res.data;
       });
     },
-    getDepartmentItems(officeID) {
-      queryDepartments({ officeID: officeID }).then((res) => {
+    getDepartmentItems() {
+      this.employee.items = [];
+      queryDepartments({ officeID: this.office.selectID }).then((res) => {
         this.department.items = res.data;
       });
     },
@@ -245,7 +261,7 @@ export default {
       this.department.selectID = null;
       this.department.selectItem = [];
       this.employee.items = [];
-      this.getDepartmentItems(item.ID);
+      this.getDepartmentItems();
       this.getEmployeeItems(item.ID, null);
     },
     clickDepartmentItem(item, options) {
@@ -258,8 +274,15 @@ export default {
       this.office.addDialog = true;
     },
     closeOfficeAddDialog() {
-      this.office.addDialog = false;
       this.getOfficeItems();
+      this.office.addDialog = false;
+    },
+    openDepartmentAddDialog() {
+      this.department.addDialog = true;
+    },
+    closeDepartmentAddDialog() {
+      this.getDepartmentItems();
+      this.department.addDialog = false;
     },
   },
 };

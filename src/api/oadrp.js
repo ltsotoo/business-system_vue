@@ -42,7 +42,7 @@ export const entryDepartment = (department) => {
     return request({
         url: '/department',
         method: 'POST',
-        data: area
+        data: department
     })
 }
 
