@@ -1,7 +1,7 @@
 <template>
-  <v-form ref="form">
-    <v-card class="mx-auto">
-      <v-card-subtitle>
+  <v-card class="mx-auto">
+    <v-card-subtitle>
+      <v-form ref="form">
         <v-row>
           <v-col cols="6" v-if="openType > 0">
             <v-text-field
@@ -61,9 +61,9 @@
             ></v-text-field>
           </v-col>
         </v-row>
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+      </v-form>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
@@ -150,7 +150,7 @@ export default {
           }
         });
       } else {
-        this.$message.error("信息填写异常，请检查后再提交！")
+        this.$message.error("信息填写异常，请检查后再提交！");
         if (this.parentFun) {
           this.parentFun(false);
         }

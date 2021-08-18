@@ -31,7 +31,7 @@
                 <v-col cols="auto">
                   <v-btn
                     rounded
-                    color="green"
+                    color="success"
                     @click="openAddDialog"
                     :disabled="addBtnDisable"
                   >

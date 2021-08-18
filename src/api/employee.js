@@ -8,6 +8,13 @@ export const entryEmployee = (employee) => {
     })
 }
 
+export const delEmployee = (id) => {
+    return request({
+        url: '/employee/'+id,
+        method: 'DELETE',
+    })
+}
+
 export const queryEmployee = (id) => {
     return request({
         url: '/employee/' + id,

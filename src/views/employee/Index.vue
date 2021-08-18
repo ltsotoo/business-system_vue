@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card>
-        <employeeForms />
+      <employeeForms :openType="1" />
     </v-card>
   </v-container>
 </template>

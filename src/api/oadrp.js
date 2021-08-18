@@ -8,16 +8,21 @@ export const entryOffice = (office) => {
     })
 }
 
+export const delOffice = (id) => {
+    return request({
+        url: '/office/' + id,
+        method: 'DELETE',
+    })
+}
+
 export const queryOffices = (name) => {
-    {
-        return request({
-            url: '/offices',
-            method: 'GET',
-            params: {
-                "name": name
-            }
-        })
-    }
+    return request({
+        url: '/offices',
+        method: 'GET',
+        params: {
+            "name": name
+        }
+    })
 }
 
 export const entryArea = (area) => {
@@ -28,14 +33,19 @@ export const entryArea = (area) => {
     })
 }
 
+export const delArea = (id) => {
+    return request({
+        url: '/area/' + id,
+        method: 'DELETE',
+    })
+}
+
 export const queryAreas = (area) => {
-    {
-        return request({
-            url: '/areas',
-            method: 'POST',
-            data: area
-        })
-    }
+    return request({
+        url: '/areas',
+        method: 'POST',
+        data: area
+    })
 }
 
 export const entryDepartment = (department) => {
@@ -46,30 +56,31 @@ export const entryDepartment = (department) => {
     })
 }
 
+export const delDepartment = (id) => {
+    return request({
+        url: '/department/' + id,
+        method: 'DELETE',
+    })
+}
+
 export const queryDepartments = (department) => {
-    {
-        return request({
-            url: '/departments',
-            method: 'POST',
-            data: department
-        })
-    }
+    return request({
+        url: '/departments',
+        method: 'POST',
+        data: department
+    })
 }
 
 export const queryRoles = () => {
-    {
-        return request({
-            url: '/roles',
-            method: 'GET',
-        })
-    }
+    return request({
+        url: '/roles',
+        method: 'GET',
+    })
 }
 
 export const queryPermissions = () => {
-    {
-        return request({
-            url: '/permissions',
-            method: 'GET',
-        })
-    }
+    return request({
+        url: '/permissions',
+        method: 'GET',
+    })
 }

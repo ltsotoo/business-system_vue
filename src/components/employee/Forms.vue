@@ -1,8 +1,9 @@
 <template>
-  <v-form ref="form">
-    <v-card class="mx-auto">
-      <v-card-subtitle>
-        <v-row v-if="openType == 0">
+  <v-card class="mx-auto">
+    <v-card-title v-if="openType == 0">员工添加</v-card-title>
+    <v-card-subtitle>
+      <v-form ref="form">
+        <v-row v-if="openType == 1">
           <v-col cols="4">
             <v-text-field
               label="办事处"
@@ -22,7 +23,7 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-row v-else>
+        <!-- <v-row v-else>
           <v-col cols="4">
             <v-select
               v-model="object.officeID"
@@ -50,15 +51,23 @@
               label="职务"
             ></v-select>
           </v-col>
-        </v-row>
+        </v-row> -->
 
         <v-row>
           <v-col cols="6">
-            <v-text-field v-model="object.name" label="姓名"></v-text-field>
+            <v-text-field
+              v-model="object.name"
+              label="姓名"
+              :rules="rules.name"
+            ></v-text-field>
           </v-col>
           <v-col cols="6">
-            <v-text-field v-model="object.phone" label="手机号"></v-text-field
-          ></v-col>
+            <v-text-field
+              v-model="object.phone"
+              label="手机号"
+              :rules="rules.phone"
+            ></v-text-field>
+          </v-col>
         </v-row>
 
         <v-row>
@@ -66,32 +75,41 @@
             <v-text-field
               v-model="object.wechatID"
               label="微信号"
-            ></v-text-field
-          ></v-col>
+              :rules="rules.wechatID"
+            ></v-text-field>
+          </v-col>
           <v-col cols="6">
-            <v-text-field v-model="object.email" label="邮箱"></v-text-field
-          ></v-col>
+            <v-text-field
+              v-model="object.email"
+              label="邮箱"
+              :rules="rules.email"
+            ></v-text-field>
+          </v-col>
         </v-row>
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+      </v-form>
+      <v-card-actions v-if="openType == 0">
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="add"> 添加 </v-btn>
+        <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+      </v-card-actions>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
 import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
-import { queryEmployee } from "@/api/employee";
+import { entryEmployee, queryEmployee } from "@/api/employee";
 export default {
   props: {
     openType: {
       type: Number,
       default: 0,
     },
-    openID: {
-      type: Number,
+    parentObj: {
+      type: Object,
     },
-    parentFun: {
+    closeDialog: {
       type: Function,
-      default: null,
     },
   },
   data: () => ({
@@ -111,9 +129,33 @@ export default {
       department: {},
       role: {},
     },
+    rules: {
+      name: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
+      ],
+      phone: [
+        (v) => !!v || "必填项！",
+        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
+      ],
+      wechatID: [
+        (v) =>
+          v.length == 0 || v.length <= 10 || "微信号的长度必须小于20个字符",
+      ],
+      email: [
+        (v) =>
+          v.length == 0 ||
+          /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
+          "邮箱格式错误",
+      ],
+    },
   }),
   created() {
-    this.getObject();
+    if (this.openType == 0) {
+      this.object = this.parentObj;
+    } else {
+      this.getObject();
+    }
   },
   methods: {
     getOfficeItems() {
@@ -137,6 +179,17 @@ export default {
       });
     },
     editObject() {},
+    add() {
+      if (this.validateForm()) {
+        entryEmployee(this.object).then((res) => {
+          this.$message.success("录入成功了！");
+          this.closeDialog();
+        });
+      }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
+    },
   },
   computed: {},
 };
