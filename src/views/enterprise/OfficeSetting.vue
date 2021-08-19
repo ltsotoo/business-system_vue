@@ -30,21 +30,23 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-data-table
-                v-model="office.selectItem"
-                :headers="office.headers"
-                :items="office.items"
-                :items-per-page="5"
-                :single-select="true"
-                item-key="name"
-                @click:row="clickOfficeItem"
-              >
-                <template v-slot:[`item.actions`]="{ item }">
-                  <v-icon @click="openOfficeDelDialog(item.ID)">
-                    mdi-delete
-                  </v-icon>
-                </template>
-              </v-data-table>
+              <v-col>
+                <v-data-table
+                  v-model="office.selectItem"
+                  :headers="office.headers"
+                  :items="office.items"
+                  :items-per-page="5"
+                  :single-select="true"
+                  item-key="name"
+                  @click:row="clickOfficeItem"
+                >
+                  <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon @click="openOfficeDelDialog(item.ID)">
+                      mdi-delete
+                    </v-icon>
+                  </template>
+                </v-data-table>
+              </v-col>
             </v-row>
           </v-card-subtitle>
         </v-card>
@@ -150,17 +152,19 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-data-table
-                :headers="employee.headers"
-                :items="employee.items"
-                :items-per-page="5"
-              >
-                <template v-slot:[`item.actions`]="{ item }">
-                  <v-icon @click="openEmployeeDelDialog(item.ID)">
-                    mdi-delete
-                  </v-icon>
-                </template>
-              </v-data-table>
+              <v-col>
+                <v-data-table
+                  :headers="employee.headers"
+                  :items="employee.items"
+                  :items-per-page="5"
+                >
+                  <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon @click="openEmployeeDelDialog(item.ID)">
+                      mdi-delete
+                    </v-icon>
+                  </template>
+                </v-data-table>
+              </v-col>
             </v-row>
           </v-card-subtitle>
         </v-card>
@@ -173,7 +177,10 @@
       persistent
       v-if="office.addDialog"
     >
-      <officeForms :closeDialog="closeOfficeAddDialog" />
+      <officeForms
+        :closeDialog="closeOfficeAddDialog"
+        :parentFun="getOfficeItems"
+      />
     </v-dialog>
 
     <v-dialog
@@ -185,6 +192,7 @@
       <departmentForms
         :officeID="office.selectID"
         :closeDialog="closeDepartmentAddDialog"
+        :parentFun="getDepartmentItems"
       />
     </v-dialog>
 
@@ -200,6 +208,7 @@
           departmentID: department.selectID,
         }"
         :closeDialog="closeEmployeeAddDialog"
+        :parentFun="getEmployeeItems"
       />
     </v-dialog>
 
@@ -365,7 +374,6 @@ export default {
           this.department.selectItem = [];
           this.employee.items = [];
           this.getDepartmentItems();
-          // this.getEmployeeItems(item.ID, null);
         }
       }, 66);
     },
@@ -383,7 +391,6 @@ export default {
       this.office.addDialog = true;
     },
     closeOfficeAddDialog() {
-      this.getOfficeItems();
       this.office.addDialog = false;
     },
     openOfficeDelDialog(id) {
@@ -404,7 +411,6 @@ export default {
       this.department.addDialog = true;
     },
     closeDepartmentAddDialog() {
-      this.getDepartmentItems();
       this.department.addDialog = false;
     },
     openDepartmentDelDialog(id) {
@@ -425,7 +431,6 @@ export default {
       this.employee.addDialog = true;
     },
     closeEmployeeAddDialog() {
-      this.getEmployeeItems();
       this.employee.addDialog = false;
     },
     openEmployeeDelDialog(id) {

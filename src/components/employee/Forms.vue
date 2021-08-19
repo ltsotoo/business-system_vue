@@ -56,14 +56,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.name"
+              v-model.trim="object.name"
               label="姓名"
               :rules="rules.name"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="object.phone"
+              v-model.trim="object.phone"
               label="手机号"
               :rules="rules.phone"
             ></v-text-field>
@@ -73,14 +73,14 @@
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model="object.wechatID"
+              v-model.trim="object.wechatID"
               label="微信号"
               :rules="rules.wechatID"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="object.email"
+              v-model.trim="object.email"
               label="邮箱"
               :rules="rules.email"
             ></v-text-field>
@@ -111,6 +111,10 @@ export default {
     closeDialog: {
       type: Function,
     },
+    parentFun: {
+      type: Function,
+      default: null,
+    },
   },
   data: () => ({
     officeItems: [],
@@ -120,7 +124,7 @@ export default {
       ID: null,
       name: "",
       phone: "",
-      wechatID: null,
+      wechatID: "",
       email: "",
       officeID: null,
       departmentID: null,
@@ -152,7 +156,8 @@ export default {
   }),
   created() {
     if (this.openType == 0) {
-      this.object = this.parentObj;
+      this.object.officeID = this.parentObj.officeID;
+      this.object.departmentID = this.parentObj.departmentID;
     } else {
       this.getObject();
     }
@@ -183,6 +188,9 @@ export default {
       if (this.validateForm()) {
         entryEmployee(this.object).then((res) => {
           this.$message.success("录入成功了！");
+          if (this.parentFun != null) {
+            this.parentFun();
+          }
           this.closeDialog();
         });
       }
