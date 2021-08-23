@@ -15,6 +15,14 @@ export const delEmployee = (id) => {
     })
 }
 
+export const editEmployee = (employee) => {
+    return request({
+        url: '/employee',
+        method: 'PUT',
+        data: employee,
+    })
+}
+
 export const queryEmployee = (id) => {
     return request({
         url: '/employee/' + id,

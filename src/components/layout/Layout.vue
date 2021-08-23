@@ -79,11 +79,11 @@ export default {
   }),
   created() {
     this.object.name = localStorage.getItem("name");
-    this.object.email = localStorage.getItem("name");
   },
   methods: {
     exit() {
       localStorage.removeItem("name");
+      localStorage.removeItem("Authorization");
       this.$router.replace("/login");
     },
   },

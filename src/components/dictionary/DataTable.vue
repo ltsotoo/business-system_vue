@@ -18,10 +18,8 @@
         <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
-          <v-spacer></v-spacer>
+          <v-btn color="error" text @click="deleteItem">确定</v-btn>
+          <v-btn color="primary" text @click="closeDeleteDialog">取消</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

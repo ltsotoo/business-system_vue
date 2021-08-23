@@ -48,6 +48,14 @@ export const queryAreas = (area) => {
     })
 }
 
+export const editArea = (area) => {
+    return request({
+        url: '/area',
+        method: 'PUT',
+        data: area
+    })
+}
+
 export const entryDepartment = (department) => {
     return request({
         url: '/department',

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title v-if="(openType = 0)">区域添加</v-card-title>
+    <v-card-title v-if="openType == 0">区域添加</v-card-title>
     <v-card-title v-else>区域编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
@@ -34,10 +34,13 @@
 </template>
 
 <script>
-import { queryOffices } from "@/api/oadrp";
+import { queryOffices, entryArea, editArea } from "@/api/oadrp";
 export default {
   props: {
     closeDialog: {
+      type: Function,
+    },
+    refresh: {
       type: Function,
     },
     openType: {
@@ -75,7 +78,19 @@ export default {
     },
     submit() {
       if (this.openType == 0) {
+        entryArea(this.object).then((res) => {
+          if (this.refresh) {
+            this.refresh();
+          }
+          this.closeDialog();
+        });
       } else if (this.openType == 2) {
+        editArea(this.object).then((res) => {
+          if (this.refresh) {
+            this.refresh();
+          }
+          this.closeDialog();
+        });
       }
     },
   },

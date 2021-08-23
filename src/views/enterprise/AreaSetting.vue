@@ -21,7 +21,7 @@
       </v-col>
       <v-divider vertical></v-divider>
       <v-col cols="auto">
-        <v-btn rounded color="success" dark> 录入 </v-btn>
+        <v-btn rounded color="success" dark @click="openAreaAddDialog"> 录入 </v-btn>
       </v-col>
       <v-spacer></v-spacer>
     </v-row>
@@ -42,11 +42,19 @@
       </v-col>
     </v-row>
 
+    <v-dialog v-model="addDialog" max-width="500px" persistent>
+      <areaForms
+        :closeDialog="closeAreaAddDialog"
+        :refresh="getObject"
+      />
+    </v-dialog>
+
     <v-dialog v-model="ediDialog" max-width="500px" persistent>
       <areaForms
         :closeDialog="closeAreaEdiDialog"
         :openType="2"
         :parentObj="ediObj"
+        :refresh="getObject"
       />
     </v-dialog>
 
@@ -95,6 +103,7 @@ export default {
       },
     },
     object: [],
+    addDialog: false,
     ediDialog: false,
     ediObj: {},
     delDialog: false,
@@ -108,6 +117,12 @@ export default {
       queryAreas(this.searchObj).then((res) => {
         this.object = res.data;
       });
+    },
+    openAreaAddDialog() {
+      this.addDialog = true;
+    },
+    closeAreaAddDialog() {
+      this.addDialog = false;
     },
     openAreaEdiDialog(obj) {
       this.ediObj = obj;

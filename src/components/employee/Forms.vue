@@ -1,6 +1,7 @@
 <template>
   <v-card class="mx-auto">
     <v-card-title v-if="openType == 0">员工添加</v-card-title>
+    <v-card-title v-if="openType == 2">员工信息编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row v-if="openType == 1">
@@ -87,9 +88,9 @@
           </v-col>
         </v-row>
       </v-form>
-      <v-card-actions v-if="openType == 0">
+      <v-card-actions v-if="openType != 1">
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="add"> 添加 </v-btn>
+        <v-btn color="blue darken-1" text @click="add"> 确定 </v-btn>
         <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
       </v-card-actions>
     </v-card-subtitle>
@@ -98,7 +99,7 @@
 
 <script>
 import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
-import { entryEmployee, queryEmployee } from "@/api/employee";
+import { entryEmployee, queryEmployee, editEmployee } from "@/api/employee";
 export default {
   props: {
     openType: {
@@ -111,9 +112,8 @@ export default {
     closeDialog: {
       type: Function,
     },
-    parentFun: {
+    refresh: {
       type: Function,
-      default: null,
     },
   },
   data: () => ({
@@ -159,6 +159,9 @@ export default {
       this.object.officeID = this.parentObj.officeID;
       this.object.departmentID = this.parentObj.departmentID;
     } else {
+      if (this.parentObj) {
+        this.object.ID = this.parentObj.ID;
+      }
       this.getObject();
     }
   },
@@ -179,20 +182,32 @@ export default {
       });
     },
     getObject() {
-      queryEmployee(localStorage.getItem("ID")).then((res) => {
+      queryEmployee(this.object.ID).then((res) => {
         this.object = res.data;
       });
     },
     editObject() {},
     add() {
-      if (this.validateForm()) {
-        entryEmployee(this.object).then((res) => {
-          this.$message.success("录入成功了！");
-          if (this.parentFun != null) {
-            this.parentFun();
-          }
-          this.closeDialog();
-        });
+      if (this.openType == 0) {
+        if (this.validateForm()) {
+          entryEmployee(this.object).then((res) => {
+            this.$message.success("录入成功了！");
+            if (this.refresh != null) {
+              this.refresh();
+            }
+            this.closeDialog();
+          });
+        }
+      } else if (this.openType == 2) {
+        if (this.validateForm()) {
+          editEmployee(this.object).then((res) => {
+            this.$message.success("编辑成功了！");
+            if (this.refresh != null) {
+              this.refresh();
+            }
+            this.closeDialog();
+          });
+        }
       }
     },
     validateForm() {

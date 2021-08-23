@@ -15,8 +15,8 @@ const service = axios.create({
 //请求拦截器
 service.interceptors.request.use(config => {
     //请求头带上token
-    if (localStorage.getItem('token')) {
-        config.headers.token = localStorage.getItem('token')
+    if (localStorage.getItem('Authorization')) {
+        config.headers.Authorization = localStorage.getItem('Authorization')
     }
     return config
 }, error => {
@@ -28,9 +28,16 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
+            if (response.data.status > 10010 && response.data.status < 10020) {
+                Message.error(response.data.message);
+                localStorage.removeItem("token")
+                setTimeout(() => {
+                    window.location.href = '/'
+                }, 666)
+            }
             if (response.data.status === 666) {
                 return Promise.resolve(response.data)
-            }else{
+            } else {
                 Message.error(response.data.message);
                 return Promise.reject(response)
             }
@@ -38,20 +45,11 @@ service.interceptors.response.use(
             return Promise.reject(response)
         }
     }, error => {
-        if (400 <= error.response.status < 500) {
-            Message.error(`用户信息过期，请重新登陆`)
-            localStorage.removeItem("token")
-            setTimeout(() => {
-                window.location.href = '/'
-            }, 1000)
-        } else {
-            if (error.response.status >= 500) {
-                alert("服务器开小差了，请稍后再试！");
-            } else {
-                alert("服务器开小差了，请稍后再试！");
-                return Promise.reject(error)
-            }
-        }
+        alert("服务器开小差了，请稍后再试！");
+        localStorage.removeItem("token")
+        setTimeout(() => {
+            window.location.href = '/'
+        }, 1000)
     }
 )
 

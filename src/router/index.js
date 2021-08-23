@@ -129,7 +129,7 @@ VueRouter.prototype.replace = function replace(location) {
 
 router.beforeEach((to, from, next) => {
   if (to.meta.login_require || to.meta.login_require) {
-    if (!window.localStorage.getItem("name")) {
+    if (!window.localStorage.getItem("Authorization")) {
       editTitle(to)
       next('/')
     }

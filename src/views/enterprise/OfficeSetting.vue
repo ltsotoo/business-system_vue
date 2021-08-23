@@ -208,7 +208,7 @@
           departmentID: department.selectID,
         }"
         :closeDialog="closeEmployeeAddDialog"
-        :parentFun="getEmployeeItems"
+        :refresh="getEmployeeItems"
       />
     </v-dialog>
 
