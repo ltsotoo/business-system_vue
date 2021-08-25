@@ -326,13 +326,13 @@ export default {
         queryAreas().then((res) => {
           _this.areaItems = res.data;
         });
-        queryCustomers(0, 0, {
+        queryCustomers({
           companyID: _this.object.customer.companyID,
         }).then((res) => {
           _this.customerItems = res.data;
         });
         queryContractUnits().then((res) => {
-          this.contractUnitItems = res.data;
+          this.contractUnitItems = res.data.dictionaries;
         });
       });
     },
@@ -352,13 +352,13 @@ export default {
       });
     },
     getCustomerItemsByCompanyID(companyID) {
-      queryCustomers(0, 0, { companyID }).then((res) => {
+      queryCustomers({ companyID }).then((res) => {
         this.customerItems = res.data;
       });
     },
     getContractUnitItems() {
       queryContractUnits().then((res) => {
-        this.contractUnitItems = res.data;
+        this.contractUnitItems = res.data.dictionaries;
       });
     },
     getObject() {

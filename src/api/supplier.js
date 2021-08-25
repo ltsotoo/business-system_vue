@@ -8,9 +8,9 @@ export const entrySupplier = (supplier) => {
     })
 }
 
-export const delSupplier = (id) => {
+export const delSupplier = (uid) => {
     return request({
-        url: '/supplier/' + id,
+        url: '/supplier/' + uid,
         method: 'DELETE',
     })
 }
@@ -23,14 +23,14 @@ export const editSupplier = (supplier) => {
     })
 }
 
-export const querySupplier = (id) => {
+export const querySupplier = (uid) => {
     return request({
-        url: '/supplier/' + id,
+        url: '/supplier/' + uid,
         method: 'GET',
     })
 }
 
-export const querySuppliers = (pageSize, pageNo, queryObject) => {
+export const querySuppliers = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/suppliers',
         method: 'POST',

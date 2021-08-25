@@ -15,10 +15,10 @@
           </v-col>
           <v-col cols="6">
             <v-select
-              v-model="object.officeID"
+              v-model="object.officeUID"
               :items="officeItems"
               item-text="name"
-              item-value="ID"
+              item-value="UID"
               label="办事处"
             ></v-select>
           </v-col>
@@ -55,7 +55,7 @@ export default {
     officeItems: [],
     object: {
       name: "",
-      officeID: null,
+      officeUID: "",
     },
     rules: {
       name: [

@@ -21,20 +21,20 @@
         <v-row v-else>
           <v-col cols="4">
             <v-select
-              v-model="object.sourceTypeID"
+              v-model="object.sourceTypeUID"
               :items="sourceTypeItems"
               item-text="text"
-              item-value="ID"
+              item-value="UID"
               label="类型"
               :rules="openType == 1 ? null : rules.sourceType"
             ></v-select>
           </v-col>
           <v-col cols="4">
             <v-select
-              v-model="object.subtypeID"
+              v-model="object.subtypeUID"
               :items="subtypeItems"
               item-text="text"
-              item-value="ID"
+              item-value="UID"
               label="子类别"
               :rules="openType == 1 ? null : rules.subtype"
             ></v-select>
@@ -76,10 +76,10 @@
           </v-col>
           <v-col cols="4" v-else>
             <v-select
-              v-model="object.supplierID"
+              v-model="object.supplierUID"
               :items="supplierItems"
               item-text="name"
-              item-value="ID"
+              item-value="UID"
               label="供应商"
               :rules="openType == 1 ? null : rules.supplier"
             ></v-select>
@@ -148,8 +148,9 @@ export default {
       type: Number,
       default: 0,
     },
-    openID: {
-      type: Number,
+    openUID: {
+      type: String,
+      default: "",
     },
     parentFun: {
       type: Function,
@@ -161,13 +162,12 @@ export default {
     subtypeItems: [],
     supplierItems: [],
     object: {
-      sourceTypeID: null,
-      subtypeID: null,
-      ID: "",
+      sourceTypeUID: "",
+      subtypeUID: "",
       name: "",
       brand: "",
       specification: "",
-      supplierID: null,
+      supplierUID: "",
       number: 0,
       unit: "",
       purchasedPrice: 0,
@@ -214,18 +214,18 @@ export default {
       this.getProductSoureTypeItems();
       this.getSupplierItems();
     }
-    if (this.openID != null) {
+    if (this.openUID != "") {
       this.getObject();
     }
   },
   methods: {
     getProductSoureTypeItems() {
       queryProductSourceType().then((res) => {
-        this.sourceTypeItems = res.data;
+        this.sourceTypeItems = res.data.dictionaries;
       });
     },
-    getSubtypeItems(parentID) {
-      queryProductSubtype(parentID).then((res) => {
+    getSubtypeItems(parentUID) {
+      queryProductSubtype(parentUID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -235,7 +235,7 @@ export default {
       });
     },
     getObject() {
-      queryProduct(this.openID).then((res) => {
+      queryProduct(this.openUID).then((res) => {
         this.object = res.data;
       });
     },
@@ -268,10 +268,10 @@ export default {
   },
   computed: {},
   watch: {
-    "object.sourceTypeID": {
+    "object.sourceTypeUID": {
       handler: function (val) {
         if (this.openType === 0) {
-          this.object.subtypeID = null;
+          this.object.subtypeUID = null;
         }
         if (val != null && this.openType != 1) {
           this.getSubtypeItems(val);

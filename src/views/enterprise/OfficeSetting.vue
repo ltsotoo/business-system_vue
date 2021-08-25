@@ -41,7 +41,7 @@
                   @click:row="clickOfficeItem"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openOfficeDelDialog(item.ID)">
+                    <v-icon @click="openOfficeDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -73,7 +73,7 @@
                   rounded
                   color="primary"
                   @click="getDepartmentItems"
-                  :disabled="office.selectID == null ? true : false"
+                  :disabled="office.selectUID == '' ? true : false"
                 >
                   查询
                 </v-btn>
@@ -84,7 +84,7 @@
                   rounded
                   color="success"
                   @click="openDepartmentAddDialog"
-                  :disabled="office.selectID == null ? true : false"
+                  :disabled="office.selectUID == '' ? true : false"
                 >
                   添加
                 </v-btn>
@@ -102,7 +102,7 @@
                   @click:row="clickDepartmentItem"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openDepartmentDelDialog(item.ID)">
+                    <v-icon @click="openDepartmentDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -134,7 +134,7 @@
                   rounded
                   color="primary"
                   @click="getEmployeeItems"
-                  :disabled="department.selectID == null ? true : false"
+                  :disabled="department.selectUID == '' ? true : false"
                 >
                   查询
                 </v-btn>
@@ -145,7 +145,7 @@
                   rounded
                   color="success"
                   @click="openEmployeeAddDialog"
-                  :disabled="department.selectID == null ? true : false"
+                  :disabled="department.selectUID == '' ? true : false"
                 >
                   添加
                 </v-btn>
@@ -159,7 +159,7 @@
                   :items-per-page="5"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openEmployeeDelDialog(item.ID)">
+                    <v-icon @click="openEmployeeDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -190,7 +190,7 @@
       v-if="department.addDialog"
     >
       <departmentForms
-        :officeID="office.selectID"
+        :officeUID="office.selectUID"
         :closeDialog="closeDepartmentAddDialog"
         :parentFun="getDepartmentItems"
       />
@@ -204,8 +204,8 @@
     >
       <employeeForms
         :parentObj="{
-          officeID: office.selectID,
-          departmentID: department.selectID,
+          officeUID: office.selectUID,
+          departmentUID: department.selectUID,
         }"
         :closeDialog="closeEmployeeAddDialog"
         :refresh="getEmployeeItems"
@@ -288,8 +288,8 @@ export default {
       text: "",
       items: [],
       selectItem: [],
-      selectID: null,
-      deleteID: null,
+      selectUID: "",
+      deleteUID: "",
       addDialog: false,
       delDialog: false,
     },
@@ -306,8 +306,8 @@ export default {
       text: "",
       items: [],
       selectItem: [],
-      selectID: null,
-      deleteID: null,
+      selectUID: "",
+      deleteUID: "",
       addDialog: false,
       delDialog: false,
     },
@@ -323,7 +323,7 @@ export default {
       ],
       text: "",
       items: [],
-      deleteID: null,
+      deleteUID: "",
       addDialog: false,
       delDialog: false,
     },
@@ -333,10 +333,10 @@ export default {
   },
   methods: {
     getOfficeItems() {
-      this.office.selectID = null;
+      this.office.selectUID = "";
       this.office.selectItem = [];
       this.department.items = [];
-      this.department.selectID = null;
+      this.department.selectUID = "";
       this.department.selectItem = [];
       this.employee.items = [];
       queryOffices(this.office.text).then((res) => {
@@ -345,11 +345,11 @@ export default {
     },
     getDepartmentItems() {
       this.department.items = [];
-      this.department.selectID = null;
+      this.department.selectUID = "";
       this.department.selectItem = [];
       this.employee.items = [];
       queryDepartments({
-        officeID: this.office.selectID,
+        officeUID: this.office.selectUID,
         name: this.department.text,
       }).then((res) => {
         this.department.items = res.data;
@@ -357,8 +357,8 @@ export default {
     },
     getEmployeeItems() {
       queryEmployees({
-        officeID: this.office.selectID,
-        departmentID: this.department.selectID,
+        officeUID: this.office.selectUID,
+        departmentUID: this.department.selectUID,
         name: this.employee.text,
       }).then((res) => {
         this.employee.items = res.data;
@@ -366,9 +366,9 @@ export default {
     },
     clickOfficeItem(item, options) {
       setTimeout(() => {
-        if (this.office.deleteID == null) {
+        if (this.office.deleteUID == "") {
           options.select(true);
-          this.office.selectID = item.ID;
+          this.office.selectUID = item.UID;
           this.department.items = [];
           this.department.selectID = null;
           this.department.selectItem = [];
@@ -379,9 +379,9 @@ export default {
     },
     clickDepartmentItem(item, options) {
       setTimeout(() => {
-        if (this.department.deleteID == null) {
+        if (this.department.deleteUID == "") {
           options.select(true);
-          this.department.selectID = item.ID;
+          this.department.selectUID = item.UID;
           this.employee.items = [];
           this.getEmployeeItems();
         }
@@ -393,16 +393,16 @@ export default {
     closeOfficeAddDialog() {
       this.office.addDialog = false;
     },
-    openOfficeDelDialog(id) {
-      this.office.deleteID = id;
+    openOfficeDelDialog(uid) {
+      this.office.deleteUID = uid;
       this.office.delDialog = true;
     },
     closeOfficeDelDialog() {
-      this.office.deleteID = null;
+      this.office.deleteUID = "";
       this.office.delDialog = false;
     },
     deleteOffice() {
-      delOffice(this.office.deleteID).then((res) => {
+      delOffice(this.office.deleteUID).then((res) => {
         this.getOfficeItems();
         this.closeOfficeDelDialog();
       });
@@ -413,16 +413,16 @@ export default {
     closeDepartmentAddDialog() {
       this.department.addDialog = false;
     },
-    openDepartmentDelDialog(id) {
-      this.department.deleteID = id;
+    openDepartmentDelDialog(uid) {
+      this.department.deleteUID = uid;
       this.department.delDialog = true;
     },
     closeDepartmentDelDialog() {
-      this.department.deleteID = null;
+      this.department.deleteUID = "";
       this.department.delDialog = false;
     },
     deleteDepartment() {
-      delDepartment(this.department.deleteID).then((res) => {
+      delDepartment(this.department.deleteUID).then((res) => {
         this.getDepartmentItems();
         this.closeDepartmentDelDialog();
       });
@@ -433,16 +433,16 @@ export default {
     closeEmployeeAddDialog() {
       this.employee.addDialog = false;
     },
-    openEmployeeDelDialog(id) {
-      this.employee.deleteID = id;
+    openEmployeeDelDialog(uid) {
+      this.employee.deleteUID = uid;
       this.employee.delDialog = true;
     },
     closeEmployeeDelDialog() {
-      this.employee.deleteID = null;
+      this.employee.deleteUID = "";
       this.employee.delDialog = false;
     },
     deleteEmployee() {
-      delEmployee(this.employee.deleteID).then((res) => {
+      delEmployee(this.employee.deleteUID).then((res) => {
         this.getEmployeeItems();
         this.closeEmployeeDelDialog();
       });

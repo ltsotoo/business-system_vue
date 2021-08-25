@@ -8,9 +8,9 @@ export const entryContract = (contract) => {
     })
 }
 
-export const delContract = (id) => {
+export const delContract = (uid) => {
     return request({
-        url: '/contract/' + id,
+        url: '/contract/' + uid,
         method: 'DELETE',
     })
 }
@@ -23,14 +23,14 @@ export const editContract = (contract) => {
     })
 }
 
-export const queryContract = (id) => {
+export const queryContract = (uid) => {
     return request({
-        url: '/contract/' + id,
+        url: '/contract/' + uid,
         method: 'GET',
     })
 }
 
-export const queryContracts = (pageSize, pageNo, queryObject) => {
+export const queryContracts = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/contracts',
         method: 'POST',

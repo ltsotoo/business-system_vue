@@ -13,7 +13,7 @@
         <v-text-field
           label="办事处名称"
           clearable
-          v-model="searchObj.office.name"
+          v-model="searchObj.officeName"
         ></v-text-field>
       </v-col>
       <v-col cols="auto">
@@ -36,20 +36,20 @@
         >
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="openAreaEdiDialog(item)"> mdi-pencil </v-icon>
-            <v-icon @click="openAreaDelDialog(item.ID)"> mdi-delete </v-icon>
+            <v-icon @click="openAreaDelDialog(item.UID)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-col>
     </v-row>
 
-    <v-dialog v-model="addDialog" max-width="500px" persistent>
+    <v-dialog v-model="addDialog" max-width="500px" persistent v-if="addDialog">
       <areaForms
         :closeDialog="closeAreaAddDialog"
         :refresh="getObject"
       />
     </v-dialog>
 
-    <v-dialog v-model="ediDialog" max-width="500px" persistent>
+    <v-dialog v-model="ediDialog" max-width="500px" persistent v-if="ediDialog">
       <areaForms
         :closeDialog="closeAreaEdiDialog"
         :openType="2"
@@ -58,7 +58,7 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="delDialog" max-width="500px" persistent>
+    <v-dialog v-model="delDialog" max-width="500px" persistent v-if="delDialog">
       <v-card>
         <v-card-title class="text-h5">您确定要删除该区域吗?</v-card-title>
         <v-card-actions>
@@ -98,16 +98,14 @@ export default {
     ],
     searchObj: {
       name: "",
-      office: {
-        name: "",
-      },
+      officeName: "",
     },
     object: [],
     addDialog: false,
     ediDialog: false,
     ediObj: {},
     delDialog: false,
-    deleteID: null,
+    deleteUID: "",
   }),
   created() {
     this.getObject();
@@ -132,16 +130,16 @@ export default {
       this.ediObj = {};
       this.ediDialog = false;
     },
-    openAreaDelDialog(id) {
-      this.deleteID = id;
+    openAreaDelDialog(uid) {
+      this.deleteUID = uid;
       this.delDialog = true;
     },
     closeAreaDelDialog() {
-      this.deleteID = null;
+      this.deleteUID = "";
       this.delDialog = false;
     },
     deleteArea() {
-      delArea(this.deleteID).then((res) => {
+      delArea(this.deleteUID).then((res) => {
         this.getObject();
         this.closeAreaDelDialog();
       });

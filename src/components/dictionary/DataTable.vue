@@ -9,7 +9,7 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
 
@@ -36,36 +36,36 @@ export default {
     ],
     object: [],
     queryObject: {
-      parentID: null,
-      dictionaryTypeID: null,
+      parentUID: "",
+      dictionaryTypeUID: "",
     },
     deleteDialog: false,
-    openID: null,
+    openUID: null,
   }),
   methods: {
-    updateQueryObject(parentID, dictionaryTypeID) {
-      this.queryObject.parentID = parentID;
-      this.queryObject.dictionaryTypeID = dictionaryTypeID;
+    updateQueryObject(parentUID, dictionaryTypeUID) {
+      this.queryObject.parentUID = parentUID;
+      this.queryObject.dictionaryTypeUID = dictionaryTypeUID;
       this.getObject();
     },
     getObject() {
       queryDictionaries(
-        this.queryObject.parentID,
-        this.queryObject.dictionaryTypeID
+        this.queryObject.parentUID,
+        this.queryObject.dictionaryTypeUID
       ).then((res) => {
         this.object = res.data;
       });
     },
-    openDeleteDialog(id) {
-      this.openID = id;
+    openDeleteDialog(uid) {
+      this.openUID = uid;
       this.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.openID = null;
+      this.openUID = "";
       this.deleteDialog = false;
     },
     deleteItem() {
-      delDictionary(this.openID).then((res) => {
+      delDictionary(this.openUID).then((res) => {
         this.$message.success("删除成功！");
         this.getObject();
         this.closeDeleteDialog();

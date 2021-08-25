@@ -6,20 +6,20 @@
           <v-row align="baseline">
             <v-col cols="2">
               <v-select
-                v-model="queryObject.sourceTypeID"
+                v-model="queryObject.sourceTypeUID"
                 :items="sourceTypeItems"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 label="类型"
                 clearable
               ></v-select>
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.subtypeID"
+                v-model="queryObject.subtypeUID"
                 :items="subtypeItems"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 label="子类别"
                 :disabled="sourceTypeItems.length == 0"
                 clearable
@@ -79,8 +79,8 @@ export default {
     subtypeItems: [],
     sourceTypeName: "",
     queryObject: {
-      sourceTypeID: null,
-      subtypeID: null,
+      sourceTypeUID: "",
+      subtypeUID: "",
       name: "",
       specification: "",
     },
@@ -91,11 +91,11 @@ export default {
   methods: {
     getProductSoureTypeItems() {
       queryProductSourceType().then((res) => {
-        this.sourceTypeItems = res.data;
+        this.sourceTypeItems = res.data.dictionaries;
       });
     },
-    getSubtypeItems(parentID) {
-      queryProductSubtype(parentID).then((res) => {
+    getSubtypeItems(parentUID) {
+      queryProductSubtype(parentUID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -111,10 +111,10 @@ export default {
     },
   },
   watch: {
-    "queryObject.sourceTypeID": {
+    "queryObject.sourceTypeUID": {
       handler: function (val) {
         this.subtypeItems = [];
-        this.queryObject.subtypeID = null;
+        this.queryObject.subtypeUID = null;
         if (val != null) {
           this.getSubtypeItems(val);
         }

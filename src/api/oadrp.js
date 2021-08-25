@@ -8,9 +8,9 @@ export const entryOffice = (office) => {
     })
 }
 
-export const delOffice = (id) => {
+export const delOffice = (uid) => {
     return request({
-        url: '/office/' + id,
+        url: '/office/' + uid,
         method: 'DELETE',
     })
 }
@@ -33,9 +33,9 @@ export const entryArea = (area) => {
     })
 }
 
-export const delArea = (id) => {
+export const delArea = (uid) => {
     return request({
-        url: '/area/' + id,
+        url: '/area/' + uid,
         method: 'DELETE',
     })
 }
@@ -64,18 +64,18 @@ export const entryDepartment = (department) => {
     })
 }
 
-export const delDepartment = (id) => {
+export const delDepartment = (uid) => {
     return request({
-        url: '/department/' + id,
+        url: '/department/' + uid,
         method: 'DELETE',
     })
 }
 
-export const queryDepartments = (department) => {
+export const queryDepartments = (querObject) => {
     return request({
         url: '/departments',
         method: 'POST',
-        data: department
+        data: querObject
     })
 }
 

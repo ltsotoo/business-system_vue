@@ -8,9 +8,9 @@ export const entryCustomer = (customer) => {
     })
 }
 
-export const delCustomer = (id) => {
+export const delCustomer = (uid) => {
     return request({
-        url: '/customer/' + id,
+        url: '/customer/' + uid,
         method: 'DELETE',
     })
 }
@@ -23,14 +23,14 @@ export const editCustomer = (customer) => {
     })
 }
 
-export const queryCustomer = (id) => {
+export const queryCustomer = (uid) => {
     return request({
-        url: '/customer/' + id,
+        url: '/customer/' + uid,
         method: 'GET',
     })
 }
 
-export const queryCustomers = (pageSize, pageNo, queryObject) => {
+export const queryCustomers = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/customers',
         method: 'POST',

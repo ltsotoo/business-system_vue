@@ -1,16 +1,16 @@
 import request from './base'
 
-export const delTask = (id) => {
+export const delTask = (uid) => {
     return request({
-        url: '/task/' + id,
+        url: '/task/' + uid,
         method: 'DELETE',
     })
 }
 
-export const queryTasks = (task) => {
+export const queryTasks = (querObject) => {
     return request({
         url: '/tasks',
         method: 'POST',
-        data: task
+        data: querObject
     })
 }

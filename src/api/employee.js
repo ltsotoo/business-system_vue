@@ -8,9 +8,9 @@ export const entryEmployee = (employee) => {
     })
 }
 
-export const delEmployee = (id) => {
+export const delEmployee = (uid) => {
     return request({
-        url: '/employee/'+id,
+        url: '/employee/'+uid,
         method: 'DELETE',
     })
 }
@@ -23,9 +23,9 @@ export const editEmployee = (employee) => {
     })
 }
 
-export const queryEmployee = (id) => {
+export const queryEmployee = (uid) => {
     return request({
-        url: '/employee/' + id,
+        url: '/employee/' + uid,
         method: 'get',
     })
 }

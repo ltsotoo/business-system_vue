@@ -12,12 +12,12 @@
           </v-col>
           <v-col cols="6" v-else>
             <v-select
-              v-model="object.companyID"
+              v-model="object.companyUID"
               :items="companyItems"
               item-text="name"
-              item-value="ID"
+              item-value="UID"
               label="公司"
-              :rules="rules.companyID"
+              :rules="rules.companyUID"
             ></v-select>
           </v-col>
           <v-col cols="6">
@@ -79,7 +79,7 @@ export default {
       type: Number,
       default: 0,
     },
-    openID: {
+    openUID: {
       type: Number,
     },
     parentFun: {
@@ -90,8 +90,7 @@ export default {
   data: () => ({
     companyItems: [],
     object: {
-      id: "",
-      companyID: null,
+      companyUID: "",
       name: "",
       researchGroup: "",
       phone: "",
@@ -99,7 +98,7 @@ export default {
       email: "",
     },
     rules: {
-      companyID: [(v) => !!v || "必填项！"],
+      companyUID: [(v) => !!v || "必填项！"],
       name: [
         (v) => !!v || "必填项！",
         (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
@@ -126,7 +125,7 @@ export default {
   }),
   created() {
     this.getCompanyItems();
-    if (this.openID != null) {
+    if (this.openType != 0) {
       this.getObject();
     }
   },
@@ -137,7 +136,7 @@ export default {
       });
     },
     getObject() {
-      queryCustomer(this.openID).then((res) => {
+      queryCustomer(this.openUID).then((res) => {
         this.object = res.data;
       });
     },

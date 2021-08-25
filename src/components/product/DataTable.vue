@@ -20,8 +20,8 @@
           <v-icon @click="transferItem(item)"> mdi-plus-thick </v-icon>
         </div>
         <div v-else>
-          <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-          <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+          <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
+          <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
         </div>
       </template>
     </v-data-table>
@@ -32,7 +32,7 @@
       max-width="800px"
       @click:outside="closeViewDialog"
     >
-      <productForms :openID="options.openID" :openType="options.openType" />
+      <productForms :openUID="options.openUID" :openType="options.openType" />
     </v-dialog>
 
     <v-dialog
@@ -42,7 +42,7 @@
       persistent
     >
       <productForms
-        :openID="options.openID"
+        :openUID="options.openUID"
         :openType="options.openType"
         ref="productForms"
         :parentFun="getObject"
@@ -182,7 +182,7 @@ export default {
       total: 1,
       page: 1,
       itemsPerPage: 10,
-      openID: null,
+      openUID: "",
       openType: null,
       isTransfer: false,
       viewDialog: false,
@@ -198,9 +198,9 @@ export default {
     getObject() {
       this.options.loading = true;
       queryProducts(
+        this.queryObject,
         this.options.itemsPerPage,
-        this.options.page,
-        this.queryObject
+        this.options.page
       ).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {
@@ -224,23 +224,23 @@ export default {
           this.options.deleteDialog == false &&
           this.options.isTransfer == false
         ) {
-          this.options.openID = item.ID;
+          this.options.openUID = item.UID;
           this.options.openType = 1;
           this.options.viewDialog = true;
         }
       }, 66);
     },
     closeViewDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.openType = null;
     },
-    openEditDialog(id) {
-      this.options.openID = id;
+    openEditDialog(uid) {
+      this.options.openUID = uid;
       this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.openType = null;
       this.options.editDialog = false;
     },
@@ -250,16 +250,16 @@ export default {
         this.closeEditDialog();
       }
     },
-    openDeleteDialog(id) {
-      this.options.openID = id;
+    openDeleteDialog(uid) {
+      this.options.openUID = uid;
       this.options.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delProduct(this.options.openID).then((res) => {
+      delProduct(this.options.openUID).then((res) => {
         this.$message.success("删除成功了！");
         this.getObject();
         this.closeDeleteDialog();

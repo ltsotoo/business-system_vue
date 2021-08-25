@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <v-card>
-      <employeeForms :openType="1" />
-    </v-card>
+    <v-card> <employeeForms :openType="1" /> </v-card>
   </v-container>
 </template>
 

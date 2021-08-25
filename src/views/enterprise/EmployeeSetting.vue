@@ -38,7 +38,7 @@
         >
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon @click="openEmployeeEdiDialog(item)"> mdi-pencil </v-icon>
-            <v-icon @click="openEmployeeDelDialog(item.ID)"> mdi-delete </v-icon>
+            <v-icon @click="openEmployeeDelDialog(item.UID)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-col>
@@ -117,7 +117,7 @@ export default {
     ediDialog: false,
     ediObj: {},
     delDialog: false,
-    deleteID: null,
+    deleteUID: "",
   }),
   created() {
     this.getObject();
@@ -142,16 +142,16 @@ export default {
       this.ediObj = {};
       this.ediDialog = false;
     },
-    openEmployeeDelDialog(id) {
-      this.deleteID = id;
+    openEmployeeDelDialog(uid) {
+      this.deleteUID = uid;
       this.delDialog = true;
     },
     closeEmployeeDelDialog() {
-      this.deleteID = null;
+      this.deleteID = "";
       this.delDialog = false;
     },
     deleteEmployee() {
-      delEmployee(this.deleteID).then((res) => {
+      delEmployee(this.deleteUID).then((res) => {
         this.getObject();
         this.closeEmployeeDelDialog();
       });

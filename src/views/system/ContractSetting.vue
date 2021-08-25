@@ -56,8 +56,8 @@
       <dictionaryForms
         :closeDialog="closeAddDialog"
         :parentObj="{
-          parentID: dictionary.ID,
-          dictionaryTypeID: dictionaryType.ID,
+          parentUID: dictionary.UID,
+          dictionaryTypeUID: dictionaryType.UID,
         }"
       />
     </v-dialog>
@@ -79,11 +79,11 @@ export default {
     dictionartItems: [],
     addDialog: false,
     dictionaryType: {
-      ID: null,
+      UID: "",
       module: "contract",
     },
     dictionary: {
-      ID: null,
+      UID: "",
       text: "",
     },
   }),
@@ -128,15 +128,15 @@ export default {
       this.$refs.systemDataTable.object = [];
       this.dictionartItems = [];
       this.dictionary = {};
-      if (dictionaryType.parentID == 0) {
-        this.$refs.systemDataTable.updateQueryObject(null, dictionaryType.ID);
+      if (dictionaryType.parentUID == "") {
+        this.$refs.systemDataTable.updateQueryObject(null, dictionaryType.UID);
       } else {
-        this.getDictionartItems(dictionaryType.parentID);
+        this.getDictionartItems(dictionaryType.parentUID);
       }
     },
     changeDictionary(dictionary) {
       this.$refs.systemDataTable.object = [];
-      this.$refs.systemDataTable.updateQueryObject(dictionary.ID, null);
+      this.$refs.systemDataTable.updateQueryObject(dictionary.UID, null);
     },
   },
   watch: {

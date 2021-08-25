@@ -1,18 +1,23 @@
 import request from './base'
 
-export const createDictionary = (object) => {
+
+export const queryDictionaryType = (module, name) => {
     return request({
-        url: '/dictionary',
-        method: 'POST',
-        data: object
+        url: '/dictionaryType',
+        method: 'get',
+        params: {
+            "module": module,
+            "name": name,
+        }
     })
 }
 
-export const delDictionary = (id) => {
-    return request({
-        url: '/dictionary/' + id,
-        method: 'DELETE',
-    })
+export const queryContractUnits = () => {
+    return queryDictionaryType("contract", "unit")
+}
+
+export const queryProductSourceType = () => {
+    return queryDictionaryType("product", "source_type")
 }
 
 export const queryDictionaryTypes = (module) => {
@@ -23,34 +28,30 @@ export const queryDictionaryTypes = (module) => {
     })
 }
 
-export const queryDictionaries = (parentID, dictionaryTypeID) => {
+export const createDictionary = (object) => {
+    return request({
+        url: '/dictionary',
+        method: 'POST',
+        data: object
+    })
+}
+
+export const delDictionary = (uid) => {
+    return request({
+        url: '/dictionary/' + uid,
+        method: 'DELETE',
+    })
+}
+
+export const queryDictionaries = (parentUID, dictionaryTypeUID) => {
     return request({
         url: '/dictionaries',
         method: 'get',
         params: {
-            "parentID": parentID,
-            "dictionaryTypeID": dictionaryTypeID,
+            "parentUID": parentUID,
+            "dictionaryTypeUID": dictionaryTypeUID,
         }
     })
-}
-
-export const queryDictionariesByDictionaryType = (module, name) => {
-    return request({
-        url: '/dictionariesByDictionaryType',
-        method: 'get',
-        params: {
-            "module": module,
-            "name": name,
-        }
-    })
-}
-
-export const queryContractUnits = () => {
-    return queryDictionariesByDictionaryType("contract", "unit")
-}
-
-export const queryProductSourceType = () => {
-    return queryDictionariesByDictionaryType("product", "source_type")
 }
 
 export const queryProductSubtype = (parentID) => {

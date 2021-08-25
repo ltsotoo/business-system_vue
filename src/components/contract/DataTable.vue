@@ -163,9 +163,9 @@ export default {
     getObject() {
       this.options.loading = true;
       queryContracts(
+        this.queryObject,
         this.options.itemsPerPage,
-        this.options.page,
-        this.queryObject
+        this.options.page
       ).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {

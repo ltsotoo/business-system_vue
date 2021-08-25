@@ -27,7 +27,7 @@
 import { entryDepartment } from "@/api/oadrp";
 export default {
   props: {
-    officeID: {
+    officeUID: {
       type: Number,
     },
     closeDialog: {
@@ -39,7 +39,7 @@ export default {
   },
   data: () => ({
     object: {
-      officeID: null,
+      officeUID: null,
       name: "",
     },
     rules: {
@@ -50,7 +50,7 @@ export default {
     },
   }),
   created() {
-    this.object.officeID = this.officeID;
+    this.object.officeUID = this.officeUID;
   },
   methods: {
     add() {

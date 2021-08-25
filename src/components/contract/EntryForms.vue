@@ -468,18 +468,18 @@ export default {
       });
     },
     getCustomerItemsByCompanyID(companyID) {
-      queryCustomers(0, 0, { companyID }).then((res) => {
+      queryCustomers({ companyID }).then((res) => {
         this.customerItems = res.data;
       });
     },
     getContractUnitItems() {
       queryContractUnits().then((res) => {
-        this.contractUnitItems = res.data;
+        this.contractUnitItems = res.data.dictionaries;
       });
     },
     getProductSoureTypeItems() {
       queryProductSourceType().then((res) => {
-        this.sourceTypeItems = res.data;
+        this.sourceTypeItems = res.data.dictionaries;
       });
     },
     getSubtypeItems(parentID) {

@@ -14,6 +14,7 @@
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.address"
+              :disabled="openType == 2"
               label="地址"
               :rules="rules.address"
             ></v-text-field>
@@ -66,8 +67,8 @@ export default {
       type: Number,
       default: 0,
     },
-    openID: {
-      type: Number,
+    openUID: {
+      type: String,
     },
     parentFun: {
       type: Function,
@@ -76,7 +77,6 @@ export default {
   },
   data: () => ({
     object: {
-      id: "",
       name: "",
       address: "",
       linkman: "",
@@ -114,13 +114,13 @@ export default {
     },
   }),
   created() {
-    if (this.openID != null) {
+    if (this.openType != 0) {
       this.getObject();
     }
   },
   methods: {
     getObject() {
-      querySupplier(this.openID).then((res) => {
+      querySupplier(this.openUID).then((res) => {
         this.object = res.data;
       });
     },

@@ -41,7 +41,7 @@
                   @click:row="clickDepartmentItem"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openDepartmentDelDialog(item.ID)">
+                    <v-icon @click="openDepartmentDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -73,7 +73,7 @@
                   rounded
                   color="primary"
                   @click="getEmployeeItems"
-                  :disabled="department.selectID == null ? true : false"
+                  :disabled="department.selectUID == '' ? true : false"
                 >
                   查询
                 </v-btn>
@@ -84,7 +84,7 @@
                   rounded
                   color="success"
                   @click="openEmployeeAddDialog"
-                  :disabled="department.selectID == null ? true : false"
+                  :disabled="department.selectUID == '' ? true : false"
                 >
                   添加
                 </v-btn>
@@ -98,7 +98,7 @@
                   :items-per-page="5"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openEmployeeDelDialog(item.ID)">
+                    <v-icon @click="openEmployeeDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -130,7 +130,7 @@
     >
       <employeeForms
         :parentObj="{
-          departmentID: department.selectID,
+          departmentUID: department.selectUID,
         }"
         :closeDialog="closeEmployeeAddDialog"
         :refresh="getEmployeeItems"
@@ -144,9 +144,9 @@
           <v-spacer></v-spacer>
           <v-btn color="error" text @click="deleteDepartment">确定</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeDepartmentDelDialog"
-            >取消</v-btn
-          >
+          <v-btn color="primary" text @click="closeDepartmentDelDialog">
+            取消
+          </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -193,8 +193,8 @@ export default {
       text: "",
       items: [],
       selectItem: [],
-      selectID: null,
-      deleteID: null,
+      selectUID: "",
+      deleteUID: "",
       addDialog: false,
       delDialog: false,
     },
@@ -210,7 +210,7 @@ export default {
       ],
       text: "",
       items: [],
-      deleteID: null,
+      deleteUID: "",
       addDialog: false,
       delDialog: false,
     },
@@ -221,11 +221,11 @@ export default {
   methods: {
     getDepartmentItems() {
       this.department.items = [];
-      this.department.selectID = null;
+      this.department.selectUID = "";
       this.department.selectItem = [];
       this.employee.items = [];
       queryDepartments({
-        officeID: null,
+        officeUID: "",
         name: this.department.text,
       }).then((res) => {
         this.department.items = res.data;
@@ -233,8 +233,8 @@ export default {
     },
     getEmployeeItems() {
       queryEmployees({
-        officeID: null,
-        departmentID: this.department.selectID,
+        officeUID: "",
+        departmentUID: this.department.selectUID,
         name: this.employee.text,
       }).then((res) => {
         this.employee.items = res.data;
@@ -242,9 +242,9 @@ export default {
     },
     clickDepartmentItem(item, options) {
       setTimeout(() => {
-        if (this.department.deleteID == null) {
+        if (this.department.deleteUID == "") {
           options.select(true);
-          this.department.selectID = item.ID;
+          this.department.selectUID = item.UID;
           this.employee.items = [];
           this.getEmployeeItems();
         }
@@ -256,16 +256,16 @@ export default {
     closeDepartmentAddDialog() {
       this.department.addDialog = false;
     },
-    openDepartmentDelDialog(id) {
-      this.department.deleteID = id;
+    openDepartmentDelDialog(uid) {
+      this.department.deleteUID = uid;
       this.department.delDialog = true;
     },
     closeDepartmentDelDialog() {
-      this.department.deleteID = null;
+      this.department.deleteUID = "";
       this.department.delDialog = false;
     },
     deleteDepartment() {
-      delDepartment(this.department.deleteID).then((res) => {
+      delDepartment(this.department.deleteUID).then((res) => {
         this.getDepartmentItems();
         this.closeDepartmentDelDialog();
       });
@@ -276,16 +276,16 @@ export default {
     closeEmployeeAddDialog() {
       this.employee.addDialog = false;
     },
-    openEmployeeDelDialog(id) {
-      this.employee.deleteID = id;
+    openEmployeeDelDialog(uid) {
+      this.employee.deleteUID = uid;
       this.employee.delDialog = true;
     },
     closeEmployeeDelDialog() {
-      this.employee.deleteID = null;
+      this.employee.deleteID = "";
       this.employee.delDialog = false;
     },
     deleteEmployee() {
-      delEmployee(this.employee.deleteID).then((res) => {
+      delEmployee(this.employee.deleteUID).then((res) => {
         this.getEmployeeItems();
         this.closeEmployeeDelDialog();
       });

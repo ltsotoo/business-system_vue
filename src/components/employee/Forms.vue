@@ -122,12 +122,13 @@ export default {
     roleItems: [],
     object: {
       ID: null,
+      UID: "",
       name: "",
       phone: "",
       wechatID: "",
       email: "",
-      officeID: null,
-      departmentID: null,
+      officeUID: "",
+      departmentUID: "",
       roleID: null,
       office: {},
       department: {},
@@ -156,11 +157,11 @@ export default {
   }),
   created() {
     if (this.openType == 0) {
-      this.object.officeID = this.parentObj.officeID;
-      this.object.departmentID = this.parentObj.departmentID;
+      this.object.officeUID = this.parentObj.officeUID;
+      this.object.departmentUID = this.parentObj.departmentUID;
     } else {
       if (this.parentObj) {
-        this.object.ID = this.parentObj.ID;
+        this.object.UID = this.parentObj.UID;
       }
       this.getObject();
     }
@@ -171,8 +172,8 @@ export default {
         this.officeItems = res.data;
       });
     },
-    getDepartmentItems(officeID) {
-      queryDepartments({ officeID: officeID }).then((res) => {
+    getDepartmentItems(officeUID) {
+      queryDepartments({ officeUID: officeUID }).then((res) => {
         this.departmentItems = res.data;
       });
     },
@@ -182,7 +183,7 @@ export default {
       });
     },
     getObject() {
-      queryEmployee(this.object.ID).then((res) => {
+      queryEmployee(this.object.UID).then((res) => {
         this.object = res.data;
       });
     },
