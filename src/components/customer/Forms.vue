@@ -80,7 +80,8 @@ export default {
       default: 0,
     },
     openUID: {
-      type: Number,
+      type: String,
+      default: "",
     },
     parentFun: {
       type: Function,
@@ -141,12 +142,13 @@ export default {
       });
     },
     entryObject() {
+      var _this = this;
       if (this.validateForm()) {
         entryCustomer(this.object).then((res) => {
           this.$message.success("录入成功了!");
-          if (this.parentFun) {
-            this.parentFun(false);
-          }
+          setTimeout(function () {
+            _this.$router.replace("/customer");
+          }, 1000);
         });
       } else {
         this.$message.error("信息填写异常，请检查后再提交！");

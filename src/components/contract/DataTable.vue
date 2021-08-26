@@ -23,8 +23,8 @@
         {{ item.isSpecial == "true" ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openEditDialog(item.ID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.ID)"> mdi-delete </v-icon>
+        <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
+        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
 
@@ -35,7 +35,7 @@
       @click:outside="closeViewDialog"
     >
       <contractViewForms
-        :openID="options.openID"
+        :openUID="options.openUID"
         :openType="options.openType"
       />
     </v-dialog>
@@ -48,7 +48,7 @@
       persistent
     >
       <contractEditForms
-        :openID="options.openID"
+        :openUID="options.openUID"
         :openType="options.openType"
         ref="contractForms"
         :parentFun="getObject"
@@ -148,7 +148,7 @@ export default {
       total: 0,
       page: 1,
       itemsPerPage: 10,
-      openID: null,
+      openUID: "",
       openType: null,
       viewDialog: false,
       editDialog: false,
@@ -181,36 +181,36 @@ export default {
           this.options.editDialog == false &&
           this.options.deleteDialog == false
         ) {
-          this.options.openID = item.ID;
+          this.options.openUID = item.UID;
           this.options.openType = 1;
           this.options.viewDialog = true;
         }
       }, 66);
     },
     closeViewDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.openType = null;
     },
-    openEditDialog(id) {
-      this.options.openID = id;
+    openEditDialog(uid) {
+      this.options.openUID = uid;
       this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.openType = null;
       this.options.editDialog = false;
     },
-    openDeleteDialog(id) {
-      this.options.openID = id;
+    openDeleteDialog(uid) {
+      this.options.openUID = uid;
       this.options.deleteDialog = true;
     },
     closeDeleteDialog() {
-      this.options.openID = null;
+      this.options.openUID = "";
       this.options.deleteDialog = false;
     },
     deleteItem() {
-      delContract(this.options.openID).then((res) => {
+      delContract(this.options.openUID).then((res) => {
         this.$message.success("删除成功了！");
         this.getObject();
         this.closeDeleteDialog();

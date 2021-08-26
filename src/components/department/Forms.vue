@@ -28,7 +28,8 @@ import { entryDepartment } from "@/api/oadrp";
 export default {
   props: {
     officeUID: {
-      type: Number,
+      type: String,
+      default: "",
     },
     closeDialog: {
       type: Function,

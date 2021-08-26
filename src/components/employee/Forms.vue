@@ -4,62 +4,13 @@
     <v-card-title v-if="openType == 2">员工信息编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
-        <v-row v-if="openType == 1">
-          <v-col cols="4">
-            <v-text-field
-              label="办事处"
-              v-model="object.office.name"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              label="部门"
-              v-model="object.department.name"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              label="职务"
-              v-model="object.role.name"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <!-- <v-row v-else>
-          <v-col cols="4">
-            <v-select
-              v-model="object.officeID"
-              :items="officeItems"
-              item-text="name"
-              item-value="ID"
-              label="办事处"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.departmentID"
-              :items="departmentItems"
-              item-text="name"
-              item-value="ID"
-              label="部门"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.roleID"
-              :items="roleItems"
-              item-text="name"
-              item-value="ID"
-              label="职务"
-            ></v-select>
-          </v-col>
-        </v-row> -->
-
         <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
               :rules="rules.name"
+              :readonly = "openType == 1"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -67,6 +18,7 @@
               v-model.trim="object.phone"
               label="手机号"
               :rules="rules.phone"
+              :readonly = "openType == 1"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -77,6 +29,7 @@
               v-model.trim="object.wechatID"
               label="微信号"
               :rules="rules.wechatID"
+              :readonly = "openType == 1"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -84,6 +37,7 @@
               v-model.trim="object.email"
               label="邮箱"
               :rules="rules.email"
+              :readonly = "openType == 1"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -102,6 +56,7 @@ import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
 import { entryEmployee, queryEmployee, editEmployee } from "@/api/employee";
 export default {
   props: {
+    // 0录入 1查看 2编辑 3my
     openType: {
       type: Number,
       default: 0,
@@ -122,7 +77,7 @@ export default {
     roleItems: [],
     object: {
       ID: null,
-      UID: "",
+      UID: "my",
       name: "",
       phone: "",
       wechatID: "",
@@ -162,6 +117,8 @@ export default {
     } else {
       if (this.parentObj) {
         this.object.UID = this.parentObj.UID;
+      }else{
+        this.object.UID = "my"
       }
       this.getObject();
     }

@@ -100,12 +100,6 @@ export default {
         value: "department.name",
         sortable: false,
       },
-      {
-        text: "职务",
-        align: "center",
-        value: "role.name",
-        sortable: false,
-      },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     searchObj: {

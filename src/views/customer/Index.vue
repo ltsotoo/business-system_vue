@@ -6,7 +6,7 @@
           <v-row align="baseline">
             <v-col cols="2">
               <v-select
-                v-model="queryObject.areaID"
+                v-model="queryObject.areaUID"
                 :items="areaItems"
                 item-text="name"
                 item-value="ID"
@@ -16,7 +16,7 @@
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.companyID"
+                v-model="queryObject.companyUID"
                 :items="companyItems"
                 item-text="name"
                 item-value="ID"
@@ -78,8 +78,8 @@ export default {
     areaItems: [],
     companyItems: [],
     queryObject: {
-      areaID: null,
-      companyID: null,
+      areaUID: "",
+      companyUID: "",
       researchGroup: "",
       name: "",
     },
@@ -93,8 +93,8 @@ export default {
         this.areaItems = res.data;
       });
     },
-    getCompanyItemsByAreaID(areaID) {
-      queryCompanys({areaID:areaID}).then((res) => {
+    getCompanyItems(areaUID) {
+      queryCompanys({areaUID:areaUID}).then((res) => {
         this.companyItems = res.data;
       });
     },
@@ -110,12 +110,12 @@ export default {
     },
   },
   watch: {
-    "queryObject.areaID": {
+    "queryObject.areaUID": {
       handler: function (val) {
         this.companyItems = [];
-        this.queryObject.companyID = null;
+        this.queryObject.companyUID = "";
         if (val != null) {
-          this.getCompanyItemsByAreaID(val);
+          this.getCompanyItems(val);
         }
       },
     },

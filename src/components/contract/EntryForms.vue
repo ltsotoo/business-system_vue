@@ -6,22 +6,22 @@
           <v-row>
             <v-col cols="4">
               <v-select
-                v-model="object.areaID"
+                v-model="object.areaUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="areaItems"
                 label="区域"
-                :rules="rules.areaID"
+                :rules="rules.areaUID"
               ></v-select>
             </v-col>
             <v-col cols="4">
               <v-select
-                v-model="object.employeeID"
+                v-model="object.employeeUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="employeeItems"
                 label="业务员"
-                :rules="rules.employeeID"
+                :rules="rules.employeeUID"
               ></v-select>
             </v-col>
           </v-row>
@@ -41,23 +41,23 @@
           <v-row align="center" v-if="object.isEntryCustomer == true">
             <v-col class="d-flex" cols="4">
               <v-select
-                v-model="object.customer.companyID"
+                v-model="object.customer.companyUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="companyItems"
                 label="客户公司"
-                :rules="rules.companyID"
+                :rules="rules.companyUID"
               ></v-select>
             </v-col>
 
             <v-col class="d-flex" cols="4">
               <v-select
-                v-model="object.customerID"
+                v-model="object.customerUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="customerItems"
                 label="客户名称"
-                :rules="rules.customerID"
+                :rules="rules.customerUID"
               ></v-select>
             </v-col>
           </v-row>
@@ -65,12 +65,12 @@
           <v-row v-if="object.isEntryCustomer == false">
             <v-col cols="3">
               <v-select
-                v-model="object.customer.companyID"
+                v-model="object.customer.companyUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="companyItems"
                 label="客户公司"
-                :rules="rules.companyID"
+                :rules="rules.companyUID"
               ></v-select>
             </v-col>
             <v-col cols="3">
@@ -99,12 +99,12 @@
           <v-row>
             <v-col cols="4">
               <v-select
-                v-model="object.contractUnitID"
+                v-model="object.contractUnitUID"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 :items="contractUnitItems"
                 label="签订单位"
-                :rules="rules.contractUnitID"
+                :rules="rules.contractUnitUID"
               ></v-select>
             </v-col>
             <v-col cols="4">
@@ -217,20 +217,20 @@
           <v-row align="baseline">
             <v-col cols="3">
               <v-select
-                v-model="queryObject.sourceTypeID"
+                v-model="queryObject.sourceTypeUID"
                 :items="sourceTypeItems"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 label="类型"
                 clearable
               ></v-select>
             </v-col>
             <v-col cols="3">
               <v-select
-                v-model="queryObject.subtypeID"
+                v-model="queryObject.subtypeUID"
                 :items="subtypeItems"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 label="子类别"
                 clearable
               ></v-select>
@@ -275,7 +275,7 @@
             }"
           >
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon @click="openCartDeleteDialog(item.productID)">
+              <v-icon @click="openCartDeleteDialog(item.productUID)">
                 mdi-delete
               </v-icon>
             </template>
@@ -370,14 +370,14 @@ export default {
     sourceTypeItems: [],
     subtypeItems: [],
     object: {
-      ID: null,
+      UID: "",
       no: "",
-      areaID: null,
-      employeeID: null,
+      areaUID: "",
+      employeeUID: "",
       isEntryCustomer: true,
-      customerID: null,
+      customerUID: "",
       contractDate: null,
-      contractUnitID: null,
+      contractUnitUID: "",
       estimatedDeliveryDate: "",
       endDeliveryDate: "",
       invoiceType: 1,
@@ -389,16 +389,16 @@ export default {
       area: {},
       employee: {},
       customer: {
-        companyID: null,
+        companyUID: "",
       },
       contractUnit: {},
     },
     rules: {
-      areaID: [(v) => !!v || "必填项！"],
-      employeeID: [(v) => !!v || "必填项！"],
-      companyID: [(v) => !!v || "必填项！"],
-      customerID: [(v) => !!v || "必填项！"],
-      contractUnitID: [(v) => !!v || "必填项！"],
+      areaUID: [(v) => !!v || "必填项！"],
+      employeeUID: [(v) => !!v || "必填项！"],
+      companyUID: [(v) => !!v || "必填项！"],
+      customerUID: [(v) => !!v || "必填项！"],
+      contractUnitUID: [(v) => !!v || "必填项！"],
       contractDate: [(v) => !!v || "必填项！"],
       estimatedDeliveryDate: [(v) => !!v || "必填项！"],
       invoiceContent: [(v) => !!v || "必填项！"],
@@ -417,8 +417,8 @@ export default {
       ],
     },
     queryObject: {
-      sourceTypeID: null,
-      subtypeID: null,
+      sourceTypeUID: "",
+      subtypeUID: "",
       name: "",
     },
     cart: {
@@ -437,7 +437,7 @@ export default {
         { text: "总价格(元)", value: "totalPrice", sortable: false },
         { text: "操作", value: "actions", sortable: false },
       ],
-      openID: null,
+      openUID: "",
       addDialog: false,
       deleteDialog: false,
       object: [],
@@ -462,13 +462,13 @@ export default {
         this.employeeItems = res.data;
       });
     },
-    getCompanyItemsByAreaID(areaID) {
-      queryCompanys({ areaID: areaID }).then((res) => {
+    getCompanyItems(areaUID) {
+      queryCompanys({ areaUID: areaUID }).then((res) => {
         this.companyItems = res.data;
       });
     },
-    getCustomerItemsByCompanyID(companyID) {
-      queryCustomers({ companyID }).then((res) => {
+    getCustomerItems(companyUID) {
+      queryCustomers({ companyUID }).then((res) => {
         this.customerItems = res.data;
       });
     },
@@ -482,8 +482,8 @@ export default {
         this.sourceTypeItems = res.data.dictionaries;
       });
     },
-    getSubtypeItems(parentID) {
-      queryProductSubtype(parentID).then((res) => {
+    getSubtypeItems(parentUID) {
+      queryProductSubtype(parentUID).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -495,7 +495,7 @@ export default {
       this.$refs.productDataTable.getObject();
     },
     openAddCartDialog(product) {
-      this.cart.product.productID = product.ID;
+      this.cart.product.productUID = product.UID;
       this.cart.product.name = product.name;
       this.cart.product.brand = product.brand;
       this.cart.product.specification = product.specification;
@@ -514,7 +514,7 @@ export default {
     addToCart() {
       var isNew = true;
       this.cart.object.forEach((item) => {
-        if (item.productID == this.cart.product.productID) {
+        if (item.productUID == this.cart.product.productUID) {
           this.$message.error("请勿重复添加！");
           isNew = false;
           return;
@@ -527,17 +527,17 @@ export default {
       }
       this.closeAddCartDialog();
     },
-    openCartDeleteDialog(id) {
-      this.cart.openID = id;
+    openCartDeleteDialog(uid) {
+      this.cart.openUID = uid;
       this.cart.deleteDialog = true;
     },
     closeCartDeleteDialog() {
-      this.cart.openID = null;
+      this.cart.openUID = "";
       this.cart.deleteDialog = false;
     },
     deleteCartItem() {
       this.cart.object = this.cart.object.filter(
-        (t) => t.productID != this.cart.openID
+        (t) => t.productUID != this.cart.openUID
       );
       this.closeCartDeleteDialog();
     },
@@ -545,12 +545,15 @@ export default {
       return this.$refs.form.validate();
     },
     entryObject() {
+      var _this = this;
       this.updateSubmitBtnDisable(true);
       if (this.validateForm()) {
         this.object.tasks = this.cart.object;
         entryContract(this.object).then((res) => {
           this.$message.success("录入成功了!");
-          this.updateSubmitBtnDisable(false);
+          setTimeout(function () {
+            _this.$router.replace("/contract");
+          }, 1000);
         });
       } else {
         this.$message.error("信息填写异常，请检查后再提交！");
@@ -562,30 +565,30 @@ export default {
     },
   },
   watch: {
-    "object.areaID": {
+    "object.areaUID": {
       handler: function (val) {
         this.companyItems = [];
         this.customerItems = [];
-        this.object.customer.companyID = null;
-        this.object.customerID = null;
+        this.object.customer.companyUID = "";
+        this.object.customerUID = "";
         if (val != null) {
-          this.getCompanyItemsByAreaID(val);
+          this.getCompanyItems(val);
         }
       },
     },
-    "object.customer.companyID": {
+    "object.customer.companyUID": {
       handler: function (val) {
         this.customerItems = [];
-        this.object.customerID = null;
+        this.object.customerUID = "";
         if (val != null) {
-          this.getCustomerItemsByCompanyID(val);
+          this.getCustomerItems(val);
         }
       },
     },
-    "queryObject.sourceTypeID": {
+    "queryObject.sourceTypeUID": {
       handler: function (val) {
         this.subtypeItems = [];
-        this.queryObject.subtypeID = null;
+        this.queryObject.subtypeUID = "";
         if (val != null) {
           this.getSubtypeItems(val);
         }

@@ -6,10 +6,10 @@
           <v-row align="baseline">
             <v-col cols="3">
               <v-select
-                v-model="queryObject.areaID"
+                v-model="queryObject.areaUID"
                 :items="areaItems"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 label="区域"
                 clearable
               ></v-select>
@@ -64,7 +64,7 @@ export default {
   data: () => ({
     areaItems: [],
     queryObject: {
-      areaID: null,
+      areaUID: "",
       no: "",
       companyName: "",
     },

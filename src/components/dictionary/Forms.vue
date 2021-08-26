@@ -38,7 +38,7 @@ export default {
   },
   data: () => ({
     object: {
-      parentID: null,
+      parentUID: "",
       dictionaryTypeID: 0,
       text: "",
     },

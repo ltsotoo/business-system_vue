@@ -6,22 +6,22 @@
           <v-row>
             <v-col cols="4">
               <v-select
-                v-model="object.areaID"
+                v-model="object.areaUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="areaItems"
                 label="区域"
-                :rules="rules.areaID"
+                :rules="rules.areaUID"
               ></v-select>
             </v-col>
             <v-col cols="4">
               <v-select
-                v-model="object.employeeID"
+                v-model="object.employeeUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="employeeItems"
                 label="业务员"
-                :rules="rules.employeeID"
+                :rules="rules.employeeUID"
               ></v-select>
             </v-col>
           </v-row>
@@ -41,23 +41,23 @@
           <v-row align="center" v-if="object.isEntryCustomer == true">
             <v-col class="d-flex" cols="4">
               <v-select
-                v-model="object.customer.companyID"
+                v-model="object.customer.companyUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="companyItems"
                 label="客户公司"
-                :rules="rules.companyID"
+                :rules="rules.companyUID"
               ></v-select>
             </v-col>
 
             <v-col class="d-flex" cols="4">
               <v-select
-                v-model="object.customerID"
+                v-model="object.customerUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="customerItems"
                 label="客户名称"
-                :rules="rules.customerID"
+                :rules="rules.customerUID"
               ></v-select>
             </v-col>
           </v-row>
@@ -65,12 +65,12 @@
           <v-row v-else>
             <v-col cols="3">
               <v-select
-                v-model="object.customer.companyID"
+                v-model="object.customer.companyUID"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 :items="companyItems"
                 label="客户公司"
-                :rules="rules.companyID"
+                :rules="rules.companyUID"
               ></v-select>
             </v-col>
             <v-col cols="3">
@@ -99,12 +99,12 @@
           <v-row>
             <v-col cols="4">
               <v-select
-                v-model="object.contractUnitID"
+                v-model="object.contractUnitUID"
                 item-text="text"
-                item-value="ID"
+                item-value="UID"
                 :items="contractUnitItems"
                 label="签订单位"
-                :rules="rules.contractUnitID"
+                :rules="rules.contractUnitUID"
               ></v-select>
             </v-col>
             <v-col cols="4">
@@ -213,7 +213,7 @@
       style="margin-top: 1px"
       ref="taskDataTable"
       :openType="2"
-      :openID="openID"
+      :openUID="openUID"
       :parentObject="object.tasks"
       v-if="object.tasks"
     />
@@ -241,8 +241,9 @@ export default {
     taskDataTable,
   },
   props: {
-    openID: {
-      type: Number,
+    openUID: {
+      type: String,
+      default: "",
     },
     parentFun: {
       type: Function,
@@ -262,14 +263,14 @@ export default {
     contractDateMenu: false,
     estimatedDeliveryDateMenu: false,
     object: {
-      ID: null,
+      UID: "",
       no: "",
-      areaID: null,
-      employeeID: null,
+      areaUID: "",
+      employeeUID: "",
       isEntryCustomer: true,
-      customerID: null,
+      customerUID: "",
       contractDate: null,
-      contractUnitID: null,
+      contractUnitUID: "",
       estimatedDeliveryDate: "",
       endDeliveryDate: "",
       invoiceType: 1,
@@ -281,16 +282,16 @@ export default {
       area: {},
       employee: {},
       customer: {
-        companyID: null,
+        companyUID: "",
       },
       contractUnit: {},
     },
     rules: {
-      areaID: [(v) => !!v || "必填项！"],
-      employeeID: [(v) => !!v || "必填项！"],
-      companyID: [(v) => !!v || "必填项！"],
-      customerID: [(v) => !!v || "必填项！"],
-      contractUnitID: [(v) => !!v || "必填项！"],
+      areaUID: [(v) => !!v || "必填项！"],
+      employeeUID: [(v) => !!v || "必填项！"],
+      companyUID: [(v) => !!v || "必填项！"],
+      customerUID: [(v) => !!v || "必填项！"],
+      contractUnitUID: [(v) => !!v || "必填项！"],
       contractDate: [(v) => !!v || "必填项！"],
       estimatedDeliveryDate: [(v) => !!v || "必填项！"],
       invoiceContent: [(v) => !!v || "必填项！"],
@@ -315,19 +316,19 @@ export default {
   methods: {
     init() {
       var _this = this;
-      queryContract(_this.openID).then((res) => {
+      queryContract(_this.openUID).then((res) => {
         _this.object = res.data;
         queryEmployees().then((res) => {
           this.employeeItems = res.data;
         });
-        queryCompanys({ areaID: _this.object.areaID }).then((res) => {
+        queryCompanys({ areaUID: _this.object.areaUID }).then((res) => {
           _this.companyItems = res.data;
         });
         queryAreas().then((res) => {
           _this.areaItems = res.data;
         });
         queryCustomers({
-          companyID: _this.object.customer.companyID,
+          companyUID: _this.object.customer.companyUID,
         }).then((res) => {
           _this.customerItems = res.data;
         });
@@ -346,13 +347,13 @@ export default {
         this.employeeItems = res.data;
       });
     },
-    getCompanyItemsByAreaID(areaID) {
-      queryCompanys({ areaID: areaID }).then((res) => {
+    getCompanyItems(areaUID) {
+      queryCompanys({ areaUID: areaUID }).then((res) => {
         this.companyItems = res.data;
       });
     },
-    getCustomerItemsByCompanyID(companyID) {
-      queryCustomers({ companyID }).then((res) => {
+    getCustomerItems(companyUID) {
+      queryCustomers({ companyUID }).then((res) => {
         this.customerItems = res.data;
       });
     },
@@ -362,7 +363,7 @@ export default {
       });
     },
     getObject() {
-      queryContract(this.openID).then((res) => {
+      queryContract(this.openUID).then((res) => {
         this.object = res.data;
       });
     },

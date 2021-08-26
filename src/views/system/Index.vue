@@ -5,9 +5,9 @@
         <v-row>
           <v-col
             cols="12"
-            xl="6"
-            lg="6"
-            md="6"
+            xl="4"
+            lg="4"
+            md="4"
             v-for="(item, i) in items"
             :key="i"
           >
@@ -49,6 +49,7 @@ export default {
         url: "/system/contract",
       },
       { title: "产品设置", src: "/icon/product.png", url: "/system/product" },
+      { title: "企业设置", src: "/icon/enterprise.png", url: "/system/enterprise" },
     ],
     selectItem: null,
   }),

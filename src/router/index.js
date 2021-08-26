@@ -106,6 +106,11 @@ const routes = [
             component: () => import('@/views/system/ProductSetting.vue'),
             meta: { login_require: true, title: "中研环科-系统设置-产品设置" },
           },
+          {
+            path: 'enterprise',
+            component: () => import('@/views/system/EnterpriseSetting.vue'),
+            meta: { login_require: true, title: "中研环科-系统设置-企业设置" },
+          },
         ]
       },
     ]
