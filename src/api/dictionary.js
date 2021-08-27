@@ -20,6 +20,10 @@ export const queryProductSourceType = () => {
     return queryDictionaryType("product", "source_type")
 }
 
+export const queryDepartmentType = () => {
+    return queryDictionaryType("department", "type")
+}
+
 export const queryDictionaryTypes = (module) => {
     return request({
         url: '/dictionaryTypes',

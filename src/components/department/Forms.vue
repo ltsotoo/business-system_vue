@@ -5,6 +5,17 @@
       <v-form ref="form">
         <v-row align="center">
           <v-col cols="12">
+            <v-select
+              v-model="object.typeUID"
+              :items="departmentTypeItems"
+              item-text="text"
+              item-value="UID"
+              label="部门类型"
+              :rules="rules.typeUID"
+              clearable
+            ></v-select>
+          </v-col>
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
@@ -24,6 +35,7 @@
 </template>
 
 <script>
+import { queryDepartmentType } from "@/api/dictionary";
 import { entryDepartment } from "@/api/oadrp";
 export default {
   props: {
@@ -39,11 +51,16 @@ export default {
     },
   },
   data: () => ({
+    departmentTypeItems: [],
     object: {
-      officeUID: null,
+      typeUID: "",
+      officeUID: "",
       name: "",
     },
     rules: {
+      typeUID: [
+        (v) => !!v || "必选项！",
+      ],
       name: [
         (v) => !!v || "必填项！",
         (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
@@ -51,9 +68,15 @@ export default {
     },
   }),
   created() {
+    this.getDepartmentTypeItems();
     this.object.officeUID = this.officeUID;
   },
   methods: {
+    getDepartmentTypeItems() {
+      queryDepartmentType().then((res) => {
+        this.departmentTypeItems = res.data.dictionaries;
+      });
+    },
     add() {
       if (this.validateForm()) {
         entryDepartment(this.object).then((res) => {

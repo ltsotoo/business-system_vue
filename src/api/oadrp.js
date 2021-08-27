@@ -79,10 +79,37 @@ export const queryDepartments = (querObject) => {
     })
 }
 
-export const queryRoles = () => {
+export const addRole = (role) => {
+    return request({
+        url: '/role',
+        method: 'POST',
+        data: role
+    })
+}
+
+export const editRole = (role) => {
+    return request({
+        url: '/role',
+        method: 'PUT',
+        data: role
+    })
+}
+
+export const queryRole = (uid) => {
+    return request({
+        url: '/role/' + uid,
+        method: 'GET',
+    })
+}
+
+export const queryRoles = (name, departmentUID) => {
     return request({
         url: '/roles',
         method: 'GET',
+        params: {
+            "name": name,
+            "departmentUID": departmentUID,
+        }
     })
 }
 

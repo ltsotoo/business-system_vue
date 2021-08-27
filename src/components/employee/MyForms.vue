@@ -20,7 +20,6 @@
           <v-col cols="4">
             <v-text-field
               label="职务"
-              v-model="object.role.name"
               readonly
             ></v-text-field>
           </v-col>
@@ -31,7 +30,6 @@
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
-              :rules="rules.name"
               readonly
             ></v-text-field>
           </v-col>
@@ -39,7 +37,6 @@
             <v-text-field
               v-model.trim="object.phone"
               label="手机号"
-              :rules="rules.phone"
               readonly
             ></v-text-field>
           </v-col>
@@ -84,9 +81,6 @@ export default {
         name: "",
       },
       department: {
-        name: "",
-      },
-      role: {
         name: "",
       },
     },

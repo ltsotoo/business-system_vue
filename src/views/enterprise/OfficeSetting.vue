@@ -301,6 +301,12 @@ export default {
           value: "name",
           sortable: false,
         },
+        {
+          text: "部门类型",
+          align: "center",
+          value: "type.text",
+          sortable: false,
+        },
         { text: "操作", align: "center", value: "actions", sortable: false },
       ],
       text: "",
