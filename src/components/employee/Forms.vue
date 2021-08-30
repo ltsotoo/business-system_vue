@@ -10,7 +10,7 @@
               v-model.trim="object.name"
               label="姓名"
               :rules="rules.name"
-              :readonly = "openType == 1"
+              :readonly="openType == 1"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -18,7 +18,7 @@
               v-model.trim="object.phone"
               label="手机号"
               :rules="rules.phone"
-              :readonly = "openType == 1"
+              :readonly="openType == 1"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -29,7 +29,7 @@
               v-model.trim="object.wechatID"
               label="微信号"
               :rules="rules.wechatID"
-              :readonly = "openType == 1"
+              :readonly="openType == 1"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -37,8 +37,22 @@
               v-model.trim="object.email"
               label="邮箱"
               :rules="rules.email"
-              :readonly = "openType == 1"
+              :readonly="openType == 1"
             ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <v-select
+              v-model="object.roles"
+              :items="roleItems"
+              item-text="name"
+              label="职位"
+              multiple
+              chips
+              return-object
+            ></v-select>
           </v-col>
         </v-row>
       </v-form>
@@ -87,7 +101,7 @@ export default {
       roleID: null,
       office: {},
       department: {},
-      role: {},
+      roles: [],
     },
     rules: {
       name: [
@@ -111,15 +125,12 @@ export default {
     },
   }),
   created() {
+    this.getRoleItems();
     if (this.openType == 0) {
       this.object.officeUID = this.parentObj.officeUID;
       this.object.departmentUID = this.parentObj.departmentUID;
     } else {
-      if (this.parentObj) {
-        this.object.UID = this.parentObj.UID;
-      }else{
-        this.object.UID = "my"
-      }
+      this.object.UID = this.parentObj.UID;
       this.getObject();
     }
   },

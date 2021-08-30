@@ -159,6 +159,7 @@
                   :items-per-page="5"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon @click="openEmployeeEditDialog(item.UID)"> mdi-pencil </v-icon>
                     <v-icon @click="openEmployeeDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
@@ -208,6 +209,20 @@
           departmentUID: department.selectUID,
         }"
         :closeDialog="closeEmployeeAddDialog"
+        :refresh="getEmployeeItems"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="employee.editDialog"
+      max-width="400px"
+      persistent
+      v-if="employee.editDialog"
+    >
+      <employeeForms
+        :closeDialog="closeEmployeeEditDialog"
+        :openType="2"
+        :parentObj="{ UID: employee.openUID }"
         :refresh="getEmployeeItems"
       />
     </v-dialog>
@@ -329,8 +344,9 @@ export default {
       ],
       text: "",
       items: [],
-      deleteUID: "",
+      openUID: "",
       addDialog: false,
+      editDialog: false,
       delDialog: false,
     },
   }),
@@ -439,16 +455,24 @@ export default {
     closeEmployeeAddDialog() {
       this.employee.addDialog = false;
     },
+    openEmployeeEditDialog(uid) {
+      this.employee.openUID = uid;
+      this.employee.editDialog = true;
+    },
+    closeEmployeeEditDialog() {
+      this.employee.openUID = "";
+      this.employee.editDialog = false;
+    },
     openEmployeeDelDialog(uid) {
-      this.employee.deleteUID = uid;
+      this.employee.openUID = uid;
       this.employee.delDialog = true;
     },
     closeEmployeeDelDialog() {
-      this.employee.deleteUID = "";
+      this.employee.openUID = "";
       this.employee.delDialog = false;
     },
     deleteEmployee() {
-      delEmployee(this.employee.deleteUID).then((res) => {
+      delEmployee(this.employee.openUID).then((res) => {
         this.getEmployeeItems();
         this.closeEmployeeDelDialog();
       });

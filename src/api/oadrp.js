@@ -102,13 +102,19 @@ export const queryRole = (uid) => {
     })
 }
 
-export const queryRoles = (name, departmentUID) => {
+export const queryRoles = () => {
     return request({
         url: '/roles',
         method: 'GET',
+    })
+}
+
+export const queryAllRoles = (name) => {
+    return request({
+        url: '/allRoles',
+        method: 'GET',
         params: {
             "name": name,
-            "departmentUID": departmentUID,
         }
     })
 }

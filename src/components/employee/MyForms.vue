@@ -18,10 +18,14 @@
             ></v-text-field>
           </v-col>
           <v-col cols="4">
-            <v-text-field
-              label="职务"
+            <v-select
+              v-model="object.roles"
+              :items="object.roles"
+              item-text="name"
+              label="职位"
+              multiple
               readonly
-            ></v-text-field>
+            ></v-select>
           </v-col>
         </v-row>
 
@@ -83,6 +87,7 @@ export default {
       department: {
         name: "",
       },
+      roles: [],
     },
     rules: {
       wechatID: [
@@ -104,6 +109,9 @@ export default {
     getObject() {
       queryEmployee("my").then((res) => {
         this.object = res.data;
+        if (this.object.roles.length == 0) {
+          this.object.roles.push({ name: "部员" });
+        }
       });
     },
     editObject() {

@@ -29,7 +29,7 @@
 
 <script>
 import roleForms from "@/components/role/Forms";
-import { queryRoles } from "@/api/oadrp.js";
+import { queryAllRoles } from "@/api/oadrp.js";
 export default {
   props: {
     queryName: {
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     getRoles() {
-      queryRoles(this.queryName).then((res) => {
+      queryAllRoles(this.queryName).then((res) => {
         this.roles = res.data;
       });
     },

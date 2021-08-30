@@ -37,7 +37,7 @@
           }"
         >
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon @click="openEmployeeEdiDialog(item)"> mdi-pencil </v-icon>
+            <!-- <v-icon @click="openEmployeeEdiDialog(item)"> mdi-pencil </v-icon> -->
             <v-icon @click="openEmployeeDelDialog(item.UID)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
