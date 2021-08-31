@@ -75,8 +75,9 @@ export default {
     userLogin() {
       login(this.queryObject).then((res) => {
         localStorage.setItem("name", res.data.employee.name);
-        localStorage.setItem("ID", res.data.employee.ID);
         localStorage.setItem("Authorization", res.data.token);
+        localStorage.setItem("urls",window.btoa(window.encodeURIComponent(JSON.stringify(res.data.urls))));
+        localStorage.setItem("nos", JSON.stringify(res.data.nos));
         this.goToIndex();
       });
     },

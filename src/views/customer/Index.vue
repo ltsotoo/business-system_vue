@@ -49,7 +49,13 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry">
+              <v-btn
+                rounded
+                color="success"
+                dark
+                @click="goToEntry"
+                v-if="nos.indexOf('05') > -1"
+              >
                 录入
               </v-btn>
             </v-col>
@@ -75,6 +81,7 @@ export default {
     customerDataTable,
   },
   data: () => ({
+    nos: [],
     areaItems: [],
     companyItems: [],
     queryObject: {
@@ -85,6 +92,7 @@ export default {
     },
   }),
   created() {
+    this.nos = localStorage.getItem("nos");
     this.getAreas();
   },
   methods: {
@@ -94,7 +102,7 @@ export default {
       });
     },
     getCompanyItems(areaUID) {
-      queryCompanys({areaUID:areaUID}).then((res) => {
+      queryCompanys({ areaUID: areaUID }).then((res) => {
         this.companyItems = res.data;
       });
     },

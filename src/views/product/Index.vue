@@ -50,7 +50,13 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry">
+              <v-btn
+                rounded
+                color="success"
+                dark
+                @click="goToEntry"
+                v-if="nos.indexOf('09') > -1"
+              >
                 录入
               </v-btn>
             </v-col>
@@ -68,13 +74,14 @@
 
 <script>
 import productDataTable from "@/components/product/DataTable";
-import { queryProductSourceType,queryProductSubtype } from "@/api/dictionary";
+import { queryProductSourceType, queryProductSubtype } from "@/api/dictionary";
 
 export default {
   components: {
     productDataTable,
   },
   data: () => ({
+    nos: [],
     sourceTypeItems: [],
     subtypeItems: [],
     sourceTypeName: "",
@@ -86,6 +93,7 @@ export default {
     },
   }),
   created() {
+    this.nos = localStorage.getItem("nos");
     this.getProductSoureTypeItems();
   },
   methods: {

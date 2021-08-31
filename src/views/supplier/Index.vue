@@ -36,7 +36,7 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry">
+              <v-btn rounded color="success" dark @click="goToEntry" v-if="nos.indexOf('13') > -1">
                 录入
               </v-btn>
             </v-col>
@@ -59,12 +59,16 @@ export default {
     supplierDataTable,
   },
   data: () => ({
+    nos: [],
     queryObject: {
       name: "",
       linkman: "",
       phone: "",
     },
   }),
+  created(){
+    this.nos = localStorage.getItem("nos");
+  },
   methods: {
     query() {
       this.$refs.supplierDataTable.getObject();

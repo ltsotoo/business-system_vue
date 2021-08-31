@@ -32,7 +32,25 @@
               multiple
               chips
               return-object
-            ></v-select>
+            >
+              <template v-slot:prepend-item>
+                <v-list-item ripple @click="toggle">
+                  <v-list-item-action>
+                    <v-icon
+                      :color="
+                        object.permissions.length > 0 ? 'indigo darken-4' : ''
+                      "
+                    >
+                      {{ icon }}
+                    </v-icon>
+                  </v-list-item-action>
+                  <v-list-item-content>
+                    <v-list-item-title> Select All </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider class="mt-2"></v-divider>
+              </template>
+            </v-select>
           </v-col>
         </v-row>
       </v-card-subtitle>
@@ -78,6 +96,19 @@ export default {
       this.getRole();
     }
   },
+  computed: {
+    selectAllPer() {
+      return this.object.permissions.length === this.permissionItems.length;
+    },
+    selectSomePer() {
+      return this.object.permissions.length > 0 && !this.selectAllPer;
+    },
+    icon() {
+      if (this.selectAllPer) return "mdi-close-box";
+      if (this.selectSomePer) return "mdi-minus-box";
+      return "mdi-checkbox-blank-outline";
+    },
+  },
   methods: {
     getRole() {
       queryRole(this.openUID).then((res) => {
@@ -113,6 +144,15 @@ export default {
       if (this.openType == 2) {
         this.updateRole();
       }
+    },
+    toggle() {
+      this.$nextTick(() => {
+        if (this.selectAllPer) {
+          this.object.permissions = [];
+        } else {
+          this.object.permissions = this.permissionItems.slice();
+        }
+      });
     },
   },
 };

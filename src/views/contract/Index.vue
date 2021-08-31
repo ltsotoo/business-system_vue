@@ -38,7 +38,13 @@
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry">
+              <v-btn
+                rounded
+                color="success"
+                dark
+                @click="goToEntry"
+                v-if="nos.indexOf('02') > -1"
+              >
                 录入
               </v-btn>
             </v-col>
@@ -62,6 +68,7 @@ export default {
     contractDataTable,
   },
   data: () => ({
+    nos: [],
     areaItems: [],
     queryObject: {
       areaUID: "",
@@ -70,6 +77,7 @@ export default {
     },
   }),
   created() {
+    this.nos = localStorage.getItem("nos");
     this.getAreas();
   },
   methods: {

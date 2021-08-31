@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card >
+    <v-card>
       <v-card-subtitle>
         <v-row>
           <v-col
@@ -10,6 +10,7 @@
             md="6"
             v-for="(item, i) in items"
             :key="i"
+            v-if="nos.indexOf(item.no) > -1"
           >
             <v-card
               class="mx-auto"
@@ -42,22 +43,38 @@
 <script>
 export default {
   data: () => ({
+    nos: [],
     items: [
       {
         title: "区域",
         src: "/icon/area.png",
         url: "/enterprise/area",
+        no: "22",
       },
       {
         title: "办事处",
         src: "/icon/office.png",
         url: "/enterprise/office",
+        no: "23",
       },
-      { title: "部门", src: "/icon/department.png", url: "/enterprise/department" },
-      { title: "员工", src: "/icon/employee.png", url: "/enterprise/employee" },
+      {
+        title: "部门",
+        src: "/icon/department.png",
+        url: "/enterprise/department",
+        no: "24",
+      },
+      {
+        title: "员工",
+        src: "/icon/employee.png",
+        url: "/enterprise/employee",
+        no: "27",
+      },
     ],
     selectItem: null,
   }),
+  created(){
+    this.nos = localStorage.getItem("nos");
+  },
   methods: {
     toggle(item, i) {
       this.selectItem = i;

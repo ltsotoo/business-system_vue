@@ -79,6 +79,8 @@ export default {
   }),
   created() {
     this.object.name = localStorage.getItem("name");
+    // this.items = JSON.parse(localStorage.getItem("urls"));
+    this.items = JSON.parse(decodeURIComponent(window.atob(localStorage.getItem("urls"))));
   },
   methods: {
     exit() {
