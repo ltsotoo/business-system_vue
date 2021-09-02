@@ -10,9 +10,9 @@
             md="6"
             v-for="(item, i) in items"
             :key="i"
-            v-if="nos.indexOf(item.no) > -1"
           >
             <v-card
+              v-if="nos.indexOf(item.no) > -1"
               class="mx-auto"
               outlined
               :color="i == selectItem ? '#f05b72' : '#87CEEB'"
@@ -72,7 +72,7 @@ export default {
     ],
     selectItem: null,
   }),
-  created(){
+  created() {
     this.nos = localStorage.getItem("nos");
   },
   methods: {

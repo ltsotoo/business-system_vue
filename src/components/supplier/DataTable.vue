@@ -144,7 +144,9 @@ export default {
           this.options.page = 1;
         }
         this.options.total = res.total;
-        this.object = res.data;
+        if (this.options.total != 0) {
+          this.object = res.data;
+        }
       });
     },
     openEditDialog(uid) {

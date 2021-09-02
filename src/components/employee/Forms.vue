@@ -155,27 +155,32 @@ export default {
         this.object = res.data;
       });
     },
-    editObject() {},
+    entryObject() {
+      entryEmployee(this.object).then((res) => {
+        this.$message.success("录入成功了！");
+        if (this.refresh != null) {
+          this.refresh();
+        }
+        this.closeDialog();
+      });
+    },
+    editObject() {
+      editEmployee(this.object).then((res) => {
+        this.$message.success("编辑成功了！");
+        if (this.refresh != null) {
+          this.refresh();
+        }
+        this.closeDialog();
+      });
+    },
     add() {
       if (this.openType == 0) {
         if (this.validateForm()) {
-          entryEmployee(this.object).then((res) => {
-            this.$message.success("录入成功了！");
-            if (this.refresh != null) {
-              this.refresh();
-            }
-            this.closeDialog();
-          });
+          this.entryObject();
         }
       } else if (this.openType == 2) {
         if (this.validateForm()) {
-          editEmployee(this.object).then((res) => {
-            this.$message.success("编辑成功了！");
-            if (this.refresh != null) {
-              this.refresh();
-            }
-            this.closeDialog();
-          });
+          this.editObject();
         }
       }
     },

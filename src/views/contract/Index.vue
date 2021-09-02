@@ -52,11 +52,8 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <v-row style="margin-top: 10px">
-      <v-col>
-        <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
-      </v-col>
-    </v-row>
+    <div style="margin-top: 10px"></div>
+    <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
   </v-container>
 </template>
 

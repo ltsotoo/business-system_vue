@@ -65,6 +65,16 @@ const routes = [
         meta: { login_require: true, title: "中研环科-供应商管理-录入" },
       },
       {
+        path: 'expense',
+        component: () => import('@/views/expense/Index.vue'),
+        meta: { login_require: true, title: "中研环科-财务管理-首页" },
+      },
+      {
+        path: 'expense/entry',
+        component: () => import('@/views/expense/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-财务管理-录入" },
+      },
+      {
         path: 'enterprise',
         component: () => import('@/views/enterprise/Index.vue'),
         meta: { login_require: true, title: "中研环科-企业管理-首页" },

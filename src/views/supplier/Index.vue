@@ -36,7 +36,13 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry" v-if="nos.indexOf('13') > -1">
+              <v-btn
+                rounded
+                color="success"
+                dark
+                @click="goToEntry"
+                v-if="nos.indexOf('13') > -1"
+              >
                 录入
               </v-btn>
             </v-col>
@@ -44,11 +50,8 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <v-row style="margin-top: 10px">
-      <v-col>
-        <supplierDataTable :queryObject="queryObject" ref="supplierDataTable" />
-      </v-col>
-    </v-row>
+    <div style="margin-top: 10px"></div>
+    <supplierDataTable :queryObject="queryObject" ref="supplierDataTable" />
   </v-container>
 </template>
 
@@ -66,7 +69,7 @@ export default {
       phone: "",
     },
   }),
-  created(){
+  created() {
     this.nos = localStorage.getItem("nos");
   },
   methods: {

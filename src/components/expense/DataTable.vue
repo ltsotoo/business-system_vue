@@ -1,0 +1,127 @@
+<template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="object"
+      :items-per-page="5"
+      class="elevation-1"
+      :server-items-length="options.total"
+      :footer-props="{
+        itemsPerPageOptions: [5, 10, 20],
+      }"
+      :loading="options.loading"
+      :options.sync="options"
+      @update:page="getObject"
+      @update:items-per-page="getObject"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn color="primary" depressed>
+          <v-icon left> mdi-file-edit-outline </v-icon>
+          审批
+        </v-btn>
+        <!-- <v-row justify="center">
+          <v-col cols="auto">
+            <v-btn color="primary" depressed>
+              <v-icon left> mdi-check-bold </v-icon>
+              通过
+            </v-btn>
+          </v-col>
+          <v-col cols="auto">
+            <v-btn color="error" depressed>
+              <v-icon left> mdi-close-thick </v-icon>
+              驳回
+            </v-btn>
+          </v-col>
+        </v-row> -->
+      </template>
+    </v-data-table>
+  </div>
+</template>
+
+<script>
+import { queryExpenses, editExpense } from "@/api/expense";
+export default {
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
+  data: () => ({
+    headers: [
+      {
+        text: "类型",
+        align: "center",
+        value: "type.text",
+        sortable: false,
+      },
+      {
+        text: "办事处",
+        align: "center",
+        value: "employee.office.name",
+        sortable: false,
+      },
+      {
+        text: "员工",
+        align: "center",
+        value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "员工电话",
+        align: "center",
+        value: "employee.phone",
+        sortable: false,
+      },
+      {
+        text: "金额(元)",
+        align: "center",
+        value: "amount",
+        sortable: false,
+      },
+      {
+        text: "发起时间",
+        align: "center",
+        value: "CreatedAt",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
+    ],
+    options: {
+      loading: false,
+      total: 0,
+      page: 1,
+      itemsPerPage: 10,
+    },
+    object: [],
+  }),
+  created() {
+    this.getObject();
+  },
+  methods: {
+    getObject() {
+      this.options.loading = true;
+      queryExpenses(
+        this.queryObject,
+        this.options.itemsPerPage,
+        this.options.page
+      ).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        if (this.options.total != 0) {
+          this.object = res.data;
+        }
+      });
+    },
+    pass(uid) {},
+    fail(uid) {},
+  },
+};
+</script>

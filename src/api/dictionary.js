@@ -24,6 +24,10 @@ export const queryDepartmentType = () => {
     return queryDictionaryType("department", "type")
 }
 
+export const queryExpenseType = () => {
+    return queryDictionaryType("expense", "type")
+}
+
 export const queryDictionaryTypes = (module) => {
     return request({
         url: '/dictionaryTypes',

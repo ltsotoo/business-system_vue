@@ -63,11 +63,8 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <v-row style="margin-top: 10px">
-      <v-col>
-        <customerDataTable :queryObject="queryObject" ref="customerDataTable" />
-      </v-col>
-    </v-row>
+    <div style="margin-top: 10px"></div>
+    <customerDataTable :queryObject="queryObject" ref="customerDataTable" />
   </v-container>
 </template>
 
