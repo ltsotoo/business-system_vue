@@ -15,7 +15,7 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn color="primary" depressed>
+        <v-btn color="primary" depressed @click="openApprovalDialog(item)">
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
@@ -35,12 +35,28 @@
         </v-row> -->
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="options.approvalDialog"
+      v-if="options.approvalDialog"
+      max-width="1080px"
+    >
+      <expenseApprovalForms
+        :expense="openItem"
+        :closeDialog="closeApprovalDialog"
+        :refresh="getObject"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryExpenses, editExpense } from "@/api/expense";
+import expenseApprovalForms from "@/components/expense/ApprovalForms";
+import { queryExpenses } from "@/api/expense";
 export default {
+  components: {
+    expenseApprovalForms,
+  },
   props: {
     queryObject: {
       type: Object,
@@ -85,6 +101,12 @@ export default {
         sortable: false,
       },
       {
+        text: "状态",
+        align: "center",
+        value: "status",
+        sortable: false,
+      },
+      {
         text: "操作",
         align: "center",
         value: "actions",
@@ -96,8 +118,10 @@ export default {
       total: 0,
       page: 1,
       itemsPerPage: 10,
+      approvalDialog: false,
     },
     object: [],
+    openItem: {},
   }),
   created() {
     this.getObject();
@@ -120,8 +144,15 @@ export default {
         }
       });
     },
-    pass(uid) {},
-    fail(uid) {},
+    openApprovalDialog(item) {
+      this.openItem = item;
+      console.log(this.openItem);
+      this.options.approvalDialog = true;
+    },
+    closeApprovalDialog() {
+      this.openItem = {};
+      this.options.approvalDialog = false;
+    },
   },
 };
 </script>
