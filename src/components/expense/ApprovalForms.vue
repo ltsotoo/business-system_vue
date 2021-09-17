@@ -62,13 +62,13 @@
         </v-row>
         <v-row justify="center">
           <v-col cols="auto">
-            <v-btn color="primary" depressed>
+            <v-btn color="primary" @click="pass">
               <v-icon left> mdi-check-bold </v-icon>
               通过
             </v-btn>
           </v-col>
           <v-col cols="auto">
-            <v-btn color="error" depressed @click="fail">
+            <v-btn color="error" @click="fail">
               <v-icon left> mdi-close-thick </v-icon>
               驳回
             </v-btn>
@@ -107,7 +107,7 @@ export default {
       this.editObject();
     },
     fail() {
-      this.object.status = -1;
+      this.object.status = 2;
       this.editObject();
     },
     editObject() {

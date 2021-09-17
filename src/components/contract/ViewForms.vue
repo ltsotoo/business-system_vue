@@ -110,13 +110,6 @@
               readonly
             ></v-text-field>
           </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.status"
-              label="当前状态"
-              readonly
-            ></v-text-field>
-          </v-col>
           <v-col cols="12" v-if="object.invoiceType != 1">
             <v-textarea
               v-model="object.invoiceContent"
@@ -130,6 +123,30 @@
                 object.invoiceContent.length == 0
               "
             ></v-textarea>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="3">
+            <v-text-field
+              v-model="text.status"
+              label="合同状态"
+              readonly
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-model="text.productionStatus"
+              label="生产状态"
+              readonly
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-model="text.collectionStatus"
+              label="回款状态"
+              readonly
+            ></v-text-field>
           </v-col>
         </v-row>
 
@@ -180,9 +197,11 @@ export default {
       },
     },
     text: {
+      status: "",
+      productionStatus: "",
+      collectionStatus: "",
       invoiceType: "",
       isSpecial: "否",
-      status: "",
     },
   }),
   created() {
@@ -208,6 +227,36 @@ export default {
           break;
         case 4:
           this.text.invoiceType = "形式发票";
+          break;
+      }
+      switch (data.status) {
+        case 0:
+          this.text.status = "未完成";
+          break;
+        case 1:
+          this.text.status = "已完成";
+          break;
+      }
+      switch (data.productionStatus) {
+        case -1:
+          this.text.productionStatus = "审批驳回";
+          break;
+        case 0:
+          this.text.productionStatus = "待审批";
+          break;
+        case 1:
+          this.text.productionStatus = "生产中";
+          break;
+        case 2:
+          this.text.productionStatus = "生产完成";
+          break;
+      }
+      switch (data.collectionStatus) {
+        case 0:
+          this.text.collectionStatus = "回款中";
+          break;
+        case 1:
+          this.text.collectionStatus = "回款完成";
           break;
       }
       if (data.isSpecial == true) {

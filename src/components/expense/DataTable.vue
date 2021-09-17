@@ -14,25 +14,19 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.status`]="{ item }">
+        {{ statusToText(item.status) }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn color="primary" depressed @click="openApprovalDialog(item)">
+        <v-btn
+          color="primary"
+          depressed
+          @click="openApprovalDialog(item)"
+          :disabled="item.status != 0"
+        >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
-        <!-- <v-row justify="center">
-          <v-col cols="auto">
-            <v-btn color="primary" depressed>
-              <v-icon left> mdi-check-bold </v-icon>
-              通过
-            </v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn color="error" depressed>
-              <v-icon left> mdi-close-thick </v-icon>
-              驳回
-            </v-btn>
-          </v-col>
-        </v-row> -->
       </template>
     </v-data-table>
 
@@ -152,6 +146,17 @@ export default {
     closeApprovalDialog() {
       this.openItem = {};
       this.options.approvalDialog = false;
+    },
+    statusToText(status) {
+      if (status == 0) {
+        return "待审批";
+      }
+      if (status == 1) {
+        return "已通过";
+      }
+      if (status == 2) {
+        return "已驳回";
+      }
     },
   },
 };

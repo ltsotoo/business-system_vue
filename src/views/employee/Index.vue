@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card> <myForms/> </v-card>
+    <v-card> <myForms /> </v-card>
   </v-container>
 </template>
 

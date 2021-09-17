@@ -15,12 +15,17 @@
       @click:row="openViewDialog"
     >
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
-        <v-chip :color="compareColor(item.estimatedDeliveryDate)">
+        <div v-if="item.status == 0">
+          <v-chip :color="compareColor(item.estimatedDeliveryDate)">
+            {{ item.estimatedDeliveryDate }}
+          </v-chip>
+        </div>
+        <div v-else>
           {{ item.estimatedDeliveryDate }}
-        </v-chip>
+        </div>
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
-        {{ item.isSpecial == "true" ? "是" : "否" }}
+        {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
@@ -131,9 +136,15 @@ export default {
         sortable: false,
       },
       {
+        text: "特殊合同",
+        align: "center",
+        value: "isSpecial",
+        sortable: false,
+      },
+      {
         text: "状态",
         align: "center",
-        value: "status",
+        value: "statusText",
         sortable: false,
       },
       {
@@ -175,6 +186,7 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+        this.stautsToText();
       });
     },
     openViewDialog(item, other) {
@@ -230,6 +242,39 @@ export default {
         return "orange";
       }
       return "green";
+    },
+    stautsToText() {
+      var _this = this;
+      this.object.forEach(function (e) {
+        if (e.status == 1) {
+          e.statusText = "完成";
+        } else {
+          e.statusText =
+            _this.productionStatusToText(e.productionStatus) +
+            "," +
+            _this.collectionStatusToText(e.collectionStatus);
+        }
+      });
+    },
+    productionStatusToText(status) {
+      switch (status) {
+        case -1:
+          return "审核驳回";
+        case 0:
+          return "待审核";
+        case 1:
+          return "生产中";
+        case 2:
+          return "生产完成";
+      }
+    },
+    collectionStatusToText(status) {
+      switch (status) {
+        case 0:
+          return "回款中";
+        case 1:
+          return "回款完成";
+      }
     },
   },
 };

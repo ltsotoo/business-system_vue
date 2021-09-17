@@ -24,6 +24,17 @@
         </v-row>
 
         <v-row>
+          <v-col cols="12">
+            <v-text-field
+              v-model.trim="object.number"
+              label="编号"
+              :rules="rules.number"
+              :readonly="openType == 1"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.wechatID"
@@ -70,7 +81,7 @@ import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
 import { entryEmployee, queryEmployee, editEmployee } from "@/api/employee";
 export default {
   props: {
-    // 0录入 1查看 2编辑 3my
+    // 0录入 1查看 2编辑
     openType: {
       type: Number,
       default: 0,
@@ -122,6 +133,7 @@ export default {
           /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
           "邮箱格式错误",
       ],
+      number: [(v) => !!v || "必填项！"],
     },
   }),
   created() {

@@ -18,6 +18,16 @@
             ></v-text-field>
           </v-col>
           <v-col cols="4">
+            <v-text-field
+              label="编号"
+              v-model="object.number"
+              readonly
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col>
             <v-select
               v-model="object.roles"
               :items="object.roles"

@@ -33,7 +33,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                label="产品电话"
+                label="员工电话"
                 v-model.trim="queryObject.employeePhone"
                 clearable
               ></v-text-field>

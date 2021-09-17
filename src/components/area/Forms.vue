@@ -5,7 +5,15 @@
     <v-card-subtitle>
       <v-form ref="form">
         <v-row align="center">
-          <v-col cols="6">
+          <v-col cols="4">
+            <v-text-field
+              v-model.trim="object.number"
+              label="区域编号"
+              :rules="rules.number"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="4">
             <v-text-field
               v-model.trim="object.name"
               label="区域名称"
@@ -13,7 +21,7 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-select
               v-model="object.officeUID"
               :items="officeItems"
@@ -56,17 +64,19 @@ export default {
     object: {
       name: "",
       officeUID: "",
+      number: "",
     },
     rules: {
       name: [
         (v) => !!v || "必填项！",
         (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
       ],
+      number: [(v) => !!v || "必填项！"],
     },
   }),
   created() {
     if (this.openType == 2) {
-      this.object = this.parentObj;
+      this.object = JSON.parse(JSON.stringify(this.parentObj));
     }
     this.getOfficeItems();
   },
@@ -77,21 +87,26 @@ export default {
       });
     },
     submit() {
-      if (this.openType == 0) {
-        entryArea(this.object).then((res) => {
-          if (this.refresh) {
-            this.refresh();
-          }
-          this.closeDialog();
-        });
-      } else if (this.openType == 2) {
-        editArea(this.object).then((res) => {
-          if (this.refresh) {
-            this.refresh();
-          }
-          this.closeDialog();
-        });
+      if (this.validateForm()) {
+        if (this.openType == 0) {
+          entryArea(this.object).then((res) => {
+            if (this.refresh) {
+              this.refresh();
+            }
+            this.closeDialog();
+          });
+        } else if (this.openType == 2) {
+          editArea(this.object).then((res) => {
+            if (this.refresh) {
+              this.refresh();
+            }
+            this.closeDialog();
+          });
+        }
       }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

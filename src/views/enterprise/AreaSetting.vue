@@ -21,7 +21,9 @@
       </v-col>
       <v-divider vertical></v-divider>
       <v-col cols="auto">
-        <v-btn rounded color="success" dark @click="openAreaAddDialog"> 录入 </v-btn>
+        <v-btn rounded color="success" dark @click="openAreaAddDialog">
+          录入
+        </v-btn>
       </v-col>
       <v-spacer></v-spacer>
     </v-row>
@@ -43,10 +45,7 @@
     </v-row>
 
     <v-dialog v-model="addDialog" max-width="500px" persistent v-if="addDialog">
-      <areaForms
-        :closeDialog="closeAreaAddDialog"
-        :refresh="getObject"
-      />
+      <areaForms :closeDialog="closeAreaAddDialog" :refresh="getObject" />
     </v-dialog>
 
     <v-dialog v-model="ediDialog" max-width="500px" persistent v-if="ediDialog">
@@ -82,6 +81,12 @@ export default {
   },
   data: () => ({
     headers: [
+      {
+        text: "编号",
+        align: "center",
+        value: "number",
+        sortable: false,
+      },
       {
         text: "区域",
         align: "center",

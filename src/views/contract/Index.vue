@@ -3,30 +3,74 @@
     <v-card>
       <v-card-subtitle>
         <v-form ref="queryForm">
-          <v-row align="baseline">
-            <v-col cols="3">
-              <v-select
-                v-model="queryObject.areaUID"
-                :items="areaItems"
-                item-text="name"
-                item-value="UID"
-                label="区域"
-                clearable
-              ></v-select>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                label="合同编号:"
-                v-model.trim="queryObject.no"
-                clearable
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                label="客户单位："
-                v-model.trim="queryObject.companyName"
-                clearable
-              ></v-text-field>
+          <v-row align="center">
+            <v-col cols="10">
+              <v-row>
+                <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.areaUID"
+                    :items="areaItems"
+                    item-text="name"
+                    item-value="UID"
+                    label="区域"
+                    clearable
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="客户单位"
+                    v-model.trim="queryObject.companyName"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="客户名称"
+                    v-model.trim="queryObject.companyName"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="合同编号"
+                    v-model.trim="queryObject.no"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.areaUID"
+                    :items="areaItems"
+                    item-text="name"
+                    item-value="UID"
+                    label="特殊合同"
+                    clearable
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="合同状态"
+                    v-model.trim="queryObject.companyName"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="生产状态"
+                    v-model.trim="queryObject.companyName"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="回款状态"
+                    v-model.trim="queryObject.no"
+                    clearable
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
