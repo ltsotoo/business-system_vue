@@ -230,10 +230,10 @@ export default {
           break;
       }
       switch (data.status) {
-        case 0:
+        case 1:
           this.text.status = "未完成";
           break;
-        case 1:
+        case 2:
           this.text.status = "已完成";
           break;
       }
@@ -241,21 +241,21 @@ export default {
         case -1:
           this.text.productionStatus = "审批驳回";
           break;
-        case 0:
+        case 1:
           this.text.productionStatus = "待审批";
           break;
-        case 1:
+        case 2:
           this.text.productionStatus = "生产中";
           break;
-        case 2:
+        case 3:
           this.text.productionStatus = "生产完成";
           break;
       }
       switch (data.collectionStatus) {
-        case 0:
+        case 1:
           this.text.collectionStatus = "回款中";
           break;
-        case 1:
+        case 2:
           this.text.collectionStatus = "回款完成";
           break;
       }

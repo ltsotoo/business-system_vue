@@ -9,29 +9,26 @@
                 v-model="queryObject.areaUID"
                 :items="areaItems"
                 item-text="name"
-                item-value="ID"
+                item-value="UID"
                 label="区域"
                 clearable
               ></v-select>
             </v-col>
             <v-col cols="2">
-              <v-select
-                v-model="queryObject.companyUID"
-                :items="companyItems"
-                item-text="name"
-                item-value="ID"
-                label="公司"
+              <v-text-field
+                label="单位"
+                v-model.trim="queryObject.companyName"
                 clearable
-              ></v-select>
+              ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <v-text-field
                 label="课题组"
                 v-model.trim="queryObject.researchGroup"
                 clearable
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="2">
               <v-text-field
                 label="姓名"
                 v-model.trim="queryObject.name"
@@ -71,7 +68,6 @@
 <script>
 import customerDataTable from "@/components/customer/DataTable";
 import { queryAreas } from "@/api/oadrp";
-import { queryCompanys } from "@/api/customer";
 
 export default {
   components: {
@@ -80,10 +76,9 @@ export default {
   data: () => ({
     nos: [],
     areaItems: [],
-    companyItems: [],
     queryObject: {
       areaUID: "",
-      companyUID: "",
+      companyName: "",
       researchGroup: "",
       name: "",
     },
@@ -98,11 +93,6 @@ export default {
         this.areaItems = res.data;
       });
     },
-    getCompanyItems(areaUID) {
-      queryCompanys({ areaUID: areaUID }).then((res) => {
-        this.companyItems = res.data;
-      });
-    },
     query() {
       this.$refs.customerDataTable.getObject();
     },
@@ -112,17 +102,6 @@ export default {
     },
     goToEntry() {
       this.$router.replace("/customer/entry");
-    },
-  },
-  watch: {
-    "queryObject.areaUID": {
-      handler: function (val) {
-        this.companyItems = [];
-        this.queryObject.companyUID = "";
-        if (val != null) {
-          this.getCompanyItems(val);
-        }
-      },
     },
   },
 };

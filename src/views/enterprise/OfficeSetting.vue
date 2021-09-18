@@ -159,7 +159,9 @@
                   :items-per-page="5"
                 >
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon @click="openEmployeeEditDialog(item.UID)"> mdi-pencil </v-icon>
+                    <v-icon @click="openEmployeeEditDialog(item.UID)">
+                      mdi-pencil
+                    </v-icon>
                     <v-icon @click="openEmployeeDelDialog(item.UID)">
                       mdi-delete
                     </v-icon>
@@ -334,6 +336,12 @@ export default {
     },
     employee: {
       headers: [
+        {
+          text: "编号",
+          align: "center",
+          value: "number",
+          sortable: false,
+        },
         {
           text: "员工名称",
           align: "center",

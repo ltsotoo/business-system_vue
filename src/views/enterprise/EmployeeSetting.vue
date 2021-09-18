@@ -38,18 +38,28 @@
         >
           <template v-slot:[`item.actions`]="{ item }">
             <!-- <v-icon @click="openEmployeeEdiDialog(item)"> mdi-pencil </v-icon> -->
-            <v-icon @click="openEmployeeDelDialog(item.UID)"> mdi-delete </v-icon>
+            <v-icon @click="openEmployeeDelDialog(item.UID)">
+              mdi-delete
+            </v-icon>
           </template>
         </v-data-table>
       </v-col>
     </v-row>
 
     <v-dialog v-model="addDialog" max-width="500px" persistent v-if="addDialog">
-      <employeeForms :closeDialog="closeEmployeeAddDialog" :refresh="getObject"/>
+      <employeeForms
+        :closeDialog="closeEmployeeAddDialog"
+        :refresh="getObject"
+      />
     </v-dialog>
 
     <v-dialog v-model="ediDialog" max-width="500px" persistent v-if="ediDialog">
-      <employeeForms :closeDialog="closeEmployeeEdiDialog" :openType="2" :parentObj="ediObj" :refresh="getObject"/>
+      <employeeForms
+        :closeDialog="closeEmployeeEdiDialog"
+        :openType="2"
+        :parentObj="ediObj"
+        :refresh="getObject"
+      />
     </v-dialog>
 
     <v-dialog v-model="delDialog" max-width="500px" persistent>
@@ -59,7 +69,9 @@
           <v-spacer></v-spacer>
           <v-btn color="error" text @click="deleteEmployee">确定</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeEmployeeDelDialog">取消</v-btn>
+          <v-btn color="primary" text @click="closeEmployeeDelDialog"
+            >取消</v-btn
+          >
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -68,7 +80,7 @@
 </template>
 
 <script>
-import {queryEmployees,delEmployee} from "@/api/employee"
+import { queryEmployees, delEmployee } from "@/api/employee";
 import employeeForms from "@/components/employee/Forms";
 export default {
   components: {
@@ -76,6 +88,12 @@ export default {
   },
   data: () => ({
     headers: [
+      {
+        text: "编号",
+        align: "center",
+        value: "number",
+        sortable: false,
+      },
       {
         text: "姓名",
         align: "center",

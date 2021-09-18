@@ -207,6 +207,12 @@ export default {
     employee: {
       headers: [
         {
+          text: "编号",
+          align: "center",
+          value: "number",
+          sortable: false,
+        },
+        {
           text: "员工名称",
           align: "center",
           value: "name",

@@ -15,7 +15,7 @@
       @click:row="openViewDialog"
     >
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
-        <div v-if="item.status == 0">
+        <div v-if="item.status != 3">
           <v-chip :color="compareColor(item.estimatedDeliveryDate)">
             {{ item.estimatedDeliveryDate }}
           </v-chip>
@@ -109,6 +109,12 @@ export default {
         text: "业务员",
         align: "center",
         value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "客户单位",
+        align: "center",
+        value: "customer.company.name",
         sortable: false,
       },
       {
@@ -246,22 +252,36 @@ export default {
     stautsToText() {
       var _this = this;
       this.object.forEach(function (e) {
-        if (e.status == 1) {
-          e.statusText = "完成";
-        } else {
-          e.statusText =
-            _this.productionStatusToText(e.productionStatus) +
-            "," +
-            _this.collectionStatusToText(e.collectionStatus);
+        // if (e.status == 1) {
+        //   e.statusText = "待审批";
+        // } else {
+        //   e.statusText =
+        //     _this.productionStatusToText(e.productionStatus) +
+        //     "," +
+        //     _this.collectionStatusToText(e.collectionStatus);
+        // }
+
+        switch (e.status) {
+          case -1:
+            e.statusText = "审批驳回";
+            break;
+          case 1:
+            e.statusText = "待审批";
+            break;
+          case 2:
+            e.statusText =
+              _this.productionStatusToText(e.productionStatus) +
+              "," +
+              _this.collectionStatusToText(e.collectionStatus);
+            break;
+          case 3:
+            e.statusText = "已完成";
+            break;
         }
       });
     },
     productionStatusToText(status) {
       switch (status) {
-        case -1:
-          return "审核驳回";
-        case 0:
-          return "待审核";
         case 1:
           return "生产中";
         case 2:
@@ -270,9 +290,9 @@ export default {
     },
     collectionStatusToText(status) {
       switch (status) {
-        case 0:
-          return "回款中";
         case 1:
+          return "回款中";
+        case 2:
           return "回款完成";
       }
     },

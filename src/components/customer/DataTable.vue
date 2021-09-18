@@ -80,7 +80,13 @@ export default {
         sortable: false,
       },
       {
-        text: "公司",
+        text: "区域",
+        align: "center",
+        value: "company.area.name",
+        sortable: false,
+      },
+      {
+        text: "单位",
         align: "center",
         value: "company.name",
         sortable: false,
