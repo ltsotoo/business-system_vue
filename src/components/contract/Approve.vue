@@ -126,7 +126,7 @@
           </v-col>
         </v-row>
 
-        <v-row>
+        <!-- <v-row>
           <v-col cols="3">
             <v-text-field
               v-model="text.status"
@@ -148,7 +148,7 @@
               readonly
             ></v-text-field>
           </v-col>
-        </v-row>
+        </v-row> -->
 
         <v-row v-if="object.remarks != undefined && object.remarks.length > 0">
           <v-col cols="12">
@@ -164,11 +164,21 @@
     <taskDataTable
       style="margin-top: 1px"
       ref="taskDataTable"
-      :openType="1"
+      :openType="4"
       :openUID="openUID"
       :parentObject="object.tasks"
       v-if="object.tasks"
     />
+
+    <v-card style="margin-top: 1px">
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" rounded @click="submit">通过</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="error" rounded @click="closeDialog">驳回</v-btn>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -184,6 +194,14 @@ export default {
       type: String,
       default: "",
     },
+    parentFun: {
+      type: Function,
+      default: null,
+    },
+    closeDialog: {
+      type: Function,
+      default: null,
+    },
   },
   data: () => ({
     object: {
@@ -195,6 +213,7 @@ export default {
       customer: {
         company: {},
       },
+      tasks: [],
     },
     text: {
       status: "",
@@ -213,6 +232,21 @@ export default {
         this.object = res.data;
         this.changeText(res.data);
       });
+    },
+    submit() {
+      if (this.check()) {
+      }else{
+          this.$message.error("该合同还有产品未分配！！！")
+      }
+    },
+    check() {
+      var status = true;
+      this.object.tasks.forEach(function (e) {
+        if (e.status == 0) {
+          status = false;
+        }
+      });
+      return status;
     },
     changeText(data) {
       switch (data.invoiceType) {

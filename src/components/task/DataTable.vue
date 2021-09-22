@@ -15,9 +15,25 @@
       @update:items-per-page="getObject"
       @click:row="openViewDialog"
     >
-      <template v-slot:[`item.actions`]="{ item }" v-if="openType == 2">
-        <v-icon @click="openEditDialog(item.productUID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
+      <template v-slot:[`item.status`]="{ item }">
+        {{ stautsToText(item.status) }}
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon
+          @click="openApproveDialog(item.UID)"
+          v-if="openType == 4"
+        >
+          mdi-check-bold
+        </v-icon>
+        <v-icon
+          @click="openEditDialog(item.productUID)"
+          v-if="item.status == 0 && openType == 2"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon @click="openDeleteDialog(item.UID)" v-if="openType == 2">
+          mdi-delete
+        </v-icon>
       </template>
     </v-data-table>
 
@@ -27,6 +43,19 @@
       max-width="800px"
     >
       <productForms :openUID="options.openUID" :openType="options.openType" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="options.approveDialog"
+      v-if="options.approveDialog"
+      max-width="800px"
+    >
+      <approve
+        :openUID="options.openUID"
+        ref="approve"
+        :parentFun="getObject"
+        :closeDialog="closeApproveDialog"
+      />
     </v-dialog>
 
     <v-dialog
@@ -67,11 +96,12 @@
 </template>
 
 <script>
+import approve from "./Approve";
 import productForms from "../product/Forms";
 import { delTask, queryTasks } from "@/api/task";
-
 export default {
   components: {
+    approve,
     productForms,
   },
   props: {
@@ -79,6 +109,7 @@ export default {
       type: String,
       default: "",
     },
+    //2：编辑 4：分配
     openType: {
       type: Number,
       default: 0,
@@ -99,11 +130,11 @@ export default {
       { text: "数量", value: "number", sortable: false },
       { text: "库存数量", value: "product.number", sortable: false },
       { text: "单位", value: "unit", sortable: false },
-      { text: "状态", value: "status", sortable: false },
       { text: "技术负责人", value: "technicianMan.name", sortable: false },
       { text: "采购负责人", value: "purchaseMan.name", sortable: false },
       { text: "库存负责人", value: "inventoryMan.name", sortable: false },
       { text: "发货人员", value: "shipmentMan.name", sortable: false },
+      { text: "状态", value: "status", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
@@ -112,6 +143,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       viewDialog: false,
+      approveDialog: false,
       editDialog: false,
       deleteDialog: false,
     },
@@ -136,19 +168,29 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+        this.stautsToText();
       });
     },
     openViewDialog(item, other) {
       setTimeout(() => {
         if (
           this.options.editDialog == false &&
-          this.options.deleteDialog == false
+          this.options.deleteDialog == false &&
+          this.options.approveDialog == false
         ) {
           this.options.openUID = item.productUID;
           this.options.openType = 1;
           this.options.viewDialog = true;
         }
       }, 66);
+    },
+    openApproveDialog(uid) {
+      this.options.openUID = uid;
+      this.options.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.options.openUID = "";
+      this.options.approveDialog = false;
     },
     openEditDialog(uid) {
       this.options.openUID = uid;
@@ -178,6 +220,38 @@ export default {
         this.getObject();
         this.options.deleteDialog = false;
       });
+    },
+    updateItemStatus(UID) {
+      this.options.loading = true;
+      queryTasks({ contractUID: UID }).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        if (this.options.total != 0) {
+          this.object = res.data;
+        }
+        this.stautsToText();
+      });
+    },
+    stautsToText(status) {
+      switch (status) {
+        case 0:
+          return "未分配";
+        case 1:
+          return "待设计";
+        case 2:
+          return "待采购";
+        case 3:
+          return "待入库";
+        case 4:
+          return "待发货";
+        case 5:
+          return "待确认收货";
+        case 6:
+          return "完成";
+      }
     },
   },
 };

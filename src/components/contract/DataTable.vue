@@ -28,6 +28,7 @@
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
+        <v-icon @click="openApproveDialog(item.UID)"> mdi-check-bold </v-icon>
         <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
       </template>
@@ -42,6 +43,20 @@
       <contractViewForms
         :openUID="options.openUID"
         :openType="options.openType"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="options.approveDialog"
+      v-if="options.approveDialog"
+      min-width="800px"
+      max-width="1440px"
+    >
+      <approve
+        :openUID="options.openUID"
+        ref="approve"
+        :parentFun="getObject"
+        :closeDialog="closeApproveDialog"
       />
     </v-dialog>
 
@@ -77,12 +92,14 @@
 </template>
 
 <script>
+import approve from "./Approve";
 import contractViewForms from "./ViewForms";
 import contractEditForms from "./EditForms";
 import { delContract, queryContracts } from "@/api/contract";
 
 export default {
   components: {
+    approve,
     contractViewForms,
     contractEditForms,
   },
@@ -167,6 +184,7 @@ export default {
       itemsPerPage: 10,
       openUID: "",
       openType: null,
+      approveDialog: false,
       viewDialog: false,
       editDialog: false,
       deleteDialog: false,
@@ -199,7 +217,8 @@ export default {
       setTimeout(() => {
         if (
           this.options.editDialog == false &&
-          this.options.deleteDialog == false
+          this.options.deleteDialog == false &&
+          this.options.approveDialog == false
         ) {
           this.options.openUID = item.UID;
           this.options.openType = 1;
@@ -210,6 +229,15 @@ export default {
     closeViewDialog() {
       this.options.openUID = "";
       this.options.openType = null;
+    },
+    openApproveDialog(uid) {
+      this.options.openUID = uid;
+      this.options.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.options.openUID = "";
+      this.options.openType = null;
+      this.options.approveDialog = false;
     },
     openEditDialog(uid) {
       this.options.openUID = uid;
@@ -252,15 +280,6 @@ export default {
     stautsToText() {
       var _this = this;
       this.object.forEach(function (e) {
-        // if (e.status == 1) {
-        //   e.statusText = "待审批";
-        // } else {
-        //   e.statusText =
-        //     _this.productionStatusToText(e.productionStatus) +
-        //     "," +
-        //     _this.collectionStatusToText(e.collectionStatus);
-        // }
-
         switch (e.status) {
           case -1:
             e.statusText = "审批驳回";

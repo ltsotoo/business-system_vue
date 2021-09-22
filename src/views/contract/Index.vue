@@ -135,14 +135,14 @@ export default {
       { key: "否", value: 2 },
     ],
     statusItems: [
-      { key: "未完成", value: 1 },
-      { key: "已完成", value: 2 },
-    ],
-    productionStatusItems: [
       { key: "审核驳回", value: -1 },
       { key: "待审核", value: 1 },
-      { key: "生产中", value: 2 },
-      { key: "生产完成", value: 3 },
+      { key: "未完成", value: 2 },
+      { key: "已完成", value: 3 },
+    ],
+    productionStatusItems: [
+      { key: "生产中", value: 1 },
+      { key: "生产完成", value: 2 },
     ],
     collectionStatusItems: [
       { key: "回款中", value: 1 },
