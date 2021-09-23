@@ -173,9 +173,9 @@
     <v-card style="margin-top: 1px">
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="submit">通过</v-btn>
+        <v-btn color="primary" rounded @click="pass">通过</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="error" rounded @click="closeDialog">驳回</v-btn>
+        <v-btn color="error" rounded @click="fail">驳回</v-btn>
         <v-spacer></v-spacer>
       </v-card-actions>
     </v-card>
@@ -185,6 +185,7 @@
 <script>
 import taskDataTable from "../task/DataTable";
 import { queryContract } from "@/api/contract";
+import { contractApprove } from "@/api/contract_flow";
 export default {
   components: {
     taskDataTable,
@@ -214,6 +215,7 @@ export default {
         company: {},
       },
       tasks: [],
+      status: null,
     },
     text: {
       status: "",
@@ -233,20 +235,27 @@ export default {
         this.changeText(res.data);
       });
     },
-    submit() {
-      if (this.check()) {
-      }else{
-          this.$message.error("该合同还有产品未分配！！！")
-      }
+    pass() {
+      this.object.status = 2;
+      this.submit();
     },
-    check() {
-      var status = true;
-      this.object.tasks.forEach(function (e) {
-        if (e.status == 0) {
-          status = false;
-        }
-      });
-      return status;
+    fail() {
+      this.object.status = -1;
+      this.submit();
+    },
+    submit() {
+      var _this = this;
+      if (this.$refs.taskDataTable.check()) {
+        contractApprove({
+          UID: this.object.UID,
+          status: this.object.status,
+        }).then((res) => {
+          _this.parentFun();
+          _this.closeDialog();
+        });
+      } else {
+        this.$message.error("该合同还有产品未分配！！！");
+      }
     },
     changeText(data) {
       switch (data.invoiceType) {

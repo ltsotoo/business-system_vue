@@ -19,10 +19,7 @@
         {{ stautsToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          @click="openApproveDialog(item.UID)"
-          v-if="openType == 4"
-        >
+        <v-icon @click="openApproveDialog(item.UID)" v-if="openType == 4">
           mdi-check-bold
         </v-icon>
         <v-icon
@@ -234,6 +231,15 @@ export default {
         }
         this.stautsToText();
       });
+    },
+    check() {
+      var status = true;
+      this.object.forEach(function (e) {
+        if (e.status == 0) {
+          status = false;
+        }
+      });
+      return status;
     },
     stautsToText(status) {
       switch (status) {
