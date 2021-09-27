@@ -39,7 +39,7 @@
       v-if="options.viewDialog"
       max-width="800px"
     >
-      <productForms :openUID="options.openUID" :openType="options.openType" />
+      <taskViewForms :openObject="options.openObject" ref="taskViewForms" />
     </v-dialog>
 
     <v-dialog
@@ -61,11 +61,7 @@
       max-width="800px"
       persistent
     >
-      <productForms
-        :openUID="options.openUID"
-        ref="productForms"
-        :parentFun="getObject"
-      />
+      <productViewForms :openUID="options.openUID" ref="productViewForms" />
       <v-card style="margin-top: 1px">
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -94,12 +90,14 @@
 
 <script>
 import approve from "./Approve";
-import productForms from "../product/Forms";
+import productViewForms from "../product/ViewForms";
+import taskViewForms from "./ViewForms";
 import { delTask, queryTasks } from "@/api/task";
 export default {
   components: {
     approve,
-    productForms,
+    productViewForms,
+    taskViewForms,
   },
   props: {
     openUID: {
@@ -176,6 +174,7 @@ export default {
           this.options.approveDialog == false
         ) {
           this.options.openUID = item.productUID;
+          this.options.openObject = item;
           this.options.openType = 1;
           this.options.viewDialog = true;
         }
@@ -198,7 +197,7 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
-      this.$refs.productForms.editObject();
+      this.$refs.productViewForms.editObject();
       this.options.openUID = "";
       this.options.editDialog = false;
     },

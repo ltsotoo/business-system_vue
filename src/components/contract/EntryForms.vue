@@ -168,6 +168,16 @@
           </v-row>
 
           <v-row>
+            <v-col cols="4">
+              <v-text-field
+                label="合同总金额(元)"
+                v-model="object.totalAmount"
+                disabled
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="12">
               <v-radio-group v-model.number="object.invoiceType" row>
                 <template v-slot:label>
@@ -274,10 +284,17 @@
               itemsPerPageOptions: [5, 10, 20],
             }"
           >
+            <template v-slot:[`item.remarks`]="{ item }">
+              <v-textarea
+                readonly
+                :value="item.remarks"
+                v-if="item.remarks != undefined"
+                rows="1"
+                auto-grow
+              ></v-textarea>
+            </template>
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon @click="openCartDeleteDialog(item.productUID)">
-                mdi-delete
-              </v-icon>
+              <v-icon @click="openCartDeleteDialog(item)"> mdi-delete </v-icon>
             </template>
           </v-data-table>
         </div>
@@ -294,7 +311,7 @@
       </v-btn>
     </v-row>
 
-    <v-dialog v-model="cart.addDialog" max-width="400px" persistent>
+    <v-dialog v-model="cart.addDialog" max-width="600px" persistent>
       <v-card>
         <v-card-title>
           <span class="text-h5">{{ cart.product.name }}</span>
@@ -314,6 +331,12 @@
                   v-model.number="cart.product.price"
                 ></v-text-field>
               </v-col>
+            </v-row>
+            <v-row>
+              <v-textarea
+                label="非标备注"
+                v-model.trim="cart.product.remarks"
+              ></v-textarea>
             </v-row>
           </v-container>
         </v-card-text>
@@ -380,6 +403,7 @@ export default {
       contractUnitUID: "",
       estimatedDeliveryDate: "",
       endDeliveryDate: "",
+      totalAmount: 0,
       invoiceType: 1,
       invoiceContent: "",
       isSpecial: false,
@@ -425,19 +449,41 @@ export default {
       headers: [
         {
           text: "名称",
-          align: "start",
+          align: "center",
           sortable: false,
           value: "name",
         },
-        { text: "品牌", value: "brand", sortable: false },
-        { text: "规格", value: "specification", sortable: false },
-        { text: "购买数量", value: "number", sortable: false },
-        { text: "单位", value: "unit", sortable: false },
-        { text: "单价(元)", value: "price", sortable: false },
-        { text: "总价格(元)", value: "totalPrice", sortable: false },
-        { text: "操作", value: "actions", sortable: false },
+        { text: "品牌", align: "center", value: "brand", sortable: false },
+        {
+          text: "规格",
+          align: "center",
+          value: "specification",
+          sortable: false,
+        },
+        { text: "购买数量", align: "center", value: "number", sortable: false },
+        { text: "单位", align: "center", value: "unit", sortable: false },
+        { text: "单价(元)", align: "center", value: "price", sortable: false },
+        {
+          text: "总价格(元)",
+          align: "center",
+          value: "totalPrice",
+          sortable: false,
+        },
+        {
+          text: "非标备注",
+          align: "center",
+          value: "remarks",
+          sortable: false,
+        },
+        {
+          text: "操作",
+          align: "center",
+          value: "actions",
+          sortable: false,
+        },
       ],
       openUID: "",
+      openRemarks: "",
       addDialog: false,
       deleteDialog: false,
       object: [],
@@ -514,7 +560,10 @@ export default {
     addToCart() {
       var isNew = true;
       this.cart.object.forEach((item) => {
-        if (item.productUID == this.cart.product.productUID) {
+        if (
+          item.productUID == this.cart.product.productUID &&
+          item.remarks == this.cart.product.remarks
+        ) {
           this.$message.error("请勿重复添加！");
           isNew = false;
           return;
@@ -523,22 +572,32 @@ export default {
       if (isNew) {
         this.cart.product.totalPrice =
           this.cart.product.number * this.cart.product.price;
+        this.object.totalAmount += this.cart.product.totalPrice;
         this.cart.object.push(this.cart.product);
       }
       this.closeAddCartDialog();
     },
-    openCartDeleteDialog(uid) {
-      this.cart.openUID = uid;
+    openCartDeleteDialog(item) {
+      this.cart.openUID = item.productUID;
+      this.cart.remarks = item.remarks;
       this.cart.deleteDialog = true;
     },
     closeCartDeleteDialog() {
       this.cart.openUID = "";
+      this.cart.remarks = "";
       this.cart.deleteDialog = false;
     },
     deleteCartItem() {
       this.cart.object = this.cart.object.filter(
-        (t) => t.productUID != this.cart.openUID
+        (t) =>
+          t.productUID != this.cart.openUID ||
+          (t.productUID == this.cart.openUID && t.remarks != this.cart.remarks)
       );
+      let temp = 0;
+      this.cart.object.forEach((item) => {
+        temp += item.totalPrice;
+      });
+      this.object.totalAmount = temp;
       this.closeCartDeleteDialog();
     },
     validateForm() {

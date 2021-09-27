@@ -32,7 +32,7 @@
       max-width="800px"
       @click:outside="closeViewDialog"
     >
-      <productForms :openUID="options.openUID" :openType="options.openType" />
+      <productViewForms :openUID="options.openUID" />
     </v-dialog>
 
     <v-dialog
@@ -41,10 +41,9 @@
       max-width="800px"
       persistent
     >
-      <productForms
+      <productEditForms
         :openUID="options.openUID"
-        :openType="options.openType"
-        ref="productForms"
+        ref="productEditForms"
         :parentFun="getObject"
       />
       <v-card style="margin-top: 1px">
@@ -74,12 +73,14 @@
 </template>
 
 <script>
-import productForms from "./Forms";
+import productViewForms from "./ViewForms";
+import productEditForms from "./EditForms";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
-    productForms,
+    productViewForms,
+    productEditForms,
   },
   props: {
     openType: {
@@ -247,8 +248,8 @@ export default {
       this.options.editDialog = false;
     },
     editItem() {
-      if (this.$refs.productForms.validateForm()) {
-        this.$refs.productForms.editObject();
+      if (this.$refs.productEditForms.validateForm()) {
+        this.$refs.productEditForms.editObject();
         this.closeEditDialog();
       }
     },
