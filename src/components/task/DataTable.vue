@@ -163,7 +163,6 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
-        this.stautsToText();
       });
     },
     openViewDialog(item, other) {
@@ -228,7 +227,6 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
-        this.stautsToText();
       });
     },
     check() {

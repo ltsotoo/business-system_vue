@@ -14,3 +14,10 @@ export const queryTasks = (querObject) => {
         data: querObject
     })
 }
+
+export const queryMyTasks = () => {
+    return request({
+        url: '/mytasks',
+        method: 'GET',
+    })
+}

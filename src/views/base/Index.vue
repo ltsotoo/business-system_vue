@@ -78,11 +78,25 @@
         </v-row>
       </v-card-subtitle>
     </v-card>
+    <v-card style="margin-top: 10px">
+      <v-card-title></v-card-title>
+      <v-card-subtitle>
+        <v-row>
+          <v-col>
+            <tasksDataTable />
+          </v-col>
+        </v-row>
+      </v-card-subtitle>
+    </v-card>
   </v-container>
 </template>
 
 <script>
+import tasksDataTable from "@/components/index/TasksDataTable";
 export default {
+  components: {
+    tasksDataTable,
+  },
   data: () => ({}),
 };
 </script>
