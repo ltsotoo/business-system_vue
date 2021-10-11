@@ -17,6 +17,24 @@
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
       </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon v-if="item.status == 1">
+          mdi-chevron-right-circle-outline
+        </v-icon>
+        <v-icon v-if="item.status == 1"> mdi-cart-outline </v-icon>
+        <v-icon v-if="item.status == 2">
+          mdi-chevron-right-circle-outline
+        </v-icon>
+        <v-icon v-if="item.status == 3">
+          mdi-chevron-right-circle-outline
+        </v-icon>
+        <v-icon v-if="item.status == 4">
+          mdi-chevron-right-circle-outline
+        </v-icon>
+        <v-icon v-if="item.status == 5">
+          mdi-chevron-right-circle-outline
+        </v-icon>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -26,12 +44,8 @@ import { queryMyTasks } from "@/api/task";
 export default {
   data: () => ({
     headers: [
-      {
-        text: "产品",
-        align: "start",
-        sortable: false,
-        value: "product.name",
-      },
+      { text: "ID", sortable: false, value: "ID" },
+      { text: "产品", sortable: false, value: "product.name" },
       { text: "数量", value: "number", sortable: false },
       { text: "库存数量", value: "product.number", sortable: false },
       { text: "单位", value: "unit", sortable: false },
