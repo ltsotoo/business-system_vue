@@ -15,33 +15,9 @@ export const queryTasks = (querObject) => {
     })
 }
 
-export const queryMyTasks1 = () => {
+export const queryMyTasks = () => {
     return request({
-        url: '/mytasks1',
-        method: 'GET',
-    })
-}
-export const queryMyTasks2 = () => {
-    return request({
-        url: '/mytasks2',
-        method: 'GET',
-    })
-}
-export const queryMyTasks3 = () => {
-    return request({
-        url: '/mytasks3',
-        method: 'GET',
-    })
-}
-export const queryMyTasks4 = () => {
-    return request({
-        url: '/mytasks4',
-        method: 'GET',
-    })
-}
-export const queryMyTasks5 = () => {
-    return request({
-        url: '/mytasks5',
+        url: '/mytasks',
         method: 'GET',
     })
 }

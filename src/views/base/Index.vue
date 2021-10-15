@@ -78,27 +78,15 @@
         </v-row>
       </v-card-subtitle>
     </v-card>
-    <tasksDataTable1 style="margin-top: 10px"/>
-    <tasksDataTable2 style="margin-top: 10px"/>
-    <tasksDataTable3 style="margin-top: 10px"/>
-    <tasksDataTable4 style="margin-top: 10px"/>
-    <tasksDataTable5 style="margin-top: 10px"/>
+    <tasksDataTable style="margin-top: 10px"/>
   </v-container>
 </template>
 
 <script>
-import tasksDataTable1 from "@/components/index/TasksDataTable1";
-import tasksDataTable2 from "@/components/index/TasksDataTable2";
-import tasksDataTable3 from "@/components/index/TasksDataTable3";
-import tasksDataTable4 from "@/components/index/TasksDataTable4";
-import tasksDataTable5 from "@/components/index/TasksDataTable5";
+import tasksDataTable from "@/components/index/TasksDataTable";
 export default {
   components: {
-    tasksDataTable1,
-    tasksDataTable2,
-    tasksDataTable3,
-    tasksDataTable4,
-    tasksDataTable5,
+    tasksDataTable,
   },
   data: () => ({}),
 };
