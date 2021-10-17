@@ -251,9 +251,7 @@ export default {
         case 4:
           return "待发货";
         case 5:
-          return "待确认收货";
-        case 6:
-          return "完成";
+          return "已发货";
       }
     },
   },
