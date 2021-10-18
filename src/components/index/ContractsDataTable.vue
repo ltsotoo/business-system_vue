@@ -30,7 +30,14 @@
       <v-card>
         <v-card-title> 历史回款记录 </v-card-title>
         <v-card-subtitle>
-          <v-row v-for="(item, i) in paymentItems" :key="i">
+          <v-row v-for="(item, i) in paymentItems" :key="i" align="center">
+            <v-col cols="2">
+              <v-text-field
+                label="时间"
+                readonly
+                v-model.number="item.CreatedAt"
+              ></v-text-field>
+            </v-col>
             <v-col cols="2">
               <v-text-field
                 label="回款金额(元)"
@@ -38,7 +45,7 @@
                 v-model.number="item.money"
               ></v-text-field>
             </v-col>
-            <v-col cols="10">
+            <v-col cols="8">
               <v-textarea
                 label="备注"
                 readonly
