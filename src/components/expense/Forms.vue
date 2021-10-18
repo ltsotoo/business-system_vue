@@ -27,6 +27,8 @@
               label="申请理由"
               v-model.trim="object.text"
               :rules="rules.text"
+              auto-grow
+              rows="3"
             ></v-textarea>
           </v-col>
         </v-row>

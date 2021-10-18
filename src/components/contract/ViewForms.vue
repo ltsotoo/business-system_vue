@@ -114,6 +114,8 @@
             <v-textarea
               v-model="object.invoiceContent"
               label="开票内容"
+              auto-grow
+              rows="3"
               :readonly="
                 object.invoiceContent != undefined &&
                 object.invoiceContent.length > 0
@@ -155,6 +157,8 @@
             <v-textarea
               v-model="object.remarks"
               label="备注"
+              auto-grow
+              rows="1"
               readonly
             ></v-textarea>
           </v-col>

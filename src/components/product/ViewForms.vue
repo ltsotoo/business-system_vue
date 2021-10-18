@@ -94,6 +94,8 @@
               v-model="object.remarks"
               readonly
               v-if="object.remarks != ''"
+              auto-grow
+              rows="1"
             ></v-textarea>
           </v-col>
         </v-row>

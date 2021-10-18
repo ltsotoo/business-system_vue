@@ -102,6 +102,8 @@
               label="备注"
               v-model="object.remarks"
               :rules="rules.remarks"
+              auto-grow
+              rows="3"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -214,7 +216,6 @@ export default {
       return this.$refs.form.validate();
     },
   },
-  computed: {},
   watch: {
     "object.sourceTypeUID": {
       handler: function (val) {

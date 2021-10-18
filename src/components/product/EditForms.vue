@@ -93,6 +93,8 @@
               label="备注"
               v-model="object.remarks"
               :rules="rules.remarks"
+              auto-grow
+              rows="3"
             ></v-textarea>
           </v-col>
         </v-row>

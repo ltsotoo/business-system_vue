@@ -1,143 +1,303 @@
 <template>
   <v-card>
-    <v-card-title></v-card-title>
+    <v-card-title>任务分配</v-card-title>
     <v-card-subtitle>
       <v-row>
-        <v-col cols="3"></v-col>
-        <v-col cols="3">
+        <v-col cols="6">
           <v-select
-            v-model="query.status"
-            :items="statusItems"
+            v-model="query.type"
+            :items="typeItems"
             item-text="key"
             item-value="value"
-            label="状态"
+            label="类型"
           ></v-select>
         </v-col>
       </v-row>
-      <v-row align="center">
-        <v-col cols="3"> 技术负责人: </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="officeUID1"
-            :items="officeItems"
-            item-text="name"
-            item-value="UID"
-            label="办事处"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="departmentUID1"
-            :items="departmentItems1"
-            item-text="name"
-            item-value="UID"
-            label="部门"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="query.technicianManUID"
-            :items="employeeItems1"
-            item-text="name"
-            item-value="UID"
-            label="员工"
-          ></v-select>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-      <v-row align="center">
-        <v-col cols="3"> 采购负责人: </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="officeUID2"
-            :items="officeItems"
-            item-text="name"
-            item-value="UID"
-            label="办事处"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="departmentUID2"
-            :items="departmentItems2"
-            item-text="name"
-            item-value="UID"
-            label="部门"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="query.purchaseManUID"
-            :items="employeeItems2"
-            item-text="name"
-            item-value="UID"
-            label="员工"
-          ></v-select>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-      <v-row align="center">
-        <v-col cols="3"> 仓库负责人: </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="officeUID3"
-            :items="officeItems"
-            item-text="name"
-            item-value="UID"
-            label="办事处"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="departmentUID3"
-            :items="departmentItems3"
-            item-text="name"
-            item-value="UID"
-            label="部门"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="query.inventoryManUID"
-            :items="employeeItems3"
-            item-text="name"
-            item-value="UID"
-            label="员工"
-          ></v-select>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-      <v-row align="center">
-        <v-col cols="3"> 发货负责人: </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="officeUID4"
-            :items="officeItems"
-            item-text="name"
-            item-value="UID"
-            label="办事处"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="departmentUID4"
-            :items="departmentItems4"
-            item-text="name"
-            item-value="UID"
-            label="部门"
-          ></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-select
-            v-model="query.shipmentManUID"
-            :items="employeeItems4"
-            item-text="name"
-            item-value="UID"
-            label="员工"
-          ></v-select>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
+      <div v-if="query.type == 1">
+        <v-row align="center">
+          <v-col cols="3"> 仓库负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID3"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID3"
+              :items="departmentItems3"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.inventoryManUID"
+              :items="employeeItems3"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 发货负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID4"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID4"
+              :items="departmentItems4"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.shipmentManUID"
+              :items="employeeItems4"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </div>
+      <div v-if="query.type == 2">
+        <v-row align="center">
+          <v-col cols="3"> 采购负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID2"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID2"
+              :items="departmentItems2"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.purchaseManUID"
+              :items="employeeItems2"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 仓库负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID3"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID3"
+              :items="departmentItems3"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.inventoryManUID"
+              :items="employeeItems3"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 发货负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID4"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID4"
+              :items="departmentItems4"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.shipmentManUID"
+              :items="employeeItems4"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </div>
+      <div v-if="query.type == 3">
+        <v-row align="center">
+          <v-col cols="3"> 技术负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID1"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID1"
+              :items="departmentItems1"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.technicianManUID"
+              :items="employeeItems1"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 采购负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID2"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID2"
+              :items="departmentItems2"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.purchaseManUID"
+              :items="employeeItems2"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 仓库负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID3"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID3"
+              :items="departmentItems3"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.inventoryManUID"
+              :items="employeeItems3"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+        <v-row align="center">
+          <v-col cols="3"> 发货负责人: </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="officeUID4"
+              :items="officeItems"
+              item-text="name"
+              item-value="UID"
+              label="办事处"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="departmentUID4"
+              :items="departmentItems4"
+              item-text="name"
+              item-value="UID"
+              label="部门"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-select
+              v-model="query.shipmentManUID"
+              :items="employeeItems4"
+              item-text="name"
+              item-value="UID"
+              label="员工"
+            ></v-select>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </div>
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -167,9 +327,14 @@ export default {
     },
   },
   data: () => ({
+    typeItems: [
+      { key: "标准/第三方有库存", value: 1 },
+      { key: "标准/第三方无库存", value: 2 },
+      { key: "非标准定制", value: 3 },
+    ],
     query: {
       UID: "",
-      status: null,
+      type: null,
       technicianManUID: "",
       purchaseManUID: "",
       inventoryManUID: "",
@@ -183,12 +348,6 @@ export default {
     departmentUID2: "",
     departmentUID3: "",
     departmentUID4: "",
-    statusItems: [
-      { key: "设计", value: 1 },
-      { key: "采购", value: 2 },
-      { key: "入库", value: 3 },
-      { key: "发货", value: 4 },
-    ],
     officeItems: [],
     departmentItems1: [],
     departmentItems2: [],
@@ -302,7 +461,8 @@ export default {
       });
     },
     check() {
-      if (this.stauts === null) {
+      if (this.query.type === null) {
+        this.$message.error("未选择类型！");
         return false;
       }
       return true;
@@ -314,12 +474,18 @@ export default {
           _this.parentFun(_this.openUID);
           _this.closeDialog();
         });
-      } else {
-        this.$message.error("未选择分配状态！");
       }
     },
   },
   watch: {
+    "query.type": {
+      handler: function (val) {
+        this.query.technicianManUID = "";
+        this.query.purchaseManUID = "";
+        this.query.inventoryManUID = "";
+        this.query.shipmentManUID = "";
+      },
+    },
     officeUID1() {
       this.getDepartmentItems1();
     },

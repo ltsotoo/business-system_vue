@@ -15,9 +15,13 @@ export const queryTasks = (querObject) => {
     })
 }
 
-export const queryMyTasks = () => {
+export const queryMyTasks = (pageSize, pageNo) => {
     return request({
         url: '/mytasks',
         method: 'GET',
+        params: {
+            "pageSize": pageSize,
+            "pageNo": pageNo,
+        }
     })
 }

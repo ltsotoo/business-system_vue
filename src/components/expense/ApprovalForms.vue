@@ -57,6 +57,8 @@
               label="申请理由"
               v-model="object.text"
               readonly
+              auto-grow
+              rows="1"
             ></v-textarea>
           </v-col>
         </v-row>

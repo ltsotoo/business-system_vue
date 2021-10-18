@@ -128,7 +128,7 @@ export default {
       { text: "技术负责人", value: "technicianMan.name", sortable: false },
       { text: "采购负责人", value: "purchaseMan.name", sortable: false },
       { text: "库存负责人", value: "inventoryMan.name", sortable: false },
-      { text: "发货人员", value: "shipmentMan.name", sortable: false },
+      { text: "发货负责人", value: "shipmentMan.name", sortable: false },
       { text: "状态", value: "status", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
@@ -240,17 +240,17 @@ export default {
     },
     stautsToText(status) {
       switch (status) {
-        case 0:
-          return "未分配";
         case 1:
           return "待设计";
         case 2:
           return "待采购";
         case 3:
-          return "待入库";
+          return "待入/出库";
         case 4:
-          return "待发货";
+          return "待装配";
         case 5:
+          return "待发货";
+        case 6:
           return "已发货";
       }
     },

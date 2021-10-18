@@ -28,7 +28,7 @@
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openApproveDialog(item.UID)"> mdi-check-bold </v-icon>
+        <v-icon @click="openApproveDialog(item.UID)" v-if="item.status == 1"> mdi-check-bold </v-icon>
         <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
         <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
       </template>

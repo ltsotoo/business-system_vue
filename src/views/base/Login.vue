@@ -75,6 +75,7 @@ export default {
     userLogin() {
       login(this.queryObject).then((res) => {
         localStorage.setItem("name", res.data.employee.name);
+        localStorage.setItem("uid", res.data.employee.UID);
         localStorage.setItem("Authorization", res.data.token);
         localStorage.setItem("urls",window.btoa(window.encodeURIComponent(JSON.stringify(res.data.urls))));
         localStorage.setItem("nos", JSON.stringify(res.data.nos));

@@ -195,6 +195,8 @@
                 label="开票内容"
                 v-model.trim="object.invoiceContent"
                 :rules="rules.invoiceContent"
+                auto-grow
+                rows="3"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -213,6 +215,8 @@
               <v-textarea
                 label="备注"
                 v-model.trim="object.remarks"
+                auto-grow
+                rows="3"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -336,6 +340,8 @@
               <v-textarea
                 label="非标备注"
                 v-model.trim="cart.product.remarks"
+                auto-grow
+                rows="3"
               ></v-textarea>
             </v-row>
           </v-container>

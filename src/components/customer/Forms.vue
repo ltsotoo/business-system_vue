@@ -169,7 +169,5 @@ export default {
       return this.$refs.form.validate();
     },
   },
-  computed: {},
-  watch: {},
 };
 </script>

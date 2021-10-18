@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card>
+      <v-card-title>合同审核</v-card-title>
       <v-card-subtitle>
         <v-row>
           <v-col cols="3">
@@ -122,11 +123,25 @@
                 object.invoiceContent == undefined ||
                 object.invoiceContent.length == 0
               "
+              auto-grow
+              rows="3"
             ></v-textarea>
           </v-col>
         </v-row>
 
-        <!-- <v-row>
+        <v-row v-if="object.remarks != undefined && object.remarks.length > 0">
+          <v-col cols="12">
+            <v-textarea
+              v-model="object.remarks"
+              label="备注"
+              auto-grow
+              rows="1"
+              readonly
+            ></v-textarea>
+          </v-col>
+        </v-row>
+        
+        <v-row>
           <v-col cols="3">
             <v-text-field
               v-model="text.status"
@@ -148,22 +163,13 @@
               readonly
             ></v-text-field>
           </v-col>
-        </v-row> -->
-
-        <v-row v-if="object.remarks != undefined && object.remarks.length > 0">
-          <v-col cols="12">
-            <v-textarea
-              v-model="object.remarks"
-              label="备注"
-              readonly
-            ></v-textarea>
-          </v-col>
         </v-row>
       </v-card-subtitle>
     </v-card>
-    <taskDataTable
+    
+    <taskApproveDataTable
       style="margin-top: 1px"
-      ref="taskDataTable"
+      ref="taskApproveDataTable"
       :openType="4"
       :openUID="openUID"
       :parentObject="object.tasks"
@@ -183,12 +189,12 @@
 </template>
 
 <script>
-import taskDataTable from "../task/DataTable";
+import taskApproveDataTable from "../task/ApproveDataTable";
 import { queryContract } from "@/api/contract";
 import { contractApprove } from "@/api/contract_flow";
 export default {
   components: {
-    taskDataTable,
+    taskApproveDataTable,
   },
   props: {
     openUID: {
@@ -245,7 +251,7 @@ export default {
     },
     submit() {
       var _this = this;
-      if (this.$refs.taskDataTable.check()) {
+      if (this.$refs.taskApproveDataTable.check()) {
         contractApprove({
           UID: this.object.UID,
           status: this.object.status,
