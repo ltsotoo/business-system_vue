@@ -1,18 +1,8 @@
-<template>
-  <v-container>
-    <tasksDataTable style="margin-top: 10px" />
-    <contractsDataTable style="margin-top: 10px" />
-  </v-container>
-</template>
+<template></template>
 
 <script>
-import tasksDataTable from "@/components/index/TasksDataTable";
-import contractsDataTable from "@/components/index/ContractsDataTable";
 export default {
-  components: {
-    tasksDataTable,
-    contractsDataTable,
-  },
+  components: {},
   data: () => ({}),
 };
 </script>

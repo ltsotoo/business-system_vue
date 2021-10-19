@@ -7,18 +7,19 @@ export const delTask = (uid) => {
     })
 }
 
-export const queryTasks = (querObject) => {
+export const queryTasks = (queryObject) => {
     return request({
         url: '/tasks',
         method: 'POST',
-        data: querObject
+        data: queryObject
     })
 }
 
-export const queryMyTasks = (pageSize, pageNo) => {
+export const queryMyTasks = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/mytasks',
-        method: 'GET',
+        method: 'POST',
+        data: queryObject,
         params: {
             "pageSize": pageSize,
             "pageNo": pageNo,

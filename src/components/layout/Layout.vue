@@ -30,15 +30,31 @@
       <v-divider></v-divider>
       <v-list rounded>
         <v-list-item-group v-model="selectedItem" color="#6b473c">
-          <v-list-item v-for="(item, i) in items" :key="i" :to="item.url">
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
+          <div>
+            <v-list-item
+              v-for="(item, i) in systemItems"
+              :key="i"
+              :to="item.url"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+          <div>
+            <v-list-item v-for="(item, i) in items" :key="i" :to="item.url">
+              <v-list-item-icon>
+                <v-icon v-text="item.icon"></v-icon>
+              </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </div>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -67,20 +83,18 @@ export default {
       settingUrl: "/my",
       exitIcon: "mdi-run",
     },
-    items: [
+    systemItems: [
       { title: "首页", icon: "mdi-home", url: "/index" },
-      { title: "合同管理", icon: "mdi-folder", url: "/contract" },
-      { title: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
-      { title: "产品管理", icon: "mdi-cube", url: "/product" },
-      { title: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
-      { title: "企业管理", icon: "mdi-domain", url: "/enterprise" },
-      { title: "系统设置", icon: "mdi-cog-outline", url: "/system" },
+      { title: "我的报销", icon: "mdi-currency-usd", url: "/my/expense" },
     ],
+    items: [],
   }),
   created() {
     this.object.name = localStorage.getItem("name");
     // this.items = JSON.parse(localStorage.getItem("urls"));
-    this.items = JSON.parse(decodeURIComponent(window.atob(localStorage.getItem("urls"))));
+    this.items = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("urls")))
+    );
   },
   methods: {
     exit() {

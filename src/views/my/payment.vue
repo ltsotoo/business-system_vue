@@ -1,4 +1,5 @@
 <template>
+  <!-- 合同-回款 -->
   <v-container>
     <v-card>
       <v-card-subtitle>
@@ -58,6 +59,7 @@
                     item-value="value"
                     label="合同状态"
                     clearable
+                    disabled
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
@@ -68,6 +70,7 @@
                     item-value="value"
                     label="生产状态"
                     clearable
+                    disabled
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
@@ -95,20 +98,22 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <div style="margin-top: 10px"></div>
-    <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
+    <payments
+      style="margin-top: 10px"
+      :queryObject="queryObject"
+      ref="payments"
+    />
   </v-container>
 </template>
 
 <script>
-import contractDataTable from "@/components/contract/DataTable";
+import payments from "@/components/my/Payments";
 import { queryAreas } from "@/api/oadrp";
 export default {
   components: {
-    contractDataTable,
+    payments,
   },
   data: () => ({
-    nos: [],
     areaItems: [],
     queryObject: {
       areaUID: "",
@@ -116,9 +121,10 @@ export default {
       companyName: "",
       customerName: "",
       isSpecial: 0,
-      status: 0,
+      status: 2,
       productionStatus: 0,
       collectionStatus: 0,
+      employeeUID: "",
     },
     isSpecialItems: [
       { key: "是", value: 1 },
@@ -140,7 +146,6 @@ export default {
     ],
   }),
   created() {
-    this.nos = localStorage.getItem("nos");
     this.getAreas();
   },
   methods: {
@@ -150,11 +155,11 @@ export default {
       });
     },
     query() {
-      this.$refs.contractDataTable.getObject();
+      this.$refs.payments.getObject();
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();
-      this.$refs.contractDataTable.getObject();
+      this.$refs.payments.getObject();
     },
   },
 };

@@ -1,10 +1,10 @@
 <template>
+  <!-- 合同 -->
   <v-container>
     <v-card>
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="center">
-            <v-spacer></v-spacer>
             <v-col cols="10">
               <v-row>
                 <v-col cols="3">
@@ -15,6 +15,7 @@
                     item-value="UID"
                     label="区域"
                     clearable
+                    disabled
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
@@ -82,7 +83,6 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-spacer></v-spacer>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
             </v-col>
@@ -91,24 +91,29 @@
                 重置
               </v-btn>
             </v-col>
+            <v-divider vertical></v-divider>
+            <v-col cols="auto">
+              <v-btn rounded color="success" dark @click="goToEntry"> 录入 </v-btn>
+            </v-col>
           </v-row>
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <div style="margin-top: 10px"></div>
-    <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
+    <contracts
+      style="margin-top: 10px"
+      :queryObject="queryObject"
+      ref="contracts"
+    />
   </v-container>
 </template>
 
 <script>
-import contractDataTable from "@/components/contract/DataTable";
-import { queryAreas } from "@/api/oadrp";
+import contracts from "@/components/my/Contracts";
 export default {
   components: {
-    contractDataTable,
+    contracts,
   },
   data: () => ({
-    nos: [],
     areaItems: [],
     queryObject: {
       areaUID: "",
@@ -119,6 +124,7 @@ export default {
       status: 0,
       productionStatus: 0,
       collectionStatus: 0,
+      employeeUID: "",
     },
     isSpecialItems: [
       { key: "是", value: 1 },
@@ -139,22 +145,17 @@ export default {
       { key: "回款完成", value: 2 },
     ],
   }),
-  created() {
-    this.nos = localStorage.getItem("nos");
-    this.getAreas();
-  },
+  created() {},
   methods: {
-    getAreas() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
-      });
-    },
     query() {
-      this.$refs.contractDataTable.getObject();
+      this.$refs.contracts.getObject();
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();
-      this.$refs.contractDataTable.getObject();
+      this.$refs.contracts.getObject();
+    },
+    goToEntry() {
+      this.$router.replace("/contract/entry");
     },
   },
 };

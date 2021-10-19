@@ -41,15 +41,3 @@ export const queryContracts = (queryObject, pageSize, pageNo) => {
         }
     })
 }
-
-export const queryContractsForIndex = (queryObject, pageSize, pageNo) => {
-    return request({
-        url: '/contractsForIndex',
-        method: 'POST',
-        data: queryObject,
-        params: {
-            "pageSize": pageSize,
-            "pageNo": pageNo,
-        }
-    })
-}

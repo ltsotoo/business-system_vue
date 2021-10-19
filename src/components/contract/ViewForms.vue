@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card>
+      <v-card-title>合同内容</v-card-title>
       <v-card-subtitle>
         <v-row>
           <v-col cols="3">
@@ -166,22 +167,27 @@
       </v-card-subtitle>
     </v-card>
     <taskDataTable
-      style="margin-top: 1px"
+      style="margin-top: 5px"
       ref="taskDataTable"
-      :openType="1"
-      :openUID="openUID"
       :parentObject="object.tasks"
       v-if="object.tasks"
     />
+    <viewPayments
+      style="margin-top: 5px"
+      :parentObject="object.payments"
+      v-if="object.payments"
+    ></viewPayments>
   </div>
 </template>
 
 <script>
-import taskDataTable from "../task/DataTable";
+import taskDataTable from "../task/ViewDataTable";
+import viewPayments from "../payment/View";
 import { queryContract } from "@/api/contract";
 export default {
   components: {
     taskDataTable,
+    viewPayments,
   },
   props: {
     openUID: {

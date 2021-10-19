@@ -4,6 +4,7 @@
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">
+            <v-spacer></v-spacer>
             <v-col cols="3">
               <v-text-field
                 label="名称"

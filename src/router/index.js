@@ -25,6 +25,26 @@ const routes = [
         meta: { login_require: true, title: "中研环科-管理系统-我的" },
       },
       {
+        path: 'my/task',
+        component: () => import('@/views/my/task.vue'),
+        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
+      },
+      {
+        path: 'my/payment',
+        component: () => import('@/views/my/payment.vue'),
+        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
+      },
+      {
+        path: 'my/contract',
+        component: () => import('@/views/my/contract.vue'),
+        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
+      },
+      {
+        path: 'my/expense',
+        component: () => import('@/views/my/expense.vue'),
+        meta: { login_require: true, title: "中研环科-管理系统-我的报销" },
+      },
+      {
         path: 'contract',
         component: () => import('@/views/contract/Index.vue'),
         meta: { login_require: true, title: "中研环科-合同管理-首页" },

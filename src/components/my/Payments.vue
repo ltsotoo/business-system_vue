@@ -16,6 +16,18 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.invoiceType`]="{ item }">
+        {{ invoiceTypeToText(item.invoiceType) }}
+      </template>
+      <template v-slot:[`item.invoiceContent`]="{ item }">
+        <v-textarea
+          auto-grow
+          readonly
+          rows="1"
+          v-model="item.invoiceContent"
+          v-if="item.invoiceType != 1"
+        ></v-textarea>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon @click="openPaymentDialog(item)"> mdi-pencil </v-icon>
       </template>
@@ -99,9 +111,14 @@
 </template>
 
 <script>
-import { queryContractsForIndex } from "@/api/contract";
+import { queryContracts } from "@/api/contract";
 import { addPayment, queryPayments } from "@/api/payment";
 export default {
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     headers: [
       {
@@ -141,6 +158,25 @@ export default {
         sortable: false,
       },
       {
+        text: "合同签订时间",
+        align: "center",
+        value: "contractDate",
+        sortable: false,
+      },
+      {
+        text: "开票类型",
+        align: "center",
+        value: "invoiceType",
+        sortable: false,
+      },
+      {
+        text: "开票内容",
+        align: "center",
+        value: "invoiceContent",
+        sortable: false,
+        width: "450px",
+      },
+      {
         text: "回款状态",
         align: "center",
         value: "statusText",
@@ -175,8 +211,9 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryContractsForIndex(
-        {},
+      this.queryObject.status = 2;
+      queryContracts(
+        this.queryObject,
         this.options.itemsPerPage,
         this.options.page
       ).then((res) => {
@@ -204,9 +241,21 @@ export default {
             return;
           case 2:
             e.statusText = "回款完成";
-            return "回款完成";
+            return;
         }
       });
+    },
+    invoiceTypeToText(invoiceType) {
+      switch (invoiceType) {
+        case 1:
+          return "不开发票";
+        case 2:
+          return "普票";
+        case 3:
+          return "专票";
+        case 4:
+          return "形式发票";
+      }
     },
     openPaymentDialog(item) {
       this.openItem = item;

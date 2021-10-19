@@ -85,6 +85,11 @@
 import { queryMyTasks } from "@/api/task";
 import { next } from "@/api/task_flow";
 export default {
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     employeeUID: "",
     headers: [
@@ -101,6 +106,7 @@ export default {
       },
       { text: "非标备注", value: "remarks", sortable: false, width: "450px" },
       { text: "状态", value: "status", sortable: false },
+      { text: "开始时间", value: "CreatedAt", sortable: false },
       { text: "操作", value: "actions", sortable: false },
     ],
     options: {
@@ -122,7 +128,11 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryMyTasks(this.options.itemsPerPage, this.options.page).then((res) => {
+      queryMyTasks(
+        this.queryObject,
+        this.options.itemsPerPage,
+        this.options.page
+      ).then((res) => {
         this.options.loading = false;
         if (res.total < this.options.total) {
           this.options.page = 1;
