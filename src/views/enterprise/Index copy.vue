@@ -1,8 +1,7 @@
 <template>
   <v-container>
     <v-expansion-panels multiple>
-      <areaPanel></areaPanel>
-      <!-- <v-expansion-panel>
+      <v-expansion-panel>
         <v-expansion-panel-header :class="[`text-h4`]">
           区域管理
         </v-expansion-panel-header>
@@ -43,7 +42,7 @@
             :queryObject="areaQueryObject"
           ></areaDataTable>
         </v-expansion-panel-content>
-      </v-expansion-panel> -->
+      </v-expansion-panel>
       <v-expansion-panel>
         <v-expansion-panel-header :class="[`text-h4`]">
           办事处管理
@@ -84,8 +83,7 @@
           ></officeDataTable>
         </v-expansion-panel-content>
       </v-expansion-panel>
-      <departmentPanel/>
-      <!-- <v-expansion-panel @click="clickDepartmentPanel">
+      <v-expansion-panel @click="clickDepartmentPanel">
         <v-expansion-panel-header :class="[`text-h4`]">
           部门管理
         </v-expansion-panel-header>
@@ -134,7 +132,7 @@
             :queryObject="departmentQueryObject"
           ></departmentDataTable>
         </v-expansion-panel-content>
-      </v-expansion-panel> -->
+      </v-expansion-panel>
       <v-expansion-panel @click="clickDepartmentPanel">
         <v-expansion-panel-header :class="[`text-h4`]">
           员工管理
@@ -230,18 +228,14 @@
 
 <script>
 import { queryOffices, queryDepartments } from "@/api/oadrp";
-import areaPanel from "./AreaPanel.vue";
 import areaDataTable from "@/components/enterprise/AreaDataTable";
 import areaForms from "@/components/enterprise/AreaForms";
 import officeDataTable from "@/components/enterprise/OfficeDataTable";
 import officeForms from "@/components/enterprise/OfficeForms";
-import departmentPanel from "./DepartmentPanel.vue";
 import departmentDataTable from "@/components/enterprise/DepartmentDataTable";
 import employeeDataTable from "@/components/enterprise/EmployeeDataTable";
 export default {
   components: {
-    areaPanel,
-    departmentPanel,
     areaDataTable,
     areaForms,
     officeDataTable,
@@ -283,11 +277,9 @@ export default {
       });
     },
     getDepartmentItems() {
-      queryDepartments({ officeUID: this.employeeQueryObject.officeUID }).then(
-        (res) => {
-          this.departmentItems = res.data;
-        }
-      );
+      queryDepartments({officeUID:this.employeeQueryObject.officeUID}).then((res) => {
+        this.departmentItems = res.data;
+      });
     },
 
     queryAreas() {

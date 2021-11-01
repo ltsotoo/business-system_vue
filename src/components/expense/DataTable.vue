@@ -14,15 +14,19 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.type`]="{ item }">
+        {{ typeToText(item.status) }}
+      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
+          rounded
           color="primary"
           depressed
           @click="openApprovalDialog(item)"
-          :disabled="item.status != 0"
+          :disabled="item.status != 1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -61,7 +65,7 @@ export default {
       {
         text: "类型",
         align: "center",
-        value: "type.text",
+        value: "type",
         sortable: false,
       },
       {
@@ -147,15 +151,23 @@ export default {
       this.openItem = {};
       this.options.approvalDialog = false;
     },
+    typeToText(type) {
+      switch (type) {
+        case 1:
+          return "个人";
+        case 2:
+          return "办事处";
+      }
+    },
     statusToText(status) {
-      if (status == 0) {
-        return "待审批";
+      if (status == -1) {
+        return "已驳回";
       }
       if (status == 1) {
-        return "已通过";
+        return "待审批";
       }
       if (status == 2) {
-        return "已驳回";
+        return "已通过";
       }
     },
   },

@@ -26,3 +26,13 @@ export const queryMyTasks = (queryObject, pageSize, pageNo) => {
         }
     })
 }
+
+export const queryTaskRemarks = (taskUID) => {
+    return request({
+        url: '/taskRemarks',
+        method: 'GET',
+        params: {
+            "taskUID": taskUID,
+        }
+    })
+}

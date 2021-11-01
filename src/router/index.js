@@ -98,28 +98,6 @@ const routes = [
         path: 'enterprise',
         component: () => import('@/views/enterprise/Index.vue'),
         meta: { login_require: true, title: "中研环科-企业管理-首页" },
-        children: [
-          {
-            path: 'area',
-            component: () => import('@/views/enterprise/AreaSetting.vue'),
-            meta: { login_require: true, title: "中研环科-企业管理-地区管理" },
-          },
-          {
-            path: 'office',
-            component: () => import('@/views/enterprise/OfficeSetting.vue'),
-            meta: { login_require: true, title: "中研环科-企业管理-办事处管理" },
-          },
-          {
-            path: 'department',
-            component: () => import('@/views/enterprise/DepartmentSetting.vue'),
-            meta: { login_require: true, title: "中研环科-企业管理-部门管理" },
-          },
-          {
-            path: 'employee',
-            component: () => import('@/views/enterprise/EmployeeSetting.vue'),
-            meta: { login_require: true, title: "中研环科-企业管理-员工管理" },
-          },
-        ]
       },
       {
         path: 'system',

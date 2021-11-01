@@ -108,7 +108,6 @@ export default {
     contractDataTable,
   },
   data: () => ({
-    nos: [],
     areaItems: [],
     queryObject: {
       areaUID: "",
@@ -140,7 +139,6 @@ export default {
     ],
   }),
   created() {
-    this.nos = localStorage.getItem("nos");
     this.getAreas();
   },
   methods: {

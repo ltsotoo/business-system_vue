@@ -55,7 +55,6 @@
                 color="success"
                 dark
                 @click="goToEntry"
-                v-if="nos.indexOf('09') > -1"
               >
                 录入
               </v-btn>
@@ -78,7 +77,6 @@ export default {
     productDataTable,
   },
   data: () => ({
-    nos: [],
     sourceTypeItems: [],
     subtypeItems: [],
     sourceTypeName: "",
@@ -90,7 +88,6 @@ export default {
     },
   }),
   created() {
-    this.nos = localStorage.getItem("nos");
     this.getProductSoureTypeItems();
   },
   methods: {

@@ -6,10 +6,10 @@
           <v-row align="baseline">
             <v-col cols="2">
               <v-select
-                v-model="queryObject.typeUID"
+                v-model="queryObject.type"
                 :items="expenseTypeItems"
                 item-text="text"
-                item-value="UID"
+                item-value="value"
                 label="类型"
                 clearable
               ></v-select>
@@ -57,34 +57,28 @@
 
 <script>
 import expenseDataTable from "@/components/expense/DataTable";
-import { queryExpenseType } from "@/api/dictionary";
 import { queryOffices } from "@/api/oadrp";
 export default {
   components: {
     expenseDataTable,
   },
   data: () => ({
-    nos: [],
-    expenseTypeItems: [],
+    expenseTypeItems: [
+      { text: "个人", value: 1 },
+      { text: "办事处", value: 2 },
+    ],
     officeItems: [],
     queryObject: {
-      typeUID: "",
+      type: 0,
       officeUID: "",
       employeeName: "",
       employeePhone: "",
     },
   }),
   created() {
-    this.nos = localStorage.getItem("nos");
-    this.getExpenseTypeItems();
     this.getOfficeItems();
   },
   methods: {
-    getExpenseTypeItems() {
-      queryExpenseType().then((res) => {
-        this.expenseTypeItems = res.data.dictionaries;
-      });
-    },
     getOfficeItems() {
       queryOffices().then((res) => {
         this.officeItems = res.data;

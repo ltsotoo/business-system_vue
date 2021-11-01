@@ -105,11 +105,11 @@ export default {
   },
   methods: {
     pass() {
-      this.object.status = 1;
+      this.object.status = 2;
       this.editObject();
     },
     fail() {
-      this.object.status = 2;
+      this.object.status = -1;
       this.editObject();
     },
     editObject() {

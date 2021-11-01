@@ -42,7 +42,6 @@
                 color="success"
                 dark
                 @click="goToEntry"
-                v-if="nos.indexOf('13') > -1"
               >
                 录入
               </v-btn>
@@ -63,16 +62,12 @@ export default {
     supplierDataTable,
   },
   data: () => ({
-    nos: [],
     queryObject: {
       name: "",
       linkman: "",
       phone: "",
     },
   }),
-  created() {
-    this.nos = localStorage.getItem("nos");
-  },
   methods: {
     query() {
       this.$refs.supplierDataTable.getObject();

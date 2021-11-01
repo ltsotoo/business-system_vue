@@ -8,10 +8,10 @@
             <v-spacer></v-spacer>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.typeUID"
+                v-model="queryObject.type"
                 :items="typeItems"
                 item-text="text"
-                item-value="UID"
+                item-value="value"
                 label="类型"
                 clearable
               ></v-select>
@@ -50,34 +50,28 @@
 
 <script>
 import expenses from "@/components/my/Expenses";
-import { queryExpenseType } from "@/api/dictionary";
 export default {
   components: {
     expenses,
   },
   data: () => ({
-    typeItems: [],
+    typeItems: [
+      { text: "个人", value: 1 },
+      { text: "办事处", value: 2 },
+    ],
     statusItems: [
       { text: "已驳回", value: -1 },
       { text: "待审批", value: 1 },
       { text: "已通过", value: 2 },
     ],
     queryObject: {
-      typeUID: "",
+      type: 0,
       status: 0,
     },
   }),
-  created() {
-    this.getTypeItems();
-  },
   methods: {
     goToEntry() {
       this.$router.replace("/expense/entry");
-    },
-    getTypeItems() {
-      queryExpenseType().then((res) => {
-        this.typeItems = res.data.dictionaries;
-      });
     },
     query() {
       this.$refs.expenses.getObject();

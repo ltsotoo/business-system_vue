@@ -14,6 +14,9 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.type`]="{ item }">
+        {{ typeToText(item.status) }}
+      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
@@ -37,7 +40,7 @@ export default {
       {
         text: "类型",
         align: "center",
-        value: "type.text",
+        value: "type",
         sortable: false,
       },
       {
@@ -101,6 +104,14 @@ export default {
           this.object = res.data;
         }
       });
+    },
+    typeToText(type) {
+      switch (type) {
+        case 1:
+          return "个人";
+        case 2:
+          return "办事处";
+      }
     },
     statusToText(status) {
       switch (status) {

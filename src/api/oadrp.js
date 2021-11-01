@@ -15,13 +15,19 @@ export const delOffice = (uid) => {
     })
 }
 
-export const queryOffices = (name) => {
+export const editOffice = (office) => {
+    return request({
+        url: '/office',
+        method: 'PUT',
+        data: office
+    })
+}
+
+export const queryOffices = (office) => {
     return request({
         url: '/offices',
-        method: 'GET',
-        params: {
-            "name": name
-        }
+        method: 'POST',
+        data: office
     })
 }
 
@@ -68,6 +74,14 @@ export const delDepartment = (uid) => {
     return request({
         url: '/department/' + uid,
         method: 'DELETE',
+    })
+}
+
+export const editDepartment = (department) => {
+    return request({
+        url: '/department',
+        method: 'PUT',
+        data: department
     })
 }
 

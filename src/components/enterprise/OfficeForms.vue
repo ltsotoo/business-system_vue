@@ -30,7 +30,7 @@ export default {
     closeDialog: {
       type: Function,
     },
-    parentFun: {
+    refresh: {
       type: Function,
     },
   },
@@ -51,7 +51,7 @@ export default {
       if (this.validateForm()) {
         entryOffice(this.object).then((res) => {
           this.$message.success("录入成功了！");
-          this.parentFun();
+          this.refresh();
           this.closeDialog();
         });
       }

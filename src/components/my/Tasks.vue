@@ -21,6 +21,7 @@
         {{ stautsToText(item.status) }}
       </template>
       <template v-slot:[`item.employees`]="{ item }">
+        <v-row><v-col> </v-col></v-row>
         <v-row v-if="item.technicianMan.name">
           <v-col>技术:{{ item.technicianMan.name }}</v-col>
         </v-row>
@@ -33,17 +34,25 @@
         <v-row v-if="item.shipmentMan.name">
           <v-col>发货:{{ item.shipmentMan.name }}</v-col>
         </v-row>
-      </template>
-      <template v-slot:[`item.remarks`]="{ item }">
-        <v-textarea
-          auto-grow
-          readonly
-          rows="1"
-          v-model="item.remarks"
-        ></v-textarea>
+        <v-row><v-col> </v-col></v-row>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
+        <v-btn
+          rounded
+          color="success"
+          dark
+          @click="openRemarksDialog(item)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看备注
+        </v-btn>
+
+        <v-btn
+          class="mx-2"
+          rounded
+          color="primary"
+          dark
           v-if="
             (item.status == 1 && item.technicianManUID == employeeUID) ||
             (item.status == 2 && item.purchaseManUID == employeeUID) ||
@@ -53,12 +62,22 @@
           "
           @click="openNextDialog(item)"
         >
-          mdi-chevron-right-circle-outline
-        </v-icon>
+          <v-icon left> mdi-chevron-right-circle-outline </v-icon>
+          下一步
+        </v-btn>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="nextDialog" max-width="900px" persistent>
+    <v-dialog v-model="remarksDialog" v-if="remarksDialog" max-width="900px">
+      <viewTaskRemarks :taskRemarks="taskRemarks" :remarks="openItem.remarks" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="nextDialog"
+      max-width="900px"
+      persistent
+      v-if="nextDialog"
+    >
       <v-card>
         <v-card-title></v-card-title>
         <v-card-subtitle>
@@ -82,32 +101,50 @@
 </template>
 
 <script>
-import { queryMyTasks } from "@/api/task";
+import { queryMyTasks, queryTaskRemarks } from "@/api/task";
 import { next } from "@/api/task_flow";
+import viewTaskRemarks from "@/components/task/ViewTaskRemarks";
 export default {
   props: {
     queryObject: {
       type: Object,
     },
   },
+  components: {
+    viewTaskRemarks,
+  },
   data: () => ({
     employeeUID: "",
     headers: [
-      { text: "ID", sortable: false, value: "ID" },
-      { text: "产品", sortable: false, value: "product.name" },
-      { text: "需求数量", value: "number", sortable: false },
-      { text: "库存数量", value: "product.number", sortable: false },
-      { text: "单位", value: "unit", sortable: false },
+      { text: "ID", align: "center", sortable: false, value: "ID" },
+      { text: "产品", align: "center", sortable: false, value: "product.name" },
+      { text: "需求数量", align: "center", value: "number", sortable: false },
+      {
+        text: "库存数量",
+        align: "center",
+        value: "product.number",
+        sortable: false,
+      },
+      { text: "单位", align: "center", value: "unit", sortable: false },
       {
         text: "负责人",
         align: "center",
         value: "employees",
         sortable: false,
       },
-      { text: "非标备注", value: "remarks", sortable: false, width: "450px" },
-      { text: "状态", value: "status", sortable: false },
-      { text: "开始时间", value: "CreatedAt", sortable: false },
-      { text: "操作", value: "actions", sortable: false },
+      { text: "状态", align: "center", value: "status", sortable: false },
+      {
+        text: "开始时间",
+        align: "center",
+        value: "CreatedAt",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
     ],
     options: {
       loading: false,
@@ -116,7 +153,10 @@ export default {
       itemsPerPage: 10,
     },
     object: [],
+    taskRemarks: [],
     openItem: {},
+
+    remarksDialog: false,
 
     nextDialog: false,
     nextText: "",
@@ -144,6 +184,11 @@ export default {
         this.stautsToText();
       });
     },
+    getTaskRemarks() {
+      queryTaskRemarks(this.openItem.UID).then((res) => {
+        this.taskRemarks = res.data;
+      });
+    },
     stautsToText(status) {
       switch (status) {
         case 1:
@@ -160,6 +205,17 @@ export default {
           return "已发货";
       }
     },
+    openRemarksDialog(item) {
+      this.openItem = item;
+      queryTaskRemarks(this.openItem.UID).then((res) => {
+        this.taskRemarks = res.data;
+        this.remarksDialog = true;
+      });
+    },
+    closeRemarksDialog() {
+      this.openItem = {};
+      this.remarksDialog = false;
+    },
     openNextDialog(item) {
       this.openItem = item;
       this.nextDialog = true;
@@ -170,7 +226,7 @@ export default {
       this.nextDialog = false;
     },
     nextTask() {
-      this.openItem.nextRemarks = this.nextText;
+      this.openItem.currentRemarksText = this.nextText;
       var _this = this;
       next(this.openItem).then((res) => {
         _this.getObject();

@@ -52,7 +52,6 @@
                 color="success"
                 dark
                 @click="goToEntry"
-                v-if="nos.indexOf('05') > -1"
               >
                 录入
               </v-btn>
@@ -75,7 +74,6 @@ export default {
     customerDataTable,
   },
   data: () => ({
-    nos: [],
     areaItems: [],
     queryObject: {
       areaUID: "",
@@ -85,7 +83,6 @@ export default {
     },
   }),
   created() {
-    this.nos = localStorage.getItem("nos");
     this.getAreas();
   },
   methods: {

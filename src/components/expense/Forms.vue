@@ -8,7 +8,7 @@
               v-model="object.typeUID"
               :items="expenseTypeItems"
               item-text="text"
-              item-value="UID"
+              item-value="value"
               label="类型"
               :rules="rules.typeUID"
             ></v-select>
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { queryExpenseType } from "@/api/dictionary";
 import { entryExpense } from "@/api/expense";
 export default {
   props: {
@@ -56,8 +55,10 @@ export default {
     },
   },
   data: () => ({
-    nos: [],
-    expenseTypeItems: [],
+    expenseTypeItems: [
+      { text: "个人", value: 1 },
+      { text: "办事处", value: 2 },
+    ],
     object: {
       typeUID: "",
       amount: 0,
@@ -72,15 +73,7 @@ export default {
       text: [(v) => !!v || "必填项！"],
     },
   }),
-  created() {
-    this.getExpenseTypeItems();
-  },
   methods: {
-    getExpenseTypeItems() {
-      queryExpenseType().then((res) => {
-        this.expenseTypeItems = res.data.dictionaries;
-      });
-    },
     entryObject() {
       var _this = this;
       if (this.validateForm()) {
