@@ -48,10 +48,10 @@
             </v-col>
           </v-row>
         </v-form>
+        <div style="margin-top: 10px"></div>
+        <expenseDataTable :queryObject="queryObject" ref="expenseDataTable" />
       </v-card-subtitle>
     </v-card>
-    <div style="margin-top: 10px"></div>
-    <expenseDataTable :queryObject="queryObject" ref="expenseDataTable" />
   </v-container>
 </template>
 

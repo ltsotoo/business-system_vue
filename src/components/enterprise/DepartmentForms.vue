@@ -1,23 +1,25 @@
 <template>
   <v-card>
-    <v-card-title>办事处添加</v-card-title>
+    <v-card-title>部门添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
-        <v-row>
+        <v-row align="center">
+          <v-col cols="12">
+            <v-select
+              v-model="object.typeUID"
+              :items="departmentTypeItems"
+              item-text="text"
+              item-value="UID"
+              label="部门类型"
+              :rules="rules.typeUID"
+              clearable
+            ></v-select>
+          </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
               :rules="rules.name"
-            >
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-text-field
-              v-model.number="object.money"
-              label="初始金额(元)"
             >
             </v-text-field>
           </v-col>
@@ -33,9 +35,14 @@
 </template>
 
 <script>
-import { entryOffice } from "@/api/oadrp";
+import { queryDepartmentType } from "@/api/dictionary";
+import { entryDepartment } from "@/api/oadrp";
 export default {
   props: {
+    officeUID: {
+      type: String,
+      default: "",
+    },
     closeDialog: {
       type: Function,
     },
@@ -44,22 +51,35 @@ export default {
     },
   },
   data: () => ({
+    departmentTypeItems: [],
     object: {
+      typeUID: "",
+      officeUID: "",
       name: "",
-      money: 0,
     },
     rules: {
+      typeUID: [
+        (v) => !!v || "必选项！",
+      ],
       name: [
         (v) => !!v || "必填项！",
         (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
       ],
     },
   }),
-  created() {},
+  created() {
+    this.getDepartmentTypeItems();
+    this.object.officeUID = this.officeUID;
+  },
   methods: {
+    getDepartmentTypeItems() {
+      queryDepartmentType().then((res) => {
+        this.departmentTypeItems = res.data;
+      });
+    },
     add() {
       if (this.validateForm()) {
-        entryOffice(this.object).then((res) => {
+        entryDepartment(this.object).then((res) => {
           this.$message.success("录入成功了！");
           this.refresh();
           this.closeDialog();

@@ -36,6 +36,9 @@ export default {
       type: String,
       default: "",
     },
+    queryObject: {
+      type: Object,
+    },
   },
   components: {
     roleForms,
@@ -65,7 +68,7 @@ export default {
   },
   methods: {
     getRoles() {
-      queryAllRoles(this.queryName).then((res) => {
+      queryAllRoles(this.queryObject.name).then((res) => {
         this.roles = res.data;
       });
     },

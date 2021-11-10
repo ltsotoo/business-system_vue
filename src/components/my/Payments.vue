@@ -1,12 +1,8 @@
 <template>
   <div>
-    <v-card elevation="1">
-      <v-card-title>合同回款表</v-card-title>
-    </v-card>
     <v-data-table
       :headers="headers"
       :items="object"
-      class="elevation-1"
       :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],

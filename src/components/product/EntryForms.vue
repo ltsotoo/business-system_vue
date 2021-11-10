@@ -115,7 +115,7 @@
 <script>
 import { entryProduct } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
-import { queryProductSourceType, queryProductSubtype } from "@/api/dictionary";
+import { queryProductTypes, queryChilds } from "@/api/dictionary";
 
 export default {
   props: {
@@ -182,12 +182,12 @@ export default {
   },
   methods: {
     getProductSoureTypeItems() {
-      queryProductSourceType().then((res) => {
-        this.sourceTypeItems = res.data.dictionaries;
+      queryProductTypes().then((res) => {
+        this.sourceTypeItems = res.data;
       });
     },
     getSubtypeItems(parentUID) {
-      queryProductSubtype(parentUID).then((res) => {
+      queryChilds(parentUID).then((res) => {
         this.subtypeItems = res.data;
       });
     },

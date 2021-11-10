@@ -117,7 +117,7 @@ export default {
     },
     getDepartmentTypeItems() {
       queryDepartmentType().then((res) => {
-        this.departmentTypeItems = res.data.dictionaries;
+        this.departmentTypeItems = res.data;
       });
     },
     getPermissionItems() {

@@ -15,7 +15,7 @@
 
     <v-dialog v-model="deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" text @click="deleteItem">确定</v-btn>
@@ -27,31 +27,34 @@
 </template>
 
 <script>
-import { queryDictionaries, delDictionary } from "@/api/dictionary";
+import { delDictionary } from "@/api/dictionary";
+import { queryDictionaries } from "@/api/dictionary";
 export default {
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     headers: [
       { text: "值", align: "center", value: "text", sortable: false },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     object: [],
-    queryObject: {
-      parentUID: "",
-      dictionaryTypeUID: "",
-    },
     deleteDialog: false,
     openUID: null,
   }),
-  methods: {
-    updateQueryObject(parentUID, dictionaryTypeUID) {
-      this.queryObject.parentUID = parentUID;
-      this.queryObject.dictionaryTypeUID = dictionaryTypeUID;
+  created() {
+    if (this.queryObject.typeName != "") {
       this.getObject();
-    },
+    }
+  },
+  methods: {
     getObject() {
       queryDictionaries(
+        this.queryObject.typeName,
         this.queryObject.parentUID,
-        this.queryObject.dictionaryTypeUID
+        this.queryObject.text
       ).then((res) => {
         this.object = res.data;
       });

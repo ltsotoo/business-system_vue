@@ -3,7 +3,6 @@
     <v-data-table
       :headers="headers"
       :items="object"
-      class="elevation-1"
       :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],

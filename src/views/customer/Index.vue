@@ -47,21 +47,16 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn
-                rounded
-                color="success"
-                dark
-                @click="goToEntry"
-              >
+              <v-btn rounded color="success" dark @click="goToEntry">
                 录入
               </v-btn>
             </v-col>
           </v-row>
         </v-form>
+        <div style="margin-top: 10px"></div>
+        <customerDataTable :queryObject="queryObject" ref="customerDataTable" />
       </v-card-subtitle>
     </v-card>
-    <div style="margin-top: 10px"></div>
-    <customerDataTable :queryObject="queryObject" ref="customerDataTable" />
   </v-container>
 </template>
 

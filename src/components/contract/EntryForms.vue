@@ -378,8 +378,8 @@ import productDataTable from "../product/DataTable";
 import { queryAreas } from "@/api/oadrp";
 import {
   queryContractUnits,
-  queryProductSourceType,
-  queryProductSubtype,
+  queryProductTypes,
+  queryChilds,
 } from "@/api/dictionary";
 import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryEmployees } from "@/api/employee";
@@ -526,16 +526,16 @@ export default {
     },
     getContractUnitItems() {
       queryContractUnits().then((res) => {
-        this.contractUnitItems = res.data.dictionaries;
+        this.contractUnitItems = res.data;
       });
     },
     getProductSoureTypeItems() {
-      queryProductSourceType().then((res) => {
-        this.sourceTypeItems = res.data.dictionaries;
+      queryProductTypes().then((res) => {
+        this.sourceTypeItems = res.data;
       });
     },
     getSubtypeItems(parentUID) {
-      queryProductSubtype(parentUID).then((res) => {
+      queryChilds(parentUID).then((res) => {
         this.subtypeItems = res.data;
       });
     },

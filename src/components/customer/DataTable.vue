@@ -4,7 +4,6 @@
       :headers="headers"
       :items="object"
       :items-per-page="5"
-      class="elevation-1"
       :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],

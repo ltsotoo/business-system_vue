@@ -93,10 +93,10 @@
             </v-col>
           </v-row>
         </v-form>
+        <div style="margin-top: 10px"></div>
+        <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
       </v-card-subtitle>
     </v-card>
-    <div style="margin-top: 10px"></div>
-    <contractDataTable :queryObject="queryObject" ref="contractDataTable" />
   </v-container>
 </template>
 

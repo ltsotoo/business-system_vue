@@ -17,7 +17,7 @@
           class="mx-2"
         >
           <v-icon left> mdi-pencil </v-icon>
-          修改名称
+          编辑名称
         </v-btn>
         <v-btn
           rounded
@@ -52,7 +52,7 @@
       v-if="editNameDialog"
     >
       <v-card>
-        <v-card-title class="text-h5">修改部门名称</v-card-title>
+        <v-card-title class="text-h5">部门名称编辑</v-card-title>
         <v-card-subtitle>
           <v-text-field label="名称" v-model="openItem.name"></v-text-field>
         </v-card-subtitle>
@@ -93,9 +93,7 @@ export default {
     delDialog: false,
     editNameDialog: false,
   }),
-  created() {
-    this.getObject();
-  },
+  created() {},
   methods: {
     getObject(queryObj) {
       queryDepartments(queryObj).then((res) => {
@@ -104,6 +102,7 @@ export default {
     },
     editObject() {
       editDepartment(this.openItem).then((res) => {
+        this.$message.success("删除成功了！");
         this.getObject();
         this.closeEditNameDialog();
       });

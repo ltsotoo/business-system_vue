@@ -118,6 +118,7 @@ export default {
     },
     deleteArea() {
       delArea(this.deleteUID).then((res) => {
+        this.$message.success("删除成功了！");
         this.getObject();
         this.closeAreaDelDialog();
       });

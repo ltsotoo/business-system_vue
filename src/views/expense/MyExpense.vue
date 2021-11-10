@@ -38,13 +38,13 @@
             </v-col>
           </v-row>
         </v-form>
+        <expenses
+          style="margin-top: 10px"
+          :queryObject="queryObject"
+          ref="expenses"
+        />
       </v-card-subtitle>
     </v-card>
-    <expenses
-      style="margin-top: 10px"
-      :queryObject="queryObject"
-      ref="expenses"
-    />
   </v-container>
 </template>
 
@@ -71,7 +71,7 @@ export default {
   }),
   methods: {
     goToEntry() {
-      this.$router.replace("/expense/entry");
+      this.$router.replace("/myExpense/entry");
     },
     query() {
       this.$refs.expenses.getObject();

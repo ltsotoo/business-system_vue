@@ -16,7 +16,7 @@ const routes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/base/Index.vue'),
+        component: () => import('@/views/index/Index.vue'),
         meta: { login_require: true, title: "中研环科-管理系统-首页" },
       },
       {
@@ -25,23 +25,8 @@ const routes = [
         meta: { login_require: true, title: "中研环科-管理系统-我的" },
       },
       {
-        path: 'my/task',
-        component: () => import('@/views/my/task.vue'),
-        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
-      },
-      {
-        path: 'my/payment',
-        component: () => import('@/views/my/payment.vue'),
-        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
-      },
-      {
-        path: 'my/contract',
-        component: () => import('@/views/my/contract.vue'),
-        meta: { login_require: true, title: "中研环科-管理系统-我的工作" },
-      },
-      {
-        path: 'my/expense',
-        component: () => import('@/views/my/expense.vue'),
+        path: 'myExpense',
+        component: () => import('@/views/expense/MyExpense.vue'),
         meta: { login_require: true, title: "中研环科-管理系统-我的报销" },
       },
       {
@@ -50,19 +35,9 @@ const routes = [
         meta: { login_require: true, title: "中研环科-合同管理-首页" },
       },
       {
-        path: 'contract/entry',
-        component: () => import('@/views/contract/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-合同管理-录入" },
-      },
-      {
         path: 'customer',
         component: () => import('@/views/customer/Index.vue'),
         meta: { login_require: true, title: "中研环科-客户管理-首页" },
-      },
-      {
-        path: 'customer/entry',
-        component: () => import('@/views/customer/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-客户管理-录入" },
       },
       {
         path: 'product',
@@ -70,29 +45,15 @@ const routes = [
         meta: { login_require: true, title: "中研环科-产品管理-首页" },
       },
       {
-        path: 'product/entry',
-        component: () => import('@/views/product/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-产品管理-录入" },
-      },
-      {
         path: 'supplier',
         component: () => import('@/views/supplier/Index.vue'),
         meta: { login_require: true, title: "中研环科-供应商管理-首页" },
       },
-      {
-        path: 'supplier/entry',
-        component: () => import('@/views/supplier/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-供应商管理-录入" },
-      },
+
       {
         path: 'expense',
         component: () => import('@/views/expense/Index.vue'),
         meta: { login_require: true, title: "中研环科-财务管理-首页" },
-      },
-      {
-        path: 'expense/entry',
-        component: () => import('@/views/expense/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-财务管理-录入" },
       },
       {
         path: 'enterprise',
@@ -100,26 +61,29 @@ const routes = [
         meta: { login_require: true, title: "中研环科-企业管理-首页" },
       },
       {
-        path: 'system',
-        component: () => import('@/views/system/Index.vue'),
-        meta: { login_require: true, title: "中研环科-系统设置-首页" },
-        children: [
-          {
-            path: 'contract',
-            component: () => import('@/views/system/ContractSetting.vue'),
-            meta: { login_require: true, title: "中研环科-系统设置-合同设置" },
-          },
-          {
-            path: 'product',
-            component: () => import('@/views/system/ProductSetting.vue'),
-            meta: { login_require: true, title: "中研环科-系统设置-产品设置" },
-          },
-          {
-            path: 'enterprise',
-            component: () => import('@/views/system/EnterpriseSetting.vue'),
-            meta: { login_require: true, title: "中研环科-系统设置-企业设置" },
-          },
-        ]
+        path: 'index/contract/entry',
+        component: () => import('@/views/contract/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-合同管理-录入" },
+      },
+      {
+        path: 'customer/entry',
+        component: () => import('@/views/customer/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-客户管理-录入" },
+      },
+      {
+        path: 'product/entry',
+        component: () => import('@/views/product/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-产品管理-录入" },
+      },
+      {
+        path: 'supplier/entry',
+        component: () => import('@/views/supplier/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-供应商管理-录入" },
+      },
+      {
+        path: 'myExpense/entry',
+        component: () => import('@/views/expense/Entry.vue'),
+        meta: { login_require: true, title: "中研环科-我的报销-发起" },
       },
     ]
   },

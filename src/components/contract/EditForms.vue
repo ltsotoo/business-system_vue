@@ -337,7 +337,7 @@ export default {
           _this.customerItems = res.data;
         });
         queryContractUnits().then((res) => {
-          this.contractUnitItems = res.data.dictionaries;
+          this.contractUnitItems = res.data;
         });
       });
     },
@@ -363,7 +363,7 @@ export default {
     },
     getContractUnitItems() {
       queryContractUnits().then((res) => {
-        this.contractUnitItems = res.data.dictionaries;
+        this.contractUnitItems = res.data;
       });
     },
     getObject() {

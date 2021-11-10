@@ -1,10 +1,19 @@
 <template>
   <v-card class="mx-auto">
     <v-card-title v-if="openType == 0">员工添加</v-card-title>
+    <v-card-title v-if="openType == 1">员工信息查看</v-card-title>
     <v-card-title v-if="openType == 2">员工信息编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
+          <v-col cols="6">
+            <v-text-field
+              v-model.trim="object.number"
+              label="编号"
+              :rules="rules.number"
+              :readonly="openType == 1"
+            ></v-text-field>
+          </v-col>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
@@ -13,7 +22,7 @@
               :readonly="openType == 1"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.phone"
               label="手机号"
@@ -21,21 +30,7 @@
               :readonly="openType == 1"
             ></v-text-field>
           </v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="12">
-            <v-text-field
-              v-model.trim="object.number"
-              label="编号"
-              :rules="rules.number"
-              :readonly="openType == 1"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="6">
             <v-text-field
               v-model.trim="object.wechatID"
               label="微信号"
@@ -43,7 +38,7 @@
               :readonly="openType == 1"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.email"
               label="邮箱"
@@ -51,9 +46,20 @@
               :readonly="openType == 1"
             ></v-text-field>
           </v-col>
-        </v-row>
-
-        <v-row>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.money"
+              label="总报销额度(元)"
+              :readonly="openType == 1"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.credit"
+              label="每月报销额度(元)"
+              :readonly="openType == 1"
+            ></v-text-field>
+          </v-col>
           <v-col cols="12">
             <v-select
               v-model="object.roles"
@@ -63,6 +69,7 @@
               multiple
               chips
               return-object
+              :readonly="openType == 1"
             ></v-select>
           </v-col>
         </v-row>
@@ -113,6 +120,8 @@ export default {
       office: {},
       department: {},
       roles: [],
+      money: 0,
+      credit: 0,
     },
     rules: {
       name: [

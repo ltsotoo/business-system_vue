@@ -1,41 +1,5 @@
 import request from './base'
 
-
-export const queryDictionaryType = (module, name) => {
-    return request({
-        url: '/dictionaryType',
-        method: 'get',
-        params: {
-            "module": module,
-            "name": name,
-        }
-    })
-}
-
-export const queryContractUnits = () => {
-    return queryDictionaryType("contract", "unit")
-}
-
-export const queryProductSourceType = () => {
-    return queryDictionaryType("product", "source_type")
-}
-
-export const queryDepartmentType = () => {
-    return queryDictionaryType("department", "type")
-}
-
-export const queryExpenseType = () => {
-    return queryDictionaryType("expense", "type")
-}
-
-export const queryDictionaryTypes = (module) => {
-    return request({
-        url: '/dictionaryTypes',
-        method: 'get',
-        params: { "module": module }
-    })
-}
-
 export const createDictionary = (object) => {
     return request({
         url: '/dictionary',
@@ -51,17 +15,33 @@ export const delDictionary = (uid) => {
     })
 }
 
-export const queryDictionaries = (parentUID, dictionaryTypeUID) => {
+export const queryDictionaries = (typeName, parentUID, text) => {
     return request({
         url: '/dictionaries',
         method: 'get',
         params: {
-            "parentUID": parentUID,
-            "dictionaryTypeUID": dictionaryTypeUID,
+            "TypeName": typeName,
+            "ParentUID": parentUID,
+            "Text": text,
         }
     })
 }
 
-export const queryProductSubtype = (parentID) => {
-    return queryDictionaries(parentID, null)
+export const queryChilds = (parentID) => {
+    return queryDictionaries("", parentID, "")
 }
+
+export const queryContractUnits = () => {
+    return queryDictionaries("ContractUnit", "", "")
+}
+
+export const queryProductTypes = () => {
+    return queryDictionaries("ProductType", "", "")
+}
+
+export const queryDepartmentType = () => {
+    return queryDictionaries("DepartmentType", "", "")
+}
+
+
+

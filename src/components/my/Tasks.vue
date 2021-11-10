@@ -1,13 +1,9 @@
 <template>
   <div>
-    <v-card elevation="1">
-      <v-card-title>任务表</v-card-title>
-    </v-card>
     <v-data-table
       :headers="headers"
       :items="object"
       :items-per-page="5"
-      class="elevation-1"
       :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],

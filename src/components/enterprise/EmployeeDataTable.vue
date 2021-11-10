@@ -11,13 +11,23 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           rounded
+          color="success"
+          dark
+          @click="openViewDialog(item)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
+        <v-btn
+          rounded
           color="primary"
           dark
           @click="openEditDialog(item)"
           class="mx-2"
         >
           <v-icon left> mdi-pencil </v-icon>
-          修改
+          编辑
         </v-btn>
         <v-btn
           rounded
@@ -31,6 +41,10 @@
         </v-btn>
       </template>
     </v-data-table>
+
+    <v-dialog v-model="viewDialog" max-width="500px" v-if="viewDialog">
+      <employeeForms :openType="1" :parentObj="openItem" />
+    </v-dialog>
 
     <v-dialog
       v-model="editDialog"
@@ -65,6 +79,11 @@
 import { queryEmployees, delEmployee } from "@/api/employee";
 import employeeForms from "@/components/enterprise/EmployeeForms";
 export default {
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   components: {
     employeeForms,
   },
@@ -105,20 +124,20 @@ export default {
     object: [],
     openUID: "",
     openItem: "",
+    viewDialog: false,
     editDialog: false,
     delDialog: false,
   }),
-  created() {
-    this.getObject();
-  },
+  created() {},
   methods: {
-    getObject(queryObj) {
-      queryEmployees(queryObj).then((res) => {
+    getObject() {
+      queryEmployees(this.queryObject).then((res) => {
         this.object = res.data;
       });
     },
     delObject() {
       delEmployee(this.openUID).then((res) => {
+        this.$message.success("删除成功了！");
         this.getObject();
         this.closeDelDialog();
       });
@@ -138,8 +157,17 @@ export default {
       this.editDialog = true;
     },
     closeEditDialog() {
-      this.ediObj = {};
+      this.openItem = {};
       this.editDialog = false;
+    },
+
+    openViewDialog(item) {
+      this.openItem = item;
+      this.viewDialog = true;
+    },
+    closeViewDialog() {
+      this.openItem = {};
+      this.viewDialog = false;
     },
   },
 };

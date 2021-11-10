@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title></v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row align="center">
