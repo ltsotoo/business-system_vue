@@ -49,7 +49,6 @@ const routes = [
         component: () => import('@/views/supplier/Index.vue'),
         meta: { login_require: true, title: "中研环科-供应商管理-首页" },
       },
-
       {
         path: 'expense',
         component: () => import('@/views/expense/Index.vue'),
@@ -84,6 +83,12 @@ const routes = [
         path: 'myExpense/entry',
         component: () => import('@/views/expense/Entry.vue'),
         meta: { login_require: true, title: "中研环科-我的报销-发起" },
+      },
+
+      {
+        path: 'preResearch',
+        component: () => import('@/views/preResearch/Index.vue'),
+        meta: { login_require: true, title: "中研环科-预设计管理" },
       },
     ]
   },

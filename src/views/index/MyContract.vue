@@ -92,6 +92,7 @@
               重置
             </v-btn>
           </v-col>
+          <v-spacer></v-spacer>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
             <v-btn rounded color="success" dark @click="goToEntry">

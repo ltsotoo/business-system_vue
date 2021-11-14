@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header :class="[`text-h4`]">
-      我的工作任务
+      我的预设计任务
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-form ref="queryForm">
@@ -23,25 +23,27 @@
           <v-spacer></v-spacer>
         </v-row>
       </v-form>
-      <tasks style="margin-top: 10px" :queryObject="queryObject" ref="tasks" />
+      <preResearchTasks
+        style="margin-top: 10px"
+        :queryObject="queryObject"
+        ref="preResearchTasks"
+      />
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
 <script>
-import tasks from "@/components/my/Tasks";
+import preResearchTasks from "@/components/my/PreResearchTasks";
 export default {
   components: {
-    tasks,
+    preResearchTasks,
   },
   data: () => ({
     statusItems: [
-      { text: "待设计", value: 1 },
-      { text: "待采购", value: 2 },
-      { text: "待入/出库", value: 3 },
-      { text: "待装配", value: 4 },
-      { text: "待发货", value: 5 },
-      { text: "已发货", value: 6 },
+      { text: "未完成", value: 1 },
+      { text: "未审核", value: 2 },
+      { text: "未通过", value: 3 },
+      { text: "已通过", value: 4 },
     ],
     queryObject: {
       status: 0,
@@ -49,7 +51,7 @@ export default {
   }),
   methods: {
     query() {
-      this.$refs.tasks.getObject();
+      this.$refs.preResearchTasks.getObject();
     },
   },
 };

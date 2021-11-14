@@ -13,12 +13,21 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
-      @click:row="openViewDialog"
     >
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
+        <v-btn
+          rounded
+          color="success"
+          dark
+          @click="openViewDialog(item)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
         <v-icon @click="openApproveDialog(item.UID)" v-if="openType == 4">
           mdi-check-bold
         </v-icon>
@@ -165,19 +174,11 @@ export default {
         }
       });
     },
-    openViewDialog(item, other) {
-      setTimeout(() => {
-        if (
-          this.options.editDialog == false &&
-          this.options.deleteDialog == false &&
-          this.options.approveDialog == false
-        ) {
-          this.options.openUID = item.productUID;
-          this.options.openObject = item;
-          this.options.openType = 1;
-          this.options.viewDialog = true;
-        }
-      }, 66);
+    openViewDialog(item) {
+      this.options.openUID = item.productUID;
+      this.options.openObject = item;
+      this.options.openType = 1;
+      this.options.viewDialog = true;
     },
     openApproveDialog(uid) {
       this.options.openUID = uid;

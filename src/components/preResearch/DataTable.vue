@@ -3,7 +3,6 @@
     <v-data-table
       :headers="headers"
       :items="object"
-      :items-per-page="5"
       :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
@@ -13,9 +12,6 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.type`]="{ item }">
-        {{ typeToText(item.status) }}
-      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
@@ -23,40 +19,49 @@
         <v-btn
           rounded
           color="primary"
-          depressed
-          @click="openApprovalDialog(item)"
-          :disabled="item.status != 1"
+          @click="openApproveDialog(item)"
+          class="mx-2"
+          v-if="item.status == 1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openEditDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
       </template>
     </v-data-table>
 
-    <v-dialog
-      v-model="options.approvalDialog"
-      v-if="options.approvalDialog"
-      max-width="1080px"
-    >
-      <expenseApprovalForms
-        :expense="openItem"
-        :closeDialog="closeApprovalDialog"
+    <v-dialog v-model="approveDialog" max-width="800px" v-if="approveDialog">
+      <approvalForms
+        :preResearch="openItem"
+        :closeDialog="closeApproveDialog"
         :refresh="getObject"
+        :refreshTask="refresh"
       />
     </v-dialog>
   </div>
 </template>
 
 <script>
-import expenseApprovalForms from "@/components/expense/ApprovalForms";
-import { queryExpenses } from "@/api/expense";
+import { queryPreResearchs } from "@/api/preResearch";
+import approvalForms from "./ApprovalForms";
 export default {
   components: {
-    expenseApprovalForms,
+    approvalForms,
   },
   props: {
     queryObject: {
       type: Object,
+    },
+    refresh: {
+      type: Function,
     },
   },
   data: () => ({
@@ -68,33 +73,15 @@ export default {
         sortable: false,
       },
       {
-        text: "类型",
-        align: "center",
-        value: "type",
-        sortable: false,
-      },
-      {
         text: "办事处",
         align: "center",
         value: "employee.office.name",
         sortable: false,
       },
       {
-        text: "员工",
+        text: "业务员",
         align: "center",
         value: "employee.name",
-        sortable: false,
-      },
-      {
-        text: "员工电话",
-        align: "center",
-        value: "employee.phone",
-        sortable: false,
-      },
-      {
-        text: "金额(元)",
-        align: "center",
-        value: "amount",
         sortable: false,
       },
       {
@@ -115,10 +102,11 @@ export default {
       total: 0,
       page: 1,
       itemsPerPage: 10,
-      approvalDialog: false,
     },
     object: [],
-    openItem: {},
+
+    openItem: null,
+    approveDialog: false,
   }),
   created() {
     this.getObject();
@@ -126,7 +114,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryExpenses(
+      queryPreResearchs(
         this.queryObject,
         this.options.itemsPerPage,
         this.options.page
@@ -141,33 +129,26 @@ export default {
         }
       });
     },
-    openApprovalDialog(item) {
-      this.openItem = item;
-      console.log(this.openItem);
-      this.options.approvalDialog = true;
-    },
-    closeApprovalDialog() {
-      this.openItem = {};
-      this.options.approvalDialog = false;
-    },
-    typeToText(type) {
-      switch (type) {
-        case 1:
-          return "个人";
-        case 2:
-          return "办事处";
-      }
-    },
     statusToText(status) {
-      if (status == -1) {
-        return "已驳回";
+      switch (status) {
+        case -1:
+          return "驳回";
+        case 1:
+          return "未审批";
+        case 2:
+          return "未完成";
+        case 3:
+          return "已完成";
       }
-      if (status == 1) {
-        return "待审批";
-      }
-      if (status == 2) {
-        return "已通过";
-      }
+    },
+
+    openApproveDialog(item) {
+      this.openItem = item;
+      this.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.openItem = null;
+      this.approveDialog = false;
     },
   },
 };

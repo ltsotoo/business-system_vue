@@ -25,7 +25,26 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openPaymentDialog(item)"> mdi-pencil </v-icon>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openPaymentDialog(item)"
+          class="mx-2"
+          v-if="item.collectionStatus == 1"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          编辑回款记录
+        </v-btn>
+        <v-btn
+          rounded
+          color="success"
+          @click="openPaymentDialog(item)"
+          class="mx-2"
+          v-if="item.collectionStatus == 2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看回款记录
+        </v-btn>
       </template>
     </v-data-table>
 

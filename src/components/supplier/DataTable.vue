@@ -14,8 +14,24 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openEditDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
+        <v-btn
+          rounded
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
       </template>
     </v-data-table>
 

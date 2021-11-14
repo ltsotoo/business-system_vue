@@ -11,7 +11,6 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
-      @click:row="openViewDialog"
     >
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
         <div v-if="item.status != 3">
@@ -27,12 +26,26 @@
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon
-          v-if="item.status == -1 || item.status == 1"
-          @click="openDeleteDialog(item.UID)"
+        <v-btn
+          rounded
+          color="success"
+          dark
+          @click="openViewDialog(item)"
+          class="mx-2"
         >
-          mdi-delete
-        </v-icon>
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
+        <v-btn
+          rounded
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          class="mx-2"
+          v-if="item.status == -1 || item.status == 1"
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
       </template>
     </v-data-table>
 
@@ -40,6 +53,7 @@
       v-model="viewDialog"
       v-if="viewDialog"
       max-width="1440px"
+      persistent
       @click:outside="closeViewDialog"
     >
       <contractViewForms :openUID="openUID" />
@@ -47,7 +61,7 @@
 
     <v-dialog v-model="deleteDialog" max-width="500px" persistent>
       <v-card>
-        <v-card-title class="text-h5">您确定删除该位合同吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该合同吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -218,13 +232,9 @@ export default {
       }
       return "green";
     },
-    openViewDialog(item, other) {
-      setTimeout(() => {
-        if (this.deleteDialog == false) {
-          this.openUID = item.UID;
-          this.viewDialog = true;
-        }
-      }, 66);
+    openViewDialog(item) {
+      this.openUID = item.UID;
+      this.viewDialog = true;
     },
     closeViewDialog() {
       this.openUID = "";

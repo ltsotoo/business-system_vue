@@ -12,15 +12,48 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
-      @click:row="openViewDialog"
     >
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="openType == 3">
-          <v-icon @click="transferItem(item)"> mdi-plus-thick </v-icon>
+          <v-btn
+            rounded
+            color="success"
+            @click="transferItem(item)"
+            class="mx-2"
+          >
+            <v-icon left> mdi-plus-thick </v-icon>
+            添加
+          </v-btn>
         </div>
         <div v-else>
-          <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
-          <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
+          <v-btn
+            rounded
+            color="success"
+            dark
+            @click="openViewDialog(item)"
+            class="mx-2"
+          >
+            <v-icon left> mdi-eye </v-icon>
+            查看
+          </v-btn>
+          <v-btn
+            rounded
+            color="primary"
+            @click="openEditDialog(item.UID)"
+            class="mx-2"
+          >
+            <v-icon left> mdi-pencil </v-icon>
+            编辑
+          </v-btn>
+          <v-btn
+            rounded
+            color="error"
+            @click="openDeleteDialog(item.UID)"
+            class="mx-2"
+          >
+            <v-icon left> mdi-delete </v-icon>
+            删除
+          </v-btn>
         </div>
       </template>
     </v-data-table>
@@ -29,6 +62,7 @@
       v-model="options.viewDialog"
       v-if="options.viewDialog"
       max-width="800px"
+      persistent
       @click:outside="closeViewDialog"
     >
       <productViewForms :openUID="options.openUID" />
@@ -219,18 +253,10 @@ export default {
     changeTransferStatus() {
       this.options.isTransfer = !this.options.isTransfer;
     },
-    openViewDialog(item, other) {
-      setTimeout(() => {
-        if (
-          this.options.editDialog == false &&
-          this.options.deleteDialog == false &&
-          this.options.isTransfer == false
-        ) {
-          this.options.openUID = item.UID;
-          this.options.openType = 1;
-          this.options.viewDialog = true;
-        }
-      }, 66);
+    openViewDialog(item) {
+      this.options.openUID = item.UID;
+      this.options.openType = 1;
+      this.options.viewDialog = true;
     },
     closeViewDialog() {
       this.options.openUID = "";

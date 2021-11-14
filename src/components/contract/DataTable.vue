@@ -11,7 +11,6 @@
       :options.sync="options"
       @update:page="getObject"
       @update:items-per-page="getObject"
-      @click:row="openViewDialog"
     >
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
         <div v-if="item.status != 3">
@@ -27,9 +26,44 @@
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openApproveDialog(item.UID)" v-if="item.status == 1"> mdi-check-bold </v-icon>
-        <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
+        <v-btn
+          rounded
+          color="success"
+          dark
+          @click="openViewDialog(item)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openApproveDialog(item.UID)"
+          class="mx-2"
+          v-if="item.status == 1"
+        >
+          <v-icon left> mdi-file-edit-outline </v-icon>
+          审批
+        </v-btn>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openEditDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
+        <v-btn
+          rounded
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
       </template>
     </v-data-table>
 
@@ -37,6 +71,7 @@
       v-model="options.viewDialog"
       v-if="options.viewDialog"
       max-width="1440px"
+      persistent
       @click:outside="closeViewDialog"
     >
       <contractViewForms
@@ -116,9 +151,9 @@ export default {
         sortable: false,
       },
       {
-        text: "区域",
+        text: "办事处",
         align: "center",
-        value: "area.name",
+        value: "area.office.name",
         sortable: false,
       },
       {
@@ -212,18 +247,10 @@ export default {
         this.stautsToText();
       });
     },
-    openViewDialog(item, other) {
-      setTimeout(() => {
-        if (
-          this.options.editDialog == false &&
-          this.options.deleteDialog == false &&
-          this.options.approveDialog == false
-        ) {
-          this.options.openUID = item.UID;
-          this.options.openType = 1;
-          this.options.viewDialog = true;
-        }
-      }, 66);
+    openViewDialog(item) {
+      this.options.openUID = item.UID;
+      this.options.openType = 1;
+      this.options.viewDialog = true;
     },
     closeViewDialog() {
       this.options.openUID = "";
