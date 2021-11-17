@@ -5,26 +5,17 @@
       <v-card-title v-if="openType == 2">职位编辑</v-card-title>
       <v-card-subtitle>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
+              counter
+              :rules="rules.name"
+              maxlength="20"
               :disabled="openType != 0"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
-            <v-select
-              v-model="object.departmentUID"
-              :items="departmentTypeItems"
-              item-text="text"
-              item-value="UID"
-              label="部门类型默认"
-              :disabled="openType != 0"
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
+          <v-col cols="12">
             <v-select
               v-model="object.permissions"
               :items="permissionItems"
@@ -64,7 +55,7 @@
 </template>
 
 <script>
-import { queryDepartmentType } from "@/api/dictionary";
+import { queryDepartmentTypes } from "@/api/dictionary";
 import { queryRole, addRole, editRole, queryPermissions } from "@/api/oadrp";
 export default {
   props: {
@@ -73,6 +64,9 @@ export default {
       default: 0,
     },
     closeDialog: {
+      type: Function,
+    },
+    refresh: {
       type: Function,
     },
     openUID: {
@@ -87,6 +81,12 @@ export default {
       name: "",
       departmentUID: "",
       permissions: [],
+    },
+    rules: {
+      name: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length <= 20) || "名称的长度必须小于20个字符",
+      ],
     },
   }),
   created() {
@@ -116,7 +116,7 @@ export default {
       });
     },
     getDepartmentTypeItems() {
-      queryDepartmentType().then((res) => {
+      queryDepartmentTypes().then((res) => {
         this.departmentTypeItems = res.data;
       });
     },
@@ -126,10 +126,13 @@ export default {
       });
     },
     entryRole() {
-      addRole(this.object).then((res) => {
-        this.$message.success("添加成功");
-        this.closeDialog();
-      });
+      if (this.validateForm()) {
+        addRole(this.object).then((res) => {
+          this.$message.success("添加成功");
+          this.refresh();
+          this.closeDialog();
+        });
+      }
     },
     updateRole() {
       editRole(this.object).then((res) => {
@@ -153,6 +156,9 @@ export default {
           this.object.permissions = this.permissionItems.slice();
         }
       });
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

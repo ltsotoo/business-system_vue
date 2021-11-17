@@ -9,7 +9,7 @@
 
     <v-expansion-panels multiple style="margin-top: 30px">
       <settingUnit />
-      <settingDepartmentType />
+      <!-- <settingDepartmentType /> -->
       <settingRole />
     </v-expansion-panels>
   </v-container>

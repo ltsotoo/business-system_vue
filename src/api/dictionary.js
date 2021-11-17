@@ -15,13 +15,12 @@ export const delDictionary = (uid) => {
     })
 }
 
-export const queryDictionaries = (typeName, parentUID, text) => {
+export const queryDictionaries = (typeName, text) => {
     return request({
         url: '/dictionaries',
         method: 'get',
         params: {
             "TypeName": typeName,
-            "ParentUID": parentUID,
             "Text": text,
         }
     })
@@ -32,15 +31,19 @@ export const queryChilds = (parentID) => {
 }
 
 export const queryContractUnits = () => {
-    return queryDictionaries("ContractUnit", "", "")
+    return queryDictionaries("ContractUnit", "")
 }
 
 export const queryProductTypes = () => {
-    return queryDictionaries("ProductType", "", "")
+    return queryDictionaries("ProductSelf", "")
 }
 
-export const queryDepartmentType = () => {
-    return queryDictionaries("DepartmentType", "", "")
+export const queryThirdpartys = () => {
+    return queryDictionaries("ProductThirdparty", "")
+}
+
+export const queryDepartmentTypes = () => {
+    return queryDictionaries("DepartmentType", "")
 }
 
 

@@ -19,12 +19,14 @@
         {{ subTime(item.endDate) }}
       </template>
       <template v-slot:[`item.realEndDate`]="{ item }">
-        {{ subTime(item.realEndDate) }}
+        <div v-if="item.status != 1">
+          {{ subTime(item.realEndDate) }}
+        </div>
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
-      <template v-slot:[`item.actions`]="{ item }">
+      <template v-slot:[`item.actions`]="{ item }" v-if="openType != 2">
         <v-btn
           rounded
           color="primary"
@@ -70,6 +72,11 @@
 import { queryPreResearchTasks, editPreResearchTask } from "@/api/preResearch";
 export default {
   props: {
+    openType: {
+      //0:录入 1:查看 2:编辑
+      type: Number,
+      default: 0,
+    },
     queryObject: {
       type: Object,
     },
@@ -95,6 +102,12 @@ export default {
         text: "实际完成时间",
         align: "center",
         value: "realEndDate",
+        sortable: false,
+      },
+      {
+        text: "技术负责人",
+        align: "center",
+        value: "employee.name",
         sortable: false,
       },
       {

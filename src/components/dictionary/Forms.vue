@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title></v-card-title>
+    <v-card-title>添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row align="center">
@@ -9,6 +9,8 @@
               v-model.trim="object.text"
               label="名称"
               :rules="rules.text"
+              counter
+              maxlength="20"
             >
             </v-text-field>
           </v-col>
@@ -27,37 +29,37 @@
 import { createDictionary } from "@/api/dictionary";
 export default {
   props: {
-    parentObj: {
-      type: Object,
-    },
-    parentFun: {
-      type: Function,
+    typeName: {
+      type: String,
     },
     closeDialog: {
+      type: Function,
+    },
+    refresh: {
       type: Function,
     },
   },
   data: () => ({
     object: {
-      parentUID: "",
-      dictionaryTypeID: 0,
+      dictionaryTypeUID: "",
       text: "",
     },
     rules: {
       text: [
         (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 9) || "名称的长度必须小于10个字符",
+        (v) => (v && v.length <= 20) || "名称的长度必须小于20个字符",
       ],
     },
   }),
   created() {
-    this.object = this.parentObj;
+    this.object.dictionaryTypeUID = this.typeName;
   },
   methods: {
     add() {
       if (this.validateForm()) {
         createDictionary(this.object).then((res) => {
           this.$message.success("录入成功了！");
+          this.refresh();
           this.closeDialog();
         });
       }

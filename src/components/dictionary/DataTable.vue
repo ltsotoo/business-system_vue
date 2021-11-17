@@ -9,11 +9,20 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openDeleteDialog(item.UID)"> mdi-delete </v-icon>
+        <v-btn
+          rounded
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          class="mx-2"
+          disabled
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="deleteDialog" max-width="500px" persistent>
+    <v-dialog v-model="deleteDialog" max-width="500px" persistent @click:outside="closeDeleteDialog">
       <v-card>
         <v-card-title class="text-h5">您确定删除吗?</v-card-title>
         <v-card-actions>
@@ -53,7 +62,6 @@ export default {
     getObject() {
       queryDictionaries(
         this.queryObject.typeName,
-        this.queryObject.parentUID,
         this.queryObject.text
       ).then((res) => {
         this.object = res.data;

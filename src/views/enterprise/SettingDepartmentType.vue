@@ -12,6 +12,8 @@
               label="名称"
               clearable
               v-model="queryObject.text"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">

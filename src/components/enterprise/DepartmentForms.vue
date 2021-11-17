@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { queryDepartmentType } from "@/api/dictionary";
+import { queryDepartmentTypes } from "@/api/dictionary";
 import { entryDepartment } from "@/api/oadrp";
 export default {
   props: {
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     getDepartmentTypeItems() {
-      queryDepartmentType().then((res) => {
+      queryDepartmentTypes().then((res) => {
         this.departmentTypeItems = res.data;
       });
     },

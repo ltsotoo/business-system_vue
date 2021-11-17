@@ -14,13 +14,14 @@
           </v-card-title>
 
           <v-card-subtitle>
-            <v-form>
+            <v-form ref="form">
               <v-container>
                 <v-row>
                   <v-col>
                     <v-text-field
                       v-model="queryObject.phone"
                       label="手机号"
+                      :rules="rules.phone"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -29,21 +30,20 @@
                     <v-text-field
                       v-model="queryObject.password"
                       label="密码"
+                      :rules="rules.password"
                     ></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="8">
                     <v-text-field
-                      v-model="queryObject.code"
+                      v-model="userVerifyCode"
                       label="验证码"
+                      :rules="rules.verifyCode"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
-                    <v-img
-                      :aspect-ratio="4 / 1"
-                      src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    ></v-img>
+                    <div id="v_container"></div>
                   </v-col>
                 </v-row>
                 <v-row no-gutters justify="center">
@@ -62,28 +62,60 @@
 
 <script>
 import { login } from "@/api/system";
+import { GVerify } from "@/components/base/verifycode.js";
 
 export default {
   data: () => ({
     queryObject: {
       phone: "",
       password: "",
-      code: "",
+    },
+    userVerifyCode: "",
+    verifyCode: null,
+    rules: {
+      phone: [(v) => !!v || "请输入手机号码！"],
+      password: [(v) => !!v || "请输入密码！"],
+      verifyCode: [(v) => !!v || "请输入校验码！"],
     },
   }),
+  mounted() {
+    this.verifyCode = new GVerify("v_container");
+  },
   methods: {
+    userLoginBefore() {
+      if (this.validateForm()) {
+        if (this.userVerifyCode != "") {
+          if (this.verifyCode.validate(this.userVerifyCode)) {
+            return true;
+          }
+          this.$message.error("验证码错误");
+        }
+      }
+      return false;
+    },
     userLogin() {
-      login(this.queryObject).then((res) => {
-        localStorage.setItem("name", res.data.employee.name);
-        localStorage.setItem("uid", res.data.employee.UID);
-        localStorage.setItem("Authorization", res.data.token);
-        localStorage.setItem("urls",window.btoa(window.encodeURIComponent(JSON.stringify(res.data.urls))));
-        localStorage.setItem("nos", JSON.stringify(res.data.nos));
-        this.goToIndex();
-      });
+      if (this.userLoginBefore()) {
+        login(this.queryObject).then((res) => {
+          localStorage.setItem("name", res.data.employee.name);
+          localStorage.setItem("uid", res.data.employee.UID);
+          localStorage.setItem("Authorization", res.data.token);
+          localStorage.setItem(
+            "urls",
+            window.btoa(
+              window.encodeURIComponent(JSON.stringify(res.data.urls))
+            )
+          );
+          localStorage.setItem("nos", JSON.stringify(res.data.nos));
+          this.goToIndex();
+        });
+        this.verifyCode.refresh();
+      }
     },
     goToIndex() {
       this.$router.replace("/index");
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

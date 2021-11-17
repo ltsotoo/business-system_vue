@@ -9,12 +9,12 @@
           <v-spacer></v-spacer>
           <v-col cols="3">
             <v-select
-              v-model="queryObject.parentUID"
+              v-model="queryObject.typeName"
               :items="dictionaryTypeItems"
               item-text="text"
-              item-value="UID"
+              item-value="name"
               label="类型"
-              clearable
+              @change="queryProductTypes"
             ></v-select>
           </v-col>
           <v-col cols="4">
@@ -22,18 +22,18 @@
               label="名称"
               clearable
               v-model="queryObject.text"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" @click="queryDepartmentTypes">
+            <v-btn rounded color="primary" @click="queryProductTypes">
               查询
             </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" disabled>
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog" :disabled="!queryObject.typeName != ''"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -42,6 +42,20 @@
         ref="dictionaryDataTable"
         :queryObject="queryObject"
       />
+
+      <v-dialog
+        v-model="addDialog"
+        max-width="500px"
+        persistent
+        v-if="addDialog"
+        @click:outside="closeAddDialog"
+      >
+        <dictionaryForms
+          :closeDialog="closeAddDialog"
+          :refresh="queryProductTypes"
+          :typeName="queryObject.typeName"
+        />
+      </v-dialog>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -49,35 +63,32 @@
 <script>
 import dictionaryDataTable from "@/components/dictionary/DataTable";
 import dictionaryForms from "@/components/dictionary/Forms";
-import { queryProductTypes } from "@/api/dictionary";
 export default {
   components: {
     dictionaryDataTable,
     dictionaryForms,
   },
   data: () => ({
-    dictionaryTypeItems: [],
-    dictionaryType: {
-      UID: "",
-      module: "product",
-    },
+    dictionaryTypeItems: [
+      { name: "ProductSelf", text: "自研" },
+      { name: "ProductThirdparty", text: "渠道" },
+    ],
     queryObject: {
-      parentUID:"",
-      text: "",
       typeName: "",
+      text: "",
     },
+    addDialog: false,
   }),
-  created() {
-    this.getDictionaryTypeItems();
-  },
   methods: {
-    getDictionaryTypeItems() {
-      queryProductTypes().then((res) => {
-        this.dictionaryTypeItems = res.data;
-      });
-    },
-    queryDepartmentTypes() {
+    queryProductTypes() {
       this.$refs.dictionaryDataTable.getObject(this.queryObject);
+    },
+
+    openAddDialog() {
+      this.addDialog = true;
+    },
+    closeAddDialog() {
+      this.addDialog = false;
     },
   },
 };

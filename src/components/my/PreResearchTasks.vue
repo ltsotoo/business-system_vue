@@ -12,14 +12,13 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.startDate`]="{ item }">
-        {{ subTime(item.startDate) }}
-      </template>
       <template v-slot:[`item.endDate`]="{ item }">
         {{ subTime(item.endDate) }}
       </template>
       <template v-slot:[`item.realEndDate`]="{ item }">
-        {{ subTime(item.realEndDate) }}
+        <div v-if="item.status != 1 ">
+          {{ subTime(item.realEndDate) }}
+        </div>
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
@@ -74,21 +73,9 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "开始时间",
-        align: "center",
-        value: "startDate",
-        sortable: false,
-      },
-      {
         text: "要求完成时间",
         align: "center",
         value: "endDate",
-        sortable: false,
-      },
-      {
-        text: "实际完成时间",
-        align: "center",
-        value: "realEndDate",
         sortable: false,
       },
       {
@@ -101,6 +88,12 @@ export default {
         text: "状态",
         align: "center",
         value: "status",
+        sortable: false,
+      },
+      {
+        text: "实际完成时间",
+        align: "center",
+        value: "realEndDate",
         sortable: false,
       },
       {

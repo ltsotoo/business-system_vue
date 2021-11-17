@@ -18,6 +18,16 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           rounded
+          color="success"
+          dark
+          @click="openViewDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
+        <v-btn
+          rounded
           color="primary"
           @click="openApproveDialog(item)"
           class="mx-2"
@@ -26,7 +36,7 @@
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           rounded
           color="primary"
           @click="openEditDialog(item.UID)"
@@ -34,11 +44,21 @@
         >
           <v-icon left> mdi-pencil </v-icon>
           编辑
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
-    <v-dialog v-model="approveDialog" max-width="800px" v-if="approveDialog">
+    <v-dialog v-model="viewDialog" max-width="1080px" v-if="viewDialog">
+      <viewForms :uid="openUID"/>
+    </v-dialog>
+
+    <v-dialog
+      v-model="approveDialog"
+      max-width="800px"
+      v-if="approveDialog"
+      persistent
+      @click:outside="closeApproveDialog"
+    >
       <approvalForms
         :preResearch="openItem"
         :closeDialog="closeApproveDialog"
@@ -52,9 +72,11 @@
 <script>
 import { queryPreResearchs } from "@/api/preResearch";
 import approvalForms from "./ApprovalForms";
+import viewForms from "./ViewForms";
 export default {
   components: {
     approvalForms,
+    viewForms,
   },
   props: {
     queryObject: {
@@ -106,6 +128,7 @@ export default {
     object: [],
 
     openItem: null,
+    viewDialog: false,
     approveDialog: false,
   }),
   created() {
@@ -142,6 +165,14 @@ export default {
       }
     },
 
+    openViewDialog(uid) {
+      this.openUID = uid;
+      this.viewDialog = true;
+    },
+    closeViewDialog() {
+      this.openUID = "";
+      this.viewDialog = false;
+    },
     openApproveDialog(item) {
       this.openItem = item;
       this.approveDialog = true;

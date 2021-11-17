@@ -7,8 +7,25 @@
       :single-select="true"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openEditDialog(item.UID)"> mdi-pencil </v-icon>
-        <v-icon @click="openDepartmentDelDialog(item.UID)"> mdi-delete </v-icon>
+        <v-btn
+          rounded
+          color="primary"
+          @click="openEditDialog(item.UID)"
+          class="mx-2"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          编辑权限
+        </v-btn>
+        <v-btn
+          rounded
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          class="mx-2"
+          disabled
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
       </template>
     </v-data-table>
 
@@ -23,6 +40,22 @@
         :openUID="openUID"
         :openType="2"
       />
+    </v-dialog>
+
+    <v-dialog
+      v-model="deleteDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定删除该职位吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" text>确定</v-btn>
+          <v-btn color="primary" text @click="closeDeleteDialog">取消</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -52,15 +85,11 @@ export default {
         value: "name",
         sortable: false,
       },
-      {
-        text: "部门类型默认",
-        align: "center",
-        value: "department.text",
-        sortable: false,
-      },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
+
     editDialog: false,
+    deleteDialog: false,
     openUID: "",
   }),
   created() {
@@ -72,6 +101,7 @@ export default {
         this.roles = res.data;
       });
     },
+
     openEditDialog(uid) {
       this.openUID = uid;
       this.editDialog = true;
@@ -80,6 +110,15 @@ export default {
       this.openUID = "";
       this.editDialog = false;
       this.getRoles();
+    },
+
+    openDeleteDialog(uid) {
+      this.openUID = uid;
+      this.deleteDialog = true;
+    },
+    closeDeleteDialog() {
+      this.openUID = "";
+      this.deleteDialog = false;
     },
   },
 };

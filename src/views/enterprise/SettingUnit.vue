@@ -12,18 +12,16 @@
               label="名称"
               clearable
               v-model="queryObject.text"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" @click="queryDepartmentTypes">
-              查询
-            </v-btn>
+            <v-btn rounded color="primary" @click="queryUnits"> 查询 </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog" disabled>
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -32,6 +30,20 @@
         ref="dictionaryDataTable"
         :queryObject="queryObject"
       />
+
+      <v-dialog
+        v-model="addDialog"
+        max-width="500px"
+        persistent
+        v-if="addDialog"
+        @click:outside="closeAddDialog"
+      >
+        <dictionaryForms
+          :closeDialog="closeAddDialog"
+          :refresh="queryUnits"
+          :typeName="queryObject.typeName"
+        />
+      </v-dialog>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -49,10 +61,18 @@ export default {
       typeName: "ContractUnit",
       text: "",
     },
+    addDialog: false,
   }),
   methods: {
-    queryDepartmentTypes() {
+    queryUnits() {
       this.$refs.dictionaryDataTable.getObject(this.queryObject);
+    },
+
+    openAddDialog() {
+      this.addDialog = true;
+    },
+    closeAddDialog() {
+      this.addDialog = false;
     },
   },
 };

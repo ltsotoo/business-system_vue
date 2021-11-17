@@ -30,7 +30,7 @@
           rounded
           color="success"
           dark
-          @click="openViewDialog(item)"
+          @click="openViewDialog(item.UID)"
           class="mx-2"
         >
           <v-icon left> mdi-eye </v-icon>
@@ -74,10 +74,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <contractViewForms
-        :openUID="options.openUID"
-        :openType="options.openType"
-      />
+      <contractViewForms :openUID="options.openUID" />
     </v-dialog>
 
     <v-dialog
@@ -247,14 +244,13 @@ export default {
         this.stautsToText();
       });
     },
-    openViewDialog(item) {
-      this.options.openUID = item.UID;
-      this.options.openType = 1;
+    openViewDialog(uid) {
+      this.options.openUID = uid;
       this.options.viewDialog = true;
     },
     closeViewDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
+      this.options.viewDialog = false;
     },
     openApproveDialog(uid) {
       this.options.openUID = uid;

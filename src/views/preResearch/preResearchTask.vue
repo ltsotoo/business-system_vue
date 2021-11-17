@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>技术负责人段</v-card-title>
+    <v-card-title>技术负责人端</v-card-title>
     <v-card-subtitle>
       <v-form ref="queryForm">
         <v-row align="center">
