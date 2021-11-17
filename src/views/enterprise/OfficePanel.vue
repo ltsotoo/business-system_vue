@@ -7,23 +7,21 @@
       <v-form ref="queryForm">
         <v-row align="baseline">
           <v-spacer></v-spacer>
-          <v-col cols="7">
+          <v-col cols="5">
             <v-text-field
-              label="办事处名称"
-              clearable
+              label="名称"
               v-model="queryObject.name"
+              clearable
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" @click="queryOffices">
-              查询
-            </v-btn>
+            <v-btn rounded color="primary" @click="queryOffices"> 查询 </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog">
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -35,9 +33,10 @@
 
       <v-dialog
         v-model="addDialog"
-        max-width="400px"
-        persistent
         v-if="addDialog"
+        max-width="600px"
+        persistent
+        @click:outside="closeAddDialog"
       >
         <officeForms :closeDialog="closeAddDialog" :refresh="queryOffices" />
       </v-dialog>
@@ -61,7 +60,7 @@ export default {
   }),
   methods: {
     queryOffices() {
-      this.$refs.officeDataTable.getObject(this.queryObject);
+      this.$refs.officeDataTable.getObject();
     },
     openAddDialog() {
       this.addDialog = true;

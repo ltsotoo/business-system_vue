@@ -12,18 +12,16 @@
         <v-btn
           rounded
           color="primary"
-          dark
-          @click="openAreaEditDialog(item)"
+          @click="openEditDialog(item)"
           class="mx-2"
         >
           <v-icon left> mdi-pencil </v-icon>
-          编辑
+          分配办事处
         </v-btn>
         <v-btn
           rounded
           color="error"
-          dark
-          @click="openAreaDelDialog(item.UID)"
+          @click="openDelDialog(item.UID)"
           class="mx-2"
         >
           <v-icon left> mdi-delete </v-icon>
@@ -32,23 +30,35 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="editDialog" max-width="500px" persistent v-if="editDialog">
+    <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
       <areaForms
-        :closeDialog="closeAreaEditDialog"
+        :closeDialog="closeEditDialog"
         :openType="2"
-        :parentObj="editObj"
+        :parentObj="openItem"
         :refresh="getObject"
       />
     </v-dialog>
 
-    <v-dialog v-model="delDialog" max-width="500px" persistent v-if="delDialog">
+    <v-dialog
+      v-model="delDialog"
+      v-if="delDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeDelDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定要删除该区域吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="deleteArea">确定</v-btn>
+          <v-btn color="error" text @click="delObject">确定</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeAreaDelDialog">取消</v-btn>
+          <v-btn color="primary" text @click="closeDelDialog">取消</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -62,6 +72,11 @@ import areaForms from "@/components/enterprise/AreaForms";
 export default {
   components: {
     areaForms,
+  },
+  props: {
+    queryObject: {
+      type: Object,
+    },
   },
   data: () => ({
     headers: [
@@ -86,8 +101,8 @@ export default {
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     object: [],
+    openItem: {},
     editDialog: false,
-    editObj: {},
     delDialog: false,
     deleteUID: "",
   }),
@@ -95,33 +110,33 @@ export default {
     this.getObject();
   },
   methods: {
-    getObject(queryObj) {
-      queryAreas(queryObj).then((res) => {
+    getObject() {
+      queryAreas(this.queryObj).then((res) => {
         this.object = res.data;
       });
     },
-    openAreaEditDialog(obj) {
-      this.editObj = obj;
-      this.editDialog = true;
-    },
-    closeAreaEditDialog() {
-      this.editObj = {};
-      this.editDialog = false;
-    },
-    openAreaDelDialog(uid) {
-      this.deleteUID = uid;
-      this.delDialog = true;
-    },
-    closeAreaDelDialog() {
-      this.deleteUID = "";
-      this.delDialog = false;
-    },
-    deleteArea() {
+    delObject() {
       delArea(this.deleteUID).then((res) => {
         this.$message.success("删除成功了！");
         this.getObject();
-        this.closeAreaDelDialog();
+        this.closeDelDialog();
       });
+    },
+    openEditDialog(obj) {
+      this.openItem = JSON.parse(JSON.stringify(obj));
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.openItem = {};
+      this.editDialog = false;
+    },
+    openDelDialog(uid) {
+      this.deleteUID = uid;
+      this.delDialog = true;
+    },
+    closeDelDialog() {
+      this.deleteUID = "";
+      this.delDialog = false;
     },
   },
 };

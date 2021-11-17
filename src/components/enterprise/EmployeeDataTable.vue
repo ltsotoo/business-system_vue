@@ -13,28 +13,48 @@
           rounded
           color="success"
           dark
-          @click="openViewDialog(item)"
-          class="mx-2"
+          @click="openViewDialog(item.UID)"
+          class="mx-1"
         >
           <v-icon left> mdi-eye </v-icon>
           查看
+        </v-btn>
+        <!-- <v-btn
+          rounded
+          color="primary"
+          dark
+          @click="openEditBaseDialog(item.UID)"
+          class="mx-1"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          基础编辑
+        </v-btn> -->
+        <v-btn
+          rounded
+          color="primary"
+          dark
+          @click="openEditExpenseDialog(item.UID)"
+          class="mx-1"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          财务编辑
         </v-btn>
         <v-btn
           rounded
           color="primary"
           dark
-          @click="openEditDialog(item)"
-          class="mx-2"
+          @click="openEditRoleDialog(item.UID)"
+          class="mx-1"
         >
           <v-icon left> mdi-pencil </v-icon>
-          编辑
+          人事编辑
         </v-btn>
         <v-btn
           rounded
           color="error"
           dark
           @click="openDelDialog(item.UID)"
-          class="mx-2"
+          class="mx-1"
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -42,25 +62,37 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="viewDialog" max-width="500px" v-if="viewDialog">
-      <employeeForms :openType="1" :parentObj="openItem" />
+    <v-dialog
+      v-model="viewDialog"
+      v-if="viewDialog"
+      max-width="600px"
+      @click:outside="closeViewDialog"
+    >
+      <employeeFormsView :openUID="openUID" />
     </v-dialog>
 
     <v-dialog
       v-model="editDialog"
-      max-width="500px"
-      persistent
       v-if="editDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeEditDialog"
     >
-      <employeeForms
+      <employeeFormsEdit
+        :editType="editType"
+        :openUID="openUID"
         :closeDialog="closeEditDialog"
-        :openType="2"
-        :parentObj="openItem"
         :refresh="getObject"
       />
     </v-dialog>
 
-    <v-dialog v-model="delDialog" max-width="500px" persistent v-if="delDialog">
+    <v-dialog
+      v-model="delDialog"
+      v-if="delDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeDelDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定要删除该员工吗?</v-card-title>
         <v-card-actions>
@@ -77,15 +109,17 @@
 
 <script>
 import { queryEmployees, delEmployee } from "@/api/employee";
-import employeeForms from "@/components/enterprise/EmployeeForms";
+import employeeFormsView from "@/components/enterprise/EmployeeFormsView";
+import employeeFormsEdit from "@/components/enterprise/EmployeeFormsEdit";
 export default {
+  components: {
+    employeeFormsView,
+    employeeFormsEdit,
+  },
   props: {
     queryObject: {
       type: Object,
     },
-  },
-  components: {
-    employeeForms,
   },
   data: () => ({
     headers: [
@@ -102,12 +136,6 @@ export default {
         sortable: false,
       },
       {
-        text: "电话",
-        align: "center",
-        value: "phone",
-        sortable: false,
-      },
-      {
         text: "办事处",
         align: "center",
         value: "office.name",
@@ -119,12 +147,18 @@ export default {
         value: "department.name",
         sortable: false,
       },
-      { text: "操作", align: "center", value: "actions", sortable: false },
+      {
+        text: "电话",
+        align: "center",
+        value: "phone",
+        sortable: false,
+      },
+      { text: "操作", align: "center", value: "actions",width:"50%", sortable: false },
     ],
     object: [],
     openUID: "",
-    openItem: "",
     viewDialog: false,
+    editType: 0,
     editDialog: false,
     delDialog: false,
   }),
@@ -152,21 +186,34 @@ export default {
       this.delDialog = false;
     },
 
-    openEditDialog(item) {
-      this.openItem = item;
+    openEditBaseDialog(uid) {
+      this.editType = 1;
+      this.openUID = uid;
       this.editDialog = true;
     },
+    openEditExpenseDialog(uid) {
+      this.editType = 2;
+      this.openUID = uid;
+      this.editDialog = true;
+    },
+    openEditRoleDialog(uid) {
+      this.editType = 3;
+      this.openUID = uid;
+      this.editDialog = true;
+    },
+
     closeEditDialog() {
-      this.openItem = {};
+      this.editType = 0;
+      this.openUID = "";
       this.editDialog = false;
     },
 
-    openViewDialog(item) {
-      this.openItem = item;
+    openViewDialog(uid) {
+      this.openUID = uid;
       this.viewDialog = true;
     },
     closeViewDialog() {
-      this.openItem = {};
+      this.openUID = "";
       this.viewDialog = false;
     },
   },

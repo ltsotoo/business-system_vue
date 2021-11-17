@@ -18,7 +18,7 @@
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="add"> 添加 </v-btn>
+        <v-btn color="blue darken-1" text @click="add"> 提交 </v-btn>
         <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
       </v-card-actions>
     </v-card-subtitle>

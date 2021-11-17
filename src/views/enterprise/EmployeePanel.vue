@@ -15,6 +15,7 @@
               item-value="UID"
               label="办事处"
               @change="getDepartmentItems"
+              clearable
             ></v-select>
           </v-col>
           <v-col cols="2">
@@ -30,27 +31,29 @@
           <v-col cols="2">
             <v-text-field
               label="员工名称"
-              clearable
               v-model="queryObject.name"
+              clearable
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="2">
             <v-text-field
               label="员工手机号"
-              clearable
               v-model="queryObject.phone"
+              clearable
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" @click="queryEmployees" :disabled="queryObject.officeUID == ''">
+            <v-btn rounded color="primary" @click="queryEmployees">
               查询
             </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog">
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -62,15 +65,17 @@
 
       <v-dialog
         v-model="addDialog"
-        max-width="400px"
-        persistent
         v-if="addDialog"
+        max-width="800px"
+        persistent
+        @click:outside="closeAddDialog"
       >
-        <employeeForms
+        <employeeFormsAdd
           :parentObj="{
             officeUID: queryObject.officeUID,
             departmentUID: queryObject.departmentUID,
           }"
+          :officeItems="officeItems"
           :closeDialog="closeAddDialog"
           :refresh="queryEmployees"
         />
@@ -82,11 +87,11 @@
 <script>
 import { queryOffices, queryDepartments } from "@/api/oadrp";
 import employeeDataTable from "@/components/enterprise/EmployeeDataTable";
-import employeeForms from "@/components/enterprise/EmployeeForms";
+import employeeFormsAdd from "@/components/enterprise/EmployeeFormsAdd";
 export default {
   components: {
     employeeDataTable,
-    employeeForms,
+    employeeFormsAdd,
   },
   data: () => ({
     officeItems: [],
@@ -107,11 +112,13 @@ export default {
     },
     getDepartmentItems() {
       this.queryObject.departmentUID = "";
-      queryDepartments({ officeUID: this.queryObject.officeUID }).then(
-        (res) => {
-          this.departmentItems = res.data;
-        }
-      );
+      if (this.queryObject.officeUID && this.queryObject.officeUID != "") {
+        queryDepartments({ officeUID: this.queryObject.officeUID }).then(
+          (res) => {
+            this.departmentItems = res.data;
+          }
+        );
+      }
     },
     queryEmployees() {
       this.$refs.employeeDataTable.getObject();

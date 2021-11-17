@@ -19,20 +19,25 @@
           <v-col cols="3">
             <v-text-field
               label="部门名称"
-              clearable
               v-model="queryObject.name"
+              clearable
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary"  @click="queryDepartments" :disabled="queryObject.officeUID == ''">
+            <v-btn
+              rounded
+              color="primary"
+              @click="queryDepartments"
+              :disabled="queryObject.officeUID == ''"
+            >
               查询
             </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success"  @click="openAddDialog">
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -40,15 +45,18 @@
       <departmentDataTable
         ref="departmentDataTable"
         :queryObject="queryObject"
+        :officeItems="officeItems"
       ></departmentDataTable>
 
       <v-dialog
         v-model="addDialog"
-        max-width="400px"
-        persistent
         v-if="addDialog"
+        max-width="600px"
+        persistent
+        @click:outside="closeAddDialog"
       >
         <departmentForms
+          :officeItems="officeItems"
           :officeUID="queryObject.officeUID"
           :closeDialog="closeAddDialog"
           :refresh="queryDepartments"
@@ -82,7 +90,7 @@ export default {
       });
     },
     queryDepartments() {
-      this.$refs.departmentDataTable.getObject(this.queryObject);
+      this.$refs.departmentDataTable.getObject();
     },
     clickDepartmentPanel(event) {
       if (

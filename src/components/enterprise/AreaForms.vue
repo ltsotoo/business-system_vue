@@ -1,27 +1,33 @@
 <template>
   <v-card>
     <v-card-title v-if="openType == 0">区域添加</v-card-title>
-    <v-card-title v-else>区域编辑</v-card-title>
+    <v-card-title v-if="openType == 2">区域编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row align="center">
-          <v-col cols="4">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.number"
               label="区域编号"
               :rules="rules.number"
+              :disabled="openType == 2"
+              counter
+              maxlength="20"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="区域名称"
               :rules="rules.name"
+              :disabled="openType == 2"
+              counter
+              maxlength="20"
             >
             </v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="12">
             <v-select
               v-model="object.officeUID"
               :items="officeItems"
@@ -34,7 +40,7 @@
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="submit"> 确定 </v-btn>
+        <v-btn color="blue darken-1" text @click="submit"> 提交 </v-btn>
         <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
       </v-card-actions>
     </v-card-subtitle>
@@ -45,15 +51,15 @@
 import { queryOffices, entryArea, editArea } from "@/api/oadrp";
 export default {
   props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
     closeDialog: {
       type: Function,
     },
     refresh: {
       type: Function,
-    },
-    openType: {
-      type: Number,
-      default: 0,
     },
     parentObj: {
       type: Object,
@@ -71,7 +77,10 @@ export default {
         (v) => !!v || "必填项！",
         (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
       ],
-      number: [(v) => !!v || "必填项！"],
+      number: [
+        (v) => !!v || "必填项！",
+        (v) => (v && v.length < 20) || "编号的长度必须小于20个字符",
+      ],
     },
   }),
   created() {
@@ -90,16 +99,12 @@ export default {
       if (this.validateForm()) {
         if (this.openType == 0) {
           entryArea(this.object).then((res) => {
-            if (this.refresh) {
-              this.refresh();
-            }
+            this.refresh();
             this.closeDialog();
           });
         } else if (this.openType == 2) {
           editArea(this.object).then((res) => {
-            if (this.refresh) {
-              this.refresh();
-            }
+            this.refresh();
             this.closeDialog();
           });
         }

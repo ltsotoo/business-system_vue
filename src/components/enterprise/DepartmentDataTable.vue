@@ -17,7 +17,7 @@
           class="mx-2"
         >
           <v-icon left> mdi-pencil </v-icon>
-          编辑名称
+          名称编辑
         </v-btn>
         <v-btn
           rounded
@@ -32,7 +32,29 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="delDialog" max-width="500px" persistent v-if="delDialog">
+    <v-dialog
+      v-model="editNameDialog"
+      v-if="editNameDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeEditNameDialog"
+    >
+      <departmentForms
+        :openType="2"
+        :closeDialog="closeEditNameDialog"
+        :refresh="getObject"
+        :parentObj="openItem"
+        :officeItems="officeItems"
+      />
+    </v-dialog>
+    
+    <v-dialog
+      v-model="delDialog"
+      v-if="delDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeDelDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定要删除该部门吗?</v-card-title>
         <v-card-actions>
@@ -44,33 +66,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      v-model="editNameDialog"
-      max-width="500px"
-      persistent
-      v-if="editNameDialog"
-    >
-      <v-card>
-        <v-card-title class="text-h5">部门名称编辑</v-card-title>
-        <v-card-subtitle>
-          <v-text-field label="名称" v-model="openItem.name"></v-text-field>
-        </v-card-subtitle>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" text @click="editObject">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeEditNameDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryDepartments, editDepartment, delDepartment } from "@/api/oadrp";
+import { queryDepartments, delDepartment } from "@/api/oadrp";
+import departmentForms from "./DepartmentForms";
 export default {
+  components: {
+    departmentForms,
+  },
+  props: {
+    queryObject: {
+      type: Object,
+    },
+    officeItems: {
+      type: Object,
+      default: [],
+    },
+  },
   data: () => ({
     headers: [
       {
@@ -80,9 +94,9 @@ export default {
         sortable: false,
       },
       {
-        text: "部门类型",
+        text: "默认职位",
         align: "center",
-        value: "type.text",
+        value: "role.name",
         sortable: false,
       },
       { text: "操作", align: "center", value: "actions", sortable: false },
@@ -93,18 +107,10 @@ export default {
     delDialog: false,
     editNameDialog: false,
   }),
-  created() {},
   methods: {
-    getObject(queryObj) {
-      queryDepartments(queryObj).then((res) => {
+    getObject() {
+      queryDepartments(this.queryObject).then((res) => {
         this.object = res.data;
-      });
-    },
-    editObject() {
-      editDepartment(this.openItem).then((res) => {
-        this.$message.success("删除成功了！");
-        this.getObject();
-        this.closeEditNameDialog();
       });
     },
     delObject() {

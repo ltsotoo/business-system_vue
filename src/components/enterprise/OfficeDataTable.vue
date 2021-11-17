@@ -12,17 +12,15 @@
         <v-btn
           rounded
           color="primary"
-          dark
           @click="openEditNameDialog(item)"
           class="mx-2"
         >
           <v-icon left> mdi-pencil </v-icon>
-          编辑名称
+          名称编辑
         </v-btn>
         <v-btn
           rounded
           color="error"
-          dark
           @click="openDelDialog(item.UID)"
           class="mx-2"
         >
@@ -32,7 +30,28 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="delDialog" max-width="500px" persistent v-if="delDialog">
+    <v-dialog
+      v-model="editNameDialog"
+      v-if="editNameDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeEditNameDialog"
+    >
+      <officeForms
+        :openType="2"
+        :closeDialog="closeEditNameDialog"
+        :refresh="getObject"
+        :parentObj="openItem"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="delDialog"
+      v-if="delDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeDelDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定要删除该办事处吗?</v-card-title>
         <v-card-actions>
@@ -44,33 +63,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      v-model="editNameDialog"
-      max-width="500px"
-      persistent
-      v-if="editNameDialog"
-    >
-      <v-card>
-        <v-card-title class="text-h5">办事处名称编辑</v-card-title>
-        <v-card-subtitle>
-          <v-text-field label="名称" v-model="openItem.name"></v-text-field>
-        </v-card-subtitle>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" text @click="editObject">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeEditNameDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryOffices, editOffice, delOffice } from "@/api/oadrp";
+import { queryOffices, delOffice } from "@/api/oadrp";
+import officeForms from "./OfficeForms";
 export default {
+  components: {
+    officeForms,
+  },
+  props: {
+    queryObject: {
+      type: Object,
+    },
+  },
   data: () => ({
     headers: [
       {
@@ -92,26 +99,19 @@ export default {
     openItem: "",
     delDialog: false,
     editNameDialog: false,
-    editDialog: false,
   }),
   created() {
     this.getObject();
   },
   methods: {
-    getObject(queryObj) {
-      queryOffices(queryObj).then((res) => {
+    getObject() {
+      queryOffices(this.queryObj).then((res) => {
         this.object = res.data;
-      });
-    },
-    editObject() {
-      editOffice(this.openItem).then((res) => {
-        this.$message.success("删除成功了！");
-        this.getObject();
-        this.closeEditNameDialog();
       });
     },
     delObject() {
       delOffice(this.openUID).then((res) => {
+        this.$message.success("删除成功了！");
         this.getObject();
         this.closeDelDialog();
       });
