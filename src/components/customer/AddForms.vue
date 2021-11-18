@@ -1,33 +1,26 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title v-if="openType == 0">客户添加</v-card-title>
-    <v-card-title v-if="openType == 2">客户编辑</v-card-title>
+    <v-card-title>客户添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
-          <v-col cols="6" v-if="openType > 0">
-            <v-text-field
-              v-model="object.company.name"
-              label="公司"
-              disabled
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6" v-else>
+          <v-col cols="6">
             <v-select
               v-model="object.companyUID"
               :items="companyItems"
               item-text="name"
               item-value="UID"
               label="公司"
-              :rules="rules.companyUID"
+              :rules="rules.must"
             ></v-select>
           </v-col>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
-              :disabled="openType == 2"
-              :rules="rules.name"
+              :rules="rules.must"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -36,7 +29,8 @@
             <v-text-field
               v-model.trim="object.researchGroup"
               label="课题组"
-              :rules="rules.researchGroup"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -44,6 +38,8 @@
               v-model.trim="object.phone"
               label="电话"
               :rules="rules.phone"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -52,7 +48,8 @@
             <v-text-field
               v-model.trim="object.wechatID"
               label="微信号"
-              :rules="rules.wechatID"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -60,34 +57,32 @@
               v-model.trim="object.email"
               label="电子邮箱"
               :rules="rules.email"
+              counter
+              maxlength="50"
             ></v-text-field>
           </v-col>
         </v-row>
       </v-form>
     </v-card-subtitle>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import {
-  queryCompanys,
-  queryCustomer,
-  entryCustomer,
-  editCustomer,
-} from "@/api/customer";
+import { queryCompanys, entryCustomer } from "@/api/customer";
 export default {
   props: {
-    openType: {
-      type: Number,
-      default: 0,
-    },
-    openUID: {
-      type: String,
-      default: "",
-    },
-    parentFun: {
+    closeDialog: {
       type: Function,
-      default: null,
+    },
+    refresh: {
+      type: Function,
     },
   },
   data: () => ({
@@ -116,9 +111,6 @@ export default {
   }),
   created() {
     this.getCompanyItems();
-    if (this.openType != 0) {
-      this.getObject();
-    }
   },
   methods: {
     getCompanyItems() {
@@ -126,34 +118,14 @@ export default {
         this.companyItems = res.data;
       });
     },
-    getObject() {
-      queryCustomer(this.openUID).then((res) => {
-        this.object = res.data;
-      });
-    },
-    entryObject() {
-      var _this = this;
+    submit() {
       if (this.validateForm()) {
         entryCustomer(this.object).then((res) => {
-          this.$message.success("录入成功了!");
-          setTimeout(function () {
-            _this.$router.replace("/customer");
-          }, 1000);
+          this.$message.success("添加成功了!");
+          this.refresh();
+          this.closeDialog();
         });
-      } else {
-        this.$message.error("信息填写异常，请检查后再提交！");
-        if (this.parentFun) {
-          this.parentFun(false);
-        }
       }
-    },
-    editObject() {
-      editCustomer(this.object).then((res) => {
-        this.$message.success("编辑成功了!");
-        if (this.parentFun) {
-          this.parentFun();
-        }
-      });
     },
     validateForm() {
       return this.$refs.form.validate();

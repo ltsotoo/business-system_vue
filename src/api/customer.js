@@ -42,6 +42,21 @@ export const queryCustomers = (queryObject, pageSize, pageNo) => {
     })
 }
 
+export const addCompany = (company) => {
+    return request({
+        url: '/company',
+        method: 'POST',
+        data: company
+    })
+}
+
+export const delCompany = (uid) => {
+    return request({
+        url: '/company/' + uid,
+        method: 'DELETE',
+    })
+}
+
 export const queryCompanys = (company) => {
     return request({
         url: '/companys',

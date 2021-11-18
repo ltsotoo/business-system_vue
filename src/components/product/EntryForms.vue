@@ -1,16 +1,18 @@
 <template>
-  <v-form ref="form">
-    <v-card class="mx-auto">
-      <v-card-subtitle>
+  <v-card class="mx-auto">
+    <v-card-title>产品添加</v-card-title>
+    <v-card-subtitle>
+      <v-form ref="form">
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="object.sourceTypeUID"
+              v-model="sourceType"
               :items="sourceTypeItems"
               item-text="text"
-              item-value="UID"
               label="类型"
-              :rules="rules.sourceType"
+              return-object
+              @change="getSubtypeItems"
+              :rules="rules.must"
             ></v-select>
           </v-col>
           <v-col cols="4">
@@ -19,35 +21,10 @@
               :items="subtypeItems"
               item-text="text"
               item-value="UID"
-              label="子类别"
-              :rules="rules.subtype"
+              label="子类型"
+              :rules="rules.must"
             ></v-select>
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-              v-model.trim="object.name"
-              label="名称"
-              :rules="rules.name"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.trim="object.brand"
-              label="品牌"
-              :rules="rules.brand"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.trim="object.specification"
-              label="规格"
-              :rules="rules.specification"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="4">
             <v-select
               v-model="object.supplierUID"
@@ -55,12 +32,39 @@
               item-text="name"
               item-value="UID"
               label="供应商"
-              :rules="rules.supplier"
+              :rules="rules.must"
             ></v-select>
           </v-col>
           <v-col cols="4">
             <v-text-field
-              v-model.number="object.number"
+              v-model.trim="object.name"
+              label="名称"
+              :rules="rules.must"
+              counter
+              maxlength="20"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.trim="object.brand"
+              label="品牌"
+              :rules="rules.must"
+              counter
+              maxlength="20"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4"></v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model.trim="object.specification"
+              label="规格"
+              counter
+              maxlength="50"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.numberCount"
               label="库存数量"
               :rules="rules.number"
             ></v-text-field>
@@ -69,63 +73,82 @@
             <v-text-field
               v-model="object.unit"
               label="单位"
-              :rules="rules.unit"
+              :rules="rules.must"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
+          <v-col cols="4"></v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.purchasedPrice"
-              label="采购价格(元)"
-              :rules="rules.purchasedPrice"
+              label="采购/成本价格(人民币)"
+              :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.standardPrice"
-              label="销售价格(元)"
-              :rules="rules.standardPrice"
+              label="销售价格(人民币)"
+              :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="object.deliveryCycle"
-              label="供货周期"
-              :rules="rules.deliveryCycle"
+              v-model.number="object.standardPriceUSD"
+              label="销售价格(美元)"
+              :rules="rules.money"
             ></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="object.deliveryCycle"
+              label="供货周期"
+              :rules="rules.must"
+              counter
+              maxlength="20"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
             <v-textarea
               label="备注"
               v-model="object.remarks"
-              :rules="rules.remarks"
               auto-grow
               rows="3"
+              counter
+              maxlength="500"
             ></v-textarea>
           </v-col>
         </v-row>
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+      </v-form>
+    </v-card-subtitle>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
 import { entryProduct } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
-import { queryProductTypes, queryChilds } from "@/api/dictionary";
+import { queryProductTypes, queryDictionaries } from "@/api/dictionary";
 
 export default {
   props: {
-    parentFun: {
+    closeDialog: {
       type: Function,
-      default: null,
+    },
+    refresh: {
+      type: Function,
     },
   },
   data: () => ({
     sourceTypeItems: [],
+    sourceType: {},
     subtypeItems: [],
     supplierItems: [],
     object: {
@@ -136,44 +159,18 @@ export default {
       specification: "",
       supplierUID: "",
       number: 0,
+      numberCount: 0,
       unit: "",
       purchasedPrice: 0,
       standardPrice: 0,
+      standardPriceUSD: 0,
       deliveryCycle: "",
       remarks: "",
-
-      supplier: {},
-      sourceType: { text: "" },
-      subtype: { text: "" },
     },
     rules: {
-      sourceType: [(v) => !!v || "必填项！"],
-      subtype: [(v) => !!v || "必填项！"],
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
-      ],
-      brand: [
-        (v) => v.length == 0 || v.length <= 10 || "品牌的长度必须小于10个字符",
-      ],
-      specification: [
-        (v) => v.length == 0 || v.length <= 20 || "规格的长度必须小于20个字符",
-      ],
-      number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为数字"],
-      unit: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 10) || "单位的长度必须小于10个字符",
-      ],
-      purchasedPrice: [(v) => /^[0-9]*$/.test(v) || "采购价格(元)必须为数字"],
-      standardPrice: [(v) => /^[0-9]*$/.test(v) || "销售价格(元)必须为数字"],
-      deliveryCycle: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 10) || "供货周期的长度必须小于10个字符",
-      ],
-      remarks: [
-        (v) =>
-          v.length == 0 || v.length <= 100 || "备注的长度必须小于100个字符",
-      ],
+      must: [(v) => !!v || "必填项！"],
+      number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为大于零的整数"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
     },
   }),
   created() {
@@ -186,8 +183,11 @@ export default {
         this.sourceTypeItems = res.data;
       });
     },
-    getSubtypeItems(parentUID) {
-      queryChilds(parentUID).then((res) => {
+    getSubtypeItems() {
+      this.subtypeItems = [];
+      this.object.subtypeUID = "";
+      this.object.sourceTypeUID = this.sourceType.UID;
+      queryDictionaries(this.sourceType.name).then((res) => {
         this.subtypeItems = res.data;
       });
     },
@@ -196,34 +196,18 @@ export default {
         this.supplierItems = res.data;
       });
     },
-    entryObject() {
-      var _this = this;
+    submit() {
       if (this.validateForm()) {
+        this.object.number = this.object.numberCount;
         entryProduct(this.object).then((res) => {
-          this.$message.success("录入成功了!");
-          setTimeout(function () {
-            _this.$router.replace("/product");
-          }, 1000);
+          this.$message.success("添加成功了!");
+          this.refresh();
+          this.closeDialog();
         });
-      } else {
-        this.$message.error("信息填写异常，请检查后再提交！");
-        if (this.parentFun) {
-          this.parentFun(false);
-        }
       }
     },
     validateForm() {
       return this.$refs.form.validate();
-    },
-  },
-  watch: {
-    "object.sourceTypeUID": {
-      handler: function (val) {
-        this.object.subtypeUID = null;
-        if (val != null) {
-          this.getSubtypeItems(val);
-        }
-      },
     },
   },
 };

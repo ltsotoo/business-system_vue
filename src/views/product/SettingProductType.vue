@@ -14,7 +14,7 @@
               item-text="text"
               item-value="name"
               label="类型"
-              @change="queryProductTypes"
+              @change="query"
             ></v-select>
           </v-col>
           <v-col cols="4">
@@ -27,13 +27,18 @@
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" @click="queryProductTypes">
-              查询
-            </v-btn>
+            <v-btn rounded color="primary" @click="query"> 查询 </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog" :disabled="!queryObject.typeName != ''"> 添加 </v-btn>
+            <v-btn
+              rounded
+              color="success"
+              @click="openAddDialog"
+              :disabled="!queryObject.typeName != ''"
+            >
+              添加
+            </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -52,7 +57,7 @@
       >
         <dictionaryForms
           :closeDialog="closeAddDialog"
-          :refresh="queryProductTypes"
+          :refresh="query"
           :typeName="queryObject.typeName"
         />
       </v-dialog>
@@ -63,24 +68,31 @@
 <script>
 import dictionaryDataTable from "@/components/dictionary/DataTable";
 import dictionaryForms from "@/components/dictionary/Forms";
+import { queryProductTypes } from "@/api/dictionary";
 export default {
   components: {
     dictionaryDataTable,
     dictionaryForms,
   },
   data: () => ({
-    dictionaryTypeItems: [
-      { name: "ProductSelf", text: "自研" },
-      { name: "ProductThirdparty", text: "渠道" },
-    ],
+    dictionaryTypeItems: [],
     queryObject: {
       typeName: "",
       text: "",
     },
     addDialog: false,
   }),
+  created() {
+    this.getDictionaryTypeItems();
+  },
   methods: {
-    queryProductTypes() {
+    getDictionaryTypeItems() {
+      queryProductTypes().then((res) => {
+        this.dictionaryTypeItems = res.data;
+      });
+    },
+
+    query() {
       this.$refs.dictionaryDataTable.getObject(this.queryObject);
     },
 

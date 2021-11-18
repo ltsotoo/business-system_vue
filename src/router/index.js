@@ -70,16 +70,6 @@ const routes = [
         meta: { login_require: true, title: "中研环科-客户管理-录入" },
       },
       {
-        path: 'product/entry',
-        component: () => import('@/views/product/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-产品管理-录入" },
-      },
-      {
-        path: 'supplier/entry',
-        component: () => import('@/views/supplier/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-供应商管理-录入" },
-      },
-      {
         path: 'myExpense/entry',
         component: () => import('@/views/expense/Entry.vue'),
         meta: { login_require: true, title: "中研环科-我的报销-发起" },
@@ -110,7 +100,7 @@ VueRouter.prototype.replace = function replace(location) {
 };
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.login_require || to.meta.login_require) {
+  if (to.meta.login_require) {
     if (!window.localStorage.getItem("Authorization")) {
       editTitle(to)
       next('/')

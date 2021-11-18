@@ -15,42 +15,21 @@
     >
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="openType == 3">
-          <v-btn
-            rounded
-            color="success"
-            @click="transferItem(item)"
-            class="mx-2"
-          >
+          <v-btn text color="success" @click="transferItem(item)">
             <v-icon left> mdi-plus-thick </v-icon>
             添加
           </v-btn>
         </div>
         <div v-else>
-          <v-btn
-            rounded
-            color="success"
-            dark
-            @click="openViewDialog(item)"
-            class="mx-2"
-          >
+          <v-btn text color="success" @click="openViewDialog(item.UID)">
             <v-icon left> mdi-eye </v-icon>
             查看
           </v-btn>
-          <v-btn
-            rounded
-            color="primary"
-            @click="openEditDialog(item.UID)"
-            class="mx-2"
-          >
+          <v-btn text color="primary" @click="openEditDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
-            编辑
+            库存编辑
           </v-btn>
-          <v-btn
-            rounded
-            color="error"
-            @click="openDeleteDialog(item.UID)"
-            class="mx-2"
-          >
+          <v-btn text color="error" @click="openDeleteDialog(item.UID)">
             <v-icon left> mdi-delete </v-icon>
             删除
           </v-btn>
@@ -73,21 +52,14 @@
       v-if="options.editDialog"
       max-width="800px"
       persistent
+      @click:outside="closeEditDialog"
     >
       <productEditForms
-        :openUID="options.openUID"
         ref="productEditForms"
-        :parentFun="getObject"
+        :openUID="options.openUID"
+        :refresh="getObject"
+        :closeDialog="closeEditDialog"
       />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
@@ -107,7 +79,7 @@
 
 <script>
 import productViewForms from "./ViewForms";
-import productEditForms from "./EditForms";
+import productEditForms from "./EditNumber";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
@@ -132,6 +104,18 @@ export default {
   data: () => ({
     headers: [
       {
+        text: "类型",
+        align: "center",
+        value: "sourceType.text",
+        sortable: false,
+      },
+      {
+        text: "子类别",
+        align: "center",
+        value: "subtype.text",
+        sortable: false,
+      },
+      {
         text: "名称",
         align: "center",
         value: "name",
@@ -150,13 +134,13 @@ export default {
         sortable: false,
       },
       {
-        text: "供应商",
+        text: "库存数量",
         align: "center",
-        value: "supplier.name",
+        value: "numberCount",
         sortable: false,
       },
       {
-        text: "库存数量",
+        text: "可售数量",
         align: "center",
         value: "number",
         sortable: false,
@@ -168,39 +152,21 @@ export default {
         sortable: false,
       },
       {
-        text: "采购/生产价格(元)",
-        align: "center",
-        value: "purchasedPrice",
-        sortable: false,
-      },
-      {
-        text: "标准价格(元)",
-        align: "center",
-        value: "standardPrice",
-        sortable: false,
-      },
-      {
         text: "供货周期",
         align: "center",
         value: "deliveryCycle",
         sortable: false,
       },
       {
-        text: "类型",
+        text: "标准售价(人民币)",
         align: "center",
-        value: "sourceType.text",
+        value: "standardPrice",
         sortable: false,
       },
       {
-        text: "子类别",
+        text: "标准售价(美元)",
         align: "center",
-        value: "subtype.text",
-        sortable: false,
-      },
-      {
-        text: "备注",
-        align: "center",
-        value: "remarks",
+        value: "standardPriceUSD",
         sortable: false,
       },
       {
@@ -253,30 +219,21 @@ export default {
     changeTransferStatus() {
       this.options.isTransfer = !this.options.isTransfer;
     },
-    openViewDialog(item) {
-      this.options.openUID = item.UID;
-      this.options.openType = 1;
+    openViewDialog(uid) {
+      this.options.openUID = uid;
       this.options.viewDialog = true;
     },
     closeViewDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
+      this.options.viewDialog = false;
     },
     openEditDialog(uid) {
       this.options.openUID = uid;
-      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
       this.options.editDialog = false;
-    },
-    editItem() {
-      if (this.$refs.productEditForms.validateForm()) {
-        this.$refs.productEditForms.editObject();
-        this.closeEditDialog();
-      }
     },
     openDeleteDialog(uid) {
       this.options.openUID = uid;

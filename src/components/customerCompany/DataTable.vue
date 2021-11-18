@@ -3,18 +3,13 @@
     <v-data-table
       :headers="headers"
       :items="object"
+      :items-per-page="5"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          text
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          class="mx-2"
-          disabled
-        >
+        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>
@@ -23,12 +18,13 @@
 
     <v-dialog
       v-model="deleteDialog"
-      max-width="500px"
+      v-if="deleteDialog"
+      max-width="600px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
-        <v-card-title class="text-h5">您确定删除吗?</v-card-title>
+        <v-card-title class="text-h5">您确定删除该客户公司吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -42,8 +38,7 @@
 </template>
 
 <script>
-import { delDictionary } from "@/api/dictionary";
-import { queryDictionaries } from "@/api/dictionary";
+import { queryCompanys, delCompany } from "@/api/customer";
 export default {
   props: {
     queryObject: {
@@ -52,26 +47,59 @@ export default {
   },
   data: () => ({
     headers: [
-      { text: "名称", align: "center", value: "text", sortable: false },
-      { text: "操作", align: "center", value: "actions", sortable: false },
+      {
+        text: "名称",
+        align: "center",
+        value: "name",
+        sortable: false,
+      },
+      {
+        text: "地址",
+        align: "center",
+        value: "address",
+        sortable: false,
+      },
+      {
+        text: "区域",
+        align: "center",
+        value: "area.name",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
     ],
+    options: {
+      loading: false,
+      total: 0,
+      page: 1,
+      itemsPerPage: 10,
+    },
     object: [],
+
+    openUID: "",
     deleteDialog: false,
-    openUID: null,
   }),
   created() {
-    if (this.queryObject.typeName != "") {
-      this.getObject();
-    }
+    this.getObject();
   },
   methods: {
     getObject() {
-      queryDictionaries(this.queryObject.typeName, this.queryObject.text).then(
-        (res) => {
-          this.object = res.data;
-        }
-      );
+      queryCompanys(this.queryObject).then((res) => {
+        this.object = res.data;
+      });
     },
+    deleteItem() {
+      delCompany(this.openUID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.getObject();
+        this.closeDeleteDialog();
+      });
+    },
+
     openDeleteDialog(uid) {
       this.openUID = uid;
       this.deleteDialog = true;
@@ -79,13 +107,6 @@ export default {
     closeDeleteDialog() {
       this.openUID = "";
       this.deleteDialog = false;
-    },
-    deleteItem() {
-      delDictionary(this.openUID).then((res) => {
-        this.$message.success("删除成功！");
-        this.getObject();
-        this.closeDeleteDialog();
-      });
     },
   },
 };

@@ -9,21 +9,11 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="primary"
-          @click="openEditDialog(item)"
-          class="mx-2"
-        >
+        <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           分配办事处
         </v-btn>
-        <v-btn
-          rounded
-          color="error"
-          @click="openDelDialog(item.UID)"
-          class="mx-2"
-        >
+        <v-btn text color="error" @click="openDelDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>
@@ -56,9 +46,9 @@
         <v-card-title class="text-h5">您确定要删除该区域吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="delObject">确定</v-btn>
+          <v-btn color="error" rounded @click="delObject">确定</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="closeDelDialog">取消</v-btn>
+          <v-btn color="primary" rounded @click="closeDelDialog">取消</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>

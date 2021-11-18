@@ -1,112 +1,101 @@
 <template>
-  <v-form ref="form">
-    <v-card class="mx-auto">
-      <v-card-subtitle>
+  <v-card class="mx-auto">
+    <v-card-title>产品查看</v-card-title>
+    <v-card-subtitle>
+      <v-form ref="form" readonly>
         <v-row>
           <v-col cols="4">
             <v-text-field
+              v-model.trim="object.sourceType.text"
               label="类型"
-              v-model="object.sourceType.text"
-              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
-              label="子类别"
-              v-model="object.subtype.text"
-              readonly
+              v-model.trim="object.subtype.text"
+              label="子类型"
             ></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
+          <v-col cols="4">
+            <v-text-field
+              v-model.trim="object.supplier.name"
+              label="供货商"
+            ></v-text-field>
+          </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
-              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.trim="object.brand"
               label="品牌"
-              readonly
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4"></v-col>
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.specification"
               label="规格"
-              readonly
             ></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="4">
             <v-text-field
-              label="供应商"
-              v-model="object.supplier.name"
-              readonly
+              v-model.number="object.numberCount"
+              label="库存数量"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.number"
-              label="库存数量"
-              readonly
+              label="可售数量"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
-            <v-text-field
-              v-model="object.unit"
-              label="单位"
-              readonly
-            ></v-text-field>
+            <v-text-field v-model="object.unit" label="单位"></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.purchasedPrice"
-              label="采购价格(元)"
-              readonly
+              label="采购/成本价格(人民币)"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.standardPrice"
-              label="销售价格(元)"
-              readonly
+              label="销售价格(人民币)"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
-              v-model="object.deliveryCycle"
-              label="供货周期"
-              readonly
+              v-model.number="object.standardPriceUSD"
+              label="销售价格(美元)"
             ></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="object.deliveryCycle"
+              label="供货周期"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
             <v-textarea
               label="备注"
               v-model="object.remarks"
-              readonly
-              v-if="object.remarks != ''"
               auto-grow
               rows="1"
             ></v-textarea>
           </v-col>
         </v-row>
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+      </v-form>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
 import { queryProduct } from "@/api/product";
-
 export default {
   props: {
     openUID: {
@@ -115,6 +104,10 @@ export default {
     },
   },
   data: () => ({
+    sourceTypeItems: [],
+    sourceType: {},
+    subtypeItems: [],
+    supplierItems: [],
     object: {
       sourceTypeUID: "",
       subtypeUID: "",
@@ -123,13 +116,15 @@ export default {
       specification: "",
       supplierUID: "",
       number: 0,
+      numberCount: 0,
       unit: "",
       purchasedPrice: 0,
       standardPrice: 0,
+      standardPriceUSD: 0,
       deliveryCycle: "",
       remarks: "",
 
-      supplier: {},
+      supplier: { name: "" },
       sourceType: { text: "" },
       subtype: { text: "" },
     },

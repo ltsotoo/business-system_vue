@@ -40,8 +40,10 @@
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="submit"> 提交 </v-btn>
-        <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+        <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+        <v-spacer></v-spacer>
       </v-card-actions>
     </v-card-subtitle>
   </v-card>
@@ -99,11 +101,13 @@ export default {
       if (this.validateForm()) {
         if (this.openType == 0) {
           entryArea(this.object).then((res) => {
+            this.$message.success("录入成功了！");
             this.refresh();
             this.closeDialog();
           });
         } else if (this.openType == 2) {
           editArea(this.object).then((res) => {
+            this.$message.success("编辑成功了！");
             this.refresh();
             this.closeDialog();
           });

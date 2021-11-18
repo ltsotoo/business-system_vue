@@ -14,21 +14,11 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="primary"
-          @click="openEditDialog(item.UID)"
-          class="mx-2"
-        >
+        <v-btn text color="primary" @click="openEditDialog(item.UID)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <v-btn
-          rounded
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          class="mx-2"
-        >
+        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>
@@ -43,7 +33,7 @@
     >
       <customerForms
         :openUID="options.openUID"
-        :openType="options.openType"
+        openType="2"
         ref="customerForms"
         :parentFun="getObject"
       />
@@ -89,12 +79,6 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "姓名",
-        align: "center",
-        value: "name",
-        sortable: false,
-      },
-      {
         text: "区域",
         align: "center",
         value: "company.area.name",
@@ -104,6 +88,12 @@ export default {
         text: "单位",
         align: "center",
         value: "company.name",
+        sortable: false,
+      },
+      {
+        text: "姓名",
+        align: "center",
+        value: "name",
         sortable: false,
       },
       {
@@ -143,7 +133,6 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
-      openType: null,
       editDialog: false,
       deleteDialog: false,
     },
@@ -172,12 +161,10 @@ export default {
     },
     openEditDialog(uid) {
       this.options.openUID = uid;
-      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
       this.options.editDialog = false;
     },
     editItem() {

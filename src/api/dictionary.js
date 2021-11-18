@@ -26,6 +26,21 @@ export const queryDictionaries = (typeName, text) => {
     })
 }
 
+export const queryDictionarieTypes = (category) => {
+    return request({
+        url: '/dictionarieTypes',
+        method: 'get',
+        params: {
+            "Category": category,
+        }
+    })
+}
+
+export const queryProductTypes = () => {
+    return queryDictionarieTypes("ProductType")
+}
+
+
 export const queryChilds = (parentID) => {
     return queryDictionaries("", parentID, "")
 }
@@ -34,7 +49,7 @@ export const queryContractUnits = () => {
     return queryDictionaries("ContractUnit", "")
 }
 
-export const queryProductTypes = () => {
+export const queryProductSelfs = () => {
     return queryDictionaries("ProductSelf", "")
 }
 

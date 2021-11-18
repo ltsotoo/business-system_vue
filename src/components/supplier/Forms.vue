@@ -1,32 +1,38 @@
 <template>
-  <v-form ref="form">
-    <v-card class="mx-auto">
-      <v-card-subtitle>
+  <v-card class="mx-auto">
+    <v-card-title v-if="openType == 0">供应商添加</v-card-title>
+    <v-card-title v-if="openType == 2">供应商编辑</v-card-title>
+    <v-card-subtitle>
+      <v-form ref="form">
         <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="供应商名称"
               :disabled="openType == 2"
-              :rules="rules.name"
+              :rules="rules.must"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="6"></v-col>
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.address"
               :disabled="openType == 2"
               label="地址"
-              :rules="rules.address"
+              :rules="rules.must"
+              counter
+              maxlength="50"
             ></v-text-field>
           </v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.linkman"
               label="联系人姓名"
-              :rules="rules.linkman"
+              :rules="rules.must"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -34,16 +40,16 @@
               v-model.trim="object.phone"
               label="联系电话"
               :rules="rules.phone"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.wechatID"
               label="微信号"
-              :rules="rules.wechatID"
+              counter
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -51,29 +57,39 @@
               v-model.trim="object.email"
               label="电子邮箱"
               :rules="rules.email"
+              counter
+              maxlength="50"
             ></v-text-field>
           </v-col>
         </v-row>
-      </v-card-subtitle>
-    </v-card>
-  </v-form>
+      </v-form>
+    </v-card-subtitle>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import { querySupplier, entrySupplier, editSupplier } from "@/api/supplier";
+import { entrySupplier, editSupplier } from "@/api/supplier";
 export default {
   props: {
     openType: {
       type: Number,
       default: 0,
     },
-    openUID: {
-      type: String,
-      default: "",
+    parentObj: {
+      type: Object,
     },
-    parentFun: {
+    closeDialog: {
       type: Function,
-      default: null,
+    },
+    refresh: {
+      type: Function,
     },
   },
   data: () => ({
@@ -86,25 +102,10 @@ export default {
       email: "",
     },
     rules: {
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 12) || "名称的长度必须小于12个字符",
-      ],
-      address: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "地址的长度必须小于20个字符",
-      ],
-      linkman: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 10) || "联系人的长度必须小于10个字符",
-      ],
+      must: [(v) => !!v || "必填项！"],
       phone: [
         (v) => !!v || "必填项！",
         (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
-      ],
-      wechatID: [
-        (v) =>
-          v.length == 0 || v.length <= 10 || "微信号的长度必须小于20个字符",
       ],
       email: [
         (v) =>
@@ -115,39 +116,27 @@ export default {
     },
   }),
   created() {
-    if (this.openType != 0) {
-      this.getObject();
+    if (this.openType == 2) {
+      this.object = JSON.parse(JSON.stringify(this.parentObj));
     }
   },
   methods: {
-    getObject() {
-      querySupplier(this.openUID).then((res) => {
-        this.object = res.data;
-      });
-    },
-    entryObject() {
-      var _this = this
+    submit() {
       if (this.validateForm()) {
-        entrySupplier(this.object).then((res) => {
-          this.$message.success("录入成功了！");
-          setTimeout(function () {
-            _this.$router.replace("/supplier");
-          }, 1000);
-        });
-      } else {
-        this.$message.error("信息填写异常，请检查后再提交！");
-        if (this.parentFun) {
-          this.parentFun(false);
+        if (this.openType == 0) {
+          entrySupplier(this.object).then((res) => {
+            this.$message.success("录入成功了！");
+            this.refresh();
+            this.closeDialog();
+          });
+        } else if (this.openType == 2) {
+          editSupplier(this.object).then((res) => {
+            this.$message.success("编辑成功了！");
+            this.refresh();
+            this.closeDialog();
+          });
         }
       }
-    },
-    editObject() {
-      editSupplier(this.object).then((res) => {
-        this.$message.success("编辑成功了！");
-        if (this.parentFun) {
-          this.parentFun();
-        }
-      });
     },
     validateForm() {
       return this.$refs.form.validate();

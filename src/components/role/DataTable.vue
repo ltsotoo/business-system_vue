@@ -7,22 +7,11 @@
       :single-select="true"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="primary"
-          @click="openEditDialog(item.UID)"
-          class="mx-2"
-        >
+        <v-btn text color="primary" @click="openEditDialog(item.UID)">
           <v-icon left> mdi-pencil </v-icon>
           编辑权限
         </v-btn>
-        <v-btn
-          rounded
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          class="mx-2"
-          disabled
-        >
+        <v-btn text color="error" @click="openDeleteDialog(item.UID)" disabled>
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>
@@ -52,8 +41,8 @@
         <v-card-title class="text-h5">您确定删除该职位吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" text>确定</v-btn>
-          <v-btn color="primary" text @click="closeDeleteDialog">取消</v-btn>
+          <v-btn color="error" rounded>确定</v-btn>
+          <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

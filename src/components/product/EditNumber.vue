@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title>产品编辑</v-card-title>
+    <v-card-title>产品入库</v-card-title>
     <v-card-subtitle>
       <v-form ref="form" disabled>
         <v-row>
@@ -26,18 +26,12 @@
             <v-text-field
               v-model.trim="object.name"
               label="名称"
-              :rules="rules.must"
-              counter
-              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.trim="object.brand"
               label="品牌"
-              :rules="rules.must"
-              counter
-              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="4"></v-col>
@@ -45,80 +39,41 @@
             <v-text-field
               v-model.trim="object.specification"
               label="规格"
-              counter
-              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.numberCount"
               label="库存数量"
-              :rules="rules.number"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.number"
               label="可售数量"
-              :rules="rules.number"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
-            <v-text-field
-              v-model="object.unit"
-              label="单位"
-              :rules="rules.must"
-              counter
-              maxlength="20"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.number="object.purchasedPrice"
-              label="采购/成本价格(人民币)"
-              :rules="rules.money"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.number="object.standardPrice"
-              label="销售价格(人民币)"
-              :rules="rules.money"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.number="object.standardPriceUSD"
-              label="销售价格(美元)"
-              :rules="rules.money"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-model="object.deliveryCycle"
-              label="供货周期"
-              :rules="rules.must"
-              counter
-              maxlength="20"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-textarea
-              label="备注"
-              v-model="object.remarks"
-              auto-grow
-              rows="3"
-              counter
-              maxlength="500"
-            ></v-textarea>
+            <v-text-field v-model="object.unit" label="单位"></v-text-field>
           </v-col>
         </v-row>
       </v-form>
+      <v-row>
+        <v-col cols="4">
+          <v-text-field
+            v-model.number="number"
+            label="入库数量"
+            :rules="rules.number"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="submit"> 提交 </v-btn>
-      <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+      <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
 </template>
@@ -160,10 +115,9 @@ export default {
       sourceType: { text: "" },
       subtype: { text: "" },
     },
+    number: 0,
     rules: {
-      must: [(v) => !!v || "必填项！"],
       number: [(v) => /^[0-9]*$/.test(v) || "必须为大于零的整数"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
     },
   }),
   created() {
@@ -177,6 +131,9 @@ export default {
     },
     submit() {
       if (this.validateForm()) {
+        this.object.number += this.number;
+        this.object.numberCount += this.number;
+
         editProduct(this.object).then((res) => {
           this.$message.success("入库编辑成功了!");
           this.refresh();

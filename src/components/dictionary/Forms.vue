@@ -18,8 +18,10 @@
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="add"> 提交 </v-btn>
-        <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+        <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+        <v-spacer></v-spacer>
       </v-card-actions>
     </v-card-subtitle>
   </v-card>
@@ -55,7 +57,7 @@ export default {
     this.object.dictionaryTypeUID = this.typeName;
   },
   methods: {
-    add() {
+    submit() {
       if (this.validateForm()) {
         createDictionary(this.object).then((res) => {
           this.$message.success("录入成功了！");

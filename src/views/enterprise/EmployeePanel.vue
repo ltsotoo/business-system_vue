@@ -112,6 +112,7 @@ export default {
     },
     getDepartmentItems() {
       this.queryObject.departmentUID = "";
+      this.departmentItems = [];
       if (this.queryObject.officeUID && this.queryObject.officeUID != "") {
         queryDepartments({ officeUID: this.queryObject.officeUID }).then(
           (res) => {

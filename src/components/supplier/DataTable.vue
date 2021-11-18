@@ -15,19 +15,17 @@
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          rounded
+          text
           color="primary"
-          @click="openEditDialog(item.UID)"
-          class="mx-2"
+          @click="openEditDialog(item)"
         >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
         <v-btn
-          rounded
+          text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          class="mx-2"
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -38,27 +36,26 @@
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      max-width="800px"
+      max-width="600px"
       persistent
+      @click:outside="closeEditDialog"
     >
       <supplierForms
-        :openUID="options.openUID"
-        :openType="options.openType"
         ref="supplierForms"
-        :parentFun="getObject"
+        :parentObj="options.openItem"
+        openType="2"
+        :refresh="getObject"
+        :closeDialog="closeEditDialog"
       />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
-    <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
+    <v-dialog
+      v-model="options.deleteDialog"
+      v-if="options.deleteDialog"
+      max-width="600px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定删除该位供应商吗?</v-card-title>
         <v-card-actions>
@@ -137,7 +134,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
-      openType: null,
+      openItem: {},
       editDialog: false,
       deleteDialog: false,
     },
@@ -164,22 +161,16 @@ export default {
         }
       });
     },
-    openEditDialog(uid) {
-      this.options.openUID = uid;
-      this.options.openType = 2;
+
+    openEditDialog(item) {
+      this.options.openItem = JSON.parse(JSON.stringify(item));
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openUID = "";
-      this.options.openType = null;
+      this.options.openItem = {};
       this.options.editDialog = false;
     },
-    editItem() {
-      if (this.$refs.supplierForms.validateForm()) {
-        this.$refs.supplierForms.editObject();
-        this.closeEditDialog();
-      }
-    },
+
     openDeleteDialog(uid) {
       this.options.openUID = uid;
       this.options.deleteDialog = true;
