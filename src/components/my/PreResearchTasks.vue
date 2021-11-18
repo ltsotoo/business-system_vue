@@ -16,7 +16,7 @@
         {{ subTime(item.endDate) }}
       </template>
       <template v-slot:[`item.realEndDate`]="{ item }">
-        <div v-if="item.status != 1 ">
+        <div v-if="item.status != 1">
           {{ subTime(item.realEndDate) }}
         </div>
       </template>
@@ -25,10 +25,8 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          class="mx-2"
-          rounded
+          text
           color="primary"
-          dark
           v-if="item.status == 1"
           @click="openSubmitDialog(item)"
         >
@@ -48,7 +46,15 @@
       <v-card>
         <v-card-title class="text-h5">您确定提交吗?</v-card-title>
         <v-card-subtitle>
-          <v-textarea label="备注" v-model="remarks" rows="6"> </v-textarea>
+          <v-textarea
+            label="备注"
+            v-model="remarks"
+            rows="6"
+            auto-grow
+            counter
+            maxlength="500"
+          >
+          </v-textarea>
         </v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -139,7 +145,7 @@ export default {
       this.openItem.remarks = this.remarks;
       this.openItem.status = 2;
       editPreResearchTask(this.openItem).then((res) => {
-        this.$message.success("提交成功");
+        this.$message.success("提交成功！");
         this.getObject();
         this.closeSubmitDialog();
       });

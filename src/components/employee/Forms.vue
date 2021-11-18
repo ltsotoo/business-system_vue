@@ -69,8 +69,8 @@
       </v-form>
       <v-card-actions v-if="openType != 1">
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="add"> 确定 </v-btn>
-        <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+        <v-btn color="primary" text @click="add"> 确定 </v-btn>
+        <v-btn color="primary" text @click="closeDialog"> 取消 </v-btn>
       </v-card-actions>
     </v-card-subtitle>
   </v-card>

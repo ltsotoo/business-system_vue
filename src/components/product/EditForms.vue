@@ -117,8 +117,8 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="submit"> 提交 </v-btn>
-      <v-btn color="blue darken-1" text @click="closeDialog"> 取消 </v-btn>
+      <v-btn color="primary" text @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" text @click="closeDialog"> 取消 </v-btn>
     </v-card-actions>
   </v-card>
 </template>

@@ -14,7 +14,7 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditDialog(item.UID)">
+        <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -30,22 +30,13 @@
       v-if="options.editDialog"
       max-width="800px"
       persistent
+      @click:outside="closeEditDialog"
     >
-      <customerForms
-        :openUID="options.openUID"
-        openType="2"
-        ref="customerForms"
-        :parentFun="getObject"
+      <editForms
+        :parentObj="options.openItem"
+        :refresh="getObject"
+        :closeDialog="closeEditDialog"
       />
-      <v-card style="margin-top: 1px">
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="editItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeEditDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
     </v-dialog>
 
     <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
@@ -64,12 +55,12 @@
 </template>
 
 <script>
-import customerForms from "./Forms";
+import editForms from "./EditForms";
 import { delCustomer, queryCustomers } from "@/api/customer";
 
 export default {
   components: {
-    customerForms,
+    editForms,
   },
   props: {
     queryObject: {
@@ -133,6 +124,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
+      openItem: {},
       editDialog: false,
       deleteDialog: false,
     },
@@ -159,19 +151,13 @@ export default {
         }
       });
     },
-    openEditDialog(uid) {
-      this.options.openUID = uid;
+    openEditDialog(item) {
+      this.options.openItem = JSON.parse(JSON.stringify(item));
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openUID = "";
+      this.options.openItem = {};
       this.options.editDialog = false;
-    },
-    editItem() {
-      if (this.$refs.customerForms.validateForm()) {
-        this.$refs.customerForms.editObject();
-        this.closeEditDialog();
-      }
     },
     openDeleteDialog(uid) {
       this.options.openUID = uid;

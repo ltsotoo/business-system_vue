@@ -12,26 +12,14 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.startDate`]="{ item }">
-        {{ subTime(item.startDate) }}
-      </template>
-      <template v-slot:[`item.endDate`]="{ item }">
-        {{ subTime(item.endDate) }}
-      </template>
-      <template v-slot:[`item.realEndDate`]="{ item }">
-        <div v-if="item.status != 1">
-          {{ subTime(item.realEndDate) }}
-        </div>
-      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }" v-if="openType != 2">
         <v-btn
-          rounded
+          text
           color="primary"
           @click="openApproveDialog(item)"
-          class="mx-2"
           v-if="item.status == 2"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
@@ -53,12 +41,12 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" rounded class="mx-2" @click="pass">
-            <v-icon> mdi-check-bold </v-icon>
+            <v-icon left> mdi-check-bold </v-icon>
             通过
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded class="mx-2" @click="fail">
-            <v-icon> mdi-close-thick </v-icon>
+            <v-icon left> mdi-close-thick </v-icon>
             驳回
           </v-btn>
           <v-spacer></v-spacer>
@@ -111,15 +99,9 @@ export default {
         sortable: false,
       },
       {
-        text: "设计要求",
-        align: "center",
-        value: "requirement",
-        sortable: false,
-      },
-      {
         text: "状态",
         align: "center",
-        value: "status",
+        value: "statusText",
         sortable: false,
       },
       {
@@ -159,6 +141,7 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+        this.updateObject();
       });
     },
     editObject() {
@@ -171,20 +154,31 @@ export default {
         this.closeApproveDialog();
       });
     },
-    statusToText(status) {
-      switch (status) {
-        case 1:
-          return "未完成";
-        case 2:
-          return "未审核";
-        case 3:
-          return "未通过";
-        case 4:
-          return "已通过";
-      }
-    },
-    subTime(time) {
-      return time.substr(0, time.indexOf("T"));
+    updateObject() {
+      this.object.forEach(function (e) {
+        e.startDate = e.startDate.substr(0, e.startDate.indexOf("T"));
+        e.endDate = e.endDate.substr(0, e.endDate.indexOf("T"));
+        if (e.status != 1) {
+          e.realEndDate = e.realEndDate.substr(0, e.realEndDate.indexOf("T"));
+        } else {
+          e.realEndDate = "";
+        }
+
+        switch (e.status) {
+          case 1:
+            e.statusText = "未完成";
+            break;
+          case 2:
+            e.statusText = "未审核";
+            break;
+          case 3:
+            e.statusText = "未通过";
+            break;
+          case 4:
+            e.statusText = "已通过";
+            break;
+        }
+      });
     },
     openApproveDialog(item) {
       this.openItem = item;

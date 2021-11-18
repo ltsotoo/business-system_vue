@@ -86,8 +86,8 @@
         </v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="nextTask"> 提交 </v-btn>
-          <v-btn color="blue darken-1" text @click="closeNextDialog">
+          <v-btn color="primary" text @click="nextTask"> 提交 </v-btn>
+          <v-btn color="primary" text @click="closeNextDialog">
             取消
           </v-btn>
         </v-card-actions>

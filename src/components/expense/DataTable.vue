@@ -13,19 +13,19 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.type`]="{ item }">
-        {{ typeToText(item.status) }}
-      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
+      <template v-slot:[`item.money`]="{ item }">
+        <div v-if="item.type == 1">{{ item.employee.money }}</div>
+        <div v-if="item.type == 2">{{ item.employee.office.money }}</div>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          rounded
+          text
           color="primary"
-          depressed
           @click="openApprovalDialog(item)"
-          :disabled="item.status != 1"
+          :disabled="item.status == -1 || item.status == 3"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -39,7 +39,7 @@
       max-width="1080px"
     >
       <expenseApprovalForms
-        :expense="openItem"
+        :parentObj="openItem"
         :closeDialog="closeApprovalDialog"
         :refresh="getObject"
       />
@@ -70,7 +70,7 @@ export default {
       {
         text: "类型",
         align: "center",
-        value: "type",
+        value: "typeText",
         sortable: false,
       },
       {
@@ -92,7 +92,13 @@ export default {
         sortable: false,
       },
       {
-        text: "金额(元)",
+        text: "可用报销金额(元)",
+        align: "center",
+        value: "money",
+        sortable: false,
+      },
+      {
+        text: "报销金额(元)",
         align: "center",
         value: "amount",
         sortable: false,
@@ -139,33 +145,40 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+        this.typeToText();
       });
     },
     openApprovalDialog(item) {
-      this.openItem = item;
-      console.log(this.openItem);
+      this.openItem = JSON.parse(JSON.stringify(item));
       this.options.approvalDialog = true;
     },
     closeApprovalDialog() {
       this.openItem = {};
       this.options.approvalDialog = false;
     },
-    typeToText(type) {
-      switch (type) {
-        case 1:
-          return "个人";
-        case 2:
-          return "办事处";
-      }
+    typeToText() {
+      this.object.forEach(function (e) {
+        switch (e.type) {
+          case 1:
+            e.typeText = "个人";
+            break;
+          case 2:
+            e.typeText = "办事处";
+            break;
+        }
+      });
     },
     statusToText(status) {
       if (status == -1) {
         return "已驳回";
       }
       if (status == 1) {
-        return "待审批";
+        return "待办事处审批";
       }
       if (status == 2) {
+        return "待财务通过";
+      }
+      if (status == 3) {
         return "已通过";
       }
     },

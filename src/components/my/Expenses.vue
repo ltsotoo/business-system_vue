@@ -14,10 +14,18 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.type`]="{ item }">
-        {{ typeToText(item.status) }}
+        {{ typeToText(item.type) }}
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
+      </template>
+      <template v-slot:[`item.text`]="{ item }">
+        <v-textarea
+          auto-grow
+          readonly
+          rows="1"
+          v-model="item.text"
+        ></v-textarea>
       </template>
       <template v-slot:[`item.UpdatedAt`]="{ item }">
         <div v-if="item.approverUID">{{ item.UpdatedAt }}</div>
@@ -46,6 +54,12 @@ export default {
         text: "金额(元)",
         align: "center",
         value: "amount",
+        sortable: false,
+      },
+      {
+        text: "审发理由",
+        align: "center",
+        value: "text",
         sortable: false,
       },
       {
@@ -117,8 +131,10 @@ export default {
         case -1:
           return "已驳回";
         case 1:
-          return "待审批";
+          return "待办事处审批";
         case 2:
+          return "待财务审批";
+        case 3:
           return "已通过";
       }
     },

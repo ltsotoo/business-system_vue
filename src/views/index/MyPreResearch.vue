@@ -4,7 +4,7 @@
       我发起的预设计
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <v-form ref="queryForm">
+      <v-form>
         <v-row align="baseline">
           <v-spacer></v-spacer>
           <v-col cols="4">
@@ -38,22 +38,29 @@
       <v-dialog v-model="createDialog" max-width="800px" persistent>
         <v-card>
           <v-card-title>发起预设计</v-card-title>
-          <v-card-subtitle>
-            <v-row>
-              <v-textarea
-                label="设计需求"
-                auto-grow
-                rows="9"
-                v-model="remarks"
-              ></v-textarea>
-            </v-row>
-          </v-card-subtitle>
+          <v-card-text>
+            <v-form ref="form">
+              <v-row>
+                <v-textarea
+                  label="设计需求"
+                  auto-grow
+                  rows="9"
+                  v-model="remarks"
+                  :rules="rules.must"
+                  counter
+                  maxlength="500"
+                ></v-textarea>
+              </v-row>
+            </v-form>
+          </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="create"> 确定 </v-btn>
-            <v-btn color="blue darken-1" text @click="closeCreateDialog">
+            <v-btn color="primary" text @click="create"> 提交 </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="closeCreateDialog">
               取消
             </v-btn>
+            <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -69,6 +76,9 @@ export default {
     preResearchs,
   },
   data: () => ({
+    rules: {
+      must: [(v) => !!v || "必填项！"],
+    },
     statusItems: [
       { text: "驳回", value: -1 },
       { text: "未审批", value: 1 },
@@ -87,17 +97,22 @@ export default {
     },
     create() {
       var _this = this;
-      createPreResearch({ remarks: this.remarks }).then((res) => {
-        this.$message.success("录入成功");
-        _this.query();
-        _this.closeCreateDialog();
-      });
+      if (this.validateForm()) {
+        createPreResearch({ remarks: this.remarks }).then((res) => {
+          this.$message.success("录入成功");
+          _this.query();
+          _this.closeCreateDialog();
+        });
+      }
     },
     openCreateDialog() {
       this.createDialog = true;
     },
     closeCreateDialog() {
       this.createDialog = false;
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

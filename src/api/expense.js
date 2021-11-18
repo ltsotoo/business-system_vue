@@ -8,7 +8,7 @@ export const entryExpense = (expense) => {
     })
 }
 
-export const editExpense = (expense) => {
+export const approvalExpense = (expense) => {
     return request({
         url: '/expense',
         method: 'PUT',

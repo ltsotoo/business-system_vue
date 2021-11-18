@@ -348,8 +348,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="addToCart"> 添加 </v-btn>
-          <v-btn color="blue darken-1" text @click="closeAddCartDialog">
+          <v-btn color="primary" text @click="addToCart"> 添加 </v-btn>
+          <v-btn color="primary" text @click="closeAddCartDialog">
             取消
           </v-btn>
         </v-card-actions>

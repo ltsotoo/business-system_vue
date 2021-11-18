@@ -93,12 +93,12 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded class="mx-2" @click="pass">
-          <v-icon> mdi-check-bold </v-icon>
+          <v-icon left> mdi-check-bold </v-icon>
           通过
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="error" rounded class="mx-2" @click="fail">
-          <v-icon> mdi-close-thick </v-icon>
+          <v-icon left> mdi-close-thick </v-icon>
           驳回
         </v-btn>
         <v-spacer></v-spacer>

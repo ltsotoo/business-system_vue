@@ -1,23 +1,24 @@
 <template>
   <v-card class="mx-auto">
+    <v-card-title>发起报销</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="object.typeUID"
+              v-model="object.type"
               :items="expenseTypeItems"
               item-text="text"
               item-value="value"
               label="类型"
-              :rules="rules.typeUID"
+              :rules="rules.must"
             ></v-select>
           </v-col>
           <v-col cols="8">
             <v-text-field
               label="金额(元)"
               v-model.number="object.amount"
-              :rules="rules.amount"
+              :rules="rules.money"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -26,14 +27,23 @@
             <v-textarea
               label="申请理由"
               v-model.trim="object.text"
-              :rules="rules.text"
+              :rules="rules.must"
               auto-grow
               rows="3"
+              counter
+              maxlength="500"
             ></v-textarea>
           </v-col>
         </v-row>
       </v-form>
     </v-card-subtitle>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -41,17 +51,11 @@
 import { entryExpense } from "@/api/expense";
 export default {
   props: {
-    openType: {
-      type: Number,
-      default: 0,
-    },
-    openUID: {
-      type: String,
-      default: "",
-    },
-    parentFun: {
+    refresh: {
       type: Function,
-      default: null,
+    },
+    closeDialog: {
+      type: Function,
     },
   },
   data: () => ({
@@ -65,29 +69,20 @@ export default {
       text: "",
     },
     rules: {
-      typeUID: [(v) => !!v || "必填项！"],
-      amount: [
-        (v) => !!v || "必填项！",
-        (v) => /[0-9]+$/.test(v) || "金额必须为数字",
+      must: [(v) => !!v || "必填项！"],
+      money: [
+        (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误",
       ],
-      text: [(v) => !!v || "必填项！"],
     },
   }),
   methods: {
-    entryObject() {
-      var _this = this;
+    submit() {
       if (this.validateForm()) {
         entryExpense(this.object).then((res) => {
-          this.$message.success("录入成功了!");
-          setTimeout(function () {
-            _this.$router.replace("/expense");
-          }, 1000);
+          this.$message.success("发起成功了!");
+          this.refresh();
+          this.closeDialog();
         });
-      } else {
-        this.$message.error("信息填写异常，请检查后再提交！");
-        if (this.parentFun) {
-          this.parentFun(false);
-        }
       }
     },
     validateForm() {

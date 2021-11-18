@@ -32,27 +32,33 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="goToEntry">
+              <v-btn rounded color="success" dark @click="openAddDialog">
                 发起
               </v-btn>
             </v-col>
           </v-row>
         </v-form>
-        <expenses
+        <myExpenses
           style="margin-top: 10px"
           :queryObject="queryObject"
-          ref="expenses"
+          ref="myExpenses"
         />
       </v-card-subtitle>
     </v-card>
+
+    <v-dialog v-model="addDialog" v-if="addDialog" max-width="800px" persistent>
+      <expenseForms :refresh="query" :closeDialog="closAddDialog" />
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
-import expenses from "@/components/my/Expenses";
+import myExpenses from "@/components/my/Expenses";
+import expenseForms from "@/components/expense/Forms";
 export default {
   components: {
-    expenses,
+    myExpenses,
+    expenseForms,
   },
   data: () => ({
     typeItems: [
@@ -61,20 +67,25 @@ export default {
     ],
     statusItems: [
       { text: "已驳回", value: -1 },
-      { text: "待审批", value: 1 },
-      { text: "已通过", value: 2 },
+      { text: "待办事处审批", value: 1 },
+      { text: "待财务通过", value: 2 },
+      { text: "已通过", value: 3 },
     ],
     queryObject: {
       type: 0,
       status: 0,
     },
+    addDialog: false,
   }),
   methods: {
-    goToEntry() {
-      this.$router.replace("/myExpense/entry");
-    },
     query() {
-      this.$refs.expenses.getObject();
+      this.$refs.myExpenses.getObject();
+    },
+    openAddDialog() {
+      this.addDialog = true;
+    },
+    closAddDialog() {
+      this.addDialog = false;
     },
   },
 };

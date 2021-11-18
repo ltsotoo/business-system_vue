@@ -17,20 +17,18 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          rounded
+          text
           color="success"
           dark
           @click="openViewDialog(item.UID)"
-          class="mx-2"
         >
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
         <v-btn
-          rounded
+          text
           color="primary"
           @click="openApproveDialog(item)"
-          class="mx-2"
           v-if="item.status == 1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>

@@ -1,36 +1,29 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title v-if="openType == 0">供应商添加</v-card-title>
-    <v-card-title v-if="openType == 2">供应商编辑</v-card-title>
+    <v-card-title>客户添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
           <v-col cols="6">
             <v-text-field
-              v-model.trim="object.name"
-              label="供应商名称"
-              :disabled="openType == 2"
-              :rules="rules.must"
-              counter
-              maxlength="20"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6"></v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-model.trim="object.address"
-              :disabled="openType == 2"
-              label="地址"
-              :rules="rules.must"
-              counter
-              maxlength="50"
+              v-model.trim="object.company.name"
+              label="公司"
+              disabled
             ></v-text-field>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model.trim="object.linkman"
-              label="联系人姓名"
-              :rules="rules.must"
+              v-model.trim="object.name"
+              label="姓名"
+              disabled
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="6">
+            <v-text-field
+              v-model.trim="object.researchGroup"
+              label="课题组"
               counter
               maxlength="20"
             ></v-text-field>
@@ -38,12 +31,14 @@
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.phone"
-              label="联系电话"
+              label="电话"
               :rules="rules.phone"
               counter
               maxlength="20"
             ></v-text-field>
           </v-col>
+        </v-row>
+        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.wechatID"
@@ -75,15 +70,12 @@
 </template>
 
 <script>
-import { entrySupplier, editSupplier } from "@/api/supplier";
+import { editCustomer } from "@/api/customer";
 export default {
   props: {
-    openType: {
-      type: Number,
-      default: 0,
-    },
     parentObj: {
       type: Object,
+      default: {},
     },
     closeDialog: {
       type: Function,
@@ -93,10 +85,11 @@ export default {
     },
   },
   data: () => ({
+    companyItems: [],
     object: {
+      companyUID: "",
       name: "",
-      address: "",
-      linkman: "",
+      researchGroup: "",
       phone: "",
       wechatID: "",
       email: "",
@@ -116,32 +109,21 @@ export default {
     },
   }),
   created() {
-    if (this.openType == 2) {
-      this.object = this.parentObj;
-    }
+    this.object = this.parentObj;
   },
   methods: {
     submit() {
       if (this.validateForm()) {
-        if (this.openType == 0) {
-          entrySupplier(this.object).then((res) => {
-            this.$message.success("录入成功了！");
-            this.refresh();
-            this.closeDialog();
-          });
-        } else if (this.openType == 2) {
-          editSupplier(this.object).then((res) => {
-            this.$message.success("编辑成功了！");
-            this.refresh();
-            this.closeDialog();
-          });
-        }
+        editCustomer(this.object).then((res) => {
+          this.$message.success("添加成功了!");
+          this.refresh();
+          this.closeDialog();
+        });
       }
     },
     validateForm() {
       return this.$refs.form.validate();
     },
   },
-  computed: {},
 };
 </script>

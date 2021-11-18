@@ -12,15 +12,18 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.remarks`]="{ item }">
+        <v-textarea v-model="item.remarks" rows="1" auto-grow readonly>
+        </v-textarea>
+      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          rounded
+          text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          class="mx-2"
           v-if="item.status == -1 || item.status == 1"
         >
           <v-icon left> mdi-delete </v-icon>
@@ -34,7 +37,7 @@
         <v-card-title class="text-h5">您确定删除该预设计吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
+          <v-btn color="error" rounded @click="delObject">确定</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
           <v-spacer></v-spacer>
@@ -45,7 +48,7 @@
 </template>
 
 <script>
-import { queryPreResearchs } from "@/api/preResearch";
+import { queryPreResearchs, delPreResearch } from "@/api/preResearch";
 export default {
   props: {
     queryObject: {
@@ -109,6 +112,13 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+      });
+    },
+    delObject() {
+      delPreResearch(this.openUID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.getObject();
+        this.closeDeleteDialog();
       });
     },
     openDeleteDialog(uid) {

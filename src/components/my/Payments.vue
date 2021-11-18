@@ -109,14 +109,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue darken-1"
+            color="primary"
             text
             @click="createPayment"
             v-if="openItem.collectionStatus == 1"
           >
             提交
           </v-btn>
-          <v-btn color="blue darken-1" text @click="closePaymentDialog">
+          <v-btn color="primary" text @click="closePaymentDialog">
             关闭
           </v-btn>
         </v-card-actions>

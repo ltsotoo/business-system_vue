@@ -4,6 +4,7 @@
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">
+            <v-spacer></v-spacer>
             <v-col cols="2">
               <v-select
                 v-model="queryObject.type"
@@ -29,6 +30,8 @@
                 label="员工名称"
                 v-model.trim="queryObject.employeeName"
                 clearable
+                counter
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -36,16 +39,14 @@
                 label="员工电话"
                 v-model.trim="queryObject.employeePhone"
                 clearable
+                counter
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
             </v-col>
-            <v-col cols="auto">
-              <v-btn rounded color="primary" dark @click="resetQueryForm">
-                重置
-              </v-btn>
-            </v-col>
+            <v-spacer></v-spacer>
           </v-row>
         </v-form>
         <div style="margin-top: 10px"></div>
@@ -85,10 +86,6 @@ export default {
       });
     },
     query() {
-      this.$refs.expenseDataTable.getObject();
-    },
-    resetQueryForm() {
-      this.$refs.queryForm.reset();
       this.$refs.expenseDataTable.getObject();
     },
   },

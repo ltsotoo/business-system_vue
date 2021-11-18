@@ -64,16 +64,6 @@ const routes = [
         component: () => import('@/views/contract/Entry.vue'),
         meta: { login_require: true, title: "中研环科-合同管理-录入" },
       },
-      {
-        path: 'customer/entry',
-        component: () => import('@/views/customer/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-客户管理-录入" },
-      },
-      {
-        path: 'myExpense/entry',
-        component: () => import('@/views/expense/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-我的报销-发起" },
-      },
 
       {
         path: 'preResearch',
