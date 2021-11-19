@@ -34,6 +34,13 @@ export const queryPreResearchs = (queryObject, pageSize, pageNo) => {
     })
 }
 
+export const queryPreResearchTask = (uid) => {
+    return request({
+        url: '/preResearchTask/' + uid,
+        method: 'GET',
+    })
+}
+
 export const queryPreResearchTasks = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/preResearchTasks',

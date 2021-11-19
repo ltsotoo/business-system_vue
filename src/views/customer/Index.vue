@@ -1,20 +1,18 @@
 <template>
   <v-container>
-    <v-expansion-panels multiple>
-      <customerPanel />
-      <companyPanel />
-    </v-expansion-panels>
+    <customer />
+    <company style="margin-top: 20px" />
   </v-container>
 </template>
 
 <script>
-import companyPanel from "./CompanyPanel";
-import customerPanel from "./CustomerPanel";
+import company from "./Company";
+import customer from "./Customer";
 
 export default {
   components: {
-    customerPanel,
-    companyPanel,
+    customer,
+    company,
   },
 };
 </script>

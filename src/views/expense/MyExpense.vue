@@ -68,7 +68,7 @@ export default {
     statusItems: [
       { text: "已驳回", value: -1 },
       { text: "待办事处审批", value: 1 },
-      { text: "待财务通过", value: 2 },
+      { text: "待财务审批", value: 2 },
       { text: "已通过", value: 3 },
     ],
     queryObject: {

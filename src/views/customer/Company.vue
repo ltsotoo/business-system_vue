@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel>
-    <v-expansion-panel-header :class="[`text-h4`]">
-      客户公司管理
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>客户公司管理</v-card-title>
+    <v-card-subtitle>
       <v-form>
         <v-row align="baseline">
           <v-spacer></v-spacer>
@@ -55,8 +53,8 @@
           :refresh="queryCompanys"
         />
       </v-dialog>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>

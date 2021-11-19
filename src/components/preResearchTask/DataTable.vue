@@ -15,11 +15,15 @@
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
-      <template v-slot:[`item.actions`]="{ item }" v-if="openType != 2">
+      <template v-slot:[`item.actions`]="{ item }" v-if="!(openType == 1)">
+        <v-btn text color="success" @click="openViewDialog(item)">
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
         <v-btn
           text
           color="primary"
-          @click="openApproveDialog(item)"
+          @click="openApproveDialog(item.UID)"
           v-if="item.status == 2"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
@@ -30,35 +34,40 @@
 
     <v-dialog
       v-model="approveDialog"
-      max-width="800px"
+      max-width="600px"
       v-if="approveDialog"
       persistent
       @click:outside="closeApproveDialog"
     >
-      <v-card>
-        <v-card-title>是否通过该预设计方案?</v-card-title>
-        <v-card-subtitle></v-card-subtitle>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded class="mx-2" @click="pass">
-            <v-icon left> mdi-check-bold </v-icon>
-            通过
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded class="mx-2" @click="fail">
-            <v-icon left> mdi-close-thick </v-icon>
-            驳回
-          </v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
+      <approvalForms
+        :openUID="openUID"
+        :closeDialog="closeApproveDialog"
+        :refresh="getObject"
+        :refreshPre="refresh"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="viewDialog"
+      max-width="600px"
+      v-if="viewDialog"
+      persistent
+      @click:outside="closeViewDialog"
+    >
+      <viewForms :parentObj="openItem" />
     </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryPreResearchTasks, editPreResearchTask } from "@/api/preResearch";
+import { queryPreResearchTasks } from "@/api/preResearch";
+import viewForms from "./ViewForms";
+import approvalForms from "./ApprovalForms";
 export default {
+  components: {
+    viewForms,
+    approvalForms,
+  },
   props: {
     openType: {
       //0:录入 1:查看 2:编辑
@@ -99,6 +108,12 @@ export default {
         sortable: false,
       },
       {
+        text: "审批人",
+        align: "center",
+        value: "auditor.name",
+        sortable: false,
+      },
+      {
         text: "状态",
         align: "center",
         value: "statusText",
@@ -119,7 +134,9 @@ export default {
     },
     object: [],
 
+    openUID: "",
     openItem: {},
+    viewDialog: false,
     approveDialog: false,
   }),
   created() {
@@ -144,16 +161,6 @@ export default {
         this.updateObject();
       });
     },
-    editObject() {
-      editPreResearchTask(this.openItem).then((res) => {
-        this.$message.success("审批成功");
-        this.getObject();
-        if (this.openItem.status == 4) {
-          this.refresh();
-        }
-        this.closeApproveDialog();
-      });
-    },
     updateObject() {
       this.object.forEach(function (e) {
         e.startDate = e.startDate.substr(0, e.startDate.indexOf("T"));
@@ -163,7 +170,6 @@ export default {
         } else {
           e.realEndDate = "";
         }
-
         switch (e.status) {
           case 1:
             e.statusText = "未完成";
@@ -180,21 +186,21 @@ export default {
         }
       });
     },
-    openApproveDialog(item) {
+    openViewDialog(item) {
       this.openItem = item;
+      this.viewDialog = true;
+    },
+    closeViewDialog() {
+      this.openItem = {};
+      this.viewDialog = false;
+    },
+    openApproveDialog(uid) {
+      this.openUID = uid;
       this.approveDialog = true;
     },
     closeApproveDialog() {
-      this.openItem = {};
+      this.openUID = "";
       this.approveDialog = false;
-    },
-    pass() {
-      this.openItem.status = 4;
-      this.editObject();
-    },
-    fail() {
-      this.openItem.status = 3;
-      this.editObject();
     },
   },
 };

@@ -176,7 +176,7 @@ export default {
         return "待办事处审批";
       }
       if (status == 2) {
-        return "待财务通过";
+        return "待财务审批";
       }
       if (status == 3) {
         return "已通过";

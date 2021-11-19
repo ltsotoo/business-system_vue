@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel>
-    <v-expansion-panel-header :class="[`text-h4`]">
-      客户管理
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>客户公司管理</v-card-title>
+    <v-card-subtitle>
       <v-form>
         <v-row align="baseline">
           <v-spacer></v-spacer>
@@ -46,7 +44,9 @@
           </v-col>
 
           <v-col cols="auto">
-            <v-btn rounded color="primary" dark @click="queryCustomers"> 查询 </v-btn>
+            <v-btn rounded color="primary" dark @click="queryCustomers">
+              查询
+            </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
@@ -75,8 +75,8 @@
           :refresh="queryCustomers"
         />
       </v-dialog>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>

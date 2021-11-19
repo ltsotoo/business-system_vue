@@ -16,12 +16,7 @@
         {{ statusToText(item.status) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          text
-          color="success"
-          dark
-          @click="openViewDialog(item.UID)"
-        >
+        <v-btn text color="success" @click="openViewDialog(item.UID)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
@@ -46,8 +41,14 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="viewDialog" max-width="1080px" v-if="viewDialog">
-      <viewForms :uid="openUID"/>
+    <v-dialog
+      v-model="viewDialog"
+      max-width="1080px"
+      v-if="viewDialog"
+      persistent
+      @click:outside="closeViewDialog"
+    >
+      <viewForms :uid="openUID" />
     </v-dialog>
 
     <v-dialog
@@ -102,6 +103,12 @@ export default {
         text: "业务员",
         align: "center",
         value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "审批人",
+        align: "center",
+        value: "auditor.name",
         sortable: false,
       },
       {

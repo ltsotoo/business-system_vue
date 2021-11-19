@@ -70,6 +70,12 @@ export default {
         sortable: false,
       },
       {
+        text: "审批人",
+        align: "center",
+        value: "auditor.name",
+        sortable: false,
+      },
+      {
         text: "状态",
         align: "center",
         value: "status",

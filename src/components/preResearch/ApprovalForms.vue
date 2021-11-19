@@ -113,9 +113,6 @@ import { queryEmployees } from "@/api/employee";
 import { editPreResearch } from "@/api/preResearch";
 export default {
   props: {
-    preResearch: {
-      type: Object,
-    },
     closeDialog: {
       type: Function,
     },
