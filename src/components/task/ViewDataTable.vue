@@ -27,21 +27,52 @@
             <v-col>仓库:{{ item.inventoryMan.name }}</v-col>
           </v-row>
           <v-row v-if="item.shipmentMan.name">
-            <v-col>发货:{{ item.shipmentMan.name }}</v-col>
+            <v-col>物流:{{ item.shipmentMan.name }}</v-col>
           </v-row>
         </template>
         <template v-slot:[`item.status`]="{ item }">
           {{ stautsToText(item.status) }}
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <div v-if="openType == 2">
+            <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+              <v-icon left> mdi-pencil </v-icon>
+              重置
+            </v-btn>
+          </div>
+        </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="approveDialog" v-if="approveDialog" max-width="800px">
+      <approve
+        :openUID="openUID"
+        :parentFun="refresh"
+        :closeDialog="closeApproveDialog"
+        :openType="openType"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import approve from "./Approve";
 export default {
+  components: {
+    approve,
+  },
   props: {
-    parentObject: {},
+    parentObject: {
+      type: Array,
+      default: [],
+    },
+    refresh: {
+      type: Function,
+    },
+    openType: {
+      type: Number,
+      default: 0,
+    },
   },
   data: () => ({
     headers: [
@@ -69,16 +100,29 @@ export default {
         sortable: false,
       },
       { text: "状态", align: "center", value: "status", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       total: 1,
       page: 1,
       itemsPerPage: 10,
     },
+    openUID: "",
+    approveDialog: false,
   }),
   methods: {
+    openApproveDialog(uid) {
+      this.openUID = uid;
+      this.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.openUID = "";
+      this.approveDialog = false;
+    },
     stautsToText(status) {
       switch (status) {
+        case 0:
+          return "待审批";
         case 1:
           return "待设计";
         case 2:

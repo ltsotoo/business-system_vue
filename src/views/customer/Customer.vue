@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>客户公司管理</v-card-title>
+    <v-card-title>客户管理</v-card-title>
     <v-card-subtitle>
       <v-form>
         <v-row align="baseline">

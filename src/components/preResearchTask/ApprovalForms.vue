@@ -6,7 +6,7 @@
         <v-form readonly>
           <v-row>
             <v-col cols="4">
-              <v-text-field v-model="startDate" label="开始时间"></v-text-field>
+              <v-text-field v-model="object.startDate" label="开始时间"></v-text-field>
             </v-col>
             <v-col cols="4">
               <v-text-field
@@ -16,7 +16,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="endDate"
+                v-model="object.endDate"
                 label="要求完成时间"
               ></v-text-field>
             </v-col>
@@ -37,7 +37,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="realEndDate"
+                v-model="object.realEndDate"
                 label="实际完成时间"
               ></v-text-field>
             </v-col>
@@ -131,9 +131,6 @@ export default {
       requirement: "",
       remarks: "",
     },
-    startDate: "",
-    endDate: "",
-    realEndDate: "",
     requirement: "",
     days: "",
   }),
@@ -145,14 +142,6 @@ export default {
       var _this = this;
       queryPreResearchTask(this.openUID).then((res) => {
         this.object = res.data;
-        _this.startDate = res.data.startDate.substr(
-          0,
-          res.data.startDate.indexOf("T")
-        );
-        _this.endDate = res.data.endDate.substr(
-          0,
-          res.data.startDate.indexOf("T")
-        );
         if (e.status != 1) {
           _this.realEndDate = res.data.realEndDate.substr(
             0,

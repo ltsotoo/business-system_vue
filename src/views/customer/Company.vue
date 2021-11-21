@@ -17,7 +17,7 @@
           </v-col>
           <v-col cols="3">
             <v-text-field
-              label="区域名称"
+              label="公司名称"
               v-model="queryObject.name"
               clearable
               counter

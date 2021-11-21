@@ -14,3 +14,11 @@ export const queryPayments = (contractUID) => {
         method: 'GET',
     })
 }
+
+export const editPayment = (payment) => {
+    return request({
+        url: '/payment',
+        method: 'PUT',
+        data: payment,
+    })
+}

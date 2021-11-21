@@ -41,3 +41,11 @@ export const queryContracts = (queryObject, pageSize, pageNo) => {
         }
     })
 }
+
+export const rejectContract = (contract) => {
+    return request({
+        url: '/rejectContract',
+        method: 'POST',
+        data: contract
+    })
+}

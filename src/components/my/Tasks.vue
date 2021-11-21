@@ -28,27 +28,19 @@
           <v-col>仓库:{{ item.inventoryMan.name }}</v-col>
         </v-row>
         <v-row v-if="item.shipmentMan.name">
-          <v-col>发货:{{ item.shipmentMan.name }}</v-col>
+          <v-col>物流:{{ item.shipmentMan.name }}</v-col>
         </v-row>
         <v-row><v-col> </v-col></v-row>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="success"
-          dark
-          @click="openRemarksDialog(item)"
-          class="mx-2"
-        >
+        <v-btn text color="success" @click="openRemarksDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看备注
         </v-btn>
 
         <v-btn
-          class="mx-2"
-          rounded
+          text
           color="primary"
-          dark
           v-if="
             (item.status == 1 && item.technicianManUID == employeeUID) ||
             (item.status == 2 && item.purchaseManUID == employeeUID) ||
@@ -86,10 +78,10 @@
         </v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="nextTask"> 提交 </v-btn>
-          <v-btn color="primary" text @click="closeNextDialog">
-            取消
-          </v-btn>
+          <v-btn color="primary" rounded @click="nextTask"> 提交 </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeNextDialog"> 取消 </v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -36,11 +36,14 @@
           <v-col>仓库:{{ item.inventoryMan.name }}</v-col>
         </v-row>
         <v-row v-if="item.shipmentMan.name">
-          <v-col>发货:{{ item.shipmentMan.name }}</v-col>
+          <v-col>物流:{{ item.shipmentMan.name }}</v-col>
         </v-row>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon @click="openApproveDialog(item)"> mdi-check-bold </v-icon>
+        <v-btn text color="primary" @click="openApproveDialog(item)">
+          <v-icon left> mdi-pencil </v-icon>
+          分配
+        </v-btn>
       </template>
     </v-data-table>
 

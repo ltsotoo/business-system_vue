@@ -98,9 +98,8 @@
 import { queryProduct } from "@/api/product";
 export default {
   props: {
-    openUID: {
-      type: String,
-      default: "",
+    openItem: {
+      type: Object,
     },
   },
   data: () => ({
@@ -130,7 +129,7 @@ export default {
     },
   }),
   created() {
-    this.getObject();
+    this.object = this.openItem;
   },
   methods: {
     getObject() {

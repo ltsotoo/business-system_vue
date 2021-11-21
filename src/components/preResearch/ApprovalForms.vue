@@ -44,49 +44,62 @@
     <v-card style="margin-top: 1px">
       <v-card-title>分配</v-card-title>
       <v-card-subtitle>
-        <v-row>
-          <v-col cols="4">
-            <v-select
-              v-model="officeUID"
-              :items="officeItems"
-              item-text="name"
-              item-value="UID"
-              label="办事处"
-              @change="getDepartmentItems"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="departmentUID"
-              :items="departmentItems"
-              item-text="name"
-              item-value="UID"
-              label="部门"
-              @change="getEmployeeItems"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.employeeUID"
-              :items="employeeItems"
-              item-text="name"
-              item-value="UID"
-              label="员工"
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="4">
-            <v-text-field v-model.number="object.days" label="工作天数">
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-textarea label="设计要求" v-model="object.requirement" rows="3">
-            </v-textarea>
-          </v-col>
-        </v-row>
+        <v-form ref="form">
+          <v-row>
+            <v-col cols="4">
+              <v-select
+                v-model="officeUID"
+                :items="officeItems"
+                item-text="name"
+                item-value="UID"
+                label="办事处"
+                @change="getDepartmentItems"
+              ></v-select>
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                v-model="departmentUID"
+                :items="departmentItems"
+                item-text="name"
+                item-value="UID"
+                label="部门"
+                @change="getEmployeeItems"
+              ></v-select>
+            </v-col>
+            <v-col cols="4">
+              <v-select
+                v-model="object.employeeUID"
+                :items="employeeItems"
+                item-text="name"
+                item-value="UID"
+                label="员工"
+                :rules="rules.must"
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                v-model.number="object.days"
+                label="工作天数"
+                :rules="rules.day"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-textarea
+                label="设计要求"
+                v-model="object.requirement"
+                rows="3"
+                counter
+                maxlength="500"
+              >
+              </v-textarea>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-subtitle>
     </v-card>
     <v-card style="margin-top: 1px">
@@ -113,6 +126,9 @@ import { queryEmployees } from "@/api/employee";
 import { editPreResearch } from "@/api/preResearch";
 export default {
   props: {
+    preResearch: {
+      type: Object,
+    },
     closeDialog: {
       type: Function,
     },
@@ -131,6 +147,10 @@ export default {
       days: 1,
       requirement: "",
     },
+    rules: {
+      must: [(v) => !!v || "必填项！"],
+      day: [(v) => /^[0-9]*$/.test(v) || "天数必须为大于零的整数"],
+    },
 
     officeItems: [],
     departmentItems: [],
@@ -140,7 +160,7 @@ export default {
     departmentUID: "",
   }),
   created() {
-    this.object.UID = this.preResearch.UID;
+    this.object = this.preResearch;
     this.getOfficeItems();
   },
   methods: {
@@ -181,12 +201,17 @@ export default {
       });
     },
     pass() {
-      this.object.status = 2;
-      this.editObject();
+      if (this.validateForm()) {
+        this.object.status = 2;
+        this.editObject();
+      }
     },
     fail() {
       this.object.status = -1;
       this.editObject();
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

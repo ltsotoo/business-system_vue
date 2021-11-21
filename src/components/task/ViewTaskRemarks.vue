@@ -24,7 +24,7 @@
         </v-col>
         <v-col cols="9">
           <v-textarea
-            :label="fromToText(taskRemark.from)"
+            :label="statusToLabel(taskRemark.status)"
             readonly
             auto-grow
             rows="1"
@@ -43,8 +43,8 @@ export default {
     taskRemarks: {},
   },
   methods: {
-    fromToText(from) {
-      switch (from) {
+    statusToLabel(status) {
+      switch (status) {
         case 1:
           return "技术负责人备注";
         case 2:
@@ -54,7 +54,7 @@ export default {
         case 4:
           return "装配负责人备注";
         case 5:
-          return "发货负责人备注";
+          return "物流负责人备注";
       }
     },
   },

@@ -12,9 +12,6 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.status`]="{ item }">
-        {{ statusToText(item.status) }}
-      </template>
       <template v-slot:[`item.actions`]="{ item }" v-if="!(openType == 1)">
         <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
@@ -163,11 +160,7 @@ export default {
     },
     updateObject() {
       this.object.forEach(function (e) {
-        e.startDate = e.startDate.substr(0, e.startDate.indexOf("T"));
-        e.endDate = e.endDate.substr(0, e.endDate.indexOf("T"));
-        if (e.status != 1) {
-          e.realEndDate = e.realEndDate.substr(0, e.realEndDate.indexOf("T"));
-        } else {
+        if (e.status == 1) {
           e.realEndDate = "";
         }
         switch (e.status) {

@@ -25,52 +25,47 @@
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
+      <template v-slot:[`item.payType`]="{ item }">
+        {{ payTypeToText(item.payType) }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="success"
-          dark
-          @click="openViewDialog(item.UID)"
-          class="mx-2"
-        >
+        <v-btn text color="success" dark @click="openViewDialog(item.UID)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
         <v-btn
-          rounded
+          text
           color="primary"
           @click="openApproveDialog(item.UID)"
-          class="mx-2"
           v-if="item.status == 1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
         <v-btn
-          rounded
+          text
           color="primary"
-          @click="openEditDialog(item.UID)"
-          class="mx-2"
+          @click="openFinalApproveDialog(item.UID)"
+          v-if="item.status == 2 && item.productionStatus == 2"
         >
+          <v-icon left> mdi-file-edit-outline </v-icon>
+          审批
+        </v-btn>
+        <v-btn text color="primary" @click="openEditDialog(item.UID)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <v-btn
-          rounded
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          class="mx-2"
-        >
+        <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="options.viewDialog"
       v-if="options.viewDialog"
-      max-width="1440px"
+      width="1440px"
       persistent
       @click:outside="closeViewDialog"
     >
@@ -80,8 +75,9 @@
     <v-dialog
       v-model="options.approveDialog"
       v-if="options.approveDialog"
-      min-width="800px"
-      max-width="1440px"
+      persistent
+      @click:outside="closeApproveDialog"
+      width="1440px"
     >
       <approve
         :openUID="options.openUID"
@@ -92,17 +88,31 @@
     </v-dialog>
 
     <v-dialog
+      v-model="options.finalApproveDialog"
+      v-if="options.finalApproveDialog"
+      persistent
+      @click:outside="closeFinalApproveDialog"
+      width="1440px"
+    >
+      <contractViewForms
+        :openUID="options.openUID"
+        openType="3"
+        :refresh="getObject"
+        :closeDialog="closeFinalApproveDialog"
+      />
+    </v-dialog>
+
+    <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      min-width="800px"
-      max-width="1440px"
+      width="1440px"
       persistent
+      @click:outside="closeEditDialog"
     >
-      <contractEditForms
+      <contractViewForms
         :openUID="options.openUID"
-        :openType="options.openType"
-        ref="contractForms"
-        :parentFun="getObject"
+        :openType="editNum"
+        :refresh="getObject"
         :closeDialog="closeEditDialog"
       />
     </v-dialog>
@@ -125,14 +135,12 @@
 <script>
 import approve from "./Approve";
 import contractViewForms from "./ViewForms";
-import contractEditForms from "./EditForms";
 import { delContract, queryContracts } from "@/api/contract";
 
 export default {
   components: {
     approve,
     contractViewForms,
-    contractEditForms,
   },
   props: {
     queryObject: {
@@ -184,9 +192,15 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额(元)",
+        text: "总金额",
         align: "center",
         value: "totalAmount",
+        sortable: false,
+      },
+      {
+        text: "付款类型",
+        align: "center",
+        value: "payType",
         sortable: false,
       },
       {
@@ -214,12 +228,14 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
-      openType: null,
       approveDialog: false,
+      finalApproveDialog: false,
       viewDialog: false,
       editDialog: false,
       deleteDialog: false,
     },
+    editNum: 2,
+    finalApproveNum: 3,
     object: [],
   }),
   created() {
@@ -258,17 +274,22 @@ export default {
     },
     closeApproveDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
       this.options.approveDialog = false;
+    },
+    openFinalApproveDialog(uid) {
+      this.options.openUID = uid;
+      this.options.finalApproveDialog = true;
+    },
+    closeFinalApproveDialog() {
+      this.options.openUID = "";
+      this.options.finalApproveDialog = false;
     },
     openEditDialog(uid) {
       this.options.openUID = uid;
-      this.options.openType = 2;
       this.options.editDialog = true;
     },
     closeEditDialog() {
       this.options.openUID = "";
-      this.options.openType = null;
       this.options.editDialog = false;
     },
     openDeleteDialog(uid) {
@@ -335,6 +356,14 @@ export default {
           return "回款中";
         case 2:
           return "回款完成";
+      }
+    },
+    payTypeToText(payType) {
+      switch (payType) {
+        case 1:
+          return "人民币";
+        case 2:
+          return "美元";
       }
     },
   },

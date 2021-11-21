@@ -12,12 +12,9 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.endDate`]="{ item }">
-        {{ subTime(item.endDate) }}
-      </template>
       <template v-slot:[`item.realEndDate`]="{ item }">
         <div v-if="item.status != 1">
-          {{ subTime(item.realEndDate) }}
+          {{ item.realEndDate }}
         </div>
       </template>
       <template v-slot:[`item.status`]="{ item }">
@@ -170,9 +167,6 @@ export default {
         case 4:
           return "已通过";
       }
-    },
-    subTime(time) {
-      return time.substr(0, time.indexOf("T"));
     },
   },
 };

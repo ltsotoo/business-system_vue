@@ -3,167 +3,142 @@
     <v-card>
       <v-card-title>合同内容</v-card-title>
       <v-card-subtitle>
-        <v-row>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.no"
-              label="合同编号"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.area.name"
-              label="区域"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.employee.office.name"
-              label="办事处"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.employee.name"
-              label="业务员"
-              readonly
-            ></v-text-field>
-          </v-col>
-        </v-row>
+        <v-form readonly>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field v-model="object.no" label="合同编号"></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.area.name"
+                label="区域"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.area.office.name"
+                label="办事处"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.employee.name"
+                label="业务员"
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.customer.company.name"
-              label="客户公司"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.customer.name"
-              label="客户名称"
-              readonly
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.customer.company.name"
+                label="客户公司"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.customer.name"
+                label="客户名称"
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.contractUnit.text"
-              label="签订单位"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.contractDate"
-              label="签订日期"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.estimatedDeliveryDate"
-              label="合同交货日期"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.endDeliveryDate"
-              label="实际交货日期"
-              :readonly="
-                object.endDeliveryDate != undefined &&
-                object.endDeliveryDate.length > 0
-              "
-              :disabled="
-                object.endDeliveryDate == undefined ||
-                object.endDeliveryDate.length == 0
-              "
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractUnit.text"
+                label="签订单位"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractDate"
+                label="签订日期"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.estimatedDeliveryDate"
+                label="合同交货日期"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.endDeliveryDate"
+                label="实际交货日期"
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col cols="3">
-            <v-text-field
-              v-model="text.invoiceType"
-              label="开票类型"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="text.isSpecial"
-              label="特殊合同"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="object.totalAmount"
-              label="总金额(元)"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" v-if="object.invoiceType != 1">
-            <v-textarea
-              v-model="object.invoiceContent"
-              label="开票内容"
-              auto-grow
-              rows="3"
-              :readonly="
-                object.invoiceContent != undefined &&
-                object.invoiceContent.length > 0
-              "
-              :disabled="
-                object.invoiceContent == undefined ||
-                object.invoiceContent.length == 0
-              "
-            ></v-textarea>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.invoiceType"
+                label="开票类型"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.isSpecial"
+                label="特殊合同"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.payType"
+                label="付款类型"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.totalAmount"
+                label="总金额"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" v-if="object.invoiceType != 1">
+              <v-textarea
+                v-model="object.invoiceContent"
+                label="开票内容"
+                auto-grow
+                rows="3"
+              ></v-textarea>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col cols="3">
-            <v-text-field
-              v-model="text.status"
-              label="合同状态"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="text.productionStatus"
-              label="生产状态"
-              readonly
-            ></v-text-field>
-          </v-col>
-          <v-col cols="3">
-            <v-text-field
-              v-model="text.collectionStatus"
-              label="回款状态"
-              readonly
-            ></v-text-field>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.status"
+                label="合同状态"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.productionStatus"
+                label="生产状态"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.collectionStatus"
+                label="回款状态"
+              ></v-text-field>
+            </v-col>
+          </v-row>
 
-        <v-row v-if="object.remarks != undefined && object.remarks.length > 0">
-          <v-col cols="12">
-            <v-textarea
-              v-model="object.remarks"
-              label="备注"
-              auto-grow
-              rows="1"
-              readonly
-            ></v-textarea>
-          </v-col>
-        </v-row>
+          <v-row
+            v-if="object.remarks != undefined && object.remarks.length > 0"
+          >
+            <v-col cols="12">
+              <v-textarea
+                v-model="object.remarks"
+                label="备注"
+                auto-grow
+                rows="1"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-subtitle>
     </v-card>
     <taskDataTable
@@ -171,39 +146,127 @@
       ref="taskDataTable"
       :parentObject="object.tasks"
       v-if="object.tasks"
+      :openType="openType"
+      :refresh="refreshAll"
     />
     <viewPayments
       style="margin-top: 5px"
       :parentObject="object.payments"
-      v-if="object.payments"
+      :openType="openType"
     ></viewPayments>
+
+    <v-card style="margin-top: 5px">
+      <v-card-title></v-card-title>
+      <v-card-subtitle>
+        <v-row justify="center" v-if="openType == 2">
+          <v-btn x-large color="error" @click="openRejectDialog">
+            合同驳回
+          </v-btn>
+        </v-row>
+        <v-row justify="center" v-if="openType == 3">
+          <v-btn x-large color="error" @click="openFinalApproveDialog">
+            合同完成
+          </v-btn>
+        </v-row>
+      </v-card-subtitle>
+    </v-card>
+
+    <v-dialog
+      v-model="rejectDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeRejectDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5"
+          >您确定驳回该审批通过了的合同吗?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="reject">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeRejectDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="finalApproveDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeFinalApproveDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定该合同已经完成了吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="finalApprove">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeFinalApproveDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import taskDataTable from "../task/ViewDataTable";
 import viewPayments from "../payment/View";
-import { queryContract } from "@/api/contract";
+import { queryContract, rejectContract } from "@/api/contract";
+import { contractApprove } from "@/api/contract_flow";
 export default {
   components: {
     taskDataTable,
     viewPayments,
   },
   props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
     openUID: {
       type: String,
       default: "",
     },
+    refresh: {
+      type: Function,
+    },
+    closeDialog: {
+      type: Function,
+    },
   },
   data: () => ({
     object: {
+      no: "",
+      contractDate: "",
+      estimatedDeliveryDate: "",
+      endDeliveryDate: "",
+      invoiceType: null,
+      isSpecial: null,
+      totalAmount: null,
+      invoiceContent: "",
       contractUnit: {},
-      area: {},
+      area: {
+        name: "",
+        office: {
+          name: "",
+        },
+      },
       employee: {
-        office: {},
+        name: "",
       },
       customer: {
-        company: {},
+        name: "",
+        company: {
+          name: "",
+        },
+      },
+      contractUnit: {
+        text: "",
       },
     },
     text: {
@@ -213,6 +276,9 @@ export default {
       invoiceType: "",
       isSpecial: "否",
     },
+
+    rejectDialog: false,
+    finalApproveDialog: false,
   }),
   created() {
     this.getObject();
@@ -224,6 +290,42 @@ export default {
         this.changeText(res.data);
       });
     },
+    refreshAll() {
+      this.refresh();
+      this.getObject();
+    },
+
+    openRejectDialog() {
+      this.rejectDialog = true;
+    },
+    closeRejectDialog() {
+      this.rejectDialog = false;
+    },
+    openFinalApproveDialog() {
+      this.finalApproveDialog = true;
+    },
+    closeFinalApproveDialog() {
+      this.finalApproveDialog = false;
+    },
+    reject() {
+      rejectContract({ UID: this.openUID }).then((res) => {
+        this.$message.success("合同驳回成功！");
+        this.refresh();
+        this.closeDialog();
+      });
+    },
+    finalApprove() {
+      var status = 3;
+      contractApprove({
+        UID: this.openUID,
+        status: status,
+      }).then((res) => {
+        this.$message.success("合同审批成功！");
+        this.refresh();
+        this.closeDialog();
+      });
+    },
+
     changeText(data) {
       switch (data.invoiceType) {
         case 1:
@@ -267,6 +369,14 @@ export default {
           break;
         case 2:
           this.text.collectionStatus = "回款完成";
+          break;
+      }
+      switch (data.payType) {
+        case 1:
+          this.text.payType = "人民币";
+          break;
+        case 2:
+          this.text.payType = "美元";
           break;
       }
       if (data.isSpecial == true) {

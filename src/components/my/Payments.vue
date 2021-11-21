@@ -15,6 +15,9 @@
       <template v-slot:[`item.invoiceType`]="{ item }">
         {{ invoiceTypeToText(item.invoiceType) }}
       </template>
+      <template v-slot:[`item.payType`]="{ item }">
+        {{ payTypeToText(item.payType) }}
+      </template>
       <template v-slot:[`item.invoiceContent`]="{ item }">
         <v-textarea
           auto-grow
@@ -26,22 +29,15 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-          rounded
+          text
           color="primary"
           @click="openPaymentDialog(item)"
-          class="mx-2"
           v-if="item.collectionStatus == 1"
         >
           <v-icon left> mdi-pencil </v-icon>
-          编辑回款记录
+          添加回款记录
         </v-btn>
-        <v-btn
-          rounded
-          color="success"
-          @click="openPaymentDialog(item)"
-          class="mx-2"
-          v-if="item.collectionStatus == 2"
-        >
+        <v-btn text color="success" @click="openPaymentDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看回款记录
         </v-btn>
@@ -49,10 +45,11 @@
     </v-data-table>
 
     <v-dialog
-      v-model="paymentDoalog"
+      v-model="paymentDialog"
       max-width="1200px"
       persistent
-      v-if="paymentDoalog"
+      v-if="paymentDialog"
+      @click:outside="closePaymentDialog"
     >
       <v-card>
         <v-card-title> 历史回款记录 </v-card-title>
@@ -86,39 +83,45 @@
         <div v-if="openItem.collectionStatus == 1">
           <v-card-title> 新增回款记录 </v-card-title>
           <v-card-subtitle>
-            <v-row>
-              <v-col cols="3">
-                <v-text-field
-                  label="回款金额(元)"
-                  v-model.number="payment.money"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-textarea
-                  label="备注"
-                  auto-grow
-                  rows="3"
-                  v-model="payment.remarks"
-                ></v-textarea>
-              </v-col>
-            </v-row>
+            <v-form ref="form">
+              <v-row>
+                <v-col cols="3">
+                  <v-text-field
+                    label="回款金额(元)"
+                    v-model.number="payment.money"
+                    :rules="rules.money"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-textarea
+                    label="备注"
+                    rows="3"
+                    v-model="payment.remarks"
+                    counter
+                    maxlength="500"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
+            </v-form>
           </v-card-subtitle>
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            text
+            rounded
             @click="createPayment"
             v-if="openItem.collectionStatus == 1"
           >
             提交
           </v-btn>
-          <v-btn color="primary" text @click="closePaymentDialog">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closePaymentDialog">
             关闭
           </v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -135,6 +138,11 @@ export default {
     },
   },
   data: () => ({
+    rules: {
+      money: [
+        (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额必须大于零",
+      ],
+    },
     headers: [
       {
         text: "合同编号",
@@ -167,15 +175,15 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额(元)",
+        text: "总金额",
         align: "center",
         value: "totalAmount",
         sortable: false,
       },
       {
-        text: "合同签订时间",
+        text: "付款类型",
         align: "center",
-        value: "contractDate",
+        value: "payType",
         sortable: false,
       },
       {
@@ -189,7 +197,6 @@ export default {
         align: "center",
         value: "invoiceContent",
         sortable: false,
-        width: "450px",
       },
       {
         text: "回款状态",
@@ -212,7 +219,7 @@ export default {
     },
     object: [],
     openItem: {},
-    paymentDoalog: false,
+    paymentDialog: false,
     paymentItems: [],
     payment: {
       contractUID: "",
@@ -272,22 +279,35 @@ export default {
           return "形式发票";
       }
     },
+    payTypeToText(payType) {
+      switch (payType) {
+        case 1:
+          return "人民币";
+        case 2:
+          return "美元";
+      }
+    },
     openPaymentDialog(item) {
       this.openItem = item;
       this.getPayments();
-      this.paymentDoalog = true;
+      this.paymentDialog = true;
     },
     closePaymentDialog() {
       this.openItem = {};
-      this.paymentDoalog = false;
+      this.paymentDialog = false;
     },
     createPayment() {
-      this.payment.contractUID = this.openItem.UID;
-      var _this = this;
-      addPayment(this.payment).then((res) => {
-        _this.getObject();
-        _this.closePaymentDialog();
-      });
+      if (this.validateForm()) {
+        this.payment.contractUID = this.openItem.UID;
+        var _this = this;
+        addPayment(this.payment).then((res) => {
+          _this.getObject();
+          _this.closePaymentDialog();
+        });
+      }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

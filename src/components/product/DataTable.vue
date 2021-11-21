@@ -21,7 +21,7 @@
           </v-btn>
         </div>
         <div v-else>
-          <v-btn text color="success" @click="openViewDialog(item.UID)">
+          <v-btn text color="success" @click="openViewDialog(item)">
             <v-icon left> mdi-eye </v-icon>
             查看
           </v-btn>
@@ -44,7 +44,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <productViewForms :openUID="options.openUID" />
+      <productViewForms :openItem="openItem" />
     </v-dialog>
 
     <v-dialog
@@ -62,7 +62,12 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
+    <v-dialog
+      v-model="options.deleteDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
         <v-card-actions>
@@ -189,6 +194,7 @@ export default {
       editDialog: false,
       deleteDialog: false,
     },
+    openItem: "",
     object: [],
   }),
   created() {
@@ -219,12 +225,12 @@ export default {
     changeTransferStatus() {
       this.options.isTransfer = !this.options.isTransfer;
     },
-    openViewDialog(uid) {
-      this.options.openUID = uid;
+    openViewDialog(item) {
+      this.openItem = item;
       this.options.viewDialog = true;
     },
     closeViewDialog() {
-      this.options.openUID = "";
+      this.openItem = "";
       this.options.viewDialog = false;
     },
     openEditDialog(uid) {

@@ -25,22 +25,18 @@
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
+      <template v-slot:[`item.payType`]="{ item }">
+        {{ payTypeToText(item.payType) }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          rounded
-          color="success"
-          dark
-          @click="openViewDialog(item)"
-          class="mx-2"
-        >
+        <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
         <v-btn
-          rounded
+          text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          class="mx-2"
           v-if="item.status == -1 || item.status == 1"
         >
           <v-icon left> mdi-delete </v-icon>
@@ -119,9 +115,15 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额(元)",
+        text: "总金额",
         align: "center",
         value: "totalAmount",
+        sortable: false,
+      },
+      {
+        text: "付款类型",
+        align: "center",
+        value: "payType",
         sortable: false,
       },
       {
@@ -232,12 +234,21 @@ export default {
       }
       return "green";
     },
+    payTypeToText(payType) {
+      switch (payType) {
+        case 1:
+          return "人民币";
+        case 2:
+          return "美元";
+      }
+    },
     openViewDialog(item) {
       this.openUID = item.UID;
       this.viewDialog = true;
     },
     closeViewDialog() {
       this.openUID = "";
+      this.viewDialog = false;
     },
     openDeleteDialog(uid) {
       this.openUID = uid;
