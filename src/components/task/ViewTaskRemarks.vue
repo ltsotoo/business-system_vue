@@ -2,14 +2,14 @@
   <v-card>
     <v-card-title>备注信息</v-card-title>
     <v-card-subtitle>
-      <v-row v-if="remarks && remarks != ''">
+      <v-row v-if="aRemarks && aRemarks != ''">
         <v-col cols="12">
           <v-textarea
-            label="业务员备注"
+            label="审批人员备注"
             readonly
             auto-grow
             rows="1"
-            v-model="remarks"
+            v-model="aRemarks"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -39,8 +39,8 @@
 <script>
 export default {
   props: {
-    remarks: "",
     taskRemarks: {},
+    aRemarks: "",
   },
   methods: {
     statusToLabel(status) {

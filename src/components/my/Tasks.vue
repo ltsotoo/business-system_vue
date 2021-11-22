@@ -16,19 +16,77 @@
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
       </template>
+      <template v-slot:[`item.days`]="{ item }">
+        <v-row>
+          <v-col v-if="item.technicianManUID == employeeUID">
+            设计限时：{{ item.technicianDays }}天
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="item.purchaseManUID == employeeUID">
+            采购限时：{{ item.purchaseDays }}天
+          </v-col>
+        </v-row>
+      </template>
+      <template v-slot:[`item.startDate`]="{ item }">
+        <v-row>
+          <v-col v-if="item.type == 3">
+            设计：{{ item.technicianStartDate }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="item.type > 1 && item.status > 1">
+            采购：{{ item.purchaseStartDate }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="item.status > 2">
+            仓库：{{ item.inventoryStartDate }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="item.status > 4">
+            物流：{{ item.shipmentStartDate }}
+          </v-col>
+        </v-row>
+      </template>
+      <template v-slot:[`item.realEndDate`]="{ item }">
+        <v-row>
+          <v-col
+            v-if="
+              item.technicianManUID == employeeUID &&
+              item.type == 3 &&
+              item.status > 1
+            "
+          >
+            设计：{{ item.technicianRealEndDate }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            v-if="
+              item.purchaseManUID == employeeUID &&
+              item.type > 1 &&
+              item.status > 2
+            "
+          >
+            采购：{{ item.purchaseRealEndDate }}
+          </v-col>
+        </v-row>
+      </template>
       <template v-slot:[`item.employees`]="{ item }">
         <v-row><v-col> </v-col></v-row>
         <v-row v-if="item.technicianMan.name">
-          <v-col>技术:{{ item.technicianMan.name }}</v-col>
+          <v-col>技术：{{ item.technicianMan.name }}</v-col>
         </v-row>
         <v-row v-if="item.purchaseMan.name">
-          <v-col>采购:{{ item.purchaseMan.name }}</v-col>
+          <v-col>采购：{{ item.purchaseMan.name }}</v-col>
         </v-row>
         <v-row v-if="item.inventoryMan.name">
-          <v-col>仓库:{{ item.inventoryMan.name }}</v-col>
+          <v-col>仓库：{{ item.inventoryMan.name }}</v-col>
         </v-row>
         <v-row v-if="item.shipmentMan.name">
-          <v-col>物流:{{ item.shipmentMan.name }}</v-col>
+          <v-col>物流：{{ item.shipmentMan.name }}</v-col>
         </v-row>
         <v-row><v-col> </v-col></v-row>
       </template>
@@ -57,7 +115,7 @@
     </v-data-table>
 
     <v-dialog v-model="remarksDialog" v-if="remarksDialog" max-width="900px">
-      <viewTaskRemarks :taskRemarks="taskRemarks" :remarks="openItem.remarks" />
+      <viewTaskRemarks :taskRemarks="taskRemarks" :aRemarks="openItem.aRemarks" />
     </v-dialog>
 
     <v-dialog
@@ -104,7 +162,6 @@ export default {
   data: () => ({
     employeeUID: "",
     headers: [
-      { text: "ID", align: "center", sortable: false, value: "ID" },
       { text: "产品", align: "center", sortable: false, value: "product.name" },
       { text: "需求数量", align: "center", value: "number", sortable: false },
       {
@@ -124,7 +181,19 @@ export default {
       {
         text: "开始时间",
         align: "center",
-        value: "CreatedAt",
+        value: "startDate",
+        sortable: false,
+      },
+      {
+        text: "限时天数",
+        align: "center",
+        value: "days",
+        sortable: false,
+      },
+      {
+        text: "实际提交时间",
+        align: "center",
+        value: "realEndDate",
         sortable: false,
       },
       {

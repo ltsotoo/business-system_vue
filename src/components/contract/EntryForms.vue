@@ -530,6 +530,11 @@ export default {
       this.openItem.remarks = "";
       this.openItem.productUID = product.UID;
       this.openItem.number = 1;
+      this.openItem.ID = null;
+      this.openItem.UID = null;
+      this.openItem.CreatedAt = null;
+      this.openItem.UpdatedAt = null;
+      this.openItem.DeletedAt = null;
 
       this.p2cDialog = true;
     },

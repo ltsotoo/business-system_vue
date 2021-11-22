@@ -8,59 +8,13 @@
         :items-per-page="5"
         class="elevation-1"
       >
-        <template v-slot:[`item.standardPrice`]="{ item }">
-          <v-row>
-            <v-col >
-              人民币：{{ item.product.standardPrice }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col >
-              美元：{{ item.product.standardPriceUSD }}
-            </v-col>
-          </v-row>
-        </template>
-        <template v-slot:[`item.startDate`]="{ item }">
-          <v-row>
-            <v-col v-if="item.type == 3">
-              设计：{{ item.technicianStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.type > 1 && item.status > 1">
-              采购：{{ item.purchaseStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.status > 2">
-              仓库：{{ item.inventoryStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.status > 4">
-              物流：{{ item.shipmentStartDate }}
-            </v-col>
-          </v-row>
-        </template>
-        <template v-slot:[`item.days`]="{ item }">
-          <v-row>
-            <v-col> 设计限时：{{ item.technicianDays }}天 </v-col>
-          </v-row>
-          <v-row>
-            <v-col> 采购限时：{{ item.purchaseDays }}天 </v-col>
-          </v-row>
-        </template>
-        <template v-slot:[`item.realEndDate`]="{ item }">
-          <v-row>
-            <v-col v-if="item.type == 3 && item.status > 1">
-              设计：{{ item.technicianRealEndDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.type > 1 && item.status > 2">
-              采购：{{ item.purchaseRealEndDate }}
-            </v-col>
-          </v-row>
+        <template v-slot:[`item.remarks`]="{ item }">
+          <v-textarea
+            auto-grow
+            readonly
+            rows="1"
+            v-model="item.remarks"
+          ></v-textarea>
         </template>
         <template v-slot:[`item.employees`]="{ item }">
           <v-row><v-col> </v-col></v-row>
@@ -81,8 +35,25 @@
         <template v-slot:[`item.status`]="{ item }">
           {{ stautsToText(item.status) }}
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <div v-if="openType == 2">
+            <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+              <v-icon left> mdi-pencil </v-icon>
+              重置
+            </v-btn>
+          </div>
+        </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="approveDialog" v-if="approveDialog" max-width="800px">
+      <approve
+        :openUID="openUID"
+        :parentFun="refresh"
+        :closeDialog="closeApproveDialog"
+        :openType="openType"
+      />
+    </v-dialog>
   </div>
 </template>
 
@@ -97,6 +68,13 @@ export default {
       type: Array,
       default: [],
     },
+    refresh: {
+      type: Function,
+    },
+    openType: {
+      type: Number,
+      default: 0,
+    },
   },
   data: () => ({
     headers: [
@@ -108,12 +86,7 @@ export default {
       },
       { text: "数量", align: "center", value: "number", sortable: false },
       { text: "单位", align: "center", value: "unit", sortable: false },
-      {
-        text: "标准价格",
-        align: "center",
-        value: "standardPrice",
-        sortable: false,
-      },
+      { text: "标准价格", align: "center", value: "unit", sortable: false },
       { text: "单价", value: "price", sortable: false },
       { text: "总价", value: "totalPrice", sortable: false },
       {
@@ -129,26 +102,31 @@ export default {
         sortable: false,
       },
       {
-        text: "限时天数",
-        align: "center",
-        value: "days",
-        sortable: false,
-      },
-      {
         text: "实际提交时间",
         align: "center",
         value: "realEndDate",
         sortable: false,
       },
       { text: "状态", align: "center", value: "status", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       total: 1,
       page: 1,
       itemsPerPage: 10,
     },
+    openUID: "",
+    approveDialog: false,
   }),
   methods: {
+    openApproveDialog(uid) {
+      this.openUID = uid;
+      this.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.openUID = "";
+      this.approveDialog = false;
+    },
     stautsToText(status) {
       switch (status) {
         case 0:

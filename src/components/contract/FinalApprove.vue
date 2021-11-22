@@ -141,28 +141,93 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <taskDataTable
+    <finalApproveDataTable
       style="margin-top: 5px"
-      ref="taskDataTable"
+      ref="finalApproveDataTable"
       :parentObject="object.tasks"
+      v-if="object.tasks"
+      :openType="openType"
+      :refresh="refreshAll"
     />
     <viewPayments
       style="margin-top: 5px"
       :parentObject="object.payments"
+      :openType="openType"
     ></viewPayments>
+
+    <v-card style="margin-top: 5px">
+      <v-card-title></v-card-title>
+      <v-card-subtitle>
+        <v-row justify="center" v-if="openType == 2">
+          <v-btn x-large color="error" @click="openRejectDialog">
+            合同驳回
+          </v-btn>
+        </v-row>
+        <v-row justify="center" v-if="openType == 3">
+          <v-btn x-large color="error" @click="openFinalApproveDialog">
+            合同完成
+          </v-btn>
+        </v-row>
+      </v-card-subtitle>
+    </v-card>
+
+    <v-dialog
+      v-model="rejectDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeRejectDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5"
+          >您确定驳回该审批通过了的合同吗?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="reject">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeRejectDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="finalApproveDialog"
+      max-width="500px"
+      persistent
+      @click:outside="closeFinalApproveDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定该合同已经完成了吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="finalApprove">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeFinalApproveDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import taskDataTable from "../task/ViewDataTable";
+import finalApproveDataTable from "../task/FinalApproveDataTable";
 import viewPayments from "../payment/View";
-import { queryContract } from "@/api/contract";
+import { queryContract, rejectContract } from "@/api/contract";
+import { contractApprove } from "@/api/contract_flow";
 export default {
   components: {
-    taskDataTable,
+    finalApproveDataTable,
     viewPayments,
   },
   props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
     openUID: {
       type: String,
       default: "",
@@ -211,6 +276,9 @@ export default {
       invoiceType: "",
       isSpecial: "否",
     },
+
+    rejectDialog: false,
+    finalApproveDialog: false,
   }),
   created() {
     this.getObject();
@@ -220,6 +288,41 @@ export default {
       queryContract(this.openUID).then((res) => {
         this.object = res.data;
         this.changeText(res.data);
+      });
+    },
+    refreshAll() {
+      this.refresh();
+      this.getObject();
+    },
+
+    openRejectDialog() {
+      this.rejectDialog = true;
+    },
+    closeRejectDialog() {
+      this.rejectDialog = false;
+    },
+    openFinalApproveDialog() {
+      this.finalApproveDialog = true;
+    },
+    closeFinalApproveDialog() {
+      this.finalApproveDialog = false;
+    },
+    reject() {
+      rejectContract({ UID: this.openUID }).then((res) => {
+        this.$message.success("合同驳回成功！");
+        this.refresh();
+        this.closeDialog();
+      });
+    },
+    finalApprove() {
+      var status = 3;
+      contractApprove({
+        UID: this.openUID,
+        status: status,
+      }).then((res) => {
+        this.$message.success("合同审批成功！");
+        this.refresh();
+        this.closeDialog();
       });
     },
 

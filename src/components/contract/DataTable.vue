@@ -49,9 +49,14 @@
           v-if="item.status == 2 && item.productionStatus == 2"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
-          审批
+          终审
         </v-btn>
-        <v-btn text color="primary" @click="openEditDialog(item.UID)">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditDialog(item.UID)"
+          v-if="item.status == 2"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -94,7 +99,7 @@
       @click:outside="closeFinalApproveDialog"
       width="1440px"
     >
-      <contractViewForms
+      <finalApprove
         :openUID="options.openUID"
         openType="3"
         :refresh="getObject"
@@ -109,7 +114,7 @@
       persistent
       @click:outside="closeEditDialog"
     >
-      <contractViewForms
+      <finalApprove
         :openUID="options.openUID"
         :openType="editNum"
         :refresh="getObject"
@@ -134,12 +139,14 @@
 
 <script>
 import approve from "./Approve";
+import finalApprove from "./FinalApprove";
 import contractViewForms from "./ViewForms";
 import { delContract, queryContracts } from "@/api/contract";
 
 export default {
   components: {
     approve,
+    finalApprove,
     contractViewForms,
   },
   props: {

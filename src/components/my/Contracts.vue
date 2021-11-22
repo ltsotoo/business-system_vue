@@ -259,7 +259,7 @@ export default {
       this.deleteDialog = false;
     },
     deleteItem() {
-      delContract(this.options.openUID).then((res) => {
+      delContract(this.openUID).then((res) => {
         this.$message.success("删除成功了！");
         this.getObject();
         this.closeDeleteDialog();

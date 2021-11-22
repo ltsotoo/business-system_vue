@@ -106,7 +106,7 @@ export default {
         sortable: false,
       },
       {
-        text: "非标备注",
+        text: "业务员备注",
         align: "center",
         value: "remarks",
         sortable: false,

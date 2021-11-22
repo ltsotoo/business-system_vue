@@ -160,6 +160,12 @@
           ></v-select>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-textarea v-model="query.aRemarks" rows="3" label="备注">
+          </v-textarea>
+        </v-col>
+      </v-row>
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -210,6 +216,7 @@ export default {
       technicianDays: 0,
       purchaseDays: 0,
       isReset: false,
+      aRemarks: "",
     },
     officeUID1: "",
     officeUID2: "",
