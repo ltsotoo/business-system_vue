@@ -28,7 +28,7 @@
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      max-width="800px"
+      width="600px"
       persistent
       @click:outside="closeEditDialog"
     >
@@ -39,7 +39,7 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="options.deleteDialog" max-width="500px" persistent>
+    <v-dialog v-model="options.deleteDialog" width="500px" persistent>
       <v-card>
         <v-card-title class="text-h5">您确定删除该位客户吗?</v-card-title>
         <v-card-actions>

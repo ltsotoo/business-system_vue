@@ -35,7 +35,7 @@
         ref="preResearchs"
       />
 
-      <v-dialog v-model="createDialog" max-width="800px" persistent>
+      <v-dialog v-model="createDialog" width="800px" persistent>
         <v-card>
           <v-card-title>发起预设计</v-card-title>
           <v-card-text>

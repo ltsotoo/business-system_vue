@@ -36,7 +36,7 @@
     <v-dialog
       v-model="options.approvalDialog"
       v-if="options.approvalDialog"
-      max-width="1080px"
+      width="1080px"
     >
       <expenseApprovalForms
         :parentObj="openItem"

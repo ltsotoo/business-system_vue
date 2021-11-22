@@ -32,7 +32,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="deleteDialog" max-width="500px" persistent>
+    <v-dialog v-model="deleteDialog" width="500px" persistent>
       <v-card>
         <v-card-title class="text-h5">您确定删除该预设计吗?</v-card-title>
         <v-card-actions>

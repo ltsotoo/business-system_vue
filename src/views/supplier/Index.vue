@@ -49,7 +49,7 @@
       </v-card-subtitle>
     </v-card>
 
-    <v-dialog v-model="addDialog" v-if="addDialog" max-width="600px" persistent>
+    <v-dialog v-model="addDialog" v-if="addDialog" width="600px" persistent>
       <supplierForms
         :refresh="query"
         :closeDialog="closAddDialog"

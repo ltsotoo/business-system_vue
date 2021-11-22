@@ -173,7 +173,7 @@
 
     <v-dialog
       v-model="rejectDialog"
-      max-width="500px"
+      width="600px"
       persistent
       @click:outside="closeRejectDialog"
     >
@@ -193,7 +193,7 @@
 
     <v-dialog
       v-model="finalApproveDialog"
-      max-width="500px"
+      width="600px"
       persistent
       @click:outside="closeFinalApproveDialog"
     >

@@ -22,6 +22,11 @@
           {{ item.estimatedDeliveryDate }}
         </div>
       </template>
+      <template v-slot:[`item.endDeliveryDate`]="{ item }">
+        <div v-if="item.productionStatus == 2">
+          {{item.endDeliveryDate}}
+        </div>
+      </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
@@ -48,14 +53,14 @@
     <v-dialog
       v-model="viewDialog"
       v-if="viewDialog"
-      max-width="1440px"
+      width="1440px"
       persistent
       @click:outside="closeViewDialog"
     >
-      <contractViewForms :openUID="openUID" />
+      <contractViewForms :openUID="openUID" isIndex="true" />
     </v-dialog>
 
-    <v-dialog v-model="deleteDialog" max-width="500px" persistent>
+    <v-dialog v-model="deleteDialog" width="600px" persistent>
       <v-card>
         <v-card-title class="text-h5">您确定删除该合同吗?</v-card-title>
         <v-card-actions>

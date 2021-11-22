@@ -35,7 +35,7 @@
 
     <v-dialog
       v-model="submitDialog"
-      max-width="800px"
+      width="800px"
       v-if="submitDialog"
       persistent
       @click:outside="closeSubmitDialog"

@@ -28,6 +28,10 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
+        <v-btn text color="success" @click="openPaymentDialog(item)">
+          <v-icon left> mdi-eye </v-icon>
+          查看回款记录
+        </v-btn>
         <v-btn
           text
           color="primary"
@@ -37,16 +41,21 @@
           <v-icon left> mdi-pencil </v-icon>
           添加回款记录
         </v-btn>
-        <v-btn text color="success" @click="openPaymentDialog(item)">
+        <v-btn
+          text
+          color="success"
+          @click="openFinishDialog(item)"
+          v-if="item.collectionStatus == 1"
+        >
           <v-icon left> mdi-eye </v-icon>
-          查看回款记录
+          回款完成
         </v-btn>
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="paymentDialog"
-      max-width="1200px"
+      width="800px"
       persistent
       v-if="paymentDialog"
       @click:outside="closePaymentDialog"
@@ -55,21 +64,21 @@
         <v-card-title> 历史回款记录 </v-card-title>
         <v-card-subtitle>
           <v-row v-for="(item, i) in paymentItems" :key="i" align="center">
-            <v-col cols="2">
+            <v-col cols="6">
               <v-text-field
                 label="时间"
                 readonly
                 v-model.number="item.CreatedAt"
               ></v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="6">
               <v-text-field
                 label="回款金额(元)"
                 readonly
                 v-model.number="item.money"
               ></v-text-field>
             </v-col>
-            <v-col cols="8">
+            <v-col cols="12">
               <v-textarea
                 label="备注"
                 readonly
@@ -125,13 +134,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-model="finishDialog"
+      v-if="finishDialog"
+      width="800px"
+      persistent
+      @close:outside="closeFinishDialog"
+    >
+      <finish
+        :paymentItems="paymentItems"
+        :openUID="openItem.UID"
+        :closeDialog="closeFinishDialog"
+        :refresh="getObject"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { queryContracts } from "@/api/contract";
 import { addPayment, queryPayments } from "@/api/payment";
+import finish from "@/components/payment/Finish";
 export default {
+  components: {
+    finish,
+  },
   props: {
     queryObject: {
       type: Object,
@@ -220,6 +248,7 @@ export default {
     object: [],
     openItem: {},
     paymentDialog: false,
+    finishDialog: false,
     paymentItems: [],
     payment: {
       contractUID: "",
@@ -248,11 +277,6 @@ export default {
           this.object = res.data;
         }
         this.stautsToText();
-      });
-    },
-    getPayments() {
-      queryPayments(this.openItem.UID).then((res) => {
-        this.paymentItems = res.data;
       });
     },
     stautsToText() {
@@ -289,12 +313,25 @@ export default {
     },
     openPaymentDialog(item) {
       this.openItem = item;
-      this.getPayments();
-      this.paymentDialog = true;
+      queryPayments(this.openItem.UID).then((res) => {
+        this.paymentItems = res.data;
+        this.paymentDialog = true;
+      });
     },
     closePaymentDialog() {
       this.openItem = {};
       this.paymentDialog = false;
+    },
+    openFinishDialog(item) {
+      this.openItem = item;
+      queryPayments(this.openItem.UID).then((res) => {
+        this.paymentItems = res.data;
+        this.finishDialog = true;
+      });
+    },
+    closeFinishDialog() {
+      this.openItem = {};
+      this.finishDialog = false;
     },
     createPayment() {
       if (this.validateForm()) {

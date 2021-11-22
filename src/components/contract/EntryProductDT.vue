@@ -28,7 +28,7 @@
     <v-dialog
       v-model="viewDialog"
       v-if="viewDialog"
-      max-width="800px"
+      width="600px"
       persistent
       @click:outside="closeViewDialog"
     >

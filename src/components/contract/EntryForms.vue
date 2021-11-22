@@ -322,7 +322,7 @@
       </v-btn>
     </v-row>
 
-    <v-dialog v-model="p2cDialog" v-if="p2cDialog" max-width="800px" persistent>
+    <v-dialog v-model="p2cDialog" v-if="p2cDialog" width="800px" persistent>
       <v-card>
         <v-card-title>
           <span class="text-h5">{{ openItem.name }}</span>
@@ -376,7 +376,7 @@
     <v-dialog
       v-model="removeDialog"
       v-if="removeDialog"
-      max-width="500px"
+      width="600px"
       persistent
       @click:outside="closeRemoveDialog"
     >

@@ -30,7 +30,7 @@
 
       <v-dialog
         v-model="addDialog"
-        max-width="500px"
+        width="500px"
         persistent
         v-if="addDialog"
         @click:outside="closeAddDialog"

@@ -114,13 +114,16 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="remarksDialog" v-if="remarksDialog" max-width="900px">
-      <viewTaskRemarks :taskRemarks="taskRemarks" :aRemarks="openItem.aRemarks" />
+    <v-dialog v-model="remarksDialog" v-if="remarksDialog" width="800px">
+      <viewTaskRemarks
+        :taskRemarks="taskRemarks"
+        :aRemarks="openItem.aRemarks"
+      />
     </v-dialog>
 
     <v-dialog
       v-model="nextDialog"
-      max-width="900px"
+      width="800px"
       persistent
       v-if="nextDialog"
     >

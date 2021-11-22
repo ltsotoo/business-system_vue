@@ -36,7 +36,7 @@
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      max-width="600px"
+      width="600px"
       persistent
       @click:outside="closeEditDialog"
     >
@@ -52,7 +52,7 @@
     <v-dialog
       v-model="options.deleteDialog"
       v-if="options.deleteDialog"
-      max-width="600px"
+      width="600px"
       persistent
       @click:outside="closeDeleteDialog"
     >

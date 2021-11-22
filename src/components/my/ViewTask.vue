@@ -77,35 +77,14 @@
         <template v-slot:[`item.status`]="{ item }">
           {{ stautsToText(item.status) }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-btn text color="success" @click="openViewDialog(item)">
-            <v-icon left> mdi-eye </v-icon>
-            查看备注
-          </v-btn>
-        </template>
       </v-data-table>
     </v-card>
-
-    <v-dialog
-      v-model="viewDialog"
-      v-if="viewDialog"
-      width="1440px"
-      persistent
-      @click:outside="closeViewDialog"
-    >
-      <viewTaskRemarks
-        :aRemarks="openItem.aRemarks"
-        :remarks="openItem.remarks"
-        :taskRemarks="taskRemarks"
-      />
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import approve from "./Approve";
-import viewTaskRemarks from "./ViewTaskRemarks.vue";
-import { queryTaskRemarks } from "@/api/task";
+import approve from "@/components/task/Approve";
+import viewTaskRemarks from "@/components/task/ViewTaskRemarks.vue";
 export default {
   components: {
     approve,
@@ -147,20 +126,7 @@ export default {
         value: "startDate",
         sortable: false,
       },
-      {
-        text: "限时天数",
-        align: "center",
-        value: "days",
-        sortable: false,
-      },
-      {
-        text: "实际提交时间",
-        align: "center",
-        value: "realEndDate",
-        sortable: false,
-      },
       { text: "状态", align: "center", value: "status", sortable: false },
-      { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {
       total: 1,
@@ -189,17 +155,6 @@ export default {
         case 6:
           return "已发货";
       }
-    },
-    openViewDialog(item) {
-      this.openItem = item;
-      queryTaskRemarks(item.UID).then((res) => {
-        this.taskRemarks = res.data;
-        this.viewDialog = true;
-      });
-    },
-    closeViewDialog() {
-      this.openItem = {};
-      this.viewDialog = false;
     },
   },
 };

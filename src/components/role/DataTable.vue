@@ -20,7 +20,7 @@
 
     <v-dialog
       v-model="editDialog"
-      max-width="600px"
+      width="600px"
       persistent
       v-if="editDialog"
     >
@@ -33,7 +33,7 @@
 
     <v-dialog
       v-model="deleteDialog"
-      max-width="500px"
+      width="500px"
       persistent
       @click:outside="closeDeleteDialog"
     >

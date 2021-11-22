@@ -22,3 +22,11 @@ export const editPayment = (payment) => {
         data: payment,
     })
 }
+
+export const finishPayments = (object) => {
+    return request({
+        url: '/finishPayments',
+        method: 'POST',
+        data: object,
+    })
+}

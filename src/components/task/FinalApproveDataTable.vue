@@ -46,7 +46,7 @@
       </v-data-table>
     </v-card>
 
-    <v-dialog v-model="approveDialog" v-if="approveDialog" max-width="800px">
+    <v-dialog v-model="approveDialog" v-if="approveDialog" width="800px">
       <approve
         :openUID="openUID"
         :parentFun="refresh"

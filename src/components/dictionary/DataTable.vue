@@ -23,7 +23,7 @@
 
     <v-dialog
       v-model="deleteDialog"
-      max-width="500px"
+      width="600px"
       persistent
       @click:outside="closeDeleteDialog"
     >

@@ -141,10 +141,17 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
+    <myViewTask
+      style="margin-top: 5px"
+      ref="taskDataTable"
+      :parentObject="object.tasks"
+      v-if="isIndex"
+    />
     <taskDataTable
       style="margin-top: 5px"
       ref="taskDataTable"
       :parentObject="object.tasks"
+      v-else
     />
     <viewPayments
       style="margin-top: 5px"
@@ -155,11 +162,13 @@
 
 <script>
 import taskDataTable from "../task/ViewDataTable";
+import myViewTask from "../my/ViewTask";
 import viewPayments from "../payment/View";
 import { queryContract } from "@/api/contract";
 export default {
   components: {
     taskDataTable,
+    myViewTask,
     viewPayments,
   },
   props: {
@@ -172,6 +181,10 @@ export default {
     },
     closeDialog: {
       type: Function,
+    },
+    isIndex: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({

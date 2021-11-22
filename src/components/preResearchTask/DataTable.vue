@@ -31,7 +31,7 @@
 
     <v-dialog
       v-model="approveDialog"
-      max-width="600px"
+      width="600px"
       v-if="approveDialog"
       persistent
       @click:outside="closeApproveDialog"
@@ -46,7 +46,7 @@
 
     <v-dialog
       v-model="viewDialog"
-      max-width="600px"
+      width="600px"
       v-if="viewDialog"
       persistent
       @click:outside="closeViewDialog"
