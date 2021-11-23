@@ -28,14 +28,19 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success" @click="openPaymentDialog(item)">
+        <v-btn
+          text
+          color="success"
+          @click="openPaymentDialog(item)"
+          v-if="item.collectionStatus == 2"
+        >
           <v-icon left> mdi-eye </v-icon>
           查看回款记录
         </v-btn>
         <v-btn
           text
           color="primary"
-          @click="openPaymentDialog(item)"
+          @click="openEditDialog(item)"
           v-if="item.collectionStatus == 1"
         >
           <v-icon left> mdi-pencil </v-icon>
@@ -43,11 +48,11 @@
         </v-btn>
         <v-btn
           text
-          color="success"
+          color="primary"
           @click="openFinishDialog(item)"
           v-if="item.collectionStatus == 1"
         >
-          <v-icon left> mdi-eye </v-icon>
+          <v-icon left> mdi-pencil </v-icon>
           回款完成
         </v-btn>
       </template>
@@ -55,90 +60,31 @@
 
     <v-dialog
       v-model="paymentDialog"
-      width="800px"
-      persistent
       v-if="paymentDialog"
+      width="1200px"
+      persistent
       @click:outside="closePaymentDialog"
     >
-      <v-card>
-        <v-card-title> 历史回款记录 </v-card-title>
-        <v-card-subtitle>
-          <v-row v-for="(item, i) in paymentItems" :key="i" align="center">
-            <v-col cols="6">
-              <v-text-field
-                label="时间"
-                readonly
-                v-model.number="item.CreatedAt"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                label="回款金额(元)"
-                readonly
-                v-model.number="item.money"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea
-                label="备注"
-                readonly
-                auto-grow
-                rows="1"
-                v-model="item.remarks"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-card-subtitle>
-        <div v-if="openItem.collectionStatus == 1">
-          <v-card-title> 新增回款记录 </v-card-title>
-          <v-card-subtitle>
-            <v-form ref="form">
-              <v-row>
-                <v-col cols="3">
-                  <v-text-field
-                    label="回款金额(元)"
-                    v-model.number="payment.money"
-                    :rules="rules.money"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-textarea
-                    label="备注"
-                    rows="3"
-                    v-model="payment.remarks"
-                    counter
-                    maxlength="500"
-                  ></v-textarea>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-card-subtitle>
-        </div>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            rounded
-            @click="createPayment"
-            v-if="openItem.collectionStatus == 1"
-          >
-            提交
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closePaymentDialog">
-            关闭
-          </v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
+      <viewPayments :parentObject="object.payments" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      width="1200px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
+      <editPayments
+        :openItem="openItem"
+        :closeDialog="closeEditDialog"
+      ></editPayments>
     </v-dialog>
 
     <v-dialog
       v-model="finishDialog"
       v-if="finishDialog"
-      width="800px"
+      width="1200px"
       persistent
       @close:outside="closeFinishDialog"
     >
@@ -154,11 +100,15 @@
 
 <script>
 import { queryContracts } from "@/api/contract";
-import { addPayment, queryPayments } from "@/api/payment";
+import { queryPayments } from "@/api/payment";
 import finish from "@/components/payment/Finish";
+import editPayments from "@/components/payment/EditFroms";
+import viewPayments from "@/components/payment/View";
 export default {
   components: {
     finish,
+    editPayments,
+    viewPayments,
   },
   props: {
     queryObject: {
@@ -166,11 +116,6 @@ export default {
     },
   },
   data: () => ({
-    rules: {
-      money: [
-        (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额必须大于零",
-      ],
-    },
     headers: [
       {
         text: "合同编号",
@@ -221,9 +166,15 @@ export default {
         sortable: false,
       },
       {
-        text: "开票内容",
+        text: "总回款额(CNY)",
         align: "center",
-        value: "invoiceContent",
+        value: "paymentTotalAmount",
+        sortable: false,
+      },
+      {
+        text: "完成回款时间",
+        align: "center",
+        value: "endPaymentDate",
         sortable: false,
       },
       {
@@ -247,14 +198,10 @@ export default {
     },
     object: [],
     openItem: {},
+    editDialog: false,
     paymentDialog: false,
     finishDialog: false,
     paymentItems: [],
-    payment: {
-      contractUID: "",
-      money: 0,
-      remarks: "",
-    },
   }),
   created() {
     this.getObject();
@@ -333,18 +280,14 @@ export default {
       this.openItem = {};
       this.finishDialog = false;
     },
-    createPayment() {
-      if (this.validateForm()) {
-        this.payment.contractUID = this.openItem.UID;
-        var _this = this;
-        addPayment(this.payment).then((res) => {
-          _this.getObject();
-          _this.closePaymentDialog();
-        });
-      }
+    openEditDialog(item) {
+      this.openItem = item;
+      this.editDialog = true;
     },
-    validateForm() {
-      return this.$refs.form.validate();
+    closeEditDialog() {
+      this.openItem = {};
+      this.getObject();
+      this.editDialog = false;
     },
   },
 };

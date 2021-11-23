@@ -51,7 +51,7 @@
           text
           color="primary"
           @click="openFinalApproveDialog(item.UID)"
-          v-if="item.status == 2 && item.productionStatus == 2"
+          v-if="item.status == 2 && item.productionStatus == 2 && item.collectionStatus == 2"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           终审

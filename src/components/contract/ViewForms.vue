@@ -41,9 +41,6 @@
                 label="客户名称"
               ></v-text-field>
             </v-col>
-          </v-row>
-
-          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="object.contractUnit.text"
@@ -56,6 +53,9 @@
                 label="签订日期"
               ></v-text-field>
             </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="object.estimatedDeliveryDate"
@@ -66,6 +66,33 @@
               <v-text-field
                 v-model="object.endDeliveryDate"
                 label="实际交货日期"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.endPaymentDate"
+                label="完成回款日期"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.totalAmount"
+                label="总金额"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.payType"
+                label="付款类型"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.paymentTotalAmount"
+                label="回款金额(CNY)"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -83,18 +110,7 @@
                 label="特殊合同"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="text.payType"
-                label="付款类型"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="object.totalAmount"
-                label="总金额"
-              ></v-text-field>
-            </v-col>
+
             <v-col cols="12" v-if="object.invoiceType != 1">
               <v-textarea
                 v-model="object.invoiceContent"

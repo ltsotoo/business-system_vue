@@ -30,3 +30,11 @@ export const finishPayments = (object) => {
         data: object,
     })
 }
+
+export const rejectContractPaymentStatus = (object) => {
+    return request({
+        url: '/rejectPayments',
+        method: 'POST',
+        data: object,
+    })
+}

@@ -4,19 +4,19 @@
     <v-card-subtitle>
       <v-form disabled>
         <v-row v-for="(item, i) in paymentItems" :key="i" align="center">
-          <v-col cols="6">
+          <v-col cols="2">
             <v-text-field
               label="时间"
               v-model.number="item.CreatedAt"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="2">
             <v-text-field
               label="回款金额(元)"
               v-model.number="item.money"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="8">
             <v-textarea
               label="备注"
               auto-grow
@@ -36,6 +36,7 @@
               label="总回款(元)"
               v-model.number="object.paymentTotalAmount"
               :rules="rules.money"
+              disabled
             ></v-text-field>
           </v-col>
           <v-col cols="6">

@@ -7,3 +7,19 @@ export const contractApprove = (data) => {
         data: data
     })
 }
+
+export const contractFinalApprove = (data) => {
+    return request({
+        url: '/task/contract/finalApprove',
+        method: 'PUT',
+        data: data
+    })
+}
+
+export const calculate = (data) => {
+    return request({
+        url: '/calculatePushMoney',
+        method: 'POST',
+        data: data
+    })
+}

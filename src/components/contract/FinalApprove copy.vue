@@ -232,9 +232,7 @@
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="rejectPayments">确定</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeRejectPaymentsDialog"
-            >取消</v-btn
-          >
+          <v-btn color="primary" rounded @click="closeRejectPaymentsDialog">取消</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -243,12 +241,22 @@
     <v-dialog
       v-model="finalApproveDialog"
       v-if="finalApproveDialog"
-      width="75%"
-      min-width="900px"
+      width="600px"
       persistent
       @click:outside="closeFinalApproveDialog"
     >
-      <finalApproveForms :parentObj="object" :closeDialog="closeFinalApproveDialog"/>
+      <v-card>
+        <v-card-title class="text-h5">您确定该合同已经完成了吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="finalApprove">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeFinalApproveDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
@@ -256,14 +264,13 @@
 <script>
 import finalApproveDataTable from "../task/FinalApproveDataTable";
 import viewPayments from "../payment/View";
-import finalApproveForms from "./FinalApproveForms.vue";
 import { queryContract, rejectContract } from "@/api/contract";
+import { contractApprove } from "@/api/contract_flow";
 import { rejectContractPaymentStatus } from "@/api/payment";
 export default {
   components: {
     finalApproveDataTable,
     viewPayments,
-    finalApproveForms,
   },
   props: {
     openType: {
@@ -366,6 +373,17 @@ export default {
     rejectPayments() {
       rejectContractPaymentStatus({ UID: this.openUID }).then((res) => {
         this.$message.success("回款状态驳回成功！");
+        this.refresh();
+        this.closeDialog();
+      });
+    },
+    finalApprove() {
+      var status = 3;
+      contractApprove({
+        UID: this.openUID,
+        status: status,
+      }).then((res) => {
+        this.$message.success("合同审批成功！");
         this.refresh();
         this.closeDialog();
       });

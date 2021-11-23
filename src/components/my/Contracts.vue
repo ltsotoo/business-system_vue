@@ -24,7 +24,7 @@
       </template>
       <template v-slot:[`item.endDeliveryDate`]="{ item }">
         <div v-if="item.productionStatus == 2">
-          {{item.endDeliveryDate}}
+          {{ item.endDeliveryDate }}
         </div>
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
@@ -129,6 +129,12 @@ export default {
         text: "付款类型",
         align: "center",
         value: "payType",
+        sortable: false,
+      },
+      {
+        text: "总回款额(CNY)",
+        align: "center",
+        value: "paymentTotalAmount",
         sortable: false,
       },
       {

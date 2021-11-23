@@ -439,7 +439,7 @@ export default {
       contractDate: null,
       contractUnitUID: "",
       estimatedDeliveryDate: "",
-      endDeliveryDate: "",
+      endDeliveryDate: null,
       payType: 1,
       totalAmount: 0,
       invoiceType: 1,
@@ -525,16 +525,15 @@ export default {
     },
 
     openP2CDialog(product) {
-      this.openItem = JSON.parse(JSON.stringify(product));
-
-      this.openItem.remarks = "";
       this.openItem.productUID = product.UID;
+      this.openItem.name = product.name;
+      this.openItem.brand = product.brand;
+      this.openItem.specification = product.specification;
       this.openItem.number = 1;
-      this.openItem.ID = null;
-      this.openItem.UID = null;
-      this.openItem.CreatedAt = null;
-      this.openItem.UpdatedAt = null;
-      this.openItem.DeletedAt = null;
+      this.openItem.total = product.number;
+      this.openItem.unit = product.unit;
+      this.openItem.standardPrice = product.standardPrice;
+      this.openItem.standardPriceUSD = product.standardPriceUSD;
 
       this.p2cDialog = true;
     },
