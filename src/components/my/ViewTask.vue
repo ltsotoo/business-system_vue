@@ -93,7 +93,7 @@ export default {
   props: {
     parentObject: {
       type: Array,
-      default: [],
+      default: ()=>[],
     },
   },
   data: () => ({

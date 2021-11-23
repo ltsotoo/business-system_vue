@@ -7,26 +7,15 @@
             <v-spacer></v-spacer>
             <v-col cols="2">
               <v-select
-                v-model="sourceType"
-                :items="sourceTypeItems"
-                item-text="text"
-                label="类型"
-                return-object
-                clearable
-                @change="getSubtypeItems"
-              ></v-select>
-            </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="queryObject.subtypeUID"
-                :items="subtypeItems"
-                item-text="text"
+                v-model="queryObject.typeUID"
+                :items="typeItems"
+                item-text="name"
                 item-value="UID"
-                label="子类型"
+                label="类型"
                 clearable
               ></v-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-text-field
                 label="产品名称"
                 v-model.trim="queryObject.name"
@@ -35,7 +24,7 @@
                 maxlength="20"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-text-field
                 label="规格"
                 v-model.trim="queryObject.specification"
@@ -69,7 +58,7 @@
 <script>
 import productDataTable from "@/components/product/DataTable";
 import productEntryForms from "@/components/product/EntryForms";
-import { queryProductTypes, queryDictionaries } from "@/api/dictionary";
+import { queryProductTypes } from "@/api/productType";
 
 export default {
   components: {
@@ -77,12 +66,9 @@ export default {
     productEntryForms,
   },
   data: () => ({
-    sourceTypeItems: [],
-    subtypeItems: [],
-    sourceType: {},
+    typeItems: [],
     queryObject: {
-      sourceTypeUID: "",
-      subtypeUID: "",
+      typeUID: "",
       name: "",
       specification: "",
     },
@@ -90,25 +76,13 @@ export default {
     addDialog: false,
   }),
   created() {
-    this.getProductSoureTypeItems();
+    this.getTypeItems();
   },
   methods: {
-    getProductSoureTypeItems() {
+    getTypeItems() {
       queryProductTypes().then((res) => {
-        this.sourceTypeItems = res.data;
+        this.typeItems = res.data;
       });
-    },
-    getSubtypeItems() {
-      this.queryObject.subtypeUID = "";
-      this.subtypeItems = [];
-      if (this.sourceType) {
-        this.queryObject.sourceTypeUID = this.sourceType.UID;
-        queryDictionaries(this.sourceType.name).then((res) => {
-          this.subtypeItems = res.data;
-        });
-      } else {
-        this.queryObject.sourceTypeUID = "";
-      }
     },
     query() {
       this.$refs.productDataTable.getObject();

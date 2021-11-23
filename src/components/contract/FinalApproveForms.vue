@@ -164,6 +164,9 @@ export default {
     closeDialog: {
       type: Function,
     },
+    refresh: {
+      type: Function,
+    },
   },
   data: () => ({
     rules: {
@@ -203,6 +206,7 @@ export default {
           temp.paymentDays = this.object.paymentDays;
           temp.paymentMoneys = this.object.paymentMoneys;
           temp.totalMoney = this.object.totalMoney;
+          temp.tasks = this.object.tasks;
         } else {
           temp.type = 2;
           temp.taskTotalMoney = this.userObject.taskTotalMoney;
@@ -211,6 +215,7 @@ export default {
         }
         contractFinalApprove(temp).then((res) => {
           this.$message.success("合同最终审批成功！");
+          this.refresh();
           this.closeDialog();
         });
       }

@@ -23,3 +23,10 @@ export const calculate = (data) => {
         data: data
     })
 }
+
+export const getContractPushMoney = (contractUID) => {
+    return request({
+        url: '/contractPushMoney/' + contractUID,
+        method: 'GET',
+    })
+}

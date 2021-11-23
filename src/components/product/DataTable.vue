@@ -111,13 +111,7 @@ export default {
       {
         text: "类型",
         align: "center",
-        value: "sourceType.text",
-        sortable: false,
-      },
-      {
-        text: "子类别",
-        align: "center",
-        value: "subtype.text",
+        value: "type.name",
         sortable: false,
       },
       {

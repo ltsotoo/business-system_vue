@@ -57,7 +57,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <contractViewForms :openUID="openUID" isIndex="true" />
+      <contractViewForms :openUID="openUID" :isIndex="true" />
     </v-dialog>
 
     <v-dialog v-model="deleteDialog" width="600px" persistent>

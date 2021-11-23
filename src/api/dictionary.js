@@ -36,15 +36,6 @@ export const queryDictionarieTypes = (category) => {
     })
 }
 
-export const queryProductTypes = () => {
-    return queryDictionarieTypes("ProductType")
-}
-
-
-export const queryChilds = (parentID) => {
-    return queryDictionaries("", parentID, "")
-}
-
 export const queryContractUnits = () => {
     return queryDictionaries("ContractUnit", "")
 }

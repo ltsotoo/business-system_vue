@@ -248,7 +248,11 @@
       persistent
       @click:outside="closeFinalApproveDialog"
     >
-      <finalApproveForms :parentObj="object" :closeDialog="closeFinalApproveDialog"/>
+      <finalApproveForms
+        :parentObj="object"
+        :closeDialog="closeFinalApproveDialogPlus"
+        :refresh="refresh"
+      />
     </v-dialog>
   </div>
 </template>
@@ -355,6 +359,10 @@ export default {
     },
     closeFinalApproveDialog() {
       this.finalApproveDialog = false;
+    },
+    closeFinalApproveDialogPlus() {
+      this.closeFinalApproveDialog();
+      this.closeDialog();
     },
     reject() {
       rejectContract({ UID: this.openUID }).then((res) => {

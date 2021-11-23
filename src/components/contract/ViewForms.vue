@@ -173,6 +173,8 @@
       style="margin-top: 5px"
       :parentObject="object.payments"
     ></viewPayments>
+
+    <viewPushMoney style="margin-top: 5px" :parentObj="object" v-if="object.status == 3"/>
   </div>
 </template>
 
@@ -180,12 +182,14 @@
 import taskDataTable from "../task/ViewDataTable";
 import myViewTask from "../my/ViewTask";
 import viewPayments from "../payment/View";
+import viewPushMoney from "./ViewPushMoney.vue";
 import { queryContract } from "@/api/contract";
 export default {
   components: {
     taskDataTable,
     myViewTask,
     viewPayments,
+    viewPushMoney,
   },
   props: {
     openUID: {

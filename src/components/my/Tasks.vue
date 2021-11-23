@@ -170,7 +170,7 @@ export default {
       {
         text: "库存数量",
         align: "center",
-        value: "product.number",
+        value: "product.numberCount",
         sortable: false,
       },
       { text: "单位", align: "center", value: "unit", sortable: false },

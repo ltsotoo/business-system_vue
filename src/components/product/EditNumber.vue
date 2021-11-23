@@ -6,26 +6,21 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              v-model.trim="object.sourceType.text"
+              v-model.trim="object.type.name"
               label="类型"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.trim="object.subtype.text"
-              label="子类型"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              v-model.trim="object.supplier.name"
-              label="供货商"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4"></v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.trim="object.supplier.name"
+              label="供货商"
             ></v-text-field>
           </v-col>
           <v-col cols="4">

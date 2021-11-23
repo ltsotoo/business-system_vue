@@ -34,7 +34,7 @@
         {{ payTypeToText(item.payType) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success" dark @click="openViewDialog(item.UID)">
+        <v-btn text color="success" @click="openViewDialog(item.UID)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
@@ -51,7 +51,11 @@
           text
           color="primary"
           @click="openFinalApproveDialog(item.UID)"
-          v-if="item.status == 2 && item.productionStatus == 2 && item.collectionStatus == 2"
+          v-if="
+            item.status == 2 &&
+            item.productionStatus == 2 &&
+            item.collectionStatus == 2
+          "
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           终审

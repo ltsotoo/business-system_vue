@@ -6,32 +6,11 @@
         <v-row>
           <v-col cols="4">
             <v-select
-              v-model="sourceType"
-              :items="sourceTypeItems"
-              item-text="text"
-              label="类型"
-              return-object
-              @change="getSubtypeItems"
-              :rules="rules.must"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.subtypeUID"
-              :items="subtypeItems"
-              item-text="text"
-              item-value="UID"
-              label="子类型"
-              :rules="rules.must"
-            ></v-select>
-          </v-col>
-          <v-col cols="4">
-            <v-select
-              v-model="object.supplierUID"
-              :items="supplierItems"
+              v-model="object.typeUID"
+              :items="typeItems"
               item-text="name"
               item-value="UID"
-              label="供应商"
+              label="类型"
               :rules="rules.must"
             ></v-select>
           </v-col>
@@ -43,6 +22,17 @@
               counter
               maxlength="20"
             ></v-text-field>
+          </v-col>
+          <v-col cols="4"></v-col>
+          <v-col cols="4">
+            <v-select
+              v-model="object.supplierUID"
+              :items="supplierItems"
+              item-text="name"
+              item-value="UID"
+              label="供应商"
+              :rules="rules.must"
+            ></v-select>
           </v-col>
           <v-col cols="4">
             <v-text-field
@@ -135,8 +125,7 @@
 <script>
 import { entryProduct } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
-import { queryProductTypes, queryDictionaries } from "@/api/dictionary";
-
+import { queryProductTypes } from "@/api/productType";
 export default {
   props: {
     closeDialog: {
@@ -147,13 +136,9 @@ export default {
     },
   },
   data: () => ({
-    sourceTypeItems: [],
-    sourceType: {},
-    subtypeItems: [],
+    typeItems: [],
     supplierItems: [],
     object: {
-      sourceTypeUID: "",
-      subtypeUID: "",
       name: "",
       brand: "",
       specification: "",
@@ -166,6 +151,7 @@ export default {
       standardPriceUSD: 0,
       deliveryCycle: "",
       remarks: "",
+      typeUID: "",
     },
     rules: {
       must: [(v) => !!v || "必填项！"],
@@ -174,21 +160,13 @@ export default {
     },
   }),
   created() {
-    this.getProductSoureTypeItems();
+    this.getTypeItems();
     this.getSupplierItems();
   },
   methods: {
-    getProductSoureTypeItems() {
+    getTypeItems() {
       queryProductTypes().then((res) => {
-        this.sourceTypeItems = res.data;
-      });
-    },
-    getSubtypeItems() {
-      this.subtypeItems = [];
-      this.object.subtypeUID = "";
-      this.object.sourceTypeUID = this.sourceType.UID;
-      queryDictionaries(this.sourceType.name).then((res) => {
-        this.subtypeItems = res.data;
+        this.typeItems = res.data;
       });
     },
     getSupplierItems() {

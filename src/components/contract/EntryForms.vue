@@ -252,13 +252,12 @@
             <v-spacer></v-spacer>
             <v-col cols="2">
               <v-select
-                v-model="sourceType"
-                :items="sourceTypeItems"
-                item-text="text"
+                v-model="queryObject.typeUID"
+                :items="typeItems"
+                item-text="name"
+                item-value="UID"
                 label="类型"
-                return-object
                 clearable
-                @change="getSubtypeItems"
               ></v-select>
             </v-col>
             <v-col cols="2">
@@ -402,11 +401,8 @@ import entryCartDT from "./EntryCartDT";
 import { queryAreas } from "@/api/oadrp";
 import { queryEmployees } from "@/api/employee";
 import { queryCompanys, queryCustomers } from "@/api/customer";
-import {
-  queryContractUnits,
-  queryProductTypes,
-  queryDictionaries,
-} from "@/api/dictionary";
+import { queryContractUnits } from "@/api/dictionary";
+import { queryProductTypes } from "@/api/productType";
 import { entryContract } from "@/api/contract";
 export default {
   components: {
@@ -426,9 +422,7 @@ export default {
     companyItems: [],
     customerItems: [],
     contractUnitItems: [],
-    sourceTypeItems: [],
-    sourceType: {},
-    subtypeItems: [],
+    typeItems: [],
     object: {
       UID: "",
       no: "",
@@ -456,8 +450,7 @@ export default {
       },
     },
     queryObject: {
-      sourceTypeUID: "",
-      subtypeUID: "",
+      typeUID: "",
       name: "",
       specification: "",
     },
@@ -471,7 +464,7 @@ export default {
   created() {
     this.getAreaItems();
     this.getContractUnitItems();
-    this.getProductSoureTypeItems();
+    this.getTypeItems();
 
     this.getEmployeeItems();
   },
@@ -503,22 +496,10 @@ export default {
         this.contractUnitItems = res.data;
       });
     },
-    getProductSoureTypeItems() {
+    getTypeItems() {
       queryProductTypes().then((res) => {
-        this.sourceTypeItems = res.data;
+        this.typeItems = res.data;
       });
-    },
-    getSubtypeItems() {
-      this.queryObject.subtypeUID = "";
-      this.subtypeItems = [];
-      if (this.sourceType) {
-        this.queryObject.sourceTypeUID = this.sourceType.UID;
-        queryDictionaries(this.sourceType.name).then((res) => {
-          this.subtypeItems = res.data;
-        });
-      } else {
-        this.queryObject.sourceTypeUID = "";
-      }
     },
     queryProducts() {
       this.$refs.entryProductDT.getObject();

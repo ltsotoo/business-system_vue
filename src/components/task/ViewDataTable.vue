@@ -114,7 +114,6 @@ export default {
   props: {
     parentObject: {
       type: Array,
-      default: [],
     },
   },
   data: () => ({
