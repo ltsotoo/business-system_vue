@@ -9,11 +9,7 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          text
-          color="primary"
-          @click="openEditNameDialog(item)"
-        >
+        <v-btn text color="primary" @click="openEditNameDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           名称编辑
         </v-btn>
@@ -21,6 +17,8 @@
           text
           color="error"
           @click="openDelDialog(item.UID)"
+          dark
+          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除

@@ -14,11 +14,7 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          text
-          color="primary"
-          @click="openEditDialog(item)"
-        >
+        <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -26,6 +22,8 @@
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
+          dark
+          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -119,6 +117,12 @@ export default {
         text: "邮箱",
         align: "center",
         value: "email",
+        sortable: false,
+      },
+      {
+        text: "网址",
+        align: "center",
+        value: "web",
         sortable: false,
       },
       {

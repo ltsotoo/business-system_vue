@@ -70,10 +70,16 @@
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+        <v-btn
+          text
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          dark
+          disabled
+        >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn> -->
+        </v-btn>
       </template>
     </v-data-table>
 

@@ -78,13 +78,16 @@
     <v-card style="margin-top: 10px">
       <v-card-subtitle>
         <v-row>
+          <v-spacer></v-spacer>
           <!-- <v-col cols="3">
             <v-btn rounded color="primary" @click="editObject">
               修改个人资料
             </v-btn>
           </v-col> -->
-          <v-col cols="3">
-            <v-btn rounded color="error" @click="openEditPwdDialog"> 修改密码 </v-btn>
+          <v-col cols="auto">
+            <v-btn rounded color="error" @click="openEditPwdDialog">
+              修改密码
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-subtitle>

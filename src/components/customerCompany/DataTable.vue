@@ -9,7 +9,13 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+        <v-btn
+          text
+          color="error"
+          @click="openDeleteDialog(item.UID)"
+          dark
+          disabled
+        >
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>

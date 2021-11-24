@@ -25,11 +25,21 @@
             <v-icon left> mdi-eye </v-icon>
             查看
           </v-btn>
-          <v-btn text color="primary" @click="openEditDialog(item.UID)">
+          <v-btn text color="primary" @click="openEditNumberDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
             库存编辑
           </v-btn>
-          <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+          <v-btn text color="primary" @click="openEditPriceDialog(item.UID)">
+            <v-icon left> mdi-pencil </v-icon>
+            价格编辑
+          </v-btn>
+          <v-btn
+            text
+            color="error"
+            @click="openDeleteDialog(item.UID)"
+            dark
+            disabled
+          >
             <v-icon left> mdi-delete </v-icon>
             删除
           </v-btn>
@@ -48,17 +58,30 @@
     </v-dialog>
 
     <v-dialog
-      v-model="options.editDialog"
-      v-if="options.editDialog"
+      v-model="options.editNumberDialog"
+      v-if="options.editNumberDialog"
       width="800px"
       persistent
-      @click:outside="closeEditDialog"
+      @click:outside="closeEditNumberDialog"
     >
-      <productEditForms
-        ref="productEditForms"
+      <productEditNumber
         :openUID="options.openUID"
         :refresh="getObject"
-        :closeDialog="closeEditDialog"
+        :closeDialog="closeEditNumberDialog"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="options.editPriceDialog"
+      v-if="options.editPriceDialog"
+      width="800px"
+      persistent
+      @click:outside="closeEditPriceDialog"
+    >
+      <productEditForms
+        :openUID="options.openUID"
+        :refresh="getObject"
+        :closeDialog="closeEditPriceDialog"
       />
     </v-dialog>
 
@@ -84,12 +107,14 @@
 
 <script>
 import productViewForms from "./ViewForms";
-import productEditForms from "./EditNumber";
+import productEditNumber from "./EditNumber";
+import productEditForms from "./EditForms";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
     productViewForms,
+    productEditNumber,
     productEditForms,
   },
   props: {
@@ -185,7 +210,8 @@ export default {
       openType: null,
       isTransfer: false,
       viewDialog: false,
-      editDialog: false,
+      editNumberDialog: false,
+      editPriceDialog: false,
       deleteDialog: false,
     },
     openItem: "",
@@ -227,13 +253,21 @@ export default {
       this.openItem = "";
       this.options.viewDialog = false;
     },
-    openEditDialog(uid) {
+    openEditNumberDialog(uid) {
       this.options.openUID = uid;
-      this.options.editDialog = true;
+      this.options.editNumberDialog = true;
     },
-    closeEditDialog() {
+    closeEditNumberDialog() {
       this.options.openUID = "";
-      this.options.editDialog = false;
+      this.options.editNumberDialog = false;
+    },
+    openEditPriceDialog(uid) {
+      this.options.openUID = uid;
+      this.options.editPriceDialog = true;
+    },
+    closeEditPriceDialog() {
+      this.options.openUID = "";
+      this.options.editPriceDialog = false;
     },
     openDeleteDialog(uid) {
       this.options.openUID = uid;

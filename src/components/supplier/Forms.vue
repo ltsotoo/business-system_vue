@@ -61,6 +61,15 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.trim="object.web"
+              label="网址"
+              :rules="rules.must"
+              counter
+              maxlength="50"
+            ></v-text-field>
+          </v-col>
         </v-row>
       </v-form>
     </v-card-subtitle>
@@ -100,6 +109,7 @@ export default {
       phone: "",
       wechatID: "",
       email: "",
+      web: "",
     },
     rules: {
       must: [(v) => !!v || "必填项！"],
@@ -142,6 +152,5 @@ export default {
       return this.$refs.form.validate();
     },
   },
-  computed: {},
 };
 </script>
