@@ -42,7 +42,7 @@
           text
           color="primary"
           @click="openApproveDialog(item.UID)"
-          v-if="item.status == 1"
+          v-if="item.status == 1 && nos.indexOf('14') != -1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -54,7 +54,8 @@
           v-if="
             item.status == 2 &&
             item.productionStatus == 2 &&
-            item.collectionStatus == 2
+            item.collectionStatus == 2 &&
+            nos.indexOf('16') != -1
           "
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
@@ -253,9 +254,15 @@ export default {
     editNum: 2,
     finalApproveNum: 3,
     object: [],
+
+    nos: [],
   }),
   created() {
     this.getObject();
+
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
   methods: {
     getObject() {

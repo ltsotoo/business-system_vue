@@ -2,11 +2,32 @@
   <!-- 报销 -->
   <v-container>
     <v-card>
+      <v-card-title></v-card-title>
+      <v-card-subtitle>
+        <v-row>
+          <v-col cols="6">
+            <v-text-field
+              label="个人剩余报销余额(元)"
+              v-model="employee.money"
+              readonly
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6">
+              <v-text-field
+                label="办事处剩余报销余额(元)"
+                v-model="employee.office.money"
+                readonly
+              ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-subtitle>
+    </v-card>
+    <v-card style="margin-top: 10px">
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">
             <v-spacer></v-spacer>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-select
                 v-model="queryObject.type"
                 :items="typeItems"
@@ -16,7 +37,7 @@
                 clearable
               ></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-select
                 v-model="queryObject.status"
                 :items="statusItems"
@@ -55,6 +76,7 @@
 <script>
 import myExpenses from "@/components/my/Expenses";
 import expenseForms from "@/components/expense/Forms";
+import { queryEmployee } from "@/api/employee.js";
 export default {
   components: {
     myExpenses,
@@ -76,7 +98,16 @@ export default {
       status: 0,
     },
     addDialog: false,
+    employee: {
+      money:null,
+      office:{
+        money:null,
+      }
+    },
   }),
+  created() {
+    this.getEmployee();
+  },
   methods: {
     query() {
       this.$refs.myExpenses.getObject();
@@ -86,6 +117,11 @@ export default {
     },
     closAddDialog() {
       this.addDialog = false;
+    },
+    getEmployee() {
+      queryEmployee(localStorage.getItem("uid")).then((res) => {
+        this.employee = res.data;
+      });
     },
   },
 };

@@ -66,7 +66,7 @@ export default {
   props: {
     parentObject: {
       type: Array,
-      default: [],
+      default: ()=>[],
     },
     refresh: {
       type: Function,

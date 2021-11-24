@@ -87,7 +87,7 @@ export default {
   props: {
     paymentItems: {
       type: Array,
-      default: [],
+      default: ()=>[],
     },
     openUID: {
       type: String,

@@ -14,6 +14,7 @@
               item-text="name"
               item-value="UID"
               label="办事处"
+              :disabled="nos.indexOf('4') == -1"
             ></v-select>
           </v-col>
           <v-col cols="3">
@@ -37,7 +38,14 @@
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
+            <v-btn
+              rounded
+              color="success"
+              @click="openAddDialog"
+              v-if="this.nos.indexOf('4') != -1"
+            >
+              添加
+            </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -82,7 +90,18 @@ export default {
       name: "",
     },
     addDialog: false,
+
+    nos: [],
   }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+
+    if (this.nos.indexOf("4") == -1 && this.nos.indexOf("7") != -1) {
+      this.queryObject.officeUID = localStorage.getItem("office");
+    }
+  },
   methods: {
     getOfficeItems() {
       queryOffices().then((res) => {

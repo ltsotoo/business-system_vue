@@ -21,18 +21,26 @@
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
         </v-btn> -->
-        <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
-          <v-icon left> mdi-pencil </v-icon>
-          财务编辑
-        </v-btn>
-        <v-btn text color="primary" @click="openEditRoleDialog(item.UID)">
-          <v-icon left> mdi-pencil </v-icon>
-          人事编辑
-        </v-btn>
-        <v-btn text color="error" @click="openDelDialog(item.UID)">
-          <v-icon left> mdi-delete </v-icon>
-          删除
-        </v-btn>
+        <v-if v-if="nos.indexOf('7') != -1">
+          <v-btn text color="primary" @click="openResetPwdDialog(item)">
+            <v-icon left> mdi-pencil </v-icon>
+            重置密码
+          </v-btn>
+        </v-if>
+        <v-if v-if="nos.indexOf('4') != -1">
+          <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
+            <v-icon left> mdi-pencil </v-icon>
+            财务编辑
+          </v-btn>
+          <v-btn text color="primary" @click="openEditRoleDialog(item.UID)">
+            <v-icon left> mdi-pencil </v-icon>
+            人事编辑
+          </v-btn>
+          <v-btn text color="error" @click="openDelDialog(item.UID)">
+            <v-icon left> mdi-delete </v-icon>
+            删除
+          </v-btn>
+        </v-if>
       </template>
     </v-data-table>
 
@@ -78,11 +86,32 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-model="resetPwdDialog"
+      v-if="resetPwdDialog"
+      width="600px"
+      persistent
+      @click:outside="closeResetPwdDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定要重置该员工的密码吗?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="resetObject">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeResetPwdDialog">
+            取消
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryEmployees, delEmployee } from "@/api/employee";
+import { queryEmployees, delEmployee, resetPwd } from "@/api/employee";
 import employeeFormsView from "@/components/enterprise/EmployeeFormsView";
 import employeeFormsEdit from "@/components/enterprise/EmployeeFormsEdit";
 export default {
@@ -141,8 +170,15 @@ export default {
     editType: 0,
     editDialog: false,
     delDialog: false,
+    resetPwdDialog: false,
+
+    nos: [],
   }),
-  created() {},
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     getObject() {
       queryEmployees(this.queryObject).then((res) => {
@@ -154,6 +190,12 @@ export default {
         this.$message.success("删除成功了！");
         this.getObject();
         this.closeDelDialog();
+      });
+    },
+    resetObject() {
+      resetPwd(this.openItem.UID).then((res) => {
+        this.$message.success("重置成功了！");
+        this.closeResetPwdDialog();
       });
     },
 
@@ -195,6 +237,15 @@ export default {
     closeViewDialog() {
       this.openUID = "";
       this.viewDialog = false;
+    },
+
+    openResetPwdDialog(item) {
+      this.openItem = item;
+      this.resetPwdDialog = true;
+    },
+    closeResetPwdDialog() {
+      this.openItem = {};
+      this.resetPwdDialog = false;
     },
   },
 };

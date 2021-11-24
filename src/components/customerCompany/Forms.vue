@@ -53,7 +53,7 @@ export default {
   props: {
     areaItems: {
       type: Array,
-      default: [],
+      default: ()=>[],
     },
     parentObj: {
       type: Object,

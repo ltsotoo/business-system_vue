@@ -1,11 +1,11 @@
 <template>
   <v-container>
     <v-expansion-panels multiple>
-      <myContract />
-      <myPreResearch />
+      <myContract v-if="nos.indexOf('13') != -1"/>
+      <myPreResearch v-if="nos.indexOf('17') != -1"/>
       <myTask />
       <myPreResearchTask />
-      <myPayment />
+      <myPayment v-if="nos.indexOf('15') != -1"/>
     </v-expansion-panels>
   </v-container>
 </template>
@@ -23,6 +23,14 @@ export default {
     myTask,
     myPreResearchTask,
     myPayment,
+  },
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
 };
 </script>

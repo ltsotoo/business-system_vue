@@ -21,14 +21,20 @@
               ></v-select>
             </v-col>
             <v-col cols="4">
-              <v-select
+              <!-- <v-select
                 v-model="object.employeeUID"
                 item-text="name"
                 item-value="UID"
                 :items="employeeItems"
                 label="业务员"
                 :rules="rules.must"
-              ></v-select>
+              ></v-select> -->
+              <!-- <v-text-field
+                label="业务员"
+                v-model="employeeName"
+                readonly
+              >
+              </v-text-field> -->
             </v-col>
             <v-col cols="4"></v-col>
             <v-col cols="12">
@@ -460,17 +466,22 @@ export default {
     p2cDialog: false,
     removeDialog: false,
     submitBtnDisable: false,
+
+    employeeName: "",
   }),
   created() {
     this.getAreaItems();
     this.getContractUnitItems();
     this.getTypeItems();
 
-    this.getEmployeeItems();
+    // this.getEmployeeItems();
+    this.employeeName = localStorage.getItem("name");
+    this.object.employeeUID = localStorage.getItem("uid");
   },
   methods: {
     getAreaItems() {
-      queryAreas().then((res) => {
+      var officeUID = localStorage.getItem("office");
+      queryAreas({ officeUID: officeUID }).then((res) => {
         this.areaItems = res.data;
       });
     },

@@ -58,8 +58,8 @@ export default {
       default: 0,
     },
     officeItems: {
-      type: Object,
-      default: [],
+      type: Array,
+      default: ()=>[],
     },
     officeUID: {
       type: String,

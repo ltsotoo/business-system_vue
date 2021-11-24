@@ -1,15 +1,15 @@
 <template>
   <v-container>
     <v-expansion-panels multiple>
-      <areaPanel />
-      <officePanel />
+      <areaPanel v-if="nos.indexOf('1') != -1" />
+      <officePanel v-if="nos.indexOf('2') != -1" />
       <departmentPanel />
       <employeePanel />
     </v-expansion-panels>
 
     <v-expansion-panels multiple style="margin-top: 30px">
-      <settingUnit />
-      <settingRole />
+      <settingUnit v-if="nos.indexOf('5') != -1" />
+      <settingRole v-if="nos.indexOf('20') != -1" />
     </v-expansion-panels>
   </v-container>
 </template>
@@ -31,6 +31,14 @@ export default {
 
     settingUnit,
     settingRole,
+  },
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
 };
 </script>

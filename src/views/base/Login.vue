@@ -31,6 +31,7 @@
                       v-model="queryObject.password"
                       label="密码"
                       :rules="rules.password"
+                      type="password"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -97,15 +98,23 @@ export default {
       if (this.userLoginBefore()) {
         login(this.queryObject).then((res) => {
           localStorage.setItem("name", res.data.employee.name);
-          localStorage.setItem("uid", res.data.employee.UID);
           localStorage.setItem("Authorization", res.data.token);
+          localStorage.setItem("uid", res.data.employee.UID);
+          localStorage.setItem("department", res.data.employee.departmentUID);
+          localStorage.setItem("office", res.data.employee.officeUID);
           localStorage.setItem(
             "urls",
             window.btoa(
               window.encodeURIComponent(JSON.stringify(res.data.urls))
             )
           );
-          localStorage.setItem("nos", JSON.stringify(res.data.nos));
+          // localStorage.setItem("nos", JSON.stringify(res.data.nos));
+          localStorage.setItem(
+            "nos",
+            window.btoa(
+              window.encodeURIComponent(JSON.stringify(res.data.nos))
+            )
+          );
           this.goToIndex();
         });
         this.verifyCode.refresh();

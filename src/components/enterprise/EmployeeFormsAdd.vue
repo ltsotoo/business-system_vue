@@ -113,8 +113,8 @@ import { entryEmployee } from "@/api/employee";
 export default {
   props: {
     officeItems: {
-      type: Object,
-      default: [],
+      type: Array,
+      default: ()=>[],
     },
     parentObj: {
       type: Object,

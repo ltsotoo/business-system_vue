@@ -12,6 +12,7 @@
               item-value="value"
               label="类型"
               :rules="rules.must"
+              :disabled="nos.indexOf('6') == -1"
             ></v-select>
           </v-col>
           <v-col cols="8">
@@ -64,7 +65,7 @@ export default {
       { text: "办事处", value: 2 },
     ],
     object: {
-      typeUID: "",
+      type: 1,
       amount: 0,
       text: "",
     },
@@ -74,7 +75,14 @@ export default {
         (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误",
       ],
     },
+
+    nos: [],
   }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     submit() {
       if (this.validateForm()) {

@@ -21,7 +21,7 @@
           text
           color="primary"
           @click="openApproveDialog(item.UID)"
-          v-if="item.status == 2"
+          v-if="item.status == 2 && nos.indexOf('18') != -1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -135,9 +135,15 @@ export default {
     openItem: {},
     viewDialog: false,
     approveDialog: false,
+
+    nos: [],
   }),
   created() {
     this.getObject();
+
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
   methods: {
     getObject() {

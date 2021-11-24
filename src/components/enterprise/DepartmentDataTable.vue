@@ -77,8 +77,8 @@ export default {
       type: Object,
     },
     officeItems: {
-      type: Object,
-      default: [],
+      type: Array,
+      default: ()=>[],
     },
   },
   data: () => ({
