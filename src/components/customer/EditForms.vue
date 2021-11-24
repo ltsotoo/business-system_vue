@@ -25,7 +25,7 @@
               v-model.trim="object.researchGroup"
               label="课题组"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -34,7 +34,7 @@
               label="电话"
               :rules="rules.phone"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -44,7 +44,7 @@
               v-model.trim="object.wechatID"
               label="微信号"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="6">

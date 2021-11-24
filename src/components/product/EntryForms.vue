@@ -20,7 +20,7 @@
               label="名称"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="4"></v-col>
@@ -40,7 +40,7 @@
               label="品牌"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="4"></v-col>
@@ -65,7 +65,7 @@
               label="单位"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="4"></v-col>
@@ -96,7 +96,7 @@
               label="供货周期"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="12">

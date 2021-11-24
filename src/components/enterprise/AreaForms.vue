@@ -12,7 +12,7 @@
               :rules="rules.number"
               :disabled="openType == 2"
               counter
-              maxlength="20"
+              maxlength="50"
             >
             </v-text-field>
           </v-col>
@@ -23,7 +23,7 @@
               :rules="rules.name"
               :disabled="openType == 2"
               counter
-              maxlength="20"
+              maxlength="50"
             >
             </v-text-field>
           </v-col>

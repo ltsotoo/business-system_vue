@@ -11,7 +11,7 @@
               label="名称"
               counter
               :rules="rules.name"
-              maxlength="20"
+              maxlength="50"
               :disabled="openType != 0"
             ></v-text-field>
           </v-col>

@@ -33,7 +33,7 @@
               label="编号"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
               disabled
             ></v-text-field>
           </v-col>
@@ -43,7 +43,7 @@
               label="姓名"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
               disabled
             ></v-text-field>
           </v-col>
@@ -53,7 +53,7 @@
               label="手机号"
               :rules="rules.phone"
               counter
-              maxlength="20"
+              maxlength="50"
               disabled
             ></v-text-field>
           </v-col>
@@ -62,7 +62,7 @@
               v-model.trim="object.wechatID"
               label="微信号"
               counter
-              maxlength="20"
+              maxlength="50"
               :disabled="!(editType == 1)"
             ></v-text-field>
           </v-col>

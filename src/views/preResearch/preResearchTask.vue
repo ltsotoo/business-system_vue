@@ -11,7 +11,7 @@
               v-model.trim="queryObject.employeeUID"
               clearable
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="3">

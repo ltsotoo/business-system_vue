@@ -21,7 +21,7 @@
               v-model.trim="queryObject.name"
               clearable
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="2">
@@ -30,7 +30,7 @@
               v-model.trim="queryObject.companyName"
               clearable
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="2">

@@ -11,7 +11,7 @@
                 v-model.trim="queryObject.name"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -20,7 +20,7 @@
                 v-model.trim="queryObject.linkman"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -29,7 +29,7 @@
                 v-model.trim="queryObject.phone"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">

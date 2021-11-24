@@ -54,7 +54,7 @@
                 v-model.trim="queryObject.employeeName"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -63,7 +63,7 @@
                 v-model.trim="queryObject.employeePhone"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">

@@ -10,7 +10,7 @@
               label="名称"
               :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="12">

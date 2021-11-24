@@ -20,7 +20,7 @@
               v-model="object.name"
               clearable
               counter
-              maxlength="20"
+              maxlength="50"
               :rules="rules.must"
             ></v-text-field>
           </v-col>

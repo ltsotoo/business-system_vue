@@ -89,7 +89,7 @@
                 v-model="object.customer.name"
                 :rules="rules.must"
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -98,7 +98,7 @@
                 v-model="object.customer.phone"
                 :rules="rules.must"
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -106,7 +106,7 @@
                 label="客户课题组"
                 v-model="object.customer.researchGroup"
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -272,7 +272,7 @@
                 v-model.trim="queryObject.name"
                 clearable
                 counter
-                maxlength="20"
+                maxlength="50"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
