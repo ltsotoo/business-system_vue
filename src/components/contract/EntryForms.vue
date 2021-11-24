@@ -266,16 +266,6 @@
                 clearable
               ></v-select>
             </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="queryObject.subtypeUID"
-                :items="subtypeItems"
-                item-text="text"
-                item-value="UID"
-                label="子类型"
-                clearable
-              ></v-select>
-            </v-col>
             <v-col cols="3">
               <v-text-field
                 label="产品名称"
@@ -491,11 +481,17 @@ export default {
       });
     },
     getCompanyItems() {
+      this.companyItems = [];
+      this.customerItems = [];
+      this.object.customer.companyUID = "";
+      this.object.customerUID = "";
       queryCompanys({ areaUID: this.object.areaUID }).then((res) => {
         this.companyItems = res.data;
       });
     },
     getCustomerItems() {
+      this.customerItems = [];
+      this.object.customerUID = "";
       queryCustomers({ companyUID: this.object.customer.companyUID }).then(
         (res) => {
           this.customerItems = res.data;

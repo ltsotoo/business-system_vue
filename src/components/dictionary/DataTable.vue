@@ -13,7 +13,6 @@
           color="error"
           @click="openDeleteDialog(item.UID)"
           class="mx-2"
-          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除

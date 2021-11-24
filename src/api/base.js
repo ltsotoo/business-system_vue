@@ -7,8 +7,8 @@ import Message from '../components/base/message/index'
 const service = axios.create({
     //公共路由
     // baseURL: 'http://localhost:8088/api/v1',
-    // baseURL: 'http://127.0.0.1:8088/api/v1',
-    baseURL: 'http://192.168.92.128:8088/api/v1',
+    baseURL: 'http://127.0.0.1:8088/api/v1',
+    // baseURL: 'http://192.168.92.128:8088/api/v1',
     //请求最大响应时间
     timeout: 9000
 })

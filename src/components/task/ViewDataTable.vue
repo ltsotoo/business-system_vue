@@ -10,10 +10,10 @@
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
           <v-row>
-            <v-col> 人民币：{{ item.product.standardPrice }} </v-col>
+            <v-col> 人民币：{{ item.standardPrice }} </v-col>
           </v-row>
           <v-row>
-            <v-col> 美元：{{ item.product.standardPriceUSD }} </v-col>
+            <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
           </v-row>
         </template>
         <template v-slot:[`item.startDate`]="{ item }">
@@ -39,10 +39,10 @@
           </v-row>
         </template>
         <template v-slot:[`item.days`]="{ item }">
-          <v-row>
+          <v-row v-if="item.type == 3">
             <v-col> 设计限时：{{ item.technicianDays }}天 </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="item.type > 1">
             <v-col> 采购限时：{{ item.purchaseDays }}天 </v-col>
           </v-row>
         </template>

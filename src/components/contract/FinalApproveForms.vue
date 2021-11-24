@@ -181,6 +181,10 @@ export default {
     useSystem: true,
   }),
   created() {
+    if (this.parentObj.payType == 2 || this.parentObj.isSpecial) {
+      this.useSystem = false;
+    }
+
     this.calculateM();
   },
   computed: {

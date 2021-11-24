@@ -1,12 +1,5 @@
 import request from './base'
 
-export const delTask = (uid) => {
-    return request({
-        url: '/task/' + uid,
-        method: 'DELETE',
-    })
-}
-
 export const queryTasks = (queryObject) => {
     return request({
         url: '/tasks',
