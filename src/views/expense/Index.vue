@@ -53,8 +53,7 @@
                 label="员工名称"
                 v-model.trim="queryObject.employeeName"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -62,8 +61,7 @@
                 label="员工电话"
                 v-model.trim="queryObject.employeePhone"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">

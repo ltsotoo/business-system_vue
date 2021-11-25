@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header :class="[`text-h4`]">
-      办事处管理
+      公司管理
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-form ref="queryForm">
@@ -12,8 +12,7 @@
               label="名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -34,7 +33,7 @@
       <v-dialog
         v-model="addDialog"
         v-if="addDialog"
-        width="600px"
+        width="800px"
         persistent
         @click:outside="closeAddDialog"
       >

@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-card-title>添加产品类型</v-card-title>
+    <v-card-title v-if="openType == 0">产品类型添加</v-card-title>
+    <v-card-title v-if="openType == 2">产品类型编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
@@ -13,21 +14,21 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.pushMoneyPercentages"
               label="标准提成百分比"
               :rules="rules.pushMoneyPercentages"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.pushMoneyPercentagesUp"
               label="提成上涨百分比"
               :rules="rules.pushMoneyPercentages"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.pushMoneyPercentagesDown"
               label="提成下降百分比"
@@ -48,9 +49,16 @@
 </template>
 
 <script>
-import { addProductType } from "@/api/productType";
+import { addProductType, editProductType } from "@/api/productType";
 export default {
   props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
+    openItem: {
+      type: Object,
+    },
     closeDialog: {
       type: Function,
     },
@@ -60,8 +68,10 @@ export default {
   },
   data: () => ({
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      pushMoneyPercentages: [(v) => /^[0-9]*(\.[0-9]{1,5})?$/.test(v) || "格式错误"],
+      must: [(v) => !!v || "必填项"],
+      pushMoneyPercentages: [
+        (v) => /^[0-9]*(\.[0-9]{1,5})?$/.test(v) || "格式错误",
+      ],
     },
     object: {
       name: "",
@@ -70,14 +80,27 @@ export default {
       pushMoneyPercentagesDown: 0,
     },
   }),
+  created() {
+    if (this.openType == 2) {
+      this.object = this.openItem;
+    }
+  },
   methods: {
     submit() {
       if (this.validateForm()) {
-        addProductType(this.object).then((res) => {
-          this.$message.success("添加成功了!");
-          this.refresh();
-          this.closeDialog();
-        });
+        if (this.openType == 0) {
+          addProductType(this.object).then((res) => {
+            this.$message.success("添加成功了!");
+            this.refresh();
+            this.closeDialog();
+          });
+        } else {
+          editProductType(this.object).then((res) => {
+            this.$message.success("编辑成功了!");
+            this.refresh();
+            this.closeDialog();
+          });
+        }
       }
     },
     validateForm() {

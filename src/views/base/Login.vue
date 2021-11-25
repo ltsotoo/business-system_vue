@@ -21,7 +21,7 @@
                     <v-text-field
                       v-model="queryObject.phone"
                       label="手机号"
-                      :rules="rules.phone"
+                      :rules="rules.must"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -30,7 +30,7 @@
                     <v-text-field
                       v-model="queryObject.password"
                       label="密码"
-                      :rules="rules.password"
+                      :rules="rules.must"
                       type="password"
                     ></v-text-field>
                   </v-col>
@@ -40,7 +40,7 @@
                     <v-text-field
                       v-model="userVerifyCode"
                       label="验证码"
-                      :rules="rules.verifyCode"
+                      :rules="rules.must"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
@@ -74,9 +74,7 @@ export default {
     userVerifyCode: "",
     verifyCode: null,
     rules: {
-      phone: [(v) => !!v || "请输入手机号码！"],
-      password: [(v) => !!v || "请输入密码！"],
-      verifyCode: [(v) => !!v || "请输入校验码！"],
+      must: [(v) => !!v || "必填项"],
     },
   }),
   mounted() {

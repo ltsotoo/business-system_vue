@@ -34,8 +34,7 @@
               label="员工名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="2">
@@ -43,8 +42,7 @@
               label="员工手机号"
               v-model="queryObject.phone"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -74,16 +72,14 @@
       <v-dialog
         v-model="addDialog"
         v-if="addDialog"
-        width="800px"
+        width="1000px"
         persistent
-        @click:outside="closeAddDialog"
       >
         <employeeFormsAdd
           :parentObj="{
             officeUID: queryObject.officeUID,
             departmentUID: queryObject.departmentUID,
           }"
-          :officeItems="officeItems"
           :closeDialog="closeAddDialog"
           :refresh="queryEmployees"
         />

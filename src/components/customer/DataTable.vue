@@ -18,13 +18,7 @@
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <v-btn
-          text
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          dark
-          disabled
-        >
+        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
         </v-btn>
@@ -34,7 +28,7 @@
     <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      width="600px"
+      width="1000px"
       persistent
       @click:outside="closeEditDialog"
     >
@@ -45,9 +39,16 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="options.deleteDialog" width="500px" persistent>
+    <v-dialog
+      v-model="options.deleteDialog"
+      v-if="options.deleteDialog"
+      width="800px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定删除该位客户吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -75,12 +76,6 @@ export default {
   },
   data: () => ({
     headers: [
-      {
-        text: "区域",
-        align: "center",
-        value: "company.area.name",
-        sortable: false,
-      },
       {
         text: "单位",
         align: "center",

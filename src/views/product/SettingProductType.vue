@@ -12,8 +12,7 @@
               label="名称"
               clearable
               v-model="queryObject.name"
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -29,11 +28,12 @@
       <productTypeDataTable
         ref="productTypeDataTable"
         :queryObject="queryObject"
+        :refresh="query"
       />
 
       <v-dialog
         v-model="addDialog"
-        width="500px"
+        width="800px"
         persistent
         v-if="addDialog"
         @click:outside="closeAddDialog"

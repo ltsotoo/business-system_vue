@@ -9,22 +9,42 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+        <v-btn text color="primary" @click="openEditDialog(item)">
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
+        <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
     <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      width="800px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
+      <editForms
+        :openType="2"
+        :openItem="openItem"
+        :refresh="refresh"
+        :closeDialog="closeEditDialog"
+      ></editForms>
+    </v-dialog>
+
+    <v-dialog
       v-model="deleteDialog"
       v-if="deleteDialog"
-      width="600px"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除该类型吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -39,11 +59,18 @@
 
 <script>
 import { queryProductTypes, delProductType } from "@/api/productType";
+import editForms from "./Forms";
 export default {
+  components: {
+    editForms,
+  },
   props: {
     queryObject: {
       type: Object,
     },
+    refresh:{
+      type:Function
+    }
   },
   data: () => ({
     headers: [
@@ -87,6 +114,8 @@ export default {
     object: [],
 
     openUID: "",
+    openItem: {},
+    editDialog: false,
     deleteDialog: false,
   }),
   created() {
@@ -105,6 +134,15 @@ export default {
         this.getObject();
         this.closeDeleteDialog();
       });
+    },
+
+    openEditDialog(item) {
+      this.openItem = JSON.parse(JSON.stringify(item));
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.openItem = {};
+      this.editDialog = false;
     },
 
     openDeleteDialog(uid) {

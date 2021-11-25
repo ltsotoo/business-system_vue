@@ -4,7 +4,7 @@
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-select
               v-model="object.typeUID"
               :items="typeItems"
@@ -14,43 +14,41 @@
               :rules="rules.must"
             ></v-select>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
               :rules="rules.must"
               counter
-              maxlength="50"
+              maxlength="100"
             ></v-text-field>
           </v-col>
-          <v-col cols="4"></v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-select
               v-model="object.supplierUID"
               :items="supplierItems"
               item-text="name"
               item-value="UID"
               label="供应商"
-              :rules="rules.must"
+              clearable
             ></v-select>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.brand"
               label="品牌"
-              :rules="rules.must"
               counter
-              maxlength="50"
+              maxlength="100"
             ></v-text-field>
           </v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="12">
-            <v-text-field
+            <v-textarea
               v-model.trim="object.specification"
               label="规格"
+              rows="3"
               counter
-              maxlength="50"
-            ></v-text-field>
+              maxlength="200"
+            ></v-textarea>
           </v-col>
           <v-col cols="4">
             <v-text-field
@@ -68,12 +66,18 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="4"></v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model="object.deliveryCycle"
+              label="供货周期"
+              counter
+              maxlength="50"
+            ></v-text-field>
+          </v-col>
           <v-col cols="4">
             <v-text-field
               v-model.number="object.purchasedPrice"
               label="采购/成本价格(人民币)"
-              :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
@@ -90,20 +94,11 @@
               :rules="rules.money"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-model="object.deliveryCycle"
-              label="供货周期"
-              :rules="rules.must"
-              counter
-              maxlength="50"
-            ></v-text-field>
-          </v-col>
+
           <v-col cols="12">
             <v-textarea
               label="备注"
               v-model="object.remarks"
-              auto-grow
               rows="3"
               counter
               maxlength="500"
@@ -154,9 +149,9 @@ export default {
       typeUID: "",
     },
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为大于零的整数"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
+      must: [(v) => !!v || "必填项"],
+      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
   }),
   created() {

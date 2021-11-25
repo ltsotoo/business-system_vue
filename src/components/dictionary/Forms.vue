@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-card-title>添加</v-card-title>
+    <v-card-title v-if="openType == 0">添加</v-card-title>
+    <v-card-title v-if="openType == 2">编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row align="center">
@@ -8,7 +9,7 @@
             <v-text-field
               v-model.trim="object.text"
               label="名称"
-              :rules="rules.text"
+              :rules="rules.must"
               counter
               maxlength="50"
             >
@@ -28,9 +29,16 @@
 </template>
 
 <script>
-import { createDictionary } from "@/api/dictionary";
+import { createDictionary, editDictionary } from "@/api/dictionary";
 export default {
   props: {
+    openType: {
+      type: String,
+      default: 0,
+    },
+    openItem: {
+      type: Object,
+    },
     typeName: {
       type: String,
     },
@@ -47,23 +55,33 @@ export default {
       text: "",
     },
     rules: {
-      text: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "名称的长度必须小于20个字符",
-      ],
+      must: [(v) => !!v || "必填项"],
     },
   }),
   created() {
     this.object.dictionaryTypeUID = this.typeName;
+    if (this.openType == 2) {
+      this.object = this.openItem;
+    }
   },
   methods: {
     submit() {
       if (this.validateForm()) {
-        createDictionary(this.object).then((res) => {
-          this.$message.success("录入成功了！");
-          this.refresh();
-          this.closeDialog();
-        });
+        if (this.openType == 0) {
+          createDictionary(this.object).then((res) => {
+            this.$message.success("录入成功了！");
+            this.refresh();
+            this.closeDialog();
+          });
+        } else if (this.openType == 2) {
+          editDictionary(this.object).then((res) => {
+            this.$message.success("编辑成功了！");
+            if (this.refresh()) {
+              this.refresh();
+            }
+            this.closeDialog();
+          });
+        }
       }
     },
     validateForm() {

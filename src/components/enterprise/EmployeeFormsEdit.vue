@@ -1,8 +1,9 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title>员工添加</v-card-title>
+    <v-card-title v-if="editType == 0">员工添加</v-card-title>
+    <v-card-title v-else>员工编辑</v-card-title>
     <v-card-subtitle>
-      <v-form ref="form">
+      <v-form ref="form3">
         <v-row>
           <v-col cols="6">
             <v-select
@@ -27,34 +28,39 @@
               :disabled="!(editType == 3)"
             ></v-select>
           </v-col>
-          <v-col cols="4">
+        </v-row>
+      </v-form>
+      <v-form ref="form1">
+        <v-row>
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
               :rules="rules.must"
               counter
               maxlength="50"
-              disabled
+              :disabled="!(editType == 1)"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6"></v-col>
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
               :rules="rules.must"
               counter
               maxlength="50"
-              disabled
+              :disabled="!(editType == 1)"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.phone"
               label="手机号"
               :rules="rules.phone"
               counter
               maxlength="50"
-              disabled
+              :disabled="!(editType == 1)"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -76,6 +82,10 @@
               :disabled="!(editType == 1)"
             ></v-text-field>
           </v-col>
+        </v-row>
+      </v-form>
+      <v-form ref="form2">
+        <v-row>
           <v-col cols="6">
             <v-text-field
               v-model.number="object.money"
@@ -92,20 +102,23 @@
               :disabled="!(editType == 2)"
             ></v-text-field>
           </v-col>
-          <v-col cols="12">
-            <v-select
-              v-model="object.roles"
-              :items="roleItems"
-              item-text="name"
-              label="职位"
-              multiple
-              chips
-              return-object
-              :disabled="!(editType == 3)"
-            ></v-select>
-          </v-col>
         </v-row>
       </v-form>
+      <v-row>
+        <v-col cols="12">
+          <v-select
+            v-model="object.roles"
+            :items="roleItems"
+            item-text="name"
+            label="职位"
+            multiple
+            chips
+            return-object
+            :disabled="!(editType == 3)"
+          ></v-select>
+        </v-col>
+      </v-row>
+
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
@@ -155,9 +168,14 @@ export default {
       credit: 0,
     },
     rules: {
-      money: [
-        (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误",
+      must: [(v) => !!v || "必填项"],
+      email: [
+        (v) =>
+          v.length == 0 ||
+          /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
+          "格式错误",
       ],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
   }),
   created() {
@@ -200,7 +218,13 @@ export default {
       });
     },
     validateForm() {
-      return this.$refs.form.validate();
+      if (this.editType == 1) {
+        return this.$refs.form1.validate();
+      } else if (this.editType == 2) {
+        return this.$refs.form2.validate();
+      } else if (this.editType == 3) {
+        return this.$refs.form3.validate();
+      }
     },
   },
 };

@@ -15,6 +15,14 @@ export const delProductType = (uid) => {
     })
 }
 
+export const editProductType = (productType) => {
+    return request({
+        url: '/productType',
+        method: 'PUT',
+        data: productType
+    })
+}
+
 export const queryProductTypes = (queryObject) => {
     return request({
         url: '/productTypes',

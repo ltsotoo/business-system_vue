@@ -4,37 +4,37 @@
     <v-card-subtitle>
       <v-form ref="form" disabled>
         <v-row>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.type.name"
               label="类型"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
             ></v-text-field>
           </v-col>
-          <v-col cols="4"></v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.supplier.name"
               label="供货商"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.brand"
               label="品牌"
             ></v-text-field>
           </v-col>
-          <v-col cols="4"></v-col>
           <v-col cols="12">
-            <v-text-field
+            <v-textarea
               v-model.trim="object.specification"
               label="规格"
-            ></v-text-field>
+              rows="1"
+              auto-grow
+            ></v-textarea>
           </v-col>
           <v-col cols="4">
             <v-text-field
@@ -54,6 +54,13 @@
         </v-row>
       </v-form>
       <v-row>
+        <v-col cols="4">
+          <v-text-field
+            v-model.number="object.purchasedPrice"
+            label="采购/成本价格(人民币)"
+            disabled
+          ></v-text-field>
+        </v-col>
         <v-col cols="4">
           <v-text-field
             v-model.number="object.standardPrice"

@@ -12,8 +12,7 @@
               label="区域名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="4">
@@ -21,8 +20,7 @@
               label="办事处名称"
               v-model="queryObject.officeName"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -42,14 +40,14 @@
       <areaDataTable
         ref="areaDataTable"
         :queryObject="queryObject"
+        :areaItems="areaItems"
       ></areaDataTable>
 
       <v-dialog
         v-model="addDialog"
         v-if="addDialog"
-        width="600px"
+        width="800px"
         persistent
-        @click:outside="closeAddDialog"
       >
         <areaForms :closeDialog="closeAddDialog" :refresh="queryAreas" />
       </v-dialog>

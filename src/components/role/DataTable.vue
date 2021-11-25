@@ -24,7 +24,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="editDialog" width="600px" persistent v-if="editDialog">
+    <v-dialog v-model="editDialog" width="1000px" persistent v-if="editDialog">
       <roleForms
         :closeDialog="closeEditDialog"
         :openUID="openUID"
@@ -34,12 +34,14 @@
 
     <v-dialog
       v-model="deleteDialog"
-      width="500px"
+      v-if="deleteDialog"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除该职位吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded>确定</v-btn>

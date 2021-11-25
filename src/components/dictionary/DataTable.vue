@@ -8,6 +8,10 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
+        <v-btn text color="primary" @click="openEditDialog(item)" class="mx-2">
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
         <v-btn
           text
           color="error"
@@ -21,13 +25,30 @@
     </v-data-table>
 
     <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      width="800px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
+      <dictionaryfroms
+        :openType="2"
+        :openItem="openItem"
+        :closeDialog="closeEditDialog"
+        :refresh="refresh"
+      />
+    </v-dialog>
+
+    <v-dialog
       v-model="deleteDialog"
-      width="600px"
+      v-if="deleteDialog"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -43,8 +64,15 @@
 <script>
 import { delDictionary } from "@/api/dictionary";
 import { queryDictionaries } from "@/api/dictionary";
+import dictionaryfroms from "./Forms.vue";
 export default {
+  components: {
+    dictionaryfroms,
+  },
   props: {
+    refresh: {
+      type: Function,
+    },
     queryObject: {
       type: Object,
     },
@@ -56,7 +84,9 @@ export default {
     ],
     object: [],
     deleteDialog: false,
+    editDialog: false,
     openUID: null,
+    openItem: {},
   }),
   created() {
     if (this.queryObject.typeName != "") {
@@ -78,6 +108,14 @@ export default {
     closeDeleteDialog() {
       this.openUID = "";
       this.deleteDialog = false;
+    },
+    openEditDialog(item) {
+      this.openItem = JSON.parse(JSON.stringify(item));
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.openItem = {};
+      this.editDialog = false;
     },
     deleteItem() {
       delDictionary(this.openUID).then((res) => {

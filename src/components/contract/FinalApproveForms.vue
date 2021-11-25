@@ -171,7 +171,7 @@ export default {
   data: () => ({
     rules: {
       number: [(v) => /^[0-9]*$/.test(v) || "格式错误"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
     object: {},
     userObject: {

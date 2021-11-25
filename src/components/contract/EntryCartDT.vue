@@ -31,6 +31,7 @@ export default {
   props: {
     objItems: {
       type: Array,
+      default: () => [],
     },
   },
   data: () => ({

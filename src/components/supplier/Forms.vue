@@ -9,21 +9,25 @@
             <v-text-field
               v-model.trim="object.name"
               label="供应商名称"
-              :disabled="openType == 2"
               :rules="rules.must"
               counter
-              maxlength="50"
+              maxlength="100"
             ></v-text-field>
           </v-col>
-          <v-col cols="6"></v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.trim="object.web"
+              label="网址"
+              counter
+              maxlength="100"
+            ></v-text-field>
+          </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.trim="object.address"
-              :disabled="openType == 2"
               label="地址"
-              :rules="rules.must"
               counter
-              maxlength="50"
+              maxlength="200"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -39,9 +43,9 @@
             <v-text-field
               v-model.trim="object.phone"
               label="联系电话"
-              :rules="rules.phone"
+              :rules="rules.must"
               counter
-              maxlength="20"
+              maxlength="100"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -49,7 +53,7 @@
               v-model.trim="object.wechatID"
               label="微信号"
               counter
-              maxlength="20"
+              maxlength="50"
             ></v-text-field>
           </v-col>
           <v-col cols="6">
@@ -57,15 +61,6 @@
               v-model.trim="object.email"
               label="电子邮箱"
               :rules="rules.email"
-              counter
-              maxlength="50"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              v-model.trim="object.web"
-              label="网址"
-              :rules="rules.must"
               counter
               maxlength="50"
             ></v-text-field>
@@ -112,11 +107,7 @@ export default {
       web: "",
     },
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      phone: [
-        (v) => !!v || "必填项！",
-        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
-      ],
+      must: [(v) => !!v || "必填项"],
       email: [
         (v) =>
           v.length == 0 ||

@@ -9,8 +9,6 @@
             <v-text-field
               v-model.trim="object.number"
               label="区域编号"
-              :rules="rules.number"
-              :disabled="openType == 2"
               counter
               maxlength="50"
             >
@@ -20,8 +18,7 @@
             <v-text-field
               v-model.trim="object.name"
               label="区域名称"
-              :rules="rules.name"
-              :disabled="openType == 2"
+              :rules="rules.must"
               counter
               maxlength="50"
             >
@@ -34,6 +31,7 @@
               item-text="name"
               item-value="UID"
               label="办事处"
+              clearable
             ></v-select>
           </v-col>
         </v-row>
@@ -75,14 +73,7 @@ export default {
       number: "",
     },
     rules: {
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
-      ],
-      number: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length < 20) || "编号的长度必须小于20个字符",
-      ],
+      muster: [(v) => !!v || "必填项"],
     },
   }),
   created() {

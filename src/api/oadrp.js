@@ -54,6 +54,13 @@ export const queryAreas = (area) => {
     })
 }
 
+export const queryMyAreas = () => {
+    return request({
+        url: '/myAreas',
+        method: 'GET',
+    })
+}
+
 export const editArea = (area) => {
     return request({
         url: '/area',

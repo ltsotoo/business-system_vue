@@ -101,10 +101,10 @@ export default {
   },
   data: () => ({
     rules: {
+      must: [(v) => !!v || "必填项"],
       money: [
-        (v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额必须大于零",
+        (v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零",
       ],
-      must: [(v) => !!v || "必填项！"],
     },
     contractDateMenu: false,
     object: {

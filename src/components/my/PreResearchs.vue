@@ -34,9 +34,16 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="deleteDialog" width="500px" persistent>
+    <v-dialog
+      v-model="deleteDialog"
+      v-if="deleteDialog"
+      width="800px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
       <v-card>
         <v-card-title class="text-h5">您确定删除该预设计吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="delObject">确定</v-btn>

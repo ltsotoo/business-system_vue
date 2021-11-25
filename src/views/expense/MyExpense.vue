@@ -67,7 +67,7 @@
       </v-card-subtitle>
     </v-card>
 
-    <v-dialog v-model="addDialog" v-if="addDialog" width="800px" persistent>
+    <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
       <expenseForms :refresh="query" :closeDialog="closAddDialog" />
     </v-dialog>
   </v-container>

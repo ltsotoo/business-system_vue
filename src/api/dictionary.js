@@ -15,6 +15,14 @@ export const delDictionary = (uid) => {
     })
 }
 
+export const editDictionary = (dictionary) => {
+    return request({
+        url: '/dictionary',
+        method: 'PUT',
+        data: dictionary
+    })
+}
+
 export const queryDictionaries = (typeName, text) => {
     return request({
         url: '/dictionaries',

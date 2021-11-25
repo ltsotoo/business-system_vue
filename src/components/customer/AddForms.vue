@@ -4,17 +4,14 @@
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
-          <v-col cols="6">
-            <v-select
-              v-model="object.companyUID"
-              :items="companyItems"
-              item-text="name"
-              item-value="UID"
+          <v-col cols="12">
+            <v-text-field
+              v-model.trim="company.name"
               label="公司"
-              :rules="rules.must"
-            ></v-select>
+              disabled
+            ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
@@ -25,26 +22,25 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.researchGroup"
               label="课题组"
               counter
-              maxlength="50"
+              maxlength="100"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.phone"
               label="电话"
-              :rules="rules.phone"
               counter
-              maxlength="50"
+              maxlength="100"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.wechatID"
               label="微信号"
@@ -52,7 +48,7 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-text-field
               v-model.trim="object.email"
               label="电子邮箱"
@@ -75,9 +71,16 @@
 </template>
 
 <script>
-import { queryCompanys, entryCustomer } from "@/api/customer";
+import { entryCustomer } from "@/api/customer";
 export default {
   props: {
+    company: {
+      type: Object,
+      default: {
+        UID: "",
+        name: "",
+      },
+    },
     closeDialog: {
       type: Function,
     },
@@ -86,7 +89,6 @@ export default {
     },
   },
   data: () => ({
-    companyItems: [],
     object: {
       companyUID: "",
       name: "",
@@ -96,28 +98,19 @@ export default {
       email: "",
     },
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      phone: [
-        (v) => !!v || "必填项！",
-        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
-      ],
+      must: [(v) => !!v || "必填项"],
       email: [
         (v) =>
           v.length == 0 ||
           /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
-          "邮箱格式错误",
+          "格式错误",
       ],
     },
   }),
   created() {
-    this.getCompanyItems();
+    this.object.companyUID = this.company.UID;
   },
   methods: {
-    getCompanyItems() {
-      queryCompanys().then((res) => {
-        this.companyItems = res.data;
-      });
-    },
     submit() {
       if (this.validateForm()) {
         entryCustomer(this.object).then((res) => {

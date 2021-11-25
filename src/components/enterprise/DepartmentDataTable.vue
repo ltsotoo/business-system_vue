@@ -13,7 +13,7 @@
           <v-icon left> mdi-pencil </v-icon>
           名称编辑
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           text
           color="error"
           @click="openDelDialog(item.UID)"
@@ -22,14 +22,14 @@
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="editNameDialog"
       v-if="editNameDialog"
-      width="600px"
+      width="800px"
       persistent
       @click:outside="closeEditNameDialog"
     >
@@ -103,9 +103,11 @@ export default {
   }),
   methods: {
     getObject() {
-      queryDepartments(this.queryObject).then((res) => {
-        this.object = res.data;
-      });
+      if (this.queryObject.officeUID != "") {
+        queryDepartments(this.queryObject).then((res) => {
+          this.object = res.data;
+        });
+      }
     },
     delObject() {
       delDepartment(this.openUID).then((res) => {

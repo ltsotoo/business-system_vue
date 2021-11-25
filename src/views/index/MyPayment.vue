@@ -31,6 +31,7 @@
                   label="客户名称"
                   v-model.trim="queryObject.customerName"
                   clearable
+                  maxlength="20"
                 ></v-text-field>
               </v-col>
               <v-col cols="3">
@@ -38,6 +39,7 @@
                   label="合同编号"
                   v-model.trim="queryObject.no"
                   clearable
+                  maxlength="20"
                 ></v-text-field>
               </v-col>
             </v-row>

@@ -16,19 +16,20 @@
               label="部门"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6"></v-col>
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.phone"
               label="手机号"

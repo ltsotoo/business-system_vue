@@ -13,13 +13,14 @@
               item-value="UID"
               label="办事处"
               :disabled="openType == 2"
+              :rules="rules.must"
             ></v-select>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
-              :rules="rules.name"
+              :rules="rules.must"
               counter
               maxlength="50"
             >
@@ -33,7 +34,6 @@
               item-value="UID"
               label="默认职位"
               clearable
-              :disabled="openType == 2"
             ></v-select>
           </v-col>
         </v-row>
@@ -50,16 +50,17 @@
 </template>
 
 <script>
-import { queryRoles, entryDepartment, editDepartment } from "@/api/oadrp";
+import {
+  queryOffices,
+  queryRoles,
+  entryDepartment,
+  editDepartment,
+} from "@/api/oadrp";
 export default {
   props: {
     openType: {
       type: Number,
       default: 0,
-    },
-    officeItems: {
-      type: Array,
-      default: ()=>[],
     },
     officeUID: {
       type: String,
@@ -76,6 +77,7 @@ export default {
     },
   },
   data: () => ({
+    officeItem: [],
     roleItems: [],
     object: {
       roleUID: "",
@@ -83,13 +85,11 @@ export default {
       name: "",
     },
     rules: {
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "名称的长度必须不大于20个字符",
-      ],
+      must: [(v) => !!v || "必填项"],
     },
   }),
   created() {
+    this.getOfficeItems();
     this.getRoleItems();
     this.object.officeUID = this.officeUID;
     if (this.openType == 2) {
@@ -97,6 +97,11 @@ export default {
     }
   },
   methods: {
+    getOfficeItems() {
+      queryOffices().then((res) => {
+        this.officeItems = res.data;
+      });
+    },
     getRoleItems() {
       queryRoles().then((res) => {
         this.roleItems = res.data;

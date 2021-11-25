@@ -11,9 +11,9 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="primary" @click="openEditNameDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
-          名称编辑
+          编辑
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           text
           color="error"
           @click="openDelDialog(item.UID)"
@@ -22,7 +22,7 @@
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -77,7 +77,7 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "办事处名称",
+        text: "公司名称",
         align: "center",
         value: "name",
         sortable: false,

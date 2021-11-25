@@ -394,7 +394,7 @@
 <script>
 import entryProductDT from "./EntryProductDT";
 import entryCartDT from "./EntryCartDT";
-import { queryAreas } from "@/api/oadrp";
+import { queryMyAreas } from "@/api/oadrp";
 import { queryEmployees } from "@/api/employee";
 import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryContractUnits } from "@/api/dictionary";
@@ -407,9 +407,9 @@ export default {
   },
   data: () => ({
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      number: [(v) => /^[0-9]*$/.test(v) || "库存数量必须为大于零的整数"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
+      must: [(v) => !!v || "必填项"],
+      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
     contractDateMenu: false,
     estimatedDeliveryDateMenu: false,
@@ -470,8 +470,7 @@ export default {
   },
   methods: {
     getAreaItems() {
-      var officeUID = localStorage.getItem("office");
-      queryAreas({ officeUID: officeUID }).then((res) => {
+      queryMyAreas().then((res) => {
         this.areaItems = res.data;
       });
     },

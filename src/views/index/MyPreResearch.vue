@@ -35,7 +35,7 @@
         ref="preResearchs"
       />
 
-      <v-dialog v-model="createDialog" width="800px" persistent>
+      <v-dialog v-model="createDialog" width="1000px" persistent>
         <v-card>
           <v-card-title>发起预设计</v-card-title>
           <v-card-text>
@@ -77,7 +77,7 @@ export default {
   },
   data: () => ({
     rules: {
-      must: [(v) => !!v || "必填项！"],
+      must: [(v) => !!v || "必填项"],
     },
     statusItems: [
       { text: "驳回", value: -1 },

@@ -22,8 +22,7 @@
               label="部门名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -59,9 +58,8 @@
       <v-dialog
         v-model="addDialog"
         v-if="addDialog"
-        width="600px"
+        width="800px"
         persistent
-        @click:outside="closeAddDialog"
       >
         <departmentForms
           :officeItems="officeItems"

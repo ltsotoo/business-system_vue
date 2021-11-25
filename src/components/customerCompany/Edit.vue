@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title>客户公司添加</v-card-title>
+    <v-card-title>客户公司编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
@@ -47,21 +47,22 @@
 </template>
 
 <script>
-import { addCompany } from "@/api/customer";
+import { queryAreas } from "@/api/oadrp";
+import { editCompany } from "@/api/customer";
 export default {
   props: {
-    areaItems: {
-      type: Array,
-      default: () => [],
-    },
     closeDialog: {
       type: Function,
     },
     refresh: {
       type: Function,
     },
+    parentObj: {
+      type: Object,
+    },
   },
   data: () => ({
+    areaItems: [],
     object: {
       areaUID: "",
       name: "",
@@ -71,11 +72,20 @@ export default {
       must: [(v) => !!v || "必填项"],
     },
   }),
+  created() {
+    this.getAreaItems();
+    this.object = JSON.parse(JSON.stringify(this.parentObj));
+  },
   methods: {
+    getAreaItems() {
+      queryAreas().then((res) => {
+        this.areaItems = res.data;
+      });
+    },
     submit() {
       if (this.validateForm()) {
-        addCompany(this.object).then((res) => {
-          this.$message.success("添加成功了！");
+        editCompany(this.object).then((res) => {
+          this.$message.success("编辑成功了！");
           this.refresh();
           this.closeDialog();
         });

@@ -13,20 +13,10 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <!-- <v-btn
-          text
-          color="primary"
-          @click="openEditBaseDialog(item.UID)"
-        >
+        <v-btn text color="primary" @click="openEditBaseDialog(item.UID)">
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
-        </v-btn> -->
-        <v-if v-if="nos.indexOf('7') != -1">
-          <v-btn text color="primary" @click="openResetPwdDialog(item)">
-            <v-icon left> mdi-pencil </v-icon>
-            重置密码
-          </v-btn>
-        </v-if>
+        </v-btn>
         <v-if v-if="nos.indexOf('4') != -1">
           <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
@@ -36,6 +26,12 @@
             <v-icon left> mdi-pencil </v-icon>
             人事编辑
           </v-btn>
+          <v-if v-if="nos.indexOf('7') != -1">
+            <v-btn text color="primary" @click="openResetPwdDialog(item)">
+              <v-icon left> mdi-pencil </v-icon>
+              重置密码
+            </v-btn>
+          </v-if>
           <v-btn text color="error" @click="openDelDialog(item.UID)">
             <v-icon left> mdi-delete </v-icon>
             删除
@@ -47,7 +43,7 @@
     <v-dialog
       v-model="viewDialog"
       v-if="viewDialog"
-      width="600px"
+      width="1000px"
       @click:outside="closeViewDialog"
     >
       <employeeFormsView :openUID="openUID" />
@@ -56,7 +52,7 @@
     <v-dialog
       v-model="editDialog"
       v-if="editDialog"
-      width="600px"
+      width="1000px"
       persistent
       @click:outside="closeEditDialog"
     >
@@ -71,7 +67,7 @@
     <v-dialog
       v-model="delDialog"
       v-if="delDialog"
-      width="600px"
+      width="1000px"
       persistent
       @click:outside="closeDelDialog"
     >
@@ -96,6 +92,7 @@
     >
       <v-card>
         <v-card-title class="text-h5">您确定要重置该员工的密码吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="resetObject">确定</v-btn>

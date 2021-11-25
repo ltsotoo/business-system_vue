@@ -10,9 +10,8 @@
               v-model.trim="object.name"
               label="名称"
               counter
-              :rules="rules.name"
+              :rules="rules.must"
               maxlength="50"
-              :disabled="openType != 0"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
@@ -85,10 +84,7 @@ export default {
       permissions: [],
     },
     rules: {
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length <= 20) || "名称的长度必须小于20个字符",
-      ],
+      must: [(v) => !!v || "必填项"],
     },
   }),
   created() {

@@ -10,8 +10,7 @@
               label="业务员"
               v-model.trim="queryObject.employeeName"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="3">

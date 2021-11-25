@@ -10,8 +10,7 @@
                 label="供应商名称"
                 v-model.trim="queryObject.name"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -19,8 +18,7 @@
                 label="联系人"
                 v-model.trim="queryObject.linkman"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -28,8 +26,7 @@
                 label="联系电话"
                 v-model.trim="queryObject.phone"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -49,7 +46,7 @@
       </v-card-subtitle>
     </v-card>
 
-    <v-dialog v-model="addDialog" v-if="addDialog" width="600px" persistent>
+    <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
       <supplierForms
         :refresh="query"
         :closeDialog="closAddDialog"

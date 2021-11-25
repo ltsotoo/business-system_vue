@@ -14,16 +14,14 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <div v-if="openType == 3">
-          <v-btn text color="success" @click="transferItem(item)">
-            <v-icon left> mdi-plus-thick </v-icon>
-            添加
-          </v-btn>
-        </div>
-        <div v-else>
+        <div>
           <v-btn text color="success" @click="openViewDialog(item)">
             <v-icon left> mdi-eye </v-icon>
             查看
+          </v-btn>
+          <v-btn text color="primary" @click="openEditBaseDialog(item)">
+            <v-icon left> mdi-pencil </v-icon>
+            基础编辑
           </v-btn>
           <v-btn text color="primary" @click="openEditNumberDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
@@ -33,7 +31,7 @@
             <v-icon left> mdi-pencil </v-icon>
             价格编辑
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             text
             color="error"
             @click="openDeleteDialog(item.UID)"
@@ -42,7 +40,7 @@
           >
             <v-icon left> mdi-delete </v-icon>
             删除
-          </v-btn>
+          </v-btn> -->
         </div>
       </template>
     </v-data-table>
@@ -58,9 +56,23 @@
     </v-dialog>
 
     <v-dialog
+      v-model="options.editBaseDialog"
+      v-if="options.editBaseDialog"
+      width="1000px"
+      persistent
+      @click:outside="closeEditBaseDialog"
+    >
+      <productEditBase
+        :openItem="openItem"
+        :refresh="getObject"
+        :closeDialog="closeEditBaseDialog"
+      />
+    </v-dialog>
+
+    <v-dialog
       v-model="options.editNumberDialog"
       v-if="options.editNumberDialog"
-      width="800px"
+      width="1000px"
       persistent
       @click:outside="closeEditNumberDialog"
     >
@@ -74,11 +86,11 @@
     <v-dialog
       v-model="options.editPriceDialog"
       v-if="options.editPriceDialog"
-      width="800px"
+      width="1000px"
       persistent
       @click:outside="closeEditPriceDialog"
     >
-      <productEditForms
+      <productEditPrice
         :openUID="options.openUID"
         :refresh="getObject"
         :closeDialog="closeEditPriceDialog"
@@ -87,12 +99,14 @@
 
     <v-dialog
       v-model="options.deleteDialog"
-      width="500px"
+      v-if="options.deleteDialog"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除该产品吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -107,19 +121,21 @@
 
 <script>
 import productViewForms from "./ViewForms";
+import productEditBase from "./EditBase";
 import productEditNumber from "./EditNumber";
-import productEditForms from "./EditForms";
+import productEditPrice from "./EditPrice";
 import { delProduct, queryProducts } from "@/api/product";
 
 export default {
   components: {
     productViewForms,
+    productEditBase,
     productEditNumber,
-    productEditForms,
+    productEditPrice,
   },
   props: {
     openType: {
-      //0:录入 1:查看 2:编辑 3:合同录入
+      //0:录入 1:查看 2:编辑
       type: Number,
       default: 0,
     },
@@ -176,12 +192,6 @@ export default {
         sortable: false,
       },
       {
-        text: "供货周期",
-        align: "center",
-        value: "deliveryCycle",
-        sortable: false,
-      },
-      {
         text: "标准售价(人民币)",
         align: "center",
         value: "standardPrice",
@@ -208,8 +218,8 @@ export default {
       itemsPerPage: 10,
       openUID: "",
       openType: null,
-      isTransfer: false,
       viewDialog: false,
+      editBaseDialog: false,
       editNumberDialog: false,
       editPriceDialog: false,
       deleteDialog: false,
@@ -238,13 +248,6 @@ export default {
         }
       });
     },
-    transferItem(item) {
-      this.options.isTransfer = !this.options.isTransfer;
-      this.$emit("child-event", item);
-    },
-    changeTransferStatus() {
-      this.options.isTransfer = !this.options.isTransfer;
-    },
     openViewDialog(item) {
       this.openItem = item;
       this.options.viewDialog = true;
@@ -252,6 +255,14 @@ export default {
     closeViewDialog() {
       this.openItem = "";
       this.options.viewDialog = false;
+    },
+    openEditBaseDialog(item) {
+      this.openItem = JSON.parse(JSON.stringify(item));
+      this.options.editBaseDialog = true;
+    },
+    closeEditBaseDialog() {
+      this.openItem = "";
+      this.options.editBaseDialog = false;
     },
     openEditNumberDialog(uid) {
       this.options.openUID = uid;

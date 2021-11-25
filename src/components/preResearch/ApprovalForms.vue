@@ -148,8 +148,8 @@ export default {
       requirement: "",
     },
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      day: [(v) => /^[0-9]*$/.test(v) || "天数必须为大于零的整数"],
+      must: [(v) => !!v || "必填项"],
+      day: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
     },
 
     officeItems: [],

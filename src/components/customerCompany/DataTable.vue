@@ -9,7 +9,15 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
+        <v-btn text color="primary" @click="openAddCustomerDialog(item)">
+          <v-icon left> mdi-plus-thick </v-icon>
+          添加客户
+        </v-btn>
+        <v-btn text color="primary" @click="openEditDialog(item)">
+          <v-icon left> mdi-pencil </v-icon>
+          编辑
+        </v-btn>
+        <!-- <v-btn
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
@@ -18,19 +26,20 @@
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="deleteDialog"
       v-if="deleteDialog"
-      width="600px"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除该客户公司吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -40,19 +49,61 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-model="addCustomerDialog"
+      v-if="addCustomerDialog"
+      width="1000px"
+      persistent
+    >
+      <customerAddForms
+        :company="openItem"
+        :closeDialog="closeAddCustomerDialog"
+        :refresh="refreshCustomers"
+      ></customerAddForms>
+    </v-dialog>
+
+    <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      width="1000px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
+      <edit
+        :parentObj="openItem"
+        :refresh="getObject"
+        :closeDialog="closeEditDialog"
+      ></edit>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { queryCompanys, delCompany } from "@/api/customer";
+import customerAddForms from "@/components/customer/AddForms";
+import edit from "./Edit";
 export default {
+  components: {
+    customerAddForms,
+    edit,
+  },
   props: {
+    refreshCustomers: {
+      type: Function,
+    },
     queryObject: {
       type: Object,
     },
   },
   data: () => ({
     headers: [
+      {
+        text: "区域",
+        align: "center",
+        value: "area.name",
+        sortable: false,
+      },
       {
         text: "名称",
         align: "center",
@@ -63,12 +114,6 @@ export default {
         text: "地址",
         align: "center",
         value: "address",
-        sortable: false,
-      },
-      {
-        text: "区域",
-        align: "center",
-        value: "area.name",
         sortable: false,
       },
       {
@@ -87,7 +132,11 @@ export default {
     object: [],
 
     openUID: "",
+    openItem: {},
+    editDialog: false,
     deleteDialog: false,
+
+    addCustomerDialog: false,
   }),
   created() {
     this.getObject();
@@ -104,6 +153,24 @@ export default {
         this.getObject();
         this.closeDeleteDialog();
       });
+    },
+
+    openAddCustomerDialog(item) {
+      this.openItem = item;
+      this.addCustomerDialog = true;
+    },
+    closeAddCustomerDialog() {
+      this.openItem = {};
+      this.addCustomerDialog = false;
+    },
+
+    openEditDialog(item) {
+      this.openItem = JSON.parse(JSON.stringify(item));
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.openItem = {};
+      this.editDialog = false;
     },
 
     openDeleteDialog(uid) {

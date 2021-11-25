@@ -211,8 +211,8 @@ export default {
   },
   data: () => ({
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      number: [(v) => /^[0-9]*$/.test(v) || "必须为整数"],
+      must: [(v) => !!v || "必填项"],
+      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
     },
     typeItems: [
       { key: "标准/第三方有库存", value: 1 },

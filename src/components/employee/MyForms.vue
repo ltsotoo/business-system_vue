@@ -71,6 +71,21 @@
               ></v-text-field>
             </v-col>
           </v-row>
+
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model.trim="object.money"
+                label="个人总报销额度(元)"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model.trim="object.credit"
+                label="每月自动累积的报销额度(元)"
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-form>
       </v-card-subtitle>
     </v-card>
@@ -125,18 +140,6 @@ export default {
         name: "",
       },
       roles: [],
-    },
-    rules: {
-      wechatID: [
-        (v) =>
-          v.length == 0 || v.length <= 10 || "微信号的长度必须小于20个字符",
-      ],
-      email: [
-        (v) =>
-          v.length == 0 ||
-          /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
-          "邮箱格式错误",
-      ],
     },
 
     editPwdDialog: false,

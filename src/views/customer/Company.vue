@@ -20,8 +20,7 @@
               label="公司名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -38,12 +37,13 @@
       <customerCompanyDataTable
         ref="customerCompanyDataTable"
         :queryObject="queryObject"
+        :refreshCustomers="refreshCustomers"
       ></customerCompanyDataTable>
 
       <v-dialog
         v-model="addDialog"
         v-if="addDialog"
-        width="600px"
+        width="1000px"
         persistent
         @click:outside="closeAddDialog"
       >
@@ -65,6 +65,11 @@ export default {
   components: {
     customerCompanyDataTable,
     customerCompanyForms,
+  },
+  props: {
+    refreshCustomers: {
+      type: Function,
+    },
   },
   data: () => ({
     areaItems: [],

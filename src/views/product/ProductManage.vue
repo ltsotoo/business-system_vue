@@ -20,8 +20,7 @@
                 label="产品名称"
                 v-model.trim="queryObject.name"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="4">
@@ -29,8 +28,7 @@
                 label="规格"
                 v-model.trim="queryObject.specification"
                 clearable
-                counter
-                maxlength="50"
+                maxlength="20"
               ></v-text-field>
             </v-col>
             <v-col cols="auto">
@@ -49,7 +47,7 @@
       </v-card-subtitle>
     </v-card>
 
-    <v-dialog v-model="addDialog" v-if="addDialog" width="800px" persistent>
+    <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
       <productEntryForms :refresh="query" :closeDialog="closAddDialog" />
     </v-dialog>
   </div>

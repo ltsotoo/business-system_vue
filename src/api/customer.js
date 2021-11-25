@@ -57,6 +57,14 @@ export const delCompany = (uid) => {
     })
 }
 
+export const editCompany = (company) => {
+    return request({
+        url: '/company',
+        method: 'PUT',
+        data: company
+    })
+}
+
 export const queryCompanys = (company) => {
     return request({
         url: '/companys',

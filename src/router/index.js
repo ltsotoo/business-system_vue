@@ -60,9 +60,9 @@ const routes = [
         meta: { login_require: true, title: "中研环科-企业管理-首页" },
       },
       {
-        path: 'index/contract/entry',
+        path: 'entryContract',
         component: () => import('@/views/contract/Entry.vue'),
-        meta: { login_require: true, title: "中研环科-合同管理-录入" },
+        meta: { login_require: true, title: "中研环科-录入合同" },
       },
 
       {

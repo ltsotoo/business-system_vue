@@ -25,16 +25,16 @@
               :rules="rules.must"
             ></v-select>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
-              :rules="rules.must"
               counter
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6"></v-col>
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="姓名"
@@ -43,11 +43,11 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.phone"
               label="手机号"
-              :rules="rules.phone"
+              :rules="rules.must"
               counter
               maxlength="50"
             ></v-text-field>
@@ -108,14 +108,10 @@
 </template>
 
 <script>
-import { queryDepartments, queryRoles } from "@/api/oadrp.js";
+import { queryOffices, queryDepartments, queryRoles } from "@/api/oadrp.js";
 import { entryEmployee } from "@/api/employee";
 export default {
   props: {
-    officeItems: {
-      type: Array,
-      default: ()=>[],
-    },
     parentObj: {
       type: Object,
     },
@@ -127,6 +123,7 @@ export default {
     },
   },
   data: () => ({
+    officeItems: [],
     departmentItems: [],
     roleItems: [],
     object: {
@@ -143,21 +140,18 @@ export default {
       credit: 0,
     },
     rules: {
-      must: [(v) => !!v || "必填项！"],
-      phone: [
-        (v) => !!v || "必填项！",
-        (v) => /[1-9][0-9]+$/.test(v) || "电话的格式错误",
-      ],
+      must: [(v) => !!v || "必填项"],
       email: [
         (v) =>
           v.length == 0 ||
           /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
           "邮箱格式错误",
       ],
-      money: [(v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
   }),
   created() {
+    this.getOfficeItems();
     this.getRoleItems();
     this.object.officeUID = this.parentObj.officeUID;
     this.object.departmentUID = this.parentObj.departmentUID;
@@ -176,6 +170,11 @@ export default {
           this.closeDialog();
         });
       }
+    },
+    getOfficeItems() {
+      queryOffices().then((res) => {
+        this.officeItems = res.data;
+      });
     },
     getDepartmentItems() {
       queryDepartments({ officeUID: this.object.officeUID }).then((res) => {

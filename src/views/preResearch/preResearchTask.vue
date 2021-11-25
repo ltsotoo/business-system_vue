@@ -10,8 +10,7 @@
               label="技术负责人"
               v-model.trim="queryObject.employeeUID"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="3">

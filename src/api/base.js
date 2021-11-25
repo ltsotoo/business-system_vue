@@ -9,6 +9,7 @@ const service = axios.create({
     // baseURL: 'http://localhost:8088/api/v1',
     baseURL: 'http://127.0.0.1:8088/api/v1',
     // baseURL: 'http://192.168.92.128:8088/api/v1',
+    // baseURL: 'http://101.201.51.200:8080/api/v1',
     //请求最大响应时间
     timeout: 9000
 })

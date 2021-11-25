@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title v-if="openType == 0">办事处添加</v-card-title>
-    <v-card-title v-if="openType == 2">办事处编辑</v-card-title>
+    <v-card-title v-if="openType == 0">公司添加</v-card-title>
+    <v-card-title v-if="openType == 2">公司信息编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
@@ -9,14 +9,12 @@
             <v-text-field
               v-model.trim="object.name"
               label="名称"
-              :rules="rules.name"
+              :rules="rules.must"
               counter
               maxlength="50"
             >
             </v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.money"
@@ -25,12 +23,13 @@
               v-if="openType == 0"
             >
             </v-text-field>
+          </v-col>
+          <v-col cols="12">
             <v-text-field
               v-model.number="object.money"
               label="总金额(元)"
               :rules="rules.money"
               v-if="openType == 2"
-              disabled
             >
             </v-text-field>
           </v-col>
@@ -71,11 +70,8 @@ export default {
       money: 0,
     },
     rules: {
-      name: [
-        (v) => !!v || "必填项！",
-        (v) => (v && v.length < 20) || "名称的长度必须小于20个字符",
-      ],
-      money: [(v) => /^[1-9][0-9]*(\.[0-9]{1,3})?$/.test(v) || "金额的格式错误"],
+      must: [(v) => !!v || "必填项"],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
   }),
   created() {

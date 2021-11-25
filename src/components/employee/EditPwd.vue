@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     rules: {
-      must: [(v) => !!v || "必填项！"],
+      must: [(v) => !!v || "必填项"],
       must1: [
         (v) =>
           /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/.test(

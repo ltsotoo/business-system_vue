@@ -11,9 +11,9 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
-          分配办事处
+          编辑
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           text
           color="error"
           @click="openDelDialog(item.UID)"
@@ -22,14 +22,14 @@
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
     <v-dialog
       v-model="editDialog"
       v-if="editDialog"
-      width="600px"
+      width="800px"
       persistent
       @click:outside="closeEditDialog"
     >

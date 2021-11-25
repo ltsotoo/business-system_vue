@@ -14,6 +14,10 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
+        <v-btn text color="success" @click="openViewDialog(item)">
+          <v-icon left> mdi-eye </v-icon>
+          查看
+        </v-btn>
         <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
@@ -22,8 +26,6 @@
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          dark
-          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -32,9 +34,19 @@
     </v-data-table>
 
     <v-dialog
+      v-model="options.viewDialog"
+      v-if="options.viewDialog"
+      width="1000px"
+      persistent
+      @click:outside="closeViewDialog"
+    >
+      <supplierView :parentObj="options.openItem" />
+    </v-dialog>
+
+    <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
-      width="600px"
+      width="1000px"
       persistent
       @click:outside="closeEditDialog"
     >
@@ -50,12 +62,13 @@
     <v-dialog
       v-model="options.deleteDialog"
       v-if="options.deleteDialog"
-      width="600px"
+      width="800px"
       persistent
       @click:outside="closeDeleteDialog"
     >
       <v-card>
         <v-card-title class="text-h5">您确定删除该位供应商吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
@@ -70,11 +83,13 @@
 
 <script>
 import supplierForms from "./Forms";
+import supplierView from "./View";
 import { delSupplier, querySuppliers } from "@/api/supplier";
 
 export default {
   components: {
     supplierForms,
+    supplierView,
   },
   props: {
     queryObject: {
@@ -108,24 +123,6 @@ export default {
         sortable: false,
       },
       {
-        text: "微信号",
-        align: "center",
-        value: "wechatID",
-        sortable: false,
-      },
-      {
-        text: "邮箱",
-        align: "center",
-        value: "email",
-        sortable: false,
-      },
-      {
-        text: "网址",
-        align: "center",
-        value: "web",
-        sortable: false,
-      },
-      {
         text: "操作",
         align: "center",
         value: "actions",
@@ -141,6 +138,7 @@ export default {
       openItem: {},
       editDialog: false,
       deleteDialog: false,
+      viewDialog: false,
     },
     object: [],
   }),
@@ -173,6 +171,15 @@ export default {
     closeEditDialog() {
       this.options.openItem = {};
       this.options.editDialog = false;
+    },
+
+    openViewDialog(item) {
+      this.options.openItem = JSON.parse(JSON.stringify(item));
+      this.options.viewDialog = true;
+    },
+    closeViewDialog() {
+      this.options.openItem = {};
+      this.options.viewDialog = false;
     },
 
     openDeleteDialog(uid) {

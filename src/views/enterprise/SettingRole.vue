@@ -7,13 +7,12 @@
       <v-form ref="queryForm">
         <v-row align="baseline">
           <v-spacer></v-spacer>
-          <v-col cols="7">
+          <v-col cols="4">
             <v-text-field
               label="职位名称"
               v-model="queryObject.name"
               clearable
-              counter
-              maxlength="50"
+              maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
@@ -30,10 +29,9 @@
 
       <v-dialog
         v-model="addDialog"
-        width="500px"
+        width="800px"
         persistent
         v-if="addDialog"
-        @click:outside="closeAddDialog"
       >
         <roleForms :closeDialog="closeAddDialog" :refresh="queryRoles" />
       </v-dialog>
