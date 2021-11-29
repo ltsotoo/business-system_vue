@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { queryDepartmentTypes } from "@/api/dictionary";
 import { queryRole, addRole, editRole, queryPermissions } from "@/api/oadrp";
 export default {
   props: {
@@ -111,11 +110,6 @@ export default {
     getRole() {
       queryRole(this.openUID).then((res) => {
         this.object = res.data;
-      });
-    },
-    getDepartmentTypeItems() {
-      queryDepartmentTypes().then((res) => {
-        this.departmentTypeItems = res.data;
       });
     },
     getPermissionItems() {

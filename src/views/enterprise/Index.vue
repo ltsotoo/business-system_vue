@@ -1,47 +1,41 @@
 <template>
   <v-container>
     <v-expansion-panels multiple>
-      <areaPanel v-if="nos.indexOf('1') != -1" />
-      <officePanel v-if="nos.indexOf('2') != -1" />
+      <officePanel />
       <departmentPanel />
       <employeePanel />
     </v-expansion-panels>
 
     <v-expansion-panels multiple style="margin-top: 30px">
-      <settingUnit v-if="nos.indexOf('5') != -1" />
-      <settingRole v-if="nos.indexOf('20') != -1" />
+      <settingRole />
+      <settingRegion />
+      <settingUnit />
       <!-- <YearClearingPanel /> -->
     </v-expansion-panels>
   </v-container>
 </template>
 
 <script>
-import areaPanel from "./AreaPanel.vue";
-import officePanel from "./OfficePanel.vue";
-import departmentPanel from "./DepartmentPanel.vue";
-import employeePanel from "./EmployeePanel.vue";
-import YearClearingPanel from "./YearClearingPanel.vue";
+import officePanel from "./OfficePanel";
+import departmentPanel from "./DepartmentPanel";
+import employeePanel from "./EmployeePanel";
+import YearClearingPanel from "./YearClearingPanel";
 
-import settingUnit from "./SettingUnit.vue";
-import settingRole from "./SettingRole.vue";
+import settingRole from "./SettingRole";
+import settingRegion from "./SettingRegion";
+import settingUnit from "./SettingUnit";
 export default {
   components: {
-    areaPanel,
     officePanel,
     departmentPanel,
     employeePanel,
     YearClearingPanel,
 
-    settingUnit,
     settingRole,
+    settingRegion,
+    settingUnit,
   },
-  data: () => ({
-    nos: [],
-  }),
-  created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
-  },
+  data: () => ({}),
+  created() {},
 };
 </script>

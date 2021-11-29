@@ -5,8 +5,7 @@
       <v-form readonly>
         <div v-if="parentObj.pushMoney.type == 1">
           <v-row v-for="(task, i) in parentObj.tasks" :key="i">
-            <v-col cols="1"></v-col>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-text-field
                 v-model="task.product.name"
                 label="产品名称"
@@ -36,19 +35,17 @@
                 label="提成金额(元)"
               ></v-text-field>
             </v-col>
-            <v-col cols="1"></v-col>
           </v-row>
         </div>
 
         <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-text-field
               v-model="parentObj.paymentTotalAmount"
               label="回款总金额(元)"
             ></v-text-field>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-text-field
               v-model="parentObj.pushMoney.taskTotalMoney"
               label="产品提成总金额(元)"
@@ -66,10 +63,9 @@
               label="回款延迟扣除金额(元)"
             ></v-text-field>
           </v-col>
-          <v-col cols="1"></v-col>
         </v-row>
         <v-row>
-          <v-col cols="8"></v-col>
+          <v-col cols="9"></v-col>
           <v-col cols="3">
             <v-text-field
               v-model="parentObj.pushMoney.totalMoney"

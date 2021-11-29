@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header :class="[`text-h4`]">
-      区域管理
+      省份管理
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-form ref="queryForm">
@@ -9,71 +9,64 @@
           <v-spacer></v-spacer>
           <v-col cols="4">
             <v-text-field
-              label="区域名称"
-              v-model="queryObject.name"
+              label="名称"
               clearable
-              maxlength="20"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
-              label="办事处名称"
-              v-model="queryObject.officeName"
-              clearable
+              v-model="queryObject.text"
               maxlength="20"
             ></v-text-field>
           </v-col>
           <v-col cols="auto">
-            <v-btn rounded color="primary" dark @click="queryAreas">
-              查询
-            </v-btn>
+            <v-btn rounded color="primary" @click="queryUnits"> 查询 </v-btn>
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" dark @click="openAddDialog">
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
       </v-form>
-      <areaDataTable
-        ref="areaDataTable"
+      <dictionaryDataTable
+        ref="dictionaryDataTable"
         :queryObject="queryObject"
-        :areaItems="areaItems"
-      ></areaDataTable>
+        :refresh="queryUnits"
+      />
 
       <v-dialog
         v-model="addDialog"
-        v-if="addDialog"
         width="800px"
         persistent
+        v-if="addDialog"
       >
-        <areaForms :closeDialog="closeAddDialog" :refresh="queryAreas" />
+        <dictionaryForms
+          :closeDialog="closeAddDialog"
+          :refresh="queryUnits"
+          :typeName="queryObject.typeName"
+        />
       </v-dialog>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
 
 <script>
-import areaDataTable from "@/components/enterprise/AreaDataTable";
-import areaForms from "@/components/enterprise/AreaForms";
+import dictionaryDataTable from "@/components/dictionary/DataTable";
+import dictionaryForms from "@/components/dictionary/Forms";
 export default {
   components: {
-    areaDataTable,
-    areaForms,
+    dictionaryDataTable,
+    dictionaryForms,
   },
   data: () => ({
     queryObject: {
-      name: "",
-      officeName: "",
+      typeName: "Region",
+      text: "",
     },
     addDialog: false,
   }),
   methods: {
-    queryAreas() {
-      this.$refs.areaDataTable.getObject();
+    queryUnits() {
+      this.$refs.dictionaryDataTable.getObject(this.queryObject);
     },
+
     openAddDialog() {
       this.addDialog = true;
     },

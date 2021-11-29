@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header :class="[`text-h4`]">
-      公司管理
+      公司(办事处)管理
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-form ref="queryForm">

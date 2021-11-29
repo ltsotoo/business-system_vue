@@ -89,7 +89,7 @@
           <v-col cols="6">
             <v-text-field
               v-model.number="object.money"
-              label="初始报销额度(元)"
+              label="可用报销额度(元)"
               :rules="rules.money"
               :disabled="!(editType == 2)"
             ></v-text-field>

@@ -65,7 +65,7 @@
       persistent
       @click:outside="closePaymentDialog"
     >
-      <viewPayments :parentObject="object.payments" />
+      <viewPayments :parentObject="paymentItems" />
     </v-dialog>
 
     <v-dialog
@@ -126,7 +126,7 @@ export default {
       {
         text: "办事处",
         align: "center",
-        value: "area.office.name",
+        value: "office.name",
         sortable: false,
       },
       {
@@ -209,7 +209,6 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      this.queryObject.status = 2;
       queryContracts(
         this.queryObject,
         this.options.itemsPerPage,

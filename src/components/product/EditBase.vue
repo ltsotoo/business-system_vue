@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { editProduct } from "@/api/product";
+import { editProductBase } from "@/api/product";
 import { querySuppliers } from "@/api/supplier";
 import { queryProductTypes } from "@/api/productType";
 export default {
@@ -129,7 +129,7 @@ export default {
     submit() {
       if (this.validateForm()) {
         this.object.number = this.object.numberCount;
-        editProduct(this.object).then((res) => {
+        editProductBase(this.object).then((res) => {
           this.$message.success("编辑成功了!");
           this.refresh();
           this.closeDialog();

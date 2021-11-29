@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header :class="[`text-h4`]">
-      职位设置
+      职位管理
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-form ref="queryForm">

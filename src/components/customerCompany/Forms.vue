@@ -6,11 +6,11 @@
         <v-row>
           <v-col cols="12">
             <v-select
-              v-model="object.areaUID"
-              :items="areaItems"
-              item-text="name"
+              v-model="object.regionUID"
+              :items="regionItems"
+              item-text="text"
               item-value="UID"
-              label="区域"
+              label="省份"
               :rules="rules.must"
             ></v-select>
           </v-col>
@@ -50,7 +50,7 @@
 import { addCompany } from "@/api/customer";
 export default {
   props: {
-    areaItems: {
+    regionItems: {
       type: Array,
       default: () => [],
     },
@@ -63,7 +63,7 @@ export default {
   },
   data: () => ({
     object: {
-      areaUID: "",
+      regionUID: "",
       name: "",
       address: "",
     },

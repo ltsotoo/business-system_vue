@@ -9,34 +9,6 @@
       <v-card-subtitle>
         <v-form ref="form">
           <v-row>
-            <v-col cols="4">
-              <v-select
-                v-model="object.areaUID"
-                item-text="name"
-                item-value="UID"
-                :items="areaItems"
-                label="区域"
-                :rules="rules.must"
-                @change="getCompanyItems"
-              ></v-select>
-            </v-col>
-            <v-col cols="4">
-              <!-- <v-select
-                v-model="object.employeeUID"
-                item-text="name"
-                item-value="UID"
-                :items="employeeItems"
-                label="业务员"
-                :rules="rules.must"
-              ></v-select> -->
-              <!-- <v-text-field
-                label="业务员"
-                v-model="employeeName"
-                readonly
-              >
-              </v-text-field> -->
-            </v-col>
-            <v-col cols="4"></v-col>
             <v-col cols="12">
               <v-radio-group v-model="object.isEntryCustomer" row>
                 <template v-slot:label>
@@ -46,9 +18,17 @@
                 <v-radio label="未录入客户" :value="false"></v-radio>
               </v-radio-group>
             </v-col>
-          </v-row>
-
-          <v-row v-if="object.isEntryCustomer == true">
+            <v-col cols="4">
+              <v-select
+                v-model="object.regionUID"
+                item-text="text"
+                item-value="UID"
+                :items="regionItems"
+                label="省份"
+                :rules="rules.must"
+                @change="getCompanyItems"
+              ></v-select>
+            </v-col>
             <v-col cols="4">
               <v-select
                 v-model="object.customer.companyUID"
@@ -60,7 +40,7 @@
                 @change="getCustomerItems"
               ></v-select>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="4" v-if="object.isEntryCustomer == true">
               <v-select
                 v-model="object.customerUID"
                 item-text="name"
@@ -73,17 +53,7 @@
           </v-row>
 
           <v-row v-if="object.isEntryCustomer == false">
-            <v-col cols="3">
-              <v-select
-                v-model="object.customer.companyUID"
-                item-text="name"
-                item-value="UID"
-                :items="companyItems"
-                label="客户公司"
-                :rules="rules.must"
-              ></v-select>
-            </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-text-field
                 label="客户名称"
                 v-model="object.customer.name"
@@ -92,7 +62,7 @@
                 maxlength="50"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-text-field
                 label="客户电话"
                 v-model="object.customer.phone"
@@ -101,7 +71,7 @@
                 maxlength="50"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-text-field
                 label="客户课题组"
                 v-model="object.customer.researchGroup"
@@ -143,6 +113,8 @@
                 </template>
                 <v-date-picker
                   locale="zh-cn"
+                  scrollable
+                  no-title
                   v-model="object.contractDate"
                   min="1900-01-01"
                   @change="$refs.contractDateMenu.save(object.contractDate)"
@@ -170,6 +142,8 @@
                 </template>
                 <v-date-picker
                   locale="zh-cn"
+                  scrollable
+                  no-title
                   v-model="object.estimatedDeliveryDate"
                   min="2000-01-01"
                   @change="
@@ -394,10 +368,8 @@
 <script>
 import entryProductDT from "./EntryProductDT";
 import entryCartDT from "./EntryCartDT";
-import { queryMyAreas } from "@/api/oadrp";
-import { queryEmployees } from "@/api/employee";
 import { queryCompanys, queryCustomers } from "@/api/customer";
-import { queryContractUnits } from "@/api/dictionary";
+import { queryRegions, queryContractUnits } from "@/api/dictionary";
 import { queryProductTypes } from "@/api/productType";
 import { entryContract } from "@/api/contract";
 export default {
@@ -413,7 +385,7 @@ export default {
     },
     contractDateMenu: false,
     estimatedDeliveryDateMenu: false,
-    areaItems: [],
+    regionItems: [],
     employeeItems: [],
     companyItems: [],
     customerItems: [],
@@ -422,11 +394,11 @@ export default {
     object: {
       UID: "",
       no: "",
-      areaUID: "",
+      regionUID: "",
       employeeUID: "",
       isEntryCustomer: true,
       customerUID: "",
-      contractDate: null,
+      contractDate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       contractUnitUID: "",
       estimatedDeliveryDate: "",
       endDeliveryDate: null,
@@ -456,27 +428,16 @@ export default {
     p2cDialog: false,
     removeDialog: false,
     submitBtnDisable: false,
-
-    employeeName: "",
   }),
   created() {
-    this.getAreaItems();
+    this.getRegionItems();
     this.getContractUnitItems();
     this.getTypeItems();
-
-    // this.getEmployeeItems();
-    this.employeeName = localStorage.getItem("name");
-    this.object.employeeUID = localStorage.getItem("uid");
   },
   methods: {
-    getAreaItems() {
-      queryMyAreas().then((res) => {
-        this.areaItems = res.data;
-      });
-    },
-    getEmployeeItems() {
-      queryEmployees().then((res) => {
-        this.employeeItems = res.data;
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
       });
     },
     getCompanyItems() {
@@ -484,18 +445,20 @@ export default {
       this.customerItems = [];
       this.object.customer.companyUID = "";
       this.object.customerUID = "";
-      queryCompanys({ areaUID: this.object.areaUID }).then((res) => {
+      queryCompanys({ regionUID: this.object.regionUID }).then((res) => {
         this.companyItems = res.data;
       });
     },
     getCustomerItems() {
-      this.customerItems = [];
-      this.object.customerUID = "";
-      queryCustomers({ companyUID: this.object.customer.companyUID }).then(
-        (res) => {
-          this.customerItems = res.data;
-        }
-      );
+      if (this.object.isEntryCustomer) {
+        this.customerItems = [];
+        this.object.customerUID = "";
+        queryCustomers({ companyUID: this.object.customer.companyUID }).then(
+          (res) => {
+            this.customerItems = res.data;
+          }
+        );
+      }
     },
     getContractUnitItems() {
       queryContractUnits().then((res) => {

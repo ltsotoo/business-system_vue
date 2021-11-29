@@ -10,13 +10,13 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="object.area.name"
-                label="区域"
+                v-model="object.region.text"
+                label="省份"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="object.area.office.name"
+                v-model="object.office.name"
                 label="办事处"
               ></v-text-field>
             </v-col>
@@ -31,6 +31,12 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
+                v-model="object.CreatedAt"
+                label="录入时间"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
                 v-model="object.customer.company.name"
                 label="客户公司"
               ></v-text-field>
@@ -41,21 +47,15 @@
                 label="客户名称"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="object.contractUnit.text"
-                label="签订单位"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="object.contractDate"
-                label="签订日期"
-              ></v-text-field>
-            </v-col>
           </v-row>
 
           <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractDate"
+                label="合同签订日期"
+              ></v-text-field>
+            </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="object.estimatedDeliveryDate"
@@ -79,10 +79,19 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.totalAmount"
-                label="总金额"
+                v-model="object.contractUnit.text"
+                label="签订单位"
               ></v-text-field>
             </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.isSpecial"
+                label="特殊合同"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="text.payType"
@@ -91,8 +100,14 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
+                v-model="object.totalAmount"
+                label="总金额"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
                 v-model="object.paymentTotalAmount"
-                label="回款金额(CNY)"
+                label="回款总金额(CNY)"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -104,19 +119,13 @@
                 label="开票类型"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="text.isSpecial"
-                label="特殊合同"
-              ></v-text-field>
-            </v-col>
 
-            <v-col cols="12" v-if="object.invoiceType != 1">
+            <v-col cols="12">
               <v-textarea
                 v-model="object.invoiceContent"
                 label="开票内容"
+                rows="1"
                 auto-grow
-                rows="3"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -174,7 +183,11 @@
       :parentObject="object.payments"
     ></viewPayments>
 
-    <viewPushMoney style="margin-top: 5px" :parentObj="object" v-if="object.status == 3"/>
+    <viewPushMoney
+      style="margin-top: 5px"
+      :parentObj="object"
+      v-if="object.status == 3"
+    />
   </div>
 </template>
 
@@ -218,11 +231,11 @@ export default {
       totalAmount: null,
       invoiceContent: "",
       contractUnit: {},
-      area: {
+      region: {
+        text: "",
+      },
+      office: {
         name: "",
-        office: {
-          name: "",
-        },
       },
       employee: {
         name: "",
@@ -239,8 +252,8 @@ export default {
     },
     text: {
       status: "",
-      productionStatus: "-",
-      collectionStatus: "-",
+      productionStatus: "",
+      collectionStatus: "",
       invoiceType: "",
       isSpecial: "否",
     },

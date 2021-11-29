@@ -90,23 +90,20 @@ VueRouter.prototype.replace = function replace(location) {
 };
 
 router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
   if (to.meta.login_require) {
-    if (!window.localStorage.getItem("Authorization")) {
-      editTitle(to)
+    if (localStorage.getItem("Authorization")) {
+      next()
+    } else {
       next('/')
     }
-    editTitle(to)
-    next()
   } else {
-    editTitle(to)
+    if (to.path == "/login" && localStorage.getItem("Authorization")) {
+      next("/index")
+    }
     next()
   }
 })
 
-function editTitle(to) {
-  if (to.meta.title) {
-    document.title = to.meta.title
-  }
-}
 
 export default router

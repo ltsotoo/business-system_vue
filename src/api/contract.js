@@ -15,14 +15,6 @@ export const delContract = (uid) => {
     })
 }
 
-export const editContract = (contract) => {
-    return request({
-        url: '/contract',
-        method: 'PUT',
-        data: contract
-    })
-}
-
 export const queryContract = (uid) => {
     return request({
         url: '/contract/' + uid,

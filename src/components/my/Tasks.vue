@@ -287,10 +287,9 @@ export default {
     },
     nextTask() {
       this.openItem.currentRemarksText = this.nextText;
-      var _this = this;
       next(this.openItem).then((res) => {
-        _this.getObject();
-        _this.closeNextDialog();
+        this.getObject();
+        this.closeNextDialog();
       });
     },
   },

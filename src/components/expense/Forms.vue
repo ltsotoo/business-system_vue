@@ -12,7 +12,6 @@
               item-value="value"
               label="类型"
               :rules="rules.must"
-              :disabled="nos.indexOf('6') == -1"
             ></v-select>
           </v-col>
           <v-col cols="8">
@@ -71,18 +70,10 @@ export default {
     },
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [
-        (v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零",
-      ],
+      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
     },
-
-    nos: [],
   }),
-  created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
-  },
+  created() {},
   methods: {
     submit() {
       if (this.validateForm()) {

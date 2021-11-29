@@ -17,7 +17,7 @@
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
         </v-btn>
-        <v-if v-if="nos.indexOf('4') != -1">
+        <v-if>
           <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
             财务编辑
@@ -26,7 +26,7 @@
             <v-icon left> mdi-pencil </v-icon>
             人事编辑
           </v-btn>
-          <v-if v-if="nos.indexOf('7') != -1">
+          <v-if>
             <v-btn text color="primary" @click="openResetPwdDialog(item)">
               <v-icon left> mdi-pencil </v-icon>
               重置密码
@@ -168,14 +168,8 @@ export default {
     editDialog: false,
     delDialog: false,
     resetPwdDialog: false,
-
-    nos: [],
   }),
-  created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
-  },
+  created() {},
   methods: {
     getObject() {
       queryEmployees(this.queryObject).then((res) => {

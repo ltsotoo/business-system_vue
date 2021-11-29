@@ -8,14 +8,12 @@
             <v-col cols="10">
               <v-row>
                 <v-col cols="3">
-                  <v-select
-                    v-model="queryObject.areaUID"
-                    :items="areaItems"
-                    item-text="name"
-                    item-value="UID"
-                    label="区域"
+                  <v-text-field
+                    label="合同编号"
+                    v-model.trim="queryObject.no"
                     clearable
-                  ></v-select>
+                    maxlength="20"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="3">
                   <v-text-field
@@ -33,12 +31,14 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="3">
-                  <v-text-field
-                    label="合同编号"
-                    v-model.trim="queryObject.no"
+                  <v-select
+                    v-model="queryObject.regionUID"
+                    :items="regionItems"
+                    item-text="text"
+                    item-value="UID"
+                    label="省份"
                     clearable
-                    maxlength="20"
-                  ></v-text-field>
+                  ></v-select>
                 </v-col>
               </v-row>
               <v-row>
@@ -104,16 +104,16 @@
 
 <script>
 import contractDataTable from "@/components/contract/DataTable";
-import { queryAreas } from "@/api/oadrp";
+import { queryRegions } from "@/api/dictionary";
 export default {
   components: {
     contractDataTable,
   },
   data: () => ({
-    areaItems: [],
+    regionItems: [],
     queryObject: {
-      areaUID: "",
       no: "",
+      regionUID: "",
       companyName: "",
       customerName: "",
       isSpecial: 0,
@@ -141,12 +141,12 @@ export default {
     ],
   }),
   created() {
-    this.getAreas();
+    this.getRegionItems();
   },
   methods: {
-    getAreas() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
       });
     },
     query() {

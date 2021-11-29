@@ -11,7 +11,7 @@
               :items="officeItems"
               item-text="name"
               item-value="UID"
-              label="办事处"
+              label="公司(办事处)"
               :disabled="openType == 2"
               :rules="rules.must"
             ></v-select>

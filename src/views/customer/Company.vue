@@ -7,11 +7,11 @@
           <v-spacer></v-spacer>
           <v-col cols="3">
             <v-select
-              v-model="queryObject.areaUID"
-              :items="areaItems"
-              item-text="name"
+              v-model="queryObject.regionUID"
+              :items="regionItems"
+              item-text="text"
               item-value="UID"
-              label="区域"
+              label="省份"
               clearable
             ></v-select>
           </v-col>
@@ -48,7 +48,7 @@
         @click:outside="closeAddDialog"
       >
         <customerCompanyForms
-          :areaItems="areaItems"
+          :regionItems="regionItems"
           :closeDialog="closeAddDialog"
           :refresh="queryCompanys"
         />
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { queryAreas } from "@/api/oadrp";
+import { queryRegions } from "@/api/dictionary";
 import customerCompanyDataTable from "@/components/customerCompany/DataTable";
 import customerCompanyForms from "@/components/customerCompany/Forms";
 export default {
@@ -72,20 +72,20 @@ export default {
     },
   },
   data: () => ({
-    areaItems: [],
+    regionItems: [],
     queryObject: {
-      areaUID: "",
+      regionUID: "",
       name: "",
     },
     addDialog: false,
   }),
   created() {
-    this.getAreaItems();
+    this.getRegionItems();
   },
   methods: {
-    getAreaItems() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
       });
     },
 

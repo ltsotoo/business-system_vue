@@ -99,9 +99,9 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "区域",
+        text: "省份",
         align: "center",
-        value: "area.name",
+        value: "region.text",
         sortable: false,
       },
       {

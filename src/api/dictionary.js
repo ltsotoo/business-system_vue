@@ -34,30 +34,12 @@ export const queryDictionaries = (typeName, text) => {
     })
 }
 
-export const queryDictionarieTypes = (category) => {
-    return request({
-        url: '/dictionarieTypes',
-        method: 'get',
-        params: {
-            "Category": category,
-        }
-    })
-}
-
 export const queryContractUnits = () => {
     return queryDictionaries("ContractUnit", "")
 }
 
-export const queryProductSelfs = () => {
-    return queryDictionaries("ProductSelf", "")
-}
-
-export const queryThirdpartys = () => {
-    return queryDictionaries("ProductThirdparty", "")
-}
-
-export const queryDepartmentTypes = () => {
-    return queryDictionaries("DepartmentType", "")
+export const queryRegions = () => {
+    return queryDictionaries("Region", "")
 }
 
 

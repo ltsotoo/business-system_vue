@@ -5,17 +5,15 @@
       <v-form>
         <v-row align="baseline">
           <v-spacer></v-spacer>
-          <v-col cols="2">
-            <v-select
-              v-model="queryObject.areaUID"
-              :items="areaItems"
-              item-text="name"
-              item-value="UID"
-              label="区域"
+          <v-col cols="3">
+            <v-text-field
+              label="公司"
+              v-model.trim="queryObject.companyName"
               clearable
-            ></v-select>
+              maxlength="20"
+            ></v-text-field>
           </v-col>
-          <v-col cols="2">
+          <v-col cols="3">
             <v-text-field
               label="姓名"
               v-model.trim="queryObject.name"
@@ -23,15 +21,7 @@
               maxlength="20"
             ></v-text-field>
           </v-col>
-          <v-col cols="2">
-            <v-text-field
-              label="单位"
-              v-model.trim="queryObject.companyName"
-              clearable
-              maxlength="20"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="2">
+          <v-col cols="3">
             <v-text-field
               label="课题组"
               v-model.trim="queryObject.researchGroup"
@@ -59,31 +49,21 @@
 
 <script>
 import customerDataTable from "@/components/customer/DataTable";
-import { queryAreas } from "@/api/oadrp";
 
 export default {
   components: {
     customerDataTable,
   },
   data: () => ({
-    areaItems: [],
     queryObject: {
-      areaUID: "",
       companyName: "",
       researchGroup: "",
       name: "",
     },
     addDialog: false,
   }),
-  created() {
-    this.getAreas();
-  },
+  created() {},
   methods: {
-    getAreas() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
-      });
-    },
     queryCustomers() {
       this.$refs.customerDataTable.getObject();
     },

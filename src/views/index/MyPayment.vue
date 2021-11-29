@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel @click="clickPanel">
     <v-expansion-panel-header :class="[`text-h4`]">
       我的回款追踪任务
     </v-expansion-panel-header>
@@ -11,11 +11,11 @@
             <v-row>
               <v-col cols="3">
                 <v-select
-                  v-model="queryObject.areaUID"
-                  :items="areaItems"
-                  item-text="name"
+                  v-model="queryObject.regionUID"
+                  :items="regionItems"
+                  item-text="text"
                   item-value="UID"
-                  label="区域"
+                  label="省份"
                   clearable
                 ></v-select>
               </v-col>
@@ -62,7 +62,6 @@
                   item-value="value"
                   label="合同状态"
                   clearable
-                  disabled
                 ></v-select>
               </v-col>
               <v-col cols="3">
@@ -73,7 +72,6 @@
                   item-value="value"
                   label="生产状态"
                   clearable
-                  disabled
                 ></v-select>
               </v-col>
               <v-col cols="3">
@@ -110,20 +108,20 @@
 
 <script>
 import payments from "@/components/my/Payments";
-import { queryAreas } from "@/api/oadrp";
+import { queryRegions } from "@/api/dictionary";
 export default {
   components: {
     payments,
   },
   data: () => ({
-    areaItems: [],
+    regionItems: [],
     queryObject: {
-      areaUID: "",
-      no: "",
+      regionUID: "",
       companyName: "",
       customerName: "",
+      no: "",
       isSpecial: 0,
-      status: 2,
+      status: 0,
       productionStatus: 0,
       collectionStatus: 0,
       employeeUID: "",
@@ -147,13 +145,22 @@ export default {
       { key: "回款完成", value: 2 },
     ],
   }),
-  created() {
-    this.getAreas();
-  },
+  created() {},
   methods: {
-    getAreas() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
+    clickPanel(event) {
+      if (
+        !event.currentTarget.classList.contains(
+          "v-expansion-panel-header--active"
+        ) &&
+        this.regionItems.length == 0
+      ) {
+        this.getRegionItems();
+      }
+    },
+
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
       });
     },
     query() {

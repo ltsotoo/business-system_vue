@@ -10,13 +10,7 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="object.area.name"
-                label="区域"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="object.area.office.name"
+                v-model="object.office.name"
                 label="办事处"
               ></v-text-field>
             </v-col>
@@ -31,6 +25,12 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
+                v-model="object.region.text"
+                label="省份"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
                 v-model="object.customer.company.name"
                 label="客户公司"
               ></v-text-field>
@@ -41,10 +41,13 @@
                 label="客户名称"
               ></v-text-field>
             </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.contractUnit.text"
-                label="签订单位"
+                v-model="object.CreatedAt"
+                label="录入日期"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -61,14 +64,23 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="object.totalAmount"
-                label="总金额"
+                v-model="object.contractUnit.text"
+                label="签订单位"
               ></v-text-field>
             </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="text.payType"
                 label="付款类型"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.totalAmount"
+                label="总金额"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -252,6 +264,14 @@ export default {
           break;
         case 2:
           this.text.collectionStatus = "回款完成";
+          break;
+      }
+      switch (data.payType) {
+        case 1:
+          this.text.payType = "人民币";
+          break;
+        case 2:
+          this.text.payType = "美元";
           break;
       }
       if (data.isSpecial == true) {

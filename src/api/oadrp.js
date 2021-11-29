@@ -31,44 +31,6 @@ export const queryOffices = (office) => {
     })
 }
 
-export const entryArea = (area) => {
-    return request({
-        url: '/area',
-        method: 'POST',
-        data: area
-    })
-}
-
-export const delArea = (uid) => {
-    return request({
-        url: '/area/' + uid,
-        method: 'DELETE',
-    })
-}
-
-export const queryAreas = (area) => {
-    return request({
-        url: '/areas',
-        method: 'POST',
-        data: area
-    })
-}
-
-export const queryMyAreas = () => {
-    return request({
-        url: '/myAreas',
-        method: 'GET',
-    })
-}
-
-export const editArea = (area) => {
-    return request({
-        url: '/area',
-        method: 'PUT',
-        data: area
-    })
-}
-
 export const entryDepartment = (department) => {
     return request({
         url: '/department',

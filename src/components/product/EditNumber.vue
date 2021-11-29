@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { editProduct, queryProduct } from "@/api/product";
+import { editProductNumber, queryProduct } from "@/api/product";
 
 export default {
   props: {
@@ -132,11 +132,10 @@ export default {
     },
     submit() {
       if (this.validateForm()) {
-        this.object.number += this.number;
-        this.object.numberCount += this.number;
+        this.object.number = this.number;
 
-        editProduct(this.object).then((res) => {
-          this.$message.success("入库编辑成功了!");
+        editProductNumber(this.object).then((res) => {
+          this.$message.success("库存编辑成功了!");
           this.refresh();
           this.closeDialog();
         });

@@ -15,9 +15,25 @@ export const delProduct = (uid) => {
     })
 }
 
-export const editProduct = (product) => {
+export const editProductBase = (product) => {
     return request({
-        url: '/product',
+        url: '/productBase',
+        method: 'PUT',
+        data: product
+    })
+}
+
+export const editProductPrice = (product) => {
+    return request({
+        url: '/productPrice',
+        method: 'PUT',
+        data: product
+    })
+}
+
+export const editProductNumber = (product) => {
+    return request({
+        url: '/productNumber',
         method: 'PUT',
         data: product
     })

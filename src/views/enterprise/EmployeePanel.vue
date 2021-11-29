@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel @click="clickDepartmentPanel">
+  <v-expansion-panel @click="clickPanel">
     <v-expansion-panel-header :class="[`text-h4`]">
       员工管理
     </v-expansion-panel-header>
@@ -16,7 +16,6 @@
               label="办事处"
               @change="getDepartmentItems"
               clearable
-              :disabled="nos.indexOf('4') == -1"
             ></v-select>
           </v-col>
           <v-col cols="2">
@@ -52,14 +51,7 @@
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn
-              rounded
-              color="success"
-              @click="openAddDialog"
-              v-if="this.nos.indexOf('4') != -1"
-            >
-              添加
-            </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -69,12 +61,7 @@
         :queryObject="queryObject"
       ></employeeDataTable>
 
-      <v-dialog
-        v-model="addDialog"
-        v-if="addDialog"
-        width="1000px"
-        persistent
-      >
+      <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
         <employeeFormsAdd
           :parentObj="{
             officeUID: queryObject.officeUID,
@@ -107,19 +94,8 @@ export default {
       phone: "",
     },
     addDialog: false,
-
-    nos: [],
   }),
-  created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
-
-    if (this.nos.indexOf("4") == -1 && this.nos.indexOf("7") != -1) {
-      this.queryObject.officeUID = localStorage.getItem("office");
-      this.getDepartmentItems();
-    }
-  },
+  created() {},
   methods: {
     getOfficeItems() {
       queryOffices().then((res) => {
@@ -140,7 +116,7 @@ export default {
     queryEmployees() {
       this.$refs.employeeDataTable.getObject();
     },
-    clickDepartmentPanel(event) {
+    clickPanel(event) {
       if (
         !event.currentTarget.classList.contains(
           "v-expansion-panel-header--active"

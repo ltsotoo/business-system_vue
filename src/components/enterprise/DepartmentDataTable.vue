@@ -103,11 +103,9 @@ export default {
   }),
   methods: {
     getObject() {
-      if (this.queryObject.officeUID != "") {
-        queryDepartments(this.queryObject).then((res) => {
-          this.object = res.data;
-        });
-      }
+      queryDepartments(this.queryObject).then((res) => {
+        this.object = res.data;
+      });
     },
     delObject() {
       delDepartment(this.openUID).then((res) => {

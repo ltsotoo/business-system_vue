@@ -77,7 +77,7 @@ export default {
   data: () => ({
     headers: [
       {
-        text: "公司名称",
+        text: "公司(办事处)名称",
         align: "center",
         value: "name",
         sortable: false,

@@ -9,70 +9,46 @@
         class="elevation-1"
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
-          <v-row>
+          <div>
             <v-col> 人民币：{{ item.standardPrice }} </v-col>
-          </v-row>
-          <v-row>
+          </div>
+          <div>
             <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
-          </v-row>
+          </div>
         </template>
         <template v-slot:[`item.startDate`]="{ item }">
-          <v-row>
-            <v-col v-if="item.type == 3">
-              设计：{{ item.technicianStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.type > 1 && item.status > 1">
-              采购：{{ item.purchaseStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.status > 2">
-              仓库：{{ item.inventoryStartDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.status > 4">
-              物流：{{ item.shipmentStartDate }}
-            </v-col>
-          </v-row>
+          <div v-if="item.type == 3">设计：{{ item.technicianStartDate }}</div>
+          <div v-if="item.type > 1 && item.status > 1">
+            采购：{{ item.purchaseStartDate }}
+          </div>
+          <div v-if="item.status > 2">仓库：{{ item.inventoryStartDate }}</div>
+          <div v-if="item.status > 4">物流：{{ item.shipmentStartDate }}</div>
         </template>
         <template v-slot:[`item.days`]="{ item }">
-          <v-row v-if="item.type == 3">
-            <v-col> 设计限时：{{ item.technicianDays }}天 </v-col>
-          </v-row>
-          <v-row v-if="item.type > 1">
-            <v-col> 采购限时：{{ item.purchaseDays }}天 </v-col>
-          </v-row>
+          <div v-if="item.type == 3">设计限时：{{ item.technicianDays }}天</div>
+          <div v-if="item.type > 1">采购限时：{{ item.purchaseDays }}天</div>
         </template>
         <template v-slot:[`item.realEndDate`]="{ item }">
-          <v-row>
-            <v-col v-if="item.type == 3 && item.status > 1">
-              设计：{{ item.technicianRealEndDate }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col v-if="item.type > 1 && item.status > 2">
-              采购：{{ item.purchaseRealEndDate }}
-            </v-col>
-          </v-row>
+          <div v-if="item.type == 3 && item.status > 1">
+            设计：{{ item.technicianRealEndDate }}
+          </div>
+          <div v-if="item.type > 1 && item.status > 2">
+            采购：{{ item.purchaseRealEndDate }}
+          </div>
         </template>
         <template v-slot:[`item.employees`]="{ item }">
-          <v-row><v-col> </v-col></v-row>
-          <v-row v-if="item.technicianMan.name">
-            <v-col>技术：{{ item.technicianMan.name }}</v-col>
-          </v-row>
-          <v-row v-if="item.purchaseMan.name">
-            <v-col>采购：{{ item.purchaseMan.name }}</v-col>
-          </v-row>
-          <v-row v-if="item.inventoryMan.name">
-            <v-col>仓库：{{ item.inventoryMan.name }}</v-col>
-          </v-row>
-          <v-row v-if="item.shipmentMan.name">
-            <v-col>物流：{{ item.shipmentMan.name }}</v-col>
-          </v-row>
-          <v-row><v-col> </v-col></v-row>
+          <div v-if="item.technicianMan.name">
+            技术：{{ item.technicianMan.name }}
+          </div>
+          <div v-if="item.purchaseMan.name">
+            采购：{{ item.purchaseMan.name }}
+          </div>
+          <div v-if="item.inventoryMan.name">
+            仓库：{{ item.inventoryMan.name }}
+          </div>
+          <div v-if="item.shipmentMan.name">
+            物流：{{ item.shipmentMan.name }}
+          </div>
         </template>
         <template v-slot:[`item.status`]="{ item }">
           {{ stautsToText(item.status) }}

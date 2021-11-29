@@ -6,11 +6,11 @@
         <v-row>
           <v-col cols="12">
             <v-select
-              v-model="object.areaUID"
-              :items="areaItems"
-              item-text="name"
+              v-model="object.regionUID"
+              :items="regionItems"
+              item-text="text"
               item-value="UID"
-              label="区域"
+              label="省份"
               :rules="rules.must"
             ></v-select>
           </v-col>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { queryAreas } from "@/api/oadrp";
+import { queryRegions } from "@/api/dictionary";
 import { editCompany } from "@/api/customer";
 export default {
   props: {
@@ -62,9 +62,9 @@ export default {
     },
   },
   data: () => ({
-    areaItems: [],
+    regionItems: [],
     object: {
-      areaUID: "",
+      regionUID: "",
       name: "",
       address: "",
     },
@@ -73,13 +73,13 @@ export default {
     },
   }),
   created() {
-    this.getAreaItems();
+    this.getRegionItems();
     this.object = JSON.parse(JSON.stringify(this.parentObj));
   },
   methods: {
-    getAreaItems() {
-      queryAreas().then((res) => {
-        this.areaItems = res.data;
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
       });
     },
     submit() {

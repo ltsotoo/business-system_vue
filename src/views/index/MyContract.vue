@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel @click="clickPanel">
     <v-expansion-panel-header :class="[`text-h4`]">
       我签订的合同
     </v-expansion-panel-header>
@@ -10,13 +10,12 @@
             <v-row>
               <v-col cols="3">
                 <v-select
-                  v-model="queryObject.areaUID"
-                  :items="areaItems"
-                  item-text="name"
+                  v-model="queryObject.regionUID"
+                  :items="regionItems"
+                  item-text="text"
                   item-value="UID"
-                  label="区域"
+                  label="省份"
                   clearable
-                  disabled
                 ></v-select>
               </v-col>
               <v-col cols="3">
@@ -113,20 +112,21 @@
 </template>
 
 <script>
+import { queryRegions } from "@/api/dictionary";
 import contracts from "@/components/my/Contracts";
 export default {
   components: {
     contracts,
   },
   data: () => ({
-    areaItems: [],
+    regionItems: [],
     queryObject: {
-      areaUID: "",
+      regionUID: "",
       no: "",
       companyName: "",
       customerName: "",
       isSpecial: 0,
-      status: 0,
+      status: 2,
       productionStatus: 0,
       collectionStatus: 0,
       employeeUID: "",
@@ -152,8 +152,23 @@ export default {
   }),
   created() {},
   methods: {
+    clickPanel(event) {
+      if (
+        !event.currentTarget.classList.contains(
+          "v-expansion-panel-header--active"
+        ) &&
+        this.regionItems.length == 0
+      ) {
+        this.getRegionItems();
+      }
+    },
     query() {
       this.$refs.contracts.getObject();
+    },
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
+      });
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();

@@ -25,7 +25,7 @@
           text
           color="primary"
           @click="openApprovalDialog(item)"
-          v-if="nos.indexOf('7') != -1 && item.status == 1"
+          v-if="item.status == 1"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -34,7 +34,7 @@
           text
           color="primary"
           @click="openApprovalDialog(item)"
-          v-if="nos.indexOf('8') != -1 && item.status == 2"
+          v-if="item.status == 2"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -134,15 +134,9 @@ export default {
     },
     object: [],
     openItem: {},
-
-    nos: [],
   }),
   created() {
     this.getObject();
-    
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
   },
   methods: {
     getObject() {

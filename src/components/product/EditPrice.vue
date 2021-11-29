@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { editProduct, queryProduct } from "@/api/product";
+import { editProductPrice, queryProduct } from "@/api/product";
 
 export default {
   props: {
@@ -122,7 +122,6 @@ export default {
       sourceType: { text: "" },
       subtype: { text: "" },
     },
-    number: 0,
     rules: {
       number: [(v) => /^[0-9]*$/.test(v) || "必须为大于零的整数"],
     },
@@ -138,10 +137,7 @@ export default {
     },
     submit() {
       if (this.validateForm()) {
-        this.object.number += this.number;
-        this.object.numberCount += this.number;
-
-        editProduct(this.object).then((res) => {
+        editProductPrice(this.object).then((res) => {
           this.$message.success("价格编辑成功了!");
           this.refresh();
           this.closeDialog();

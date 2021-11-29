@@ -30,12 +30,9 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
-            if (response.data.status > 10010 && response.data.status < 10020) {
+            if (response.data.status > 1100 && response.data.status < 1200) {
                 Message.error(response.data.message);
-                localStorage.removeItem("token")
-                setTimeout(() => {
-                    window.location.href = '/'
-                }, 666)
+                window.localStorage.clear()
             }
             if (response.data.status === 666) {
                 return Promise.resolve(response.data)
@@ -48,10 +45,10 @@ service.interceptors.response.use(
         }
     }, error => {
         alert("服务器开小差了，请稍后再试！");
-        localStorage.removeItem("token")
+        // localStorage.clear()
         setTimeout(() => {
             window.location.href = '/'
-        }, 1000)
+        }, 300)
     }
 )
 
