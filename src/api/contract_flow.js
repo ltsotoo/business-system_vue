@@ -8,25 +8,10 @@ export const contractApprove = (data) => {
     })
 }
 
-export const contractFinalApprove = (data) => {
+export const rejectContract = (contract) => {
     return request({
-        url: '/task/contract/finalApprove',
-        method: 'PUT',
-        data: data
-    })
-}
-
-export const calculate = (data) => {
-    return request({
-        url: '/calculatePushMoney',
+        url: '/rejectContract',
         method: 'POST',
-        data: data
-    })
-}
-
-export const getContractPushMoney = (contractUID) => {
-    return request({
-        url: '/contractPushMoney/' + contractUID,
-        method: 'GET',
+        data: contract
     })
 }

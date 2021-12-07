@@ -50,35 +50,12 @@
         <v-btn
           text
           color="primary"
-          @click="openFinalApproveDialog(item.UID)"
-          v-if="
-            item.status == 2 &&
-            item.productionStatus == 2 &&
-            item.collectionStatus == 2
-          "
-        >
-          <v-icon left> mdi-file-edit-outline </v-icon>
-          终审
-        </v-btn>
-        <v-btn
-          text
-          color="primary"
           @click="openEditDialog(item.UID)"
           v-if="item.status == 2"
         >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <!-- <v-btn
-          text
-          color="error"
-          @click="openDeleteDialog(item.UID)"
-          dark
-          disabled
-        >
-          <v-icon left> mdi-delete </v-icon>
-          删除
-        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -108,67 +85,32 @@
     </v-dialog>
 
     <v-dialog
-      v-model="options.finalApproveDialog"
-      v-if="options.finalApproveDialog"
-      persistent
-      @click:outside="closeFinalApproveDialog"
-      width="1440px"
-    >
-      <finalApprove
-        :openUID="options.openUID"
-        :openType="finalApproveNum"
-        :refresh="getObject"
-        :closeDialog="closeFinalApproveDialog"
-      />
-    </v-dialog>
-
-    <v-dialog
       v-model="options.editDialog"
       v-if="options.editDialog"
       width="1440px"
       persistent
       @click:outside="closeEditDialog"
     >
-      <finalApprove
+      <contractEditForms
         :openUID="options.openUID"
         :openType="editNum"
         :refresh="getObject"
         :closeDialog="closeEditDialog"
       />
     </v-dialog>
-
-    <v-dialog
-      v-model="options.deleteDialog"
-      v-if="options.deleteDialog"
-      width="800px"
-      persistent
-      @click:outside="closeDeleteDialog"
-    >
-      <v-card>
-        <v-card-title class="text-h5">您确定删除该位合同吗?</v-card-title>
-        <v-card-subtitle></v-card-subtitle>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import approve from "./Approve";
-import finalApprove from "./FinalApprove";
+import contractEditForms from "./EditForms";
 import contractViewForms from "./ViewForms";
-import { delContract, queryContracts } from "@/api/contract";
+import { queryContracts } from "@/api/contract";
 
 export default {
   components: {
     approve,
-    finalApprove,
+    contractEditForms,
     contractViewForms,
   },
   props: {
@@ -258,13 +200,10 @@ export default {
       itemsPerPage: 10,
       openUID: "",
       approveDialog: false,
-      finalApproveDialog: false,
       viewDialog: false,
       editDialog: false,
-      deleteDialog: false,
     },
     editNum: 2,
-    finalApproveNum: 3,
     object: [],
   }),
   created() {
@@ -305,14 +244,6 @@ export default {
       this.options.openUID = "";
       this.options.approveDialog = false;
     },
-    openFinalApproveDialog(uid) {
-      this.options.openUID = uid;
-      this.options.finalApproveDialog = true;
-    },
-    closeFinalApproveDialog() {
-      this.options.openUID = "";
-      this.options.finalApproveDialog = false;
-    },
     openEditDialog(uid) {
       this.options.openUID = uid;
       this.options.editDialog = true;
@@ -320,21 +251,6 @@ export default {
     closeEditDialog() {
       this.options.openUID = "";
       this.options.editDialog = false;
-    },
-    openDeleteDialog(uid) {
-      this.options.openUID = uid;
-      this.options.deleteDialog = true;
-    },
-    closeDeleteDialog() {
-      this.options.openUID = "";
-      this.options.deleteDialog = false;
-    },
-    deleteItem() {
-      delContract(this.options.openUID).then((res) => {
-        this.$message.success("删除成功了！");
-        this.getObject();
-        this.closeDeleteDialog();
-      });
     },
     compareColor(date) {
       //替换为‘/’转译为中国时间，‘-’转译为UTC

@@ -40,6 +40,15 @@
         <v-btn
           text
           color="primary"
+          @click="openInvoiceDialog(item.UID)"
+          v-if="item.collectionStatus == 1"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          添加发票
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
           @click="openEditDialog(item)"
           v-if="item.collectionStatus == 1"
         >
@@ -57,6 +66,21 @@
         </v-btn>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="invoiceDialog"
+      v-if="invoiceDialog"
+      width="1200px"
+      persistent
+      @click:outside="closeInvoiceDialog"
+    >
+      <invoiceViewForms :openUID="openUID"></invoiceViewForms>
+      <invoiceAddForms
+        :openUID="openUID"
+        :closeDialog="closeInvoiceDialog"
+        style="margin-top: 3px"
+      />
+    </v-dialog>
 
     <v-dialog
       v-model="paymentDialog"
@@ -104,11 +128,15 @@ import { queryPayments } from "@/api/payment";
 import finish from "@/components/payment/Finish";
 import editPayments from "@/components/payment/EditFroms";
 import viewPayments from "@/components/payment/View";
+import invoiceViewForms from "@/components/invoice/ViewForms";
+import invoiceAddForms from "@/components/invoice/AddForms";
 export default {
   components: {
     finish,
     editPayments,
     viewPayments,
+    invoiceViewForms,
+    invoiceAddForms,
   },
   props: {
     queryObject: {
@@ -197,8 +225,10 @@ export default {
       itemsPerPage: 10,
     },
     object: [],
+    openUID: "",
     openItem: {},
     editDialog: false,
+    invoiceDialog: false,
     paymentDialog: false,
     finishDialog: false,
     paymentItems: [],
@@ -256,6 +286,14 @@ export default {
         case 2:
           return "美元";
       }
+    },
+    openInvoiceDialog(uid) {
+      this.openUID = uid;
+      this.invoiceDialog = true;
+    },
+    closeInvoiceDialog() {
+      this.openUID = "";
+      this.invoiceDialog = false;
     },
     openPaymentDialog(item) {
       this.openItem = item;

@@ -36,12 +36,10 @@
           {{ stautsToText(item.status) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <div v-if="openType == 2">
-            <v-btn text color="primary" @click="openApproveDialog(item.UID)">
-              <v-icon left> mdi-pencil </v-icon>
-              重置
-            </v-btn>
-          </div>
+          <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+            <v-icon left> mdi-pencil </v-icon>
+            重置
+          </v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -51,7 +49,7 @@
         :openUID="openUID"
         :parentFun="refresh"
         :closeDialog="closeApproveDialog"
-        :openType="openType"
+        :openType="2"
       />
     </v-dialog>
   </div>
@@ -66,14 +64,10 @@ export default {
   props: {
     parentObject: {
       type: Array,
-      default: ()=>[],
+      default: () => [],
     },
     refresh: {
       type: Function,
-    },
-    openType: {
-      type: Number,
-      default: 0,
     },
   },
   data: () => ({

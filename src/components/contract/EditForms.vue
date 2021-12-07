@@ -1,8 +1,7 @@
 <template>
   <div>
     <v-card>
-      <v-card-title v-if="openType == 2">合同编辑</v-card-title>
-      <v-card-title v-if="openType == 3">合同终审</v-card-title>
+      <v-card-title>合同编辑</v-card-title>
       <v-card-subtitle>
         <v-form readonly>
           <v-row>
@@ -167,12 +166,10 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <finalApproveDataTable
+    <editTaskDataTable
       style="margin-top: 5px"
-      ref="finalApproveDataTable"
       :parentObject="object.tasks"
       v-if="object.tasks"
-      :openType="openType"
       :refresh="refreshAll"
     />
     <viewPayments
@@ -183,13 +180,7 @@
     <v-card style="margin-top: 5px">
       <v-card-title></v-card-title>
       <v-card-subtitle>
-        <v-row justify="center" v-if="openType == 2">
-          <v-spacer></v-spacer>
-          <v-col cols="auto">
-            <v-btn x-large color="error" @click="openRejectPaymentsDialog">
-              回款状态回退
-            </v-btn>
-          </v-col>
+        <v-row justify="center">
           <v-spacer></v-spacer>
           <v-col cols="auto">
             <v-btn x-large color="error" @click="openRejectDialog">
@@ -197,11 +188,6 @@
             </v-btn>
           </v-col>
           <v-spacer></v-spacer>
-        </v-row>
-        <v-row justify="center" v-if="openType == 3">
-          <v-btn x-large color="error" @click="openFinalApproveDialog">
-            合同完成
-          </v-btn>
         </v-row>
       </v-card-subtitle>
     </v-card>
@@ -226,58 +212,18 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-dialog
-      v-model="rejectPaymentsDialog"
-      v-if="rejectPaymentsDialog"
-      width="600px"
-      persistent
-      @click:outside="closeRejectPaymentsDialog"
-    >
-      <v-card>
-        <v-card-title class="text-h5"
-          >您确定回退该合同的回款状态吗?</v-card-title
-        >
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="rejectPayments">确定</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" rounded @click="closeRejectPaymentsDialog"
-            >取消</v-btn
-          >
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog
-      v-model="finalApproveDialog"
-      v-if="finalApproveDialog"
-      width="75%"
-      min-width="900px"
-      persistent
-      @click:outside="closeFinalApproveDialog"
-    >
-      <finalApproveForms
-        :parentObj="object"
-        :closeDialog="closeFinalApproveDialogPlus"
-        :refresh="refresh"
-      />
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import finalApproveDataTable from "../task/FinalApproveDataTable";
+import editTaskDataTable from "../task/EditDataTable";
 import viewPayments from "../payment/View";
-import finalApproveForms from "./FinalApproveForms.vue";
-import { queryContract, rejectContract } from "@/api/contract";
-import { rejectContractPaymentStatus } from "@/api/payment";
+import { queryContract} from "@/api/contract";
+import { rejectContract } from "@/api/contract_flow";
 export default {
   components: {
-    finalApproveDataTable,
+    editTaskDataTable,
     viewPayments,
-    finalApproveForms,
   },
   props: {
     openType: {
@@ -341,8 +287,6 @@ export default {
     },
 
     rejectDialog: false,
-    rejectPaymentsDialog: false,
-    finalApproveDialog: false,
   }),
   created() {
     this.getObject();
@@ -365,32 +309,10 @@ export default {
     closeRejectDialog() {
       this.rejectDialog = false;
     },
-    openRejectPaymentsDialog() {
-      this.rejectPaymentsDialog = true;
-    },
-    closeRejectPaymentsDialog() {
-      this.rejectPaymentsDialog = false;
-    },
-    openFinalApproveDialog() {
-      this.finalApproveDialog = true;
-    },
-    closeFinalApproveDialog() {
-      this.finalApproveDialog = false;
-    },
-    closeFinalApproveDialogPlus() {
-      this.closeFinalApproveDialog();
-      this.closeDialog();
-    },
+
     reject() {
       rejectContract({ UID: this.openUID }).then((res) => {
         this.$message.success("合同驳回成功！");
-        this.refresh();
-        this.closeDialog();
-      });
-    },
-    rejectPayments() {
-      rejectContractPaymentStatus({ UID: this.openUID }).then((res) => {
-        this.$message.success("回款状态驳回成功！");
         this.refresh();
         this.closeDialog();
       });
