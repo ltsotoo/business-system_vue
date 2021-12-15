@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>添加发票</v-card-title>
+    <v-card-title>发票添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>

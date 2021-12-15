@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>已开发票</v-card-title>
+    <v-card-title>开票记录</v-card-title>
     <v-card-subtitle>
       <v-form readonly>
         <v-row v-for="(item, i) in invoiceItems" :key="i">

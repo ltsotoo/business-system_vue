@@ -28,39 +28,19 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn
-          text
-          color="success"
-          @click="openPaymentDialog(item)"
-          v-if="item.collectionStatus == 2"
-        >
+        <v-btn text color="success">
           <v-icon left> mdi-eye </v-icon>
-          查看回款记录
+          查看详情
         </v-btn>
-        <v-btn
-          text
-          color="primary"
-          @click="openInvoiceDialog(item.UID)"
-          v-if="item.collectionStatus == 1"
-        >
+        <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           添加发票
         </v-btn>
-        <v-btn
-          text
-          color="primary"
-          @click="openEditDialog(item)"
-          v-if="item.collectionStatus == 1"
-        >
+        <v-btn text color="primary" @click="openAddPaymentDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
-          添加回款记录
+          添加回款
         </v-btn>
-        <v-btn
-          text
-          color="primary"
-          @click="openFinishDialog(item)"
-          v-if="item.collectionStatus == 1"
-        >
+        <v-btn text color="primary">
           <v-icon left> mdi-pencil </v-icon>
           回款完成
         </v-btn>
@@ -68,55 +48,59 @@
     </v-data-table>
 
     <v-dialog
-      v-model="invoiceDialog"
-      v-if="invoiceDialog"
+      v-model="addInvoiceDialog"
+      v-if="addInvoiceDialog"
       width="1200px"
       persistent
-      @click:outside="closeInvoiceDialog"
+      @click:outside="closeAddInvoiceDialog"
     >
-      <invoiceViewForms :openUID="openUID"></invoiceViewForms>
+      <v-card>
+        <v-card-title>开票需求</v-card-title>
+        <v-card-subtitle>
+          <v-form readonly>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field v-model="openItem.payType" label="付款类型">
+                </v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field v-model="openItem.invoiceType" label="开票类型">
+                </v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="openItem.invoiceText"
+                  label="开票备注"
+                  rows="1"
+                  auto-grow
+                >
+                </v-textarea>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-subtitle>
+      </v-card>
+      <invoiceViewForms
+        :openUID="openItem.UID"
+        style="margin-top: 1px"
+      ></invoiceViewForms>
       <invoiceAddForms
-        :openUID="openUID"
-        :closeDialog="closeInvoiceDialog"
-        style="margin-top: 3px"
+        :openUID="openItem.UID"
+        :closeDialog="closeAddInvoiceDialog"
+        style="margin-top: 1px"
       />
     </v-dialog>
 
     <v-dialog
-      v-model="paymentDialog"
-      v-if="paymentDialog"
+      v-model="addPaymentDialog"
+      v-if="addPaymentDialog"
       width="1200px"
       persistent
-      @click:outside="closePaymentDialog"
+      @click:outside="closeAddPaymentDialog"
     >
-      <viewPayments :parentObject="paymentItems" />
-    </v-dialog>
-
-    <v-dialog
-      v-model="editDialog"
-      v-if="editDialog"
-      width="1200px"
-      persistent
-      @click:outside="closeEditDialog"
-    >
-      <editPayments
+      <paymentAddForms
         :openItem="openItem"
-        :closeDialog="closeEditDialog"
-      ></editPayments>
-    </v-dialog>
-
-    <v-dialog
-      v-model="finishDialog"
-      v-if="finishDialog"
-      width="1200px"
-      persistent
-      @close:outside="closeFinishDialog"
-    >
-      <finish
-        :paymentItems="paymentItems"
-        :openUID="openItem.UID"
-        :closeDialog="closeFinishDialog"
-        :refresh="getObject"
+        :closeDialog="closeAddPaymentDialog"
       />
     </v-dialog>
   </div>
@@ -124,19 +108,17 @@
 
 <script>
 import { queryContracts } from "@/api/contract";
-import { queryPayments } from "@/api/payment";
-import finish from "@/components/payment/Finish";
-import editPayments from "@/components/payment/EditFroms";
-import viewPayments from "@/components/payment/View";
+
 import invoiceViewForms from "@/components/invoice/ViewForms";
 import invoiceAddForms from "@/components/invoice/AddForms";
+import paymentAddForms from "@/components/payment/AddFroms";
+
 export default {
   components: {
-    finish,
-    editPayments,
-    viewPayments,
     invoiceViewForms,
     invoiceAddForms,
+
+    paymentAddForms,
   },
   props: {
     queryObject: {
@@ -225,13 +207,9 @@ export default {
       itemsPerPage: 10,
     },
     object: [],
-    openUID: "",
     openItem: {},
-    editDialog: false,
-    invoiceDialog: false,
-    paymentDialog: false,
-    finishDialog: false,
-    paymentItems: [],
+    addInvoiceDialog: false,
+    addPaymentDialog: false,
   }),
   created() {
     this.getObject();
@@ -287,44 +265,23 @@ export default {
           return "美元";
       }
     },
-    openInvoiceDialog(uid) {
-      this.openUID = uid;
-      this.invoiceDialog = true;
-    },
-    closeInvoiceDialog() {
-      this.openUID = "";
-      this.invoiceDialog = false;
-    },
-    openPaymentDialog(item) {
+
+    openAddInvoiceDialog(item) {
       this.openItem = item;
-      queryPayments(this.openItem.UID).then((res) => {
-        this.paymentItems = res.data;
-        this.paymentDialog = true;
-      });
+      this.addInvoiceDialog = true;
     },
-    closePaymentDialog() {
+    closeAddInvoiceDialog() {
       this.openItem = {};
-      this.paymentDialog = false;
+      this.addInvoiceDialog = false;
     },
-    openFinishDialog(item) {
+
+    openAddPaymentDialog(item) {
       this.openItem = item;
-      queryPayments(this.openItem.UID).then((res) => {
-        this.paymentItems = res.data;
-        this.finishDialog = true;
-      });
+      this.addPaymentDialog = true;
     },
-    closeFinishDialog() {
+    closeAddPaymentDialog() {
       this.openItem = {};
-      this.finishDialog = false;
-    },
-    openEditDialog(item) {
-      this.openItem = item;
-      this.editDialog = true;
-    },
-    closeEditDialog() {
-      this.openItem = {};
-      this.getObject();
-      this.editDialog = false;
+      this.addPaymentDialog = false;
     },
   },
 };
