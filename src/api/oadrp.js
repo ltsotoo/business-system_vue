@@ -23,6 +23,13 @@ export const editOffice = (office) => {
     })
 }
 
+export const queryOffice = (uid) => {
+    return request({
+        url: '/office/' + uid,
+        method: 'GET',
+    })
+}
+
 export const queryOffices = (office) => {
     return request({
         url: '/offices',

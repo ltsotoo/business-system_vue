@@ -9,18 +9,16 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="primary" @click="openEditDialog(item.UID)">
           <v-icon left> mdi-pencil </v-icon>
-          编辑权限
+          编辑
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          dark
-          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 

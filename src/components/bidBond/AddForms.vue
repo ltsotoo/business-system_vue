@@ -81,7 +81,9 @@ export default {
   data: () => ({
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     officeItems: [],
     departmentItems: [],

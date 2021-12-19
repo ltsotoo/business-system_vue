@@ -46,7 +46,14 @@
       </v-card-subtitle>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+        <v-btn
+          color="primary"
+          rounded
+          @click="submit"
+          :disabled="submitDisabled"
+        >
+          提交
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
         <v-spacer></v-spacer>
@@ -75,6 +82,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     departmentTypeItems: [],
     permissionItems: [],
     object: {
@@ -87,7 +95,6 @@ export default {
     },
   }),
   created() {
-    this.getDepartmentTypeItems();
     this.getPermissionItems();
     if (this.openType == 2) {
       this.getRole();
@@ -117,27 +124,23 @@ export default {
         this.permissionItems = res.data;
       });
     },
-    entryRole() {
-      if (this.validateForm()) {
-        addRole(this.object).then((res) => {
-          this.$message.success("添加成功");
-          this.refresh();
-          this.closeDialog();
-        });
-      }
-    },
-    updateRole() {
-      editRole(this.object).then((res) => {
-        this.$message.success("编辑成功");
-        this.closeDialog();
-      });
-    },
     submit() {
-      if (this.openType == 0) {
-        this.entryRole();
-      }
-      if (this.openType == 2) {
-        this.updateRole();
+      this.submitDisabled = true;
+      if (this.validateForm()) {
+        if (this.openType == 0) {
+          addRole(this.object).then((res) => {
+            this.$message.success("添加成功");
+            this.refresh();
+            this.closeDialog();
+          });
+        } else if (this.openType == 2) {
+          editRole(this.object).then((res) => {
+            this.$message.success("编辑成功");
+            this.closeDialog();
+          });
+        }
+      } else {
+        this.submitDisabled = false;
       }
     },
     toggle() {

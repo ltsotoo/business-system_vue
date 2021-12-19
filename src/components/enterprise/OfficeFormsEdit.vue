@@ -1,13 +1,21 @@
 <template>
   <v-card>
-    <v-card-title v-if="openType == 0">添加</v-card-title>
-    <v-card-title v-if="openType == 2">编辑</v-card-title>
+    <v-card-title>公司(办事处)信息编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
-        <v-row align="center">
+        <v-row>
           <v-col cols="12">
             <v-text-field
-              v-model.trim="object.text"
+              v-model.trim="object.number"
+              label="编号"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model.trim="object.name"
               label="名称"
               :rules="rules.must"
               counter
@@ -36,18 +44,12 @@
 </template>
 
 <script>
-import { createDictionary, editDictionary } from "@/api/dictionary";
+import { queryOffice, editOffice } from "@/api/oadrp";
 export default {
   props: {
-    openType: {
+    openUID: {
       type: String,
-      default: 0,
-    },
-    openItem: {
-      type: Object,
-    },
-    typeName: {
-      type: String,
+      default: "",
     },
     closeDialog: {
       type: Function,
@@ -59,38 +61,30 @@ export default {
   data: () => ({
     submitDisabled: false,
     object: {
-      dictionaryTypeUID: "",
-      text: "",
+      number: "",
+      name: "",
     },
     rules: {
       must: [(v) => !!v || "必填项"],
     },
   }),
   created() {
-    this.object.dictionaryTypeUID = this.typeName;
-    if (this.openType == 2) {
-      this.object = this.openItem;
-    }
+    this.getObject();
   },
   methods: {
+    getObject() {
+      queryOffice(this.openUID).then((res) => {
+        this.object = res.data;
+      });
+    },
     submit() {
       this.submitDisabled = true;
       if (this.validateForm()) {
-        if (this.openType == 0) {
-          createDictionary(this.object).then((res) => {
-            this.$message.success("录入成功了！");
-            this.refresh();
-            this.closeDialog();
-          });
-        } else if (this.openType == 2) {
-          editDictionary(this.object).then((res) => {
-            this.$message.success("编辑成功了！");
-            if (this.refresh()) {
-              this.refresh();
-            }
-            this.closeDialog();
-          });
-        }
+        editOffice(this.object).then((res) => {
+          this.$message.success("编辑成功了！");
+          this.refresh();
+          this.closeDialog();
+        });
       } else {
         this.submitDisabled = false;
       }

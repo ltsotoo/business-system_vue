@@ -17,8 +17,6 @@
           text
           color="error"
           @click="openDelDialog(item.UID)"
-          dark
-          disabled
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -33,11 +31,10 @@
       persistent
       @click:outside="closeEditNameDialog"
     >
-      <officeForms
-        :openType="2"
+      <officeFormsEdit
         :closeDialog="closeEditNameDialog"
         :refresh="getObject"
-        :parentObj="openItem"
+        :openUID="openUID"
       />
     </v-dialog>
 
@@ -49,7 +46,7 @@
       @click:outside="closeDelDialog"
     >
       <v-card>
-        <v-card-title class="text-h5">您确定要删除该办事处吗?</v-card-title>
+        <v-card-title class="text-h5">您确定要删除该公司(办事处)吗?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="delObject">确定</v-btn>
@@ -64,10 +61,10 @@
 
 <script>
 import { queryOffices, delOffice } from "@/api/oadrp";
-import officeForms from "./OfficeForms";
+import officeFormsEdit from "./OfficeFormsEdit";
 export default {
   components: {
-    officeForms,
+    officeFormsEdit,
   },
   props: {
     queryObject: {
@@ -77,22 +74,51 @@ export default {
   data: () => ({
     headers: [
       {
+        text: "公司(办事处)编号",
+        align: "center",
+        value: "number",
+        sortable: false,
+      },
+      {
         text: "公司(办事处)名称",
         align: "center",
         value: "name",
         sortable: false,
       },
       {
-        text: "余额(元)",
+        text: "可用业务费用金额(元)",
+        align: "center",
+        value: "businessMoney",
+        sortable: false,
+      },
+      {
+        text: "可提成金额(元)",
         align: "center",
         value: "money",
+        sortable: false,
+      },
+      {
+        text: "年底提成金额(元)",
+        align: "center",
+        value: "moneyCold",
+        sortable: false,
+      },
+      {
+        text: "今年目标量(元)",
+        align: "center",
+        value: "taskLoad",
+        sortable: false,
+      },
+      {
+        text: "今年完成量(元)",
+        align: "center",
+        value: "targetLoad",
         sortable: false,
       },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     object: [],
     openUID: "",
-    openItem: "",
     delDialog: false,
     editNameDialog: false,
   }),
@@ -101,7 +127,7 @@ export default {
   },
   methods: {
     getObject() {
-      queryOffices(this.queryObj).then((res) => {
+      queryOffices(this.queryObject).then((res) => {
         this.object = res.data;
       });
     },
@@ -123,11 +149,11 @@ export default {
     },
 
     openEditNameDialog(item) {
-      this.openItem = JSON.parse(JSON.stringify(item));
+      this.openUID = item.UID;
       this.editNameDialog = true;
     },
     closeEditNameDialog() {
-      this.openItem = {};
+      this.openUID = "";
       this.editNameDialog = false;
     },
   },

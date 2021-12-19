@@ -37,7 +37,7 @@
         persistent
         @click:outside="closeAddDialog"
       >
-        <officeForms :closeDialog="closeAddDialog" :refresh="queryOffices" />
+        <officeFormsAdd :closeDialog="closeAddDialog" :refresh="queryOffices" />
       </v-dialog>
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -45,11 +45,11 @@
 
 <script>
 import officeDataTable from "@/components/enterprise/OfficeDataTable";
-import officeForms from "@/components/enterprise/OfficeForms";
+import officeFormsAdd from "@/components/enterprise/OfficeFormsAdd";
 export default {
   components: {
     officeDataTable,
-    officeForms,
+    officeFormsAdd,
   },
   data: () => ({
     queryObject: {

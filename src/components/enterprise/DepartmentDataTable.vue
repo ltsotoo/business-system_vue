@@ -11,7 +11,7 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="primary" @click="openEditNameDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
-          名称编辑
+          编辑
         </v-btn>
         <!-- <v-btn
           text
@@ -81,6 +81,12 @@ export default {
   },
   data: () => ({
     headers: [
+      {
+        text: "公司(办事处)",
+        align: "center",
+        value: "office.name",
+        sortable: false,
+      },
       {
         text: "部门名称",
         align: "center",

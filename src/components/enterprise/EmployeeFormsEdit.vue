@@ -1,11 +1,10 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title v-if="editType == 0">员工添加</v-card-title>
-    <v-card-title v-else>员工编辑</v-card-title>
+    <v-card-title>员工编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form3">
         <v-row>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-select
               v-model="object.officeUID"
               :items="officeItems"
@@ -17,7 +16,7 @@
               :disabled="!(editType == 3)"
             ></v-select>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-select
               v-model="object.departmentUID"
               :items="departmentItems"
@@ -28,21 +27,19 @@
               :disabled="!(editType == 3)"
             ></v-select>
           </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.trim="object.number"
+              label="编号"
+              counter
+              maxlength="50"
+              :disabled="!(editType == 3)"
+            ></v-text-field>
+          </v-col>
         </v-row>
       </v-form>
       <v-form ref="form1">
         <v-row>
-          <v-col cols="6">
-            <v-text-field
-              v-model.trim="object.number"
-              label="编号"
-              :rules="rules.must"
-              counter
-              maxlength="50"
-              :disabled="!(editType == 1)"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6"></v-col>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
@@ -86,18 +83,26 @@
       </v-form>
       <v-form ref="form2">
         <v-row>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.money"
-              label="可用报销额度(元)"
+              label="补助额度(元)"
               :rules="rules.money"
               :disabled="!(editType == 2)"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.credit"
-              label="每月报销额度(元)"
+              label="每月总部补助额度(元)"
+              :rules="rules.money"
+              :disabled="!(editType == 2)"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.officeCredit"
+              label="每月办事处补助额度(元)"
               :rules="rules.money"
               :disabled="!(editType == 2)"
             ></v-text-field>
@@ -121,7 +126,14 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+        <v-btn
+          color="primary"
+          rounded
+          @click="submit"
+          :disabled="submitDisabled"
+        >
+          提交
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
         <v-spacer></v-spacer>
@@ -151,6 +163,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     officeItems: [],
     departmentItems: [],
     roleItems: [],
@@ -166,6 +179,8 @@ export default {
       roles: [],
       money: 0,
       credit: 0,
+      officeCredit: 0,
+      editType: 0,
     },
     rules: {
       must: [(v) => !!v || "必填项"],
@@ -175,7 +190,9 @@ export default {
           /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
           "格式错误",
       ],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
   created() {
@@ -185,12 +202,16 @@ export default {
   },
   methods: {
     submit() {
+      this.submitDisabled = true;
+      this.object.editType = this.editType;
       if (this.validateForm()) {
         editEmployee(this.object).then((res) => {
           this.$message.success("编辑成功了！");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     getObject() {

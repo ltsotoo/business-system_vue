@@ -4,25 +4,24 @@
     <v-card-subtitle>
       <v-form ref="form" readonly>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.trim="object.office.name"
               label="办事处"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.trim="object.department.name"
               label="部门"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
             ></v-text-field>
           </v-col>
-          <v-col cols="6"></v-col>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
@@ -47,16 +46,22 @@
               label="邮箱"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.money"
-              label="初始报销额度(元)"
+              label="报销额度(元)"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.credit"
-              label="每月报销额度(元)"
+              label="每月总部补助额度(元)"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.officeCredit"
+              label="每月办事处补助额度(元)"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
@@ -100,6 +105,7 @@ export default {
       roles: [{ name: "" }],
       money: 0,
       credit: 0,
+      officeCredit: 0,
     },
   }),
   created() {

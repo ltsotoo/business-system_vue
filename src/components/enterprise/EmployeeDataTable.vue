@@ -17,26 +17,22 @@
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
         </v-btn>
-        <v-if>
-          <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
-            <v-icon left> mdi-pencil </v-icon>
-            财务编辑
-          </v-btn>
-          <v-btn text color="primary" @click="openEditRoleDialog(item.UID)">
-            <v-icon left> mdi-pencil </v-icon>
-            人事编辑
-          </v-btn>
-          <v-if>
-            <v-btn text color="primary" @click="openResetPwdDialog(item)">
-              <v-icon left> mdi-pencil </v-icon>
-              重置密码
-            </v-btn>
-          </v-if>
-          <v-btn text color="error" @click="openDelDialog(item.UID)">
-            <v-icon left> mdi-delete </v-icon>
-            删除
-          </v-btn>
-        </v-if>
+        <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
+          <v-icon left> mdi-pencil </v-icon>
+          财务编辑
+        </v-btn>
+        <v-btn text color="primary" @click="openEditRoleDialog(item.UID)">
+          <v-icon left> mdi-pencil </v-icon>
+          人事编辑
+        </v-btn>
+        <v-btn text color="primary" @click="openResetPwdDialog(item)">
+          <v-icon left> mdi-pencil </v-icon>
+          重置密码
+        </v-btn>
+        <v-btn text color="error" @click="openDelDialog(item.UID)">
+          <v-icon left> mdi-delete </v-icon>
+          停用
+        </v-btn>
       </template>
     </v-data-table>
 

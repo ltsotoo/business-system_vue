@@ -4,7 +4,7 @@
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-select
               v-model="object.officeUID"
               :items="officeItems"
@@ -15,7 +15,7 @@
               :rules="rules.must"
             ></v-select>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-select
               v-model="object.departmentUID"
               :items="departmentItems"
@@ -25,7 +25,7 @@
               :rules="rules.must"
             ></v-select>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
@@ -33,7 +33,6 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="6"></v-col>
           <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
@@ -69,17 +68,24 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.money"
-              label="初始报销额度(元)"
+              label="初始补助额度(元)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-text-field
               v-model.number="object.credit"
-              label="每月报销额度(元)"
+              label="每月总部补助额度(元)"
+              :rules="rules.money"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.officeCredit"
+              label="每月办事处补助额度(元)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
@@ -98,7 +104,14 @@
       </v-form>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+        <v-btn
+          color="primary"
+          rounded
+          @click="submit"
+          :disabled="submitDisabled"
+        >
+          提交
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
         <v-spacer></v-spacer>
@@ -123,6 +136,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     officeItems: [],
     departmentItems: [],
     roleItems: [],
@@ -138,6 +152,7 @@ export default {
       roles: [],
       money: 0,
       credit: 0,
+      officeCredit: 0,
     },
     rules: {
       must: [(v) => !!v || "必填项"],
@@ -147,7 +162,9 @@ export default {
           /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) ||
           "邮箱格式错误",
       ],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
   created() {
@@ -161,6 +178,7 @@ export default {
   },
   methods: {
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         entryEmployee(this.object).then((res) => {
           this.$message.success("添加成功了！");
@@ -169,6 +187,8 @@ export default {
           }
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     getOfficeItems() {
