@@ -4,9 +4,14 @@
       :headers="headers"
       :items="object"
       :items-per-page="5"
+      :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
       }"
+      :loading="options.loading"
+      :options.sync="options"
+      @update:page="getObject"
+      @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="primary" @click="openAddCustomerDialog(item)">
@@ -143,8 +148,20 @@ export default {
   },
   methods: {
     getObject() {
-      queryCompanys(this.queryObject).then((res) => {
-        this.object = res.data;
+      this.options.loading = true;
+      queryCompanys(
+        this.queryObject,
+        this.options.itemsPerPage,
+        this.options.page
+      ).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        if (this.options.total != 0) {
+          this.object = res.data;
+        }
       });
     },
     deleteItem() {

@@ -65,10 +65,14 @@ export const editCompany = (company) => {
     })
 }
 
-export const queryCompanys = (company) => {
+export const queryCompanys = (company, pageSize, pageNo) => {
     return request({
         url: '/companys',
         method: 'POST',
-        data: company
+        data: company,
+        params: {
+            "pageSize": pageSize,
+            "pageNo": pageNo,
+        }
     })
 }

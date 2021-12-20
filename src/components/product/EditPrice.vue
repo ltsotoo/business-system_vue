@@ -2,7 +2,7 @@
   <v-card class="mx-auto">
     <v-card-title>产品入库</v-card-title>
     <v-card-subtitle>
-      <v-form ref="form" disabled>
+      <v-form disabled>
         <v-row>
           <v-col cols="6">
             <v-text-field
@@ -53,31 +53,31 @@
           </v-col>
         </v-row>
       </v-form>
-      <v-row>
-        <v-col cols="4">
-          <v-text-field
-            v-model.number="object.purchasedPrice"
-            label="采购/成本价格(人民币)"
-            disabled
-          ></v-text-field>
-        </v-col>
-        <v-col cols="4">
-          <v-text-field
-            v-model.number="object.standardPrice"
-            label="销售价格(人民币)"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="4">
-          <v-text-field
-            v-model.number="object.standardPriceUSD"
-            label="销售价格(美元)"
-          ></v-text-field>
-        </v-col>
-      </v-row>
+      <v-form ref="form">
+        <v-row>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.standardPrice"
+              label="销售价格(人民币)"
+              :rules="rules.money"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.standardPriceUSD"
+              label="销售价格(美元)"
+              :rules="rules.money"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4"></v-col>
+        </v-row>
+      </v-form>
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -102,6 +102,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     object: {
       sourceTypeUID: "",
       subtypeUID: "",
@@ -123,7 +124,9 @@ export default {
       subtype: { text: "" },
     },
     rules: {
-      number: [(v) => /^[0-9]*$/.test(v) || "必须为大于零的整数"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
   created() {
@@ -136,12 +139,15 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         editProductPrice(this.object).then((res) => {
           this.$message.success("价格编辑成功了!");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

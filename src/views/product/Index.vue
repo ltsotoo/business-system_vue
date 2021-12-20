@@ -1,9 +1,7 @@
 <template>
   <v-container>
     <productManage />
-    <v-expansion-panels multiple style="margin-top: 30px">
-      <settingProductType />
-    </v-expansion-panels>
+    <settingProductType style="margin-top: 30px" />
   </v-container>
 </template>
 

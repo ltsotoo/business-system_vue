@@ -76,12 +76,6 @@
           </v-col>
           <v-col cols="4">
             <v-text-field
-              v-model.number="object.purchasedPrice"
-              label="采购/成本价格(人民币)"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
               v-model.number="object.standardPrice"
               label="销售价格(人民币)"
               :rules="rules.money"
@@ -94,7 +88,7 @@
               :rules="rules.money"
             ></v-text-field>
           </v-col>
-
+          <v-col cols="4"></v-col>
           <v-col cols="12">
             <v-textarea
               label="备注"
@@ -109,7 +103,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -131,6 +127,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     typeItems: [],
     supplierItems: [],
     object: {
@@ -150,8 +147,10 @@ export default {
     },
     rules: {
       must: [(v) => !!v || "必填项"],
-      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      number: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
   created() {
@@ -170,6 +169,7 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         this.object.number = this.object.numberCount;
         entryProduct(this.object).then((res) => {
@@ -177,6 +177,8 @@ export default {
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

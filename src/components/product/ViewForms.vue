@@ -53,12 +53,6 @@
           </v-col>
           <v-col cols="4">
             <v-text-field
-              v-model.number="object.purchasedPrice"
-              label="采购/成本价格(人民币)"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-text-field
               v-model.number="object.standardPrice"
               label="销售价格(人民币)"
             ></v-text-field>
@@ -69,6 +63,7 @@
               label="销售价格(美元)"
             ></v-text-field>
           </v-col>
+          <v-col cols="4"></v-col>
           <v-col cols="12">
             <v-text-field
               v-model="object.deliveryCycle"

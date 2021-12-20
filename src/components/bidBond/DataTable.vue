@@ -24,16 +24,16 @@
         <div v-if="item.status == 1">
           <v-btn text color="primary" @click="openApproveDialog(item.UID)">
             <v-icon left> mdi-pencil </v-icon>
-            完成
+            回款
           </v-btn>
           <v-btn text color="primary" @click="openEditDialog(item)">
             <v-icon left> mdi-pencil </v-icon>
             编辑
           </v-btn>
-          <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+          <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
             <v-icon left> mdi-delete </v-icon>
             删除
-          </v-btn>
+          </v-btn> -->
         </div>
       </template>
     </v-data-table>
@@ -125,6 +125,18 @@ export default {
         text: "业务员",
         align: "center",
         value: "salesman.name",
+        sortable: false,
+      },
+      {
+        text: "录入财务",
+        align: "center",
+        value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "回款确认财务",
+        align: "center",
+        value: "finalEmployee.name",
         sortable: false,
       },
       {

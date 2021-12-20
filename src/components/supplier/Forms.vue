@@ -70,7 +70,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -97,6 +99,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     object: {
       name: "",
       address: "",
@@ -123,6 +126,7 @@ export default {
   },
   methods: {
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         if (this.openType == 0) {
           entrySupplier(this.object).then((res) => {
@@ -137,6 +141,8 @@ export default {
             this.closeDialog();
           });
         }
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

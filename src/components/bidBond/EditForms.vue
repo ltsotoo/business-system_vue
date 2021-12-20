@@ -57,7 +57,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -82,9 +84,12 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     officeItems: [],
     departmentItems: [],
@@ -141,11 +146,19 @@ export default {
       });
     },
     submit() {
-      editBidBond(this.object).then((res) => {
-        this.$message.success("编辑成功了!");
-        this.refresh();
-        this.closeDialog();
-      });
+      this.submitDisabled = true;
+      if (this.validateForm()) {
+        editBidBond(this.object).then((res) => {
+          this.$message.success("编辑成功了!");
+          this.refresh();
+          this.closeDialog();
+        });
+      } else {
+        this.submitDisabled = false;
+      }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

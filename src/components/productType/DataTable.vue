@@ -81,21 +81,33 @@ export default {
         sortable: false,
       },
       {
-        text: "标准提成百分比",
+        text: "标准提成百分比(小数)",
         align: "center",
         value: "pushMoneyPercentages",
         sortable: false,
       },
       {
-        text: "提成上涨百分比",
+        text: "提成上涨百分比(小数)",
         align: "center",
         value: "pushMoneyPercentagesUp",
         sortable: false,
       },
       {
-        text: "提成下降百分比",
+        text: "提成下降百分比(小数)",
         align: "center",
         value: "pushMoneyPercentagesDown",
+        sortable: false,
+      },
+      {
+        text: "标准业务费用百分比(小数)",
+        align: "center",
+        value: "businessMoneyPercentages",
+        sortable: false,
+      },
+      {
+        text: "业务费用上涨百分比(小数)",
+        align: "center",
+        value: "businessMoneyPercentagesUp",
         sortable: false,
       },
       {

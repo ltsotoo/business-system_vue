@@ -42,5 +42,18 @@ export const queryRegions = () => {
     return queryDictionaries("Region", "")
 }
 
+export const queryExpenseTypes = () => {
+    return queryDictionaries("ExpenseType", "")
+}
+
+export const queryExpenseStatus = () => {
+    return queryDictionaries("ExpenseStatus", "")
+}
+
+export const queryBidBondStatus = () => {
+    return queryDictionaries("BidBondStatus", "")
+}
+
+
 
 

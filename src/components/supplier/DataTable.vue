@@ -14,22 +14,22 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success" @click="openViewDialog(item)">
+        <!-- <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看
-        </v-btn>
+        </v-btn> -->
         <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
         >
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -105,6 +105,12 @@ export default {
         sortable: false,
       },
       {
+        text: "网站",
+        align: "center",
+        value: "web",
+        sortable: false,
+      },
+      {
         text: "地址",
         align: "center",
         value: "address",
@@ -120,6 +126,18 @@ export default {
         text: "联系电话",
         align: "center",
         value: "phone",
+        sortable: false,
+      },
+      {
+        text: "微信号",
+        align: "center",
+        value: "wechatID",
+        sortable: false,
+      },
+      {
+        text: "电子邮箱",
+        align: "center",
+        value: "email",
         sortable: false,
       },
       {

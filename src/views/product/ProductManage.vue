@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card>
+      <v-card-title>产品管理</v-card-title>
       <v-card-subtitle>
         <v-form ref="queryForm">
           <v-row align="baseline">

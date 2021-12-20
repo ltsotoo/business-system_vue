@@ -13,9 +13,6 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.type`]="{ item }">
-        {{ typeToText(item.type) }}
-      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
@@ -28,7 +25,7 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.UpdatedAt`]="{ item }">
-        <div v-if="item.approverUID">{{ item.UpdatedAt }}</div>
+        <div v-if="item.status != 1">{{ item.UpdatedAt }}</div>
       </template>
     </v-data-table>
   </div>
@@ -41,13 +38,16 @@ export default {
     queryObject: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+    },
   },
   data: () => ({
     headers: [
       {
         text: "类型",
         align: "center",
-        value: "type",
+        value: "expenseType.text",
         sortable: false,
       },
       {
@@ -69,13 +69,25 @@ export default {
         sortable: false,
       },
       {
-        text: "审批人",
+        text: "办事处审批人",
         align: "center",
-        value: "approver.name",
+        value: "approver1.name",
         sortable: false,
       },
       {
-        text: "审批时间",
+        text: "财务",
+        align: "center",
+        value: "approver2.name",
+        sortable: false,
+      },
+      {
+        text: "出纳",
+        align: "center",
+        value: "approver3.name",
+        sortable: false,
+      },
+      {
+        text: "最后审批时间",
         align: "center",
         value: "UpdatedAt",
         sortable: false,
@@ -118,25 +130,15 @@ export default {
         }
       });
     },
-    typeToText(type) {
-      switch (type) {
-        case 1:
-          return "个人";
-        case 2:
-          return "办事处";
-      }
-    },
     statusToText(status) {
-      switch (status) {
-        case -1:
-          return "已驳回";
-        case 1:
-          return "待办事处审批";
-        case 2:
-          return "待财务审批";
-        case 3:
-          return "已通过";
-      }
+      var temp = "";
+      this.statusItems.forEach((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

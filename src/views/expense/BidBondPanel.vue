@@ -10,11 +10,29 @@
               <v-select
                 v-model="queryObject.status"
                 :items="statusItems"
-                item-text="key"
+                item-text="text"
                 item-value="value"
-                label="类型"
+                label="状态"
                 clearable
               ></v-select>
+            </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="queryObject.officeUID"
+                :items="officeItems"
+                item-text="name"
+                item-value="UID"
+                label="办事处"
+                clearable
+              ></v-select>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                label="业务员名称"
+                v-model.trim="queryObject.salesmanName"
+                clearable
+                maxlength="20"
+              ></v-text-field>
             </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
@@ -42,29 +60,42 @@
 <script>
 import bidBondDataTable from "@/components/bidBond/DataTable";
 import bidBondAddForms from "@/components/bidBond/AddForms";
+import { queryOffices } from "@/api/oadrp";
+import { queryBidBondStatus } from "@/api/dictionary";
 export default {
   components: {
     bidBondDataTable,
     bidBondAddForms,
   },
   data: () => ({
-    statusItems: [
-      { key: "待退还", value: 1 },
-      { key: "完成", value: 2 },
-    ],
+    statusItems: [],
     officeItems: [],
     queryObject: {
       status: 1,
+      officeUID: "",
+      salesmanName: "",
     },
 
     addDialog: false,
   }),
-  created() {},
+  created() {
+    this.getStatusItems();
+    this.getOfficeItems();
+  },
   methods: {
+    getStatusItems() {
+      queryBidBondStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
+    getOfficeItems() {
+      queryOffices().then((res) => {
+        this.officeItems = res.data;
+      });
+    },
     query() {
       this.$refs.bidBondDataTable.getObject();
     },
-
     openAddDialog() {
       this.addDialog = true;
     },

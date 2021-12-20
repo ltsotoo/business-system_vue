@@ -48,7 +48,7 @@
     <v-dialog
       v-model="options.viewDialog"
       v-if="options.viewDialog"
-      width="800px"
+      width="1000px"
       persistent
       @click:outside="closeViewDialog"
     >

@@ -5,19 +5,33 @@
       <v-card-title></v-card-title>
       <v-card-subtitle>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="3">
             <v-text-field
-              label="个人剩余报销余额(元)"
+              label="个人补助金额(元)"
               v-model="employee.money"
               readonly
             ></v-text-field>
           </v-col>
-          <v-col cols="6">
-              <v-text-field
-                label="办事处剩余报销余额(元)"
-                v-model="employee.office.money"
-                readonly
-              ></v-text-field>
+          <v-col cols="3">
+            <v-text-field
+              label="业务费用金额(元)"
+              v-model="employee.office.businessMoney"
+              readonly
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              label="办事处提成金额(元)"
+              v-model="employee.office.money"
+              readonly
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              label="办事处年底提成金额(元)"
+              v-model="employee.office.moneyCold"
+              readonly
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-card-subtitle>
@@ -32,7 +46,7 @@
                 v-model="queryObject.type"
                 :items="typeItems"
                 item-text="text"
-                item-value="value"
+                item-value="UID"
                 label="类型"
                 clearable
               ></v-select>
@@ -62,6 +76,7 @@
         <myExpenses
           style="margin-top: 10px"
           :queryObject="queryObject"
+          :statusItems="statusItems"
           ref="myExpenses"
         />
       </v-card-subtitle>
@@ -77,38 +92,43 @@
 import myExpenses from "@/components/my/Expenses";
 import expenseForms from "@/components/expense/Forms";
 import { queryEmployee } from "@/api/employee.js";
+import { queryExpenseTypes, queryExpenseStatus } from "@/api/dictionary";
 export default {
   components: {
     myExpenses,
     expenseForms,
   },
   data: () => ({
-    typeItems: [
-      { text: "个人", value: 1 },
-      { text: "办事处", value: 2 },
-    ],
-    statusItems: [
-      { text: "已驳回", value: -1 },
-      { text: "待办事处审批", value: 1 },
-      { text: "待财务审批", value: 2 },
-      { text: "已通过", value: 3 },
-    ],
+    typeItems: [],
+    statusItems: [],
     queryObject: {
       type: 0,
       status: 0,
     },
     addDialog: false,
     employee: {
-      money:null,
-      office:{
-        money:null,
-      }
+      money: null,
+      office: {
+        money: null,
+      },
     },
   }),
   created() {
+    this.getTypeItems();
+    this.getStatusItems();
     this.getEmployee();
   },
   methods: {
+    getTypeItems() {
+      queryExpenseTypes().then((res) => {
+        this.typeItems = res.data;
+      });
+    },
+    getStatusItems() {
+      queryExpenseStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     query() {
       this.$refs.myExpenses.getObject();
     },

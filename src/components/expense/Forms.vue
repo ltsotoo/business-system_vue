@@ -9,7 +9,7 @@
               v-model="object.type"
               :items="expenseTypeItems"
               item-text="text"
-              item-value="value"
+              item-value="UID"
               label="类型"
               :rules="rules.must"
             ></v-select>
@@ -39,7 +39,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -49,6 +51,7 @@
 
 <script>
 import { entryExpense } from "@/api/expense";
+import { queryExpenseTypes } from "@/api/dictionary";
 export default {
   props: {
     refresh: {
@@ -59,29 +62,39 @@ export default {
     },
   },
   data: () => ({
-    expenseTypeItems: [
-      { text: "个人", value: 1 },
-      { text: "办事处", value: 2 },
-    ],
+    submitDisabled: false,
+    expenseTypeItems: [],
     object: {
-      type: 1,
+      type: "",
       amount: 0,
       text: "",
     },
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
-  created() {},
+  created() {
+    this.getExpenseTypeItems();
+  },
   methods: {
+    getExpenseTypeItems() {
+      queryExpenseTypes().then((res) => {
+        this.expenseTypeItems = res.data;
+      });
+    },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         entryExpense(this.object).then((res) => {
           this.$message.success("发起成功了!");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

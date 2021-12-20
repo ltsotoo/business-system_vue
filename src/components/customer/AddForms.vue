@@ -62,7 +62,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -89,6 +91,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     object: {
       companyUID: "",
       name: "",
@@ -112,12 +115,15 @@ export default {
   },
   methods: {
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         entryCustomer(this.object).then((res) => {
           this.$message.success("添加成功了!");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

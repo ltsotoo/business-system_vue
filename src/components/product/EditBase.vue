@@ -50,6 +50,15 @@
               maxlength="200"
             ></v-textarea>
           </v-col>
+          <v-col cols="6">
+            <v-text-field v-model="object.unit" label="单位"></v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model="object.deliveryCycle"
+              label="供货周期"
+            ></v-text-field>
+          </v-col>
           <v-col cols="12">
             <v-textarea
               label="备注"
@@ -64,7 +73,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -78,8 +89,8 @@ import { querySuppliers } from "@/api/supplier";
 import { queryProductTypes } from "@/api/productType";
 export default {
   props: {
-    openItem:{
-      type:Object
+    openItem: {
+      type: Object,
     },
     closeDialog: {
       type: Function,
@@ -89,6 +100,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     typeItems: [],
     supplierItems: [],
     object: {
@@ -127,6 +139,7 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         this.object.number = this.object.numberCount;
         editProductBase(this.object).then((res) => {
@@ -134,6 +147,8 @@ export default {
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

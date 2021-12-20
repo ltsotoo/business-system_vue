@@ -16,10 +16,6 @@
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
-      <template v-slot:[`item.money`]="{ item }">
-        <div v-if="item.type == 1">{{ item.employee.money }}</div>
-        <div v-if="item.type == 2">{{ item.employee.office.money }}</div>
-      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           text
@@ -39,6 +35,15 @@
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
+        <v-btn
+          text
+          color="primary"
+          @click="openApprovalDialog(item)"
+          v-if="item.status == 3"
+        >
+          <v-icon left> mdi-file-edit-outline </v-icon>
+          付款
+        </v-btn>
       </template>
     </v-data-table>
 
@@ -48,7 +53,7 @@
       width="1000px"
     >
       <expenseApprovalForms
-        :parentObj="openItem"
+        :openUID="openUID"
         :closeDialog="closeApprovalDialog"
         :refresh="getObject"
       />
@@ -67,19 +72,22 @@ export default {
     queryObject: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+    },
   },
   data: () => ({
     headers: [
       {
-        text: "发起时间",
+        text: "类型",
         align: "center",
-        value: "CreatedAt",
+        value: "expenseType.text",
         sortable: false,
       },
       {
-        text: "类型",
+        text: "发起时间",
         align: "center",
-        value: "typeText",
+        value: "CreatedAt",
         sortable: false,
       },
       {
@@ -101,15 +109,27 @@ export default {
         sortable: false,
       },
       {
-        text: "可用报销金额(元)",
-        align: "center",
-        value: "money",
-        sortable: false,
-      },
-      {
         text: "报销金额(元)",
         align: "center",
         value: "amount",
+        sortable: false,
+      },
+      {
+        text: "办事处审批人",
+        align: "center",
+        value: "approver1.name",
+        sortable: false,
+      },
+      {
+        text: "财务",
+        align: "center",
+        value: "approver2.name",
+        sortable: false,
+      },
+      {
+        text: "出纳",
+        align: "center",
+        value: "approver3.name",
         sortable: false,
       },
       {
@@ -133,7 +153,7 @@ export default {
       approvalDialog: false,
     },
     object: [],
-    openItem: {},
+    openUID: "",
   }),
   created() {
     this.getObject();
@@ -154,42 +174,25 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
-        this.typeToText();
       });
     },
     openApprovalDialog(item) {
-      this.openItem = JSON.parse(JSON.stringify(item));
+      this.openUID = item.UID;
       this.options.approvalDialog = true;
     },
     closeApprovalDialog() {
-      this.openItem = {};
+      this.openUID = "";
       this.options.approvalDialog = false;
     },
-    typeToText() {
-      this.object.forEach(function (e) {
-        switch (e.type) {
-          case 1:
-            e.typeText = "个人";
-            break;
-          case 2:
-            e.typeText = "办事处";
-            break;
+    statusToText(status) {
+      var temp = "";
+      this.statusItems.forEach((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
         }
       });
-    },
-    statusToText(status) {
-      if (status == -1) {
-        return "已驳回";
-      }
-      if (status == 1) {
-        return "待办事处审批";
-      }
-      if (status == 2) {
-        return "待财务审批";
-      }
-      if (status == 3) {
-        return "已通过";
-      }
+      return temp;
     },
   },
 };

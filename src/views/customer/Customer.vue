@@ -5,13 +5,25 @@
       <v-form>
         <v-row align="baseline">
           <v-spacer></v-spacer>
-          <v-col cols="3">
-            <v-text-field
-              label="公司"
-              v-model.trim="queryObject.companyName"
+          <v-col cols="2">
+            <v-select
+              v-model="queryObject.regionUID"
+              :items="regionItems"
+              item-text="text"
+              item-value="UID"
+              label="省份"
+              @change="getCompanyItems"
               clearable
-              maxlength="20"
-            ></v-text-field>
+            ></v-select>
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-model="queryObject.companyUID"
+              item-text="name"
+              item-value="UID"
+              :items="companyItems"
+              label="客户公司"
+            ></v-select>
           </v-col>
           <v-col cols="3">
             <v-text-field
@@ -48,6 +60,8 @@
 </template>
 
 <script>
+import { queryRegions } from "@/api/dictionary";
+import { queryCompanys } from "@/api/customer";
 import customerDataTable from "@/components/customer/DataTable";
 
 export default {
@@ -55,15 +69,34 @@ export default {
     customerDataTable,
   },
   data: () => ({
+    regionItems: [],
+    companyItems: [],
     queryObject: {
-      companyName: "",
+      regionUID: "",
+      companyUID: "",
       researchGroup: "",
       name: "",
     },
     addDialog: false,
   }),
-  created() {},
+  created() {
+    this.getRegionItems();
+  },
   methods: {
+    getRegionItems() {
+      queryRegions().then((res) => {
+        this.regionItems = res.data;
+      });
+    },
+    getCompanyItems() {
+      this.companyItems = [];
+      this.queryObject.companyUID = "";
+      if (this.queryObject.regionUID) {
+        queryCompanys({ regionUID: this.queryObject.regionUID }).then((res) => {
+          this.companyItems = res.data;
+        });
+      }
+    },
     queryCustomers() {
       this.$refs.customerDataTable.getObject();
     },

@@ -2,7 +2,7 @@
   <v-card class="mx-auto">
     <v-card-title>产品入库</v-card-title>
     <v-card-subtitle>
-      <v-form ref="form" disabled>
+      <v-form disabled>
         <v-row>
           <v-col cols="6">
             <v-text-field
@@ -37,41 +37,43 @@
             ></v-textarea>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.numberCount"
+              label="库存数量"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="object.number"
+              label="可售数量"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field v-model="object.unit" label="单位"></v-text-field>
+          </v-col>
+        </v-row>
       </v-form>
-      <v-row>
-        <v-col cols="3">
-          <v-text-field
-            v-model.number="object.numberCount"
-            label="库存数量"
-            disabled
-          ></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field
-            v-model.number="object.number"
-            label="可售数量"
-            disabled
-          ></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field
-            v-model="object.unit"
-            label="单位"
-            disabled
-          ></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field
-            v-model.number="number"
-            label="入库数量"
-            :rules="rules.number"
-          ></v-text-field>
-        </v-col>
-      </v-row>
+      <v-form ref="form">
+        <v-row>
+          <v-col cols="4"></v-col>
+          <v-col cols="4">
+            <v-text-field
+              v-model.number="number"
+              label="入库数量"
+              :rules="rules.number"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="4"></v-col>
+        </v-row>
+      </v-form>
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -96,6 +98,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     object: {
       sourceTypeUID: "",
       subtypeUID: "",
@@ -131,14 +134,16 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         this.object.number = this.number;
-
         editProductNumber(this.object).then((res) => {
           this.$message.success("库存编辑成功了!");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {

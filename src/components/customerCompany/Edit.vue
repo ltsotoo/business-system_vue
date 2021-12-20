@@ -38,7 +38,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -62,6 +64,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     regionItems: [],
     object: {
       regionUID: "",
@@ -83,12 +86,15 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         editCompany(this.object).then((res) => {
           this.$message.success("编辑成功了！");
           this.refresh();
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {
