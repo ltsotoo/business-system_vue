@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mx-auto">
+    <v-card >
       <v-card-subtitle>
         <v-form ref="form" readonly>
           <v-row>

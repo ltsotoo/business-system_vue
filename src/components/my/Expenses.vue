@@ -40,6 +40,7 @@ export default {
     },
     statusItems: {
       type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -132,7 +133,7 @@ export default {
     },
     statusToText(status) {
       var temp = "";
-      this.statusItems.forEach((item) => {
+      this.statusItems.some((item) => {
         if (item.value == status) {
           temp = item.text;
           return;

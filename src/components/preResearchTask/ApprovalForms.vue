@@ -6,7 +6,10 @@
         <v-form readonly>
           <v-row>
             <v-col cols="4">
-              <v-text-field v-model="object.startDate" label="开始时间"></v-text-field>
+              <v-text-field
+                v-model="object.startDate"
+                label="开始时间"
+              ></v-text-field>
             </v-col>
             <v-col cols="4">
               <v-text-field
@@ -64,30 +67,48 @@
     <v-card style="margin-top: 1px">
       <v-card-title></v-card-title>
       <v-card-subtitle>
-        <v-row>
-          <v-col cols="6">
-            <v-text-field v-model.number="days" label="新工作天数（驳回填写）"></v-text-field>
-          </v-col>
-          <v-col cols="6"></v-col>
-          <v-col cols="12">
-            <v-textarea
-              v-model="requirement"
-              label="新设计要求（驳回填写）"
-              rows="3"
-              counter
-              maxlength="500"
-            ></v-textarea>
-          </v-col>
-        </v-row>
+        <v-form ref="form">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model.number="days"
+                label="新工作天数（驳回填写）"
+                :rules="rules.day"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6"></v-col>
+            <v-col cols="12">
+              <v-textarea
+                v-model="requirement"
+                label="新设计要求（驳回填写）"
+                rows="3"
+                counter
+                maxlength="500"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+        </v-form>
       </v-card-subtitle>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded class="mx-2" @click="pass">
+        <v-btn
+          color="primary"
+          rounded
+          class="mx-2"
+          @click="pass"
+          :disabled="submitDisabled"
+        >
           <v-icon left> mdi-check-bold </v-icon>
           通过
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="error" rounded class="mx-2" @click="fail">
+        <v-btn
+          color="error"
+          rounded
+          class="mx-2"
+          @click="fail"
+          :disabled="submitDisabled"
+        >
           <v-icon left> mdi-close-thick </v-icon>
           驳回
         </v-btn>
@@ -98,7 +119,7 @@
 </template>
 
 <script>
-import { queryPreResearchTask, editPreResearchTask } from "@/api/preResearch";
+import { queryPreResearchTask, approveTask } from "@/api/preResearch";
 export default {
   props: {
     openUID: {
@@ -115,6 +136,10 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
+    rules: {
+      day: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
+    },
     statusItems: [
       { text: "未完成", value: 1 },
       { text: "未审核", value: 2 },
@@ -151,7 +176,7 @@ export default {
       });
     },
     editObject() {
-      editPreResearchTask(this.object).then((res) => {
+      approveTask(this.object).then((res) => {
         this.$message.success("审批成功");
         this.refresh();
         if (this.object.status == 4) {
@@ -161,14 +186,23 @@ export default {
       });
     },
     pass() {
+      this.submitDisabled = true;
       this.object.status = 4;
       this.editObject();
     },
     fail() {
-      this.object.status = 3;
-      this.object.requirement = this.requirement;
-      this.object.days = this.days;
-      this.editObject();
+      this.submitDisabled = true;
+      if (this.validateForm()) {
+        this.object.status = 3;
+        this.object.requirement = this.requirement;
+        this.object.days = this.days;
+        this.editObject();
+      } else {
+        this.submitDisabled = false;
+      }
+    },
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

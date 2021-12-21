@@ -54,6 +54,27 @@ export const queryBidBondStatus = () => {
     return queryDictionaries("BidBondStatus", "")
 }
 
+export const queryPreResearchStatus = () => {
+    return queryDictionaries("PreResearchStatus", "")
+}
+
+export const queryPreResearchTaskStatus = () => {
+    return queryDictionaries("PreResearchTaskStatus", "")
+}
+
+export const queryContractStatus = () => {
+    return queryDictionaries("ContractStatus", "")
+}
+
+export const queryContractProductionStatus = () => {
+    return queryDictionaries("ContractProductionStatus", "")
+}
+
+export const queryContractCollectionStatus = () => {
+    return queryDictionaries("ContractCollectionStatus", "")
+}
+
+
 
 
 

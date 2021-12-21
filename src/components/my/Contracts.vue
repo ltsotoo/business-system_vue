@@ -22,16 +22,14 @@
           {{ item.estimatedDeliveryDate }}
         </div>
       </template>
-      <template v-slot:[`item.endDeliveryDate`]="{ item }">
-        <div v-if="item.productionStatus == 2">
-          {{ item.endDeliveryDate }}
-        </div>
-      </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
       <template v-slot:[`item.payType`]="{ item }">
         {{ payTypeToText(item.payType) }}
+      </template>
+      <template v-slot:[`item.status`]="{ item }">
+        {{ stautsToText(item) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="success" @click="openViewDialog(item)">
@@ -93,6 +91,18 @@ export default {
     queryObject: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
+    productionStatusItems: {
+      type: Array,
+      default: () => [],
+    },
+    collectionStatusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     headers: [
@@ -153,7 +163,7 @@ export default {
       {
         text: "状态",
         align: "center",
-        value: "statusText",
+        value: "status",
         sortable: false,
       },
       {
@@ -197,47 +207,46 @@ export default {
           if (this.options.total != 0) {
             this.object = res.data;
           }
-          this.stautsToText();
         });
       }
     },
-    stautsToText() {
-      var _this = this;
-      this.object.forEach(function (e) {
-        switch (e.status) {
-          case -1:
-            e.statusText = "审批驳回";
-            break;
-          case 1:
-            e.statusText = "待审批";
-            break;
-          case 2:
-            e.statusText =
-              _this.productionStatusToText(e.productionStatus) +
-              "," +
-              _this.collectionStatusToText(e.collectionStatus);
-            break;
-          case 3:
-            e.statusText = "已完成";
-            break;
-        }
-      });
+    stautsToText(e) {
+      if (e.status == 2) {
+        return (
+          this.productionStatusToText(e.productionStatus) +
+          "," +
+          this.collectionStatusToText(e.collectionStatus)
+        );
+      } else {
+        var temp = "";
+        this.statusItems.some((item) => {
+          if (item.value == e.status) {
+            temp = item.text;
+            return;
+          }
+        });
+        return temp;
+      }
     },
     productionStatusToText(status) {
-      switch (status) {
-        case 1:
-          return "生产中";
-        case 2:
-          return "生产完成";
-      }
+      var temp = "";
+      this.productionStatusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
     collectionStatusToText(status) {
-      switch (status) {
-        case 1:
-          return "回款中";
-        case 2:
-          return "回款完成";
-      }
+      var temp = "";
+      this.collectionStatusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
     compareColor(date) {
       //替换为‘/’转译为中国时间，‘-’转译为UTC
@@ -253,11 +262,10 @@ export default {
       return "green";
     },
     payTypeToText(payType) {
-      switch (payType) {
-        case 1:
-          return "人民币";
-        case 2:
-          return "美元";
+      if (payType == 1) {
+        return "人民币";
+      } else if (payType == 2) {
+        return "美元";
       }
     },
     openViewDialog(item) {

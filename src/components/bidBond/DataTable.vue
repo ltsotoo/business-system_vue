@@ -106,6 +106,10 @@ export default {
     queryObject: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     headers: [
@@ -239,12 +243,14 @@ export default {
     },
 
     statusToText(status) {
-      switch (status) {
-        case 1:
-          return "待退还";
-        case 2:
-          return "完成";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

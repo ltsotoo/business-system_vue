@@ -29,15 +29,6 @@
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
         </v-btn>
-        <!-- <v-btn
-          rounded
-          color="primary"
-          @click="openEditDialog(item.UID)"
-          class="mx-2"
-        >
-          <v-icon left> mdi-pencil </v-icon>
-          编辑
-        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -83,6 +74,10 @@ export default {
     },
     refresh: {
       type: Function,
+    },
+    statusItems: {
+      type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -158,16 +153,14 @@ export default {
       });
     },
     statusToText(status) {
-      switch (status) {
-        case -1:
-          return "驳回";
-        case 1:
-          return "未审批";
-        case 2:
-          return "未完成";
-        case 3:
-          return "已完成";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
 
     openViewDialog(uid) {

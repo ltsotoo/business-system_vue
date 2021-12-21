@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card >
     <v-card-title>客户公司编辑</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">

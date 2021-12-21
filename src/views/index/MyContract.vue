@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel @click="clickPanel">
-    <v-expansion-panel-header :class="[`text-h4`]">
-      我签订的合同
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>我签订的合同</v-card-title>
+    <v-card-subtitle>
       <v-form ref="queryForm">
         <v-row align="center">
           <v-col cols="10">
@@ -47,7 +45,7 @@
                 <v-select
                   v-model="queryObject.isSpecial"
                   :items="isSpecialItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="特殊合同"
                   clearable
@@ -57,7 +55,7 @@
                 <v-select
                   v-model="queryObject.status"
                   :items="statusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="合同状态"
                   clearable
@@ -67,7 +65,7 @@
                 <v-select
                   v-model="queryObject.productionStatus"
                   :items="productionStatusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="生产状态"
                   clearable
@@ -77,7 +75,7 @@
                 <v-select
                   v-model="queryObject.collectionStatus"
                   :items="collectionStatusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="回款状态"
                   clearable
@@ -106,13 +104,21 @@
         style="margin-top: 10px"
         :queryObject="queryObject"
         ref="contracts"
+        :statusItems="statusItems"
+        :productionStatusItems="productionStatusItems"
+        :collectionStatusItems="collectionStatusItems"
       />
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
-import { queryRegions } from "@/api/dictionary";
+import {
+  queryRegions,
+  queryContractStatus,
+  queryContractProductionStatus,
+  queryContractCollectionStatus,
+} from "@/api/dictionary";
 import contracts from "@/components/my/Contracts";
 export default {
   components: {
@@ -132,35 +138,34 @@ export default {
       employeeUID: "",
     },
     isSpecialItems: [
-      { key: "是", value: 1 },
-      { key: "否", value: 2 },
+      { text: "是", value: 1 },
+      { text: "否", value: 2 },
     ],
-    statusItems: [
-      { key: "审核驳回", value: -1 },
-      { key: "待审核", value: 1 },
-      { key: "未完成", value: 2 },
-      { key: "已完成", value: 3 },
-    ],
-    productionStatusItems: [
-      { key: "生产中", value: 1 },
-      { key: "生产完成", value: 2 },
-    ],
-    collectionStatusItems: [
-      { key: "回款中", value: 1 },
-      { key: "回款完成", value: 2 },
-    ],
+    statusItems: [],
+    productionStatusItems: [],
+    collectionStatusItems: [],
   }),
-  created() {},
+  created() {
+    this.getRegionItems();
+    this.getStatusItems();
+    this.getProductionStatusItems();
+    this.getCollectionStatusItems();
+  },
   methods: {
-    clickPanel(event) {
-      if (
-        !event.currentTarget.classList.contains(
-          "v-expansion-panel-header--active"
-        ) &&
-        this.regionItems.length == 0
-      ) {
-        this.getRegionItems();
-      }
+    getStatusItems() {
+      queryContractStatus().then((res) => {
+        this.statusItems = res.data
+      })
+    },
+    getProductionStatusItems() {
+      queryContractProductionStatus().then((res) => {
+        this.productionStatusItems = res.data
+      })
+    },
+    getCollectionStatusItems() {
+      queryContractCollectionStatus().then((res) => {
+        this.collectionStatusItems = res.data
+      })
     },
     query() {
       this.$refs.contracts.getObject();

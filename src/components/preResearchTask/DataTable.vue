@@ -12,6 +12,9 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.status`]="{ item }">
+        {{ statusToText(item.status) }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }" v-if="!(openType == 1)">
         <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
@@ -77,6 +80,10 @@ export default {
     refresh: {
       type: Function,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     headers: [
@@ -84,6 +91,12 @@ export default {
         text: "开始时间",
         align: "center",
         value: "startDate",
+        sortable: false,
+      },
+      {
+        text: "分配工作天数",
+        align: "center",
+        value: "days",
         sortable: false,
       },
       {
@@ -113,7 +126,7 @@ export default {
       {
         text: "状态",
         align: "center",
-        value: "statusText",
+        value: "status",
         sortable: false,
       },
       {
@@ -135,7 +148,6 @@ export default {
     openItem: {},
     viewDialog: false,
     approveDialog: false,
-
   }),
   created() {
     this.getObject();
@@ -156,29 +168,17 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
-        this.updateObject();
       });
     },
-    updateObject() {
-      this.object.forEach(function (e) {
-        if (e.status == 1) {
-          e.realEndDate = "";
-        }
-        switch (e.status) {
-          case 1:
-            e.statusText = "未完成";
-            break;
-          case 2:
-            e.statusText = "未审核";
-            break;
-          case 3:
-            e.statusText = "未通过";
-            break;
-          case 4:
-            e.statusText = "已通过";
-            break;
+    statusToText(status) {
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
         }
       });
+      return temp;
     },
     openViewDialog(item) {
       this.openItem = item;

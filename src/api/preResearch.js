@@ -15,6 +15,14 @@ export const delPreResearch = (uid) => {
     })
 }
 
+export const editPreResearch = (preResearch) => {
+    return request({
+        url: '/preResearch',
+        method: 'PUT',
+        data: preResearch
+    })
+}
+
 export const queryPreResearch = (uid) => {
     return request({
         url: '/preResearch/' + uid,
@@ -53,17 +61,17 @@ export const queryPreResearchTasks = (queryObject, pageSize, pageNo) => {
     })
 }
 
-export const editPreResearch = (preResearchQuery) => {
+export const approve = (preResearchQuery) => {
     return request({
-        url: '/preResearch',
+        url: '/approvePreResearch',
         method: 'PUT',
         data: preResearchQuery
     })
 }
 
-export const editPreResearchTask = (preResearchTask) => {
+export const approveTask = (preResearchTask) => {
     return request({
-        url: '/preResearchTask',
+        url: '/approvePreResearchTask',
         method: 'PUT',
         data: preResearchTask
     })

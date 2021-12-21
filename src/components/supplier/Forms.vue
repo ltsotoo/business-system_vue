@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card >
     <v-card-title v-if="openType == 0">供应商添加</v-card-title>
     <v-card-title v-if="openType == 2">供应商编辑</v-card-title>
     <v-card-subtitle>

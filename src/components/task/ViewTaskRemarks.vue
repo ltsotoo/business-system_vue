@@ -27,14 +27,7 @@
       </v-row>
 
       <v-row v-for="(taskRemark, i) in taskRemarks" :key="i" align="center">
-        <v-col cols="3">
-          <v-text-field
-            label="时间"
-            readonly
-            v-model.number="taskRemark.CreatedAt"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="9">
+        <v-col cols="12">
           <v-textarea
             :label="statusToLabel(taskRemark.status)"
             readonly
@@ -53,6 +46,7 @@ export default {
   props: {
     taskRemarks: {
       type: Array,
+      default: () => [],
     },
     aRemarks: {
       type: String,

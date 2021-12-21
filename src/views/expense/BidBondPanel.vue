@@ -48,7 +48,7 @@
         </v-form>
       </v-card-subtitle>
       <div style="margin-top: 10px"></div>
-      <bidBondDataTable ref="bidBondDataTable" :queryObject="queryObject" />
+      <bidBondDataTable ref="bidBondDataTable" :queryObject="queryObject" :statusItems="statusItems"/>
     </v-card>
 
     <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>

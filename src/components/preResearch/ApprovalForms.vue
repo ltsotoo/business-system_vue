@@ -105,12 +105,24 @@
     <v-card style="margin-top: 1px">
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded class="mx-2" @click="pass">
+        <v-btn
+          color="primary"
+          rounded
+          class="mx-2"
+          @click="pass"
+          :disabled="submitDisabled"
+        >
           <v-icon left> mdi-check-bold </v-icon>
           通过
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="error" rounded class="mx-2" @click="fail">
+        <v-btn
+          color="error"
+          rounded
+          class="mx-2"
+          @click="fail"
+          :disabled="submitDisabled"
+        >
           <v-icon left> mdi-close-thick </v-icon>
           驳回
         </v-btn>
@@ -123,7 +135,7 @@
 <script>
 import { queryOffices, queryDepartments } from "@/api/oadrp";
 import { queryEmployees } from "@/api/employee";
-import { editPreResearch } from "@/api/preResearch";
+import { approve } from "@/api/preResearch";
 export default {
   props: {
     preResearch: {
@@ -140,6 +152,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     object: {
       UID: "",
       employeeUID: "",
@@ -149,7 +162,7 @@ export default {
     },
     rules: {
       must: [(v) => !!v || "必填项"],
-      day: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
+      day: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
     },
 
     officeItems: [],
@@ -165,7 +178,7 @@ export default {
   },
   methods: {
     editObject() {
-      editPreResearch(this.object).then((res) => {
+      approve(this.object).then((res) => {
         this.$message.success("审批完成");
         this.refresh();
         if (this.object.status == 2) {
@@ -201,12 +214,16 @@ export default {
       });
     },
     pass() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         this.object.status = 2;
         this.editObject();
+      } else {
+        this.submitDisabled = false;
       }
     },
     fail() {
+      this.submitDisabled = true;
       this.object.status = -1;
       this.editObject();
     },

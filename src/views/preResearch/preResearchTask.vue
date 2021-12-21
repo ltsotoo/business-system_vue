@@ -32,6 +32,7 @@
       <div style="margin-top: 10px"></div>
       <preResearchTaskDataTable
         :queryObject="queryObject"
+        :statusItems="statusItems"
         :refresh="refresh"
         ref="preResearchTaskDataTable"
       />
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import { queryPreResearchTaskStatus } from "@/api/dictionary";
 import preResearchTaskDataTable from "@/components/preResearchTask/DataTable";
 export default {
   components: {
@@ -51,19 +53,21 @@ export default {
     },
   },
   data: () => ({
-    statusItems: [
-      { text: "未完成", value: 1 },
-      { text: "未审核", value: 2 },
-      { text: "未通过", value: 3 },
-      { text: "已通过", value: 4 },
-    ],
+    statusItems: [],
     queryObject: {
       employeeUID: "",
       status: 0,
     },
   }),
-  created() {},
+  created() {
+    this.getStatusItems();
+  },
   methods: {
+    getStatusItems() {
+      queryPreResearchTaskStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     query() {
       this.$refs.preResearchTaskDataTable.getObject();
     },

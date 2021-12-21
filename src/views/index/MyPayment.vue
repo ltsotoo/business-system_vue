@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel @click="clickPanel">
-    <v-expansion-panel-header :class="[`text-h4`]">
-      我的回款追踪任务
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>我的回款追踪任务</v-card-title>
+    <v-card-subtitle>
       <v-form ref="queryForm">
         <v-row align="center">
           <v-spacer></v-spacer>
@@ -102,8 +100,8 @@
         :queryObject="queryObject"
         ref="payments"
       />
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
@@ -145,19 +143,10 @@ export default {
       { key: "回款完成", value: 2 },
     ],
   }),
-  created() {},
+  created() {
+    this.getRegionItems();
+  },
   methods: {
-    clickPanel(event) {
-      if (
-        !event.currentTarget.classList.contains(
-          "v-expansion-panel-header--active"
-        ) &&
-        this.regionItems.length == 0
-      ) {
-        this.getRegionItems();
-      }
-    },
-
     getRegionItems() {
       queryRegions().then((res) => {
         this.regionItems = res.data;

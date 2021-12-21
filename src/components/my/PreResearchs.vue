@@ -24,9 +24,7 @@
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          v-if="item.status == -1 || item.status == 1"
-          dark
-          disabled
+          v-if="item.status == 1"
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -62,6 +60,10 @@ export default {
   props: {
     queryObject: {
       type: Object,
+    },
+    statusItems: {
+      type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -145,16 +147,14 @@ export default {
       this.deleteDialog = false;
     },
     statusToText(status) {
-      switch (status) {
-        case -1:
-          return "驳回";
-        case 1:
-          return "未审批";
-        case 2:
-          return "未完成";
-        case 3:
-          return "已完成";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

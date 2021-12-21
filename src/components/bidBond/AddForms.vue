@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card >
     <v-card-title>投标保证金记录添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">

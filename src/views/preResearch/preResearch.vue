@@ -34,12 +34,14 @@
         :queryObject="queryObject"
         ref="preResearchDataTable"
         :refresh="refresh"
+        :statusItems="statusItems"
       />
     </v-card-subtitle>
   </v-card>
 </template>
 
 <script>
+import { queryPreResearchStatus } from "@/api/dictionary";
 import preResearchDataTable from "@/components/preResearch/DataTable";
 export default {
   components: {
@@ -51,19 +53,21 @@ export default {
     },
   },
   data: () => ({
-    statusItems: [
-      { text: "驳回", value: -1 },
-      { text: "未审批", value: 1 },
-      { text: "未完成", value: 2 },
-      { text: "已完成", value: 3 },
-    ],
+    statusItems: [],
     queryObject: {
       employeeName: "",
       status: 0,
     },
   }),
-  created() {},
+  created() {
+    this.getStatusItems();
+  },
   methods: {
+    getStatusItems() {
+      queryPreResearchStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     query() {
       this.$refs.preResearchDataTable.getObject();
     },

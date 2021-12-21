@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel>
-    <v-expansion-panel-header :class="[`text-h4`]">
-      我的工作任务
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>我的工作任务</v-card-title>
+    <v-card-subtitle>
       <v-form ref="queryForm">
         <v-row align="baseline">
           <v-spacer></v-spacer>
@@ -24,8 +22,8 @@
         </v-row>
       </v-form>
       <tasks style="margin-top: 10px" :queryObject="queryObject" ref="tasks" />
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>

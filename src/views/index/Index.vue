@@ -1,13 +1,11 @@
 <template>
   <v-container>
     <index />
-    <v-expansion-panels multiple>
-      <myContract />
-      <myPreResearch />
-      <myTask />
-      <myPreResearchTask />
-      <myPayment />
-    </v-expansion-panels>
+    <myContract />
+    <myTask style="margin-top: 10px" />
+    <myPayment style="margin-top: 10px" />
+    <myPreResearch style="margin-top: 10px" />
+    <myPreResearchTask style="margin-top: 10px" />
   </v-container>
 </template>
 

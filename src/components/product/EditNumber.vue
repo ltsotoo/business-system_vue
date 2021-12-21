@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card >
     <v-card-title>产品入库</v-card-title>
     <v-card-subtitle>
       <v-form disabled>
@@ -121,7 +121,7 @@ export default {
     },
     number: 0,
     rules: {
-      number: [(v) => /^[0-9]*$/.test(v) || "必须为大于零的整数"],
+      number: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
     },
   }),
   created() {

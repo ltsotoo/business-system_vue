@@ -1,6 +1,6 @@
 <template>
   <v-form ref="form">
-    <v-card class="mx-auto">
+    <v-card >
       <v-card-title v-if="openType == 0">职位添加</v-card-title>
       <v-card-title v-if="openType == 2">职位编辑</v-card-title>
       <v-card-subtitle>

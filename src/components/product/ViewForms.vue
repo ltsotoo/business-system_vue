@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card >
     <v-card-title>产品查看</v-card-title>
     <v-card-subtitle>
       <v-form ref="form" readonly>

@@ -154,8 +154,13 @@
                 ></v-date-picker>
               </v-menu>
             </v-col>
-            <v-col cols="12">
-              <v-radio-group v-model.number="object.payType" row>
+
+            <v-col cols="2">
+              <v-radio-group
+                v-model.number="object.payType"
+                row
+                :disabled="cartItems.length > 0"
+              >
                 <template v-slot:label>
                   <div>付款类型</div>
                 </template>
@@ -177,7 +182,35 @@
                 v-if="object.payType == 2"
               ></v-text-field>
             </v-col>
-            <v-col cols="8"></v-col>
+            <v-col cols="6"></v-col>
+            <v-col cols="2">
+              <v-radio-group v-model.number="object.isPreDeposit" row>
+                <template v-slot:label>
+                  <div>预存款</div>
+                </template>
+                <v-radio label="是" :value="true"></v-radio>
+                <v-radio label="否" :value="false"></v-radio>
+              </v-radio-group>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                v-if="object.isPreDeposit"
+                label="预存款金额"
+                v-model.number="object.preDeposit"
+                :rules="rules.money"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="6"></v-col>
+            <v-col cols="12">
+              <v-radio-group v-model.number="object.isSpecial" row>
+                <template v-slot:label>
+                  <div style="color: red">特殊合同</div>
+                </template>
+                <v-radio label="是" :value="true"></v-radio>
+                <v-radio label="否" :value="false"></v-radio>
+              </v-radio-group>
+            </v-col>
             <v-col cols="12">
               <v-radio-group v-model.number="object.invoiceType" row>
                 <template v-slot:label>
@@ -200,15 +233,6 @@
                 counter
                 maxlength="500"
               ></v-textarea>
-            </v-col>
-            <v-col cols="12">
-              <v-radio-group v-model.number="object.isSpecial" row>
-                <template v-slot:label>
-                  <div style="color: red">特殊合同</div>
-                </template>
-                <v-radio label="是" :value="true"></v-radio>
-                <v-radio label="否" :value="false"></v-radio>
-              </v-radio-group>
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -285,7 +309,7 @@
         x-large
         color="success"
         @click="submit"
-        :disabled="submitBtnDisable"
+        :disabled="submitBtnDisable || cartItems.length == 0"
       >
         提交
       </v-btn>
@@ -380,8 +404,10 @@ export default {
   data: () => ({
     rules: {
       must: [(v) => !!v || "必填项"],
-      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      number: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     contractDateMenu: false,
     estimatedDeliveryDateMenu: false,
@@ -398,7 +424,11 @@ export default {
       employeeUID: "",
       isEntryCustomer: true,
       customerUID: "",
-      contractDate: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      contractDate: new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .substr(0, 10),
       contractUnitUID: "",
       estimatedDeliveryDate: "",
       endDeliveryDate: null,
@@ -407,6 +437,8 @@ export default {
       invoiceType: 1,
       invoiceContent: "",
       isSpecial: false,
+      isPreDeposit: false,
+      preDeposit: 0,
       remarks: "",
       status: null,
 
@@ -495,7 +527,7 @@ export default {
     p2c() {
       if (this.validateCartForm()) {
         var isNew = true;
-        this.cartItems.forEach((item) => {
+        this.cartItems.some((item) => {
           if (
             item.productUID == this.openItem.productUID &&
             item.remarks == this.openItem.remarks
@@ -547,13 +579,15 @@ export default {
     validateForm() {
       return this.$refs.form.validate();
     },
+
     validateCartForm() {
       return this.$refs.cartForm.validate();
     },
+
     submit() {
       var _this = this;
+      this.submitBtnDisable = true;
       if (this.validateForm()) {
-        this.submitBtnDisable = true;
         this.object.tasks = this.cartItems;
         entryContract(this.object).then((res) => {
           this.$message.success("录入成功了!");
@@ -561,6 +595,8 @@ export default {
             _this.$router.replace("/index");
           }, 1000);
         });
+      } else {
+        this.submitBtnDisable = false;
       }
     },
   },

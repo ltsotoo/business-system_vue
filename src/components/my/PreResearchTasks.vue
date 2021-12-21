@@ -12,10 +12,9 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.realEndDate`]="{ item }">
-        <div v-if="item.status != 1">
-          {{ item.realEndDate }}
-        </div>
+      <template v-slot:[`item.requirement`]="{ item }">
+        <v-textarea v-model="item.requirement" rows="1" auto-grow readonly>
+        </v-textarea>
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
@@ -55,7 +54,13 @@
         </v-card-subtitle>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="submit">确定</v-btn>
+          <v-btn
+            color="primary"
+            rounded
+            @click="submit"
+            :disabled="submitDisabled"
+            >提交</v-btn
+          >
           <v-spacer></v-spacer>
           <v-btn color="primary" rounded @click="closeSubmitDialog">取消</v-btn>
           <v-spacer></v-spacer>
@@ -66,14 +71,19 @@
 </template>
 
 <script>
-import { queryPreResearchTasks, editPreResearchTask } from "@/api/preResearch";
+import { queryPreResearchTasks, approveTask } from "@/api/preResearch";
 export default {
   props: {
     queryObject: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
+    submitDisabled: false,
     headers: [
       {
         text: "要求完成时间",
@@ -139,9 +149,10 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       this.openItem.remarks = this.remarks;
       this.openItem.status = 2;
-      editPreResearchTask(this.openItem).then((res) => {
+      approveTask(this.openItem).then((res) => {
         this.$message.success("提交成功！");
         this.getObject();
         this.closeSubmitDialog();
@@ -157,16 +168,14 @@ export default {
       this.submitDialog = false;
     },
     statusToText(status) {
-      switch (status) {
-        case 1:
-          return "未完成";
-        case 2:
-          return "未审核";
-        case 3:
-          return "未通过";
-        case 4:
-          return "已通过";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };
