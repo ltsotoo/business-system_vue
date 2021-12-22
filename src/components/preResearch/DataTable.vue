@@ -39,7 +39,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <viewForms :uid="openUID" />
+      <viewForms :uid="openUID" :statusItems="statusItems" />
     </v-dialog>
 
     <v-dialog

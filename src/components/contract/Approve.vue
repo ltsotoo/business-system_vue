@@ -150,6 +150,7 @@
 import taskApproveDataTable from "../task/ApproveDataTable";
 import { queryContract } from "@/api/contract";
 import { contractApprove } from "@/api/contract_flow";
+import { queryContractInvoiceTypes } from "@/api/dictionary";
 export default {
   components: {
     taskApproveDataTable,
@@ -167,8 +168,26 @@ export default {
       type: Function,
       default: null,
     },
+
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
+    productionStatusItems: {
+      type: Array,
+      default: () => [],
+    },
+    collectionStatusItems: {
+      type: Array,
+      default: () => [],
+    },
+    payTypeItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
+    invoiceTypeItems: [],
     object: {
       contractUnit: {},
       area: {},
@@ -190,9 +209,15 @@ export default {
     },
   }),
   created() {
+    this.getInvoiceTypeItems();
     this.getObject();
   },
   methods: {
+    getInvoiceTypeItems() {
+      queryContractInvoiceTypes().then((res) => {
+        this.invoiceTypeItems = res.data;
+      });
+    },
     getObject() {
       queryContract(this.openUID).then((res) => {
         this.object = res.data;
@@ -222,58 +247,38 @@ export default {
       }
     },
     changeText(data) {
-      switch (data.invoiceType) {
-        case 1:
-          this.text.invoiceType = "不开发票";
-          break;
-        case 2:
-          this.text.invoiceType = "普票";
-          break;
-        case 3:
-          this.text.invoiceType = "专票";
-          break;
-        case 4:
-          this.text.invoiceType = "形式发票";
-          break;
-      }
-      switch (data.status) {
-        case -1:
-          this.text.status = "审核驳回";
-          break;
-        case 1:
-          this.text.status = "待审核";
-          break;
-        case 2:
-          this.text.status = "未完成";
-          break;
-        case 3:
-          this.text.status = "已完成";
-          break;
-      }
-      switch (data.productionStatus) {
-        case 1:
-          this.text.productionStatus = "生产中";
-          break;
-        case 2:
-          this.text.productionStatus = "生产完成";
-          break;
-      }
-      switch (data.collectionStatus) {
-        case 1:
-          this.text.collectionStatus = "回款中";
-          break;
-        case 2:
-          this.text.collectionStatus = "回款完成";
-          break;
-      }
-      switch (data.payType) {
-        case 1:
-          this.text.payType = "人民币";
-          break;
-        case 2:
-          this.text.payType = "美元";
-          break;
-      }
+      this.invoiceTypeItems.some((item) => {
+        if (item.value == data.invoiceType) {
+          this.text.invoiceType = item.text;
+          return;
+        }
+      });
+      this.statusItems.some((item) => {
+        if (item.value == data.status) {
+          this.text.status = item.text;
+          return;
+        }
+      });
+      this.productionStatusItems.some((item) => {
+        if (item.value == data.productionStatus) {
+          this.text.productionStatus = item.text;
+          return;
+        }
+      });
+      this.collectionStatusItems.some((item) => {
+        if (item.value == data.collectionStatus) {
+          this.text.collectionStatus = item.text;
+          return;
+        }
+      });
+
+      this.payTypeItems.some((item) => {
+        if (item.value == data.payType) {
+          this.text.payType = item.text;
+          return;
+        }
+      });
+
       if (data.isSpecial == true) {
         this.text.isSpecial = "是";
       }

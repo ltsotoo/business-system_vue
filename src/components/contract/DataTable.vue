@@ -64,7 +64,13 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <contractViewForms :openUID="options.openUID" />
+      <contractViewForms
+        :openUID="options.openUID"
+        :statusItems="statusItems"
+        :productionStatusItems="productionStatusItems"
+        :collectionStatusItems="collectionStatusItems"
+        :payTypeItems="payTypeItems"
+      />
     </v-dialog>
 
     <v-dialog
@@ -79,6 +85,10 @@
         ref="approve"
         :parentFun="getObject"
         :closeDialog="closeApproveDialog"
+        :statusItems="statusItems"
+        :productionStatusItems="productionStatusItems"
+        :collectionStatusItems="collectionStatusItems"
+        :payTypeItems="payTypeItems"
       />
     </v-dialog>
 
@@ -94,6 +104,10 @@
         :openType="editNum"
         :refresh="getObject"
         :closeDialog="closeEditDialog"
+        :statusItems="statusItems"
+        :productionStatusItems="productionStatusItems"
+        :collectionStatusItems="collectionStatusItems"
+        :payTypeItems="payTypeItems"
       />
     </v-dialog>
   </div>
@@ -104,6 +118,7 @@ import approve from "./Approve";
 import contractEditForms from "./EditForms";
 import contractViewForms from "./ViewForms";
 import { queryContracts } from "@/api/contract";
+import { queryContractPayTypes } from "@/api/dictionary";
 
 export default {
   components: {
@@ -129,6 +144,7 @@ export default {
     },
   },
   data: () => ({
+    payTypeItems: [],
     headers: [
       {
         text: "合同编号",
@@ -217,9 +233,15 @@ export default {
     object: [],
   }),
   created() {
+    this.getPayTypeItems();
     this.getObject();
   },
   methods: {
+    getPayTypeItems() {
+      queryContractPayTypes().then((res) => {
+        this.payTypeItems = res.data;
+      });
+    },
     getObject() {
       this.options.loading = true;
       queryContracts(
@@ -313,11 +335,14 @@ export default {
       return temp;
     },
     payTypeToText(payType) {
-      if (payType == 1) {
-        return "人民币";
-      } else if (payType == 2) {
-        return "美元";
-      }
+      var temp = "";
+      this.payTypeItems.some((item) => {
+        if (item.value == payType) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

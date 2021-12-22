@@ -34,7 +34,7 @@
 
     <v-dialog
       v-model="approveDialog"
-      width="600px"
+      width="800px"
       v-if="approveDialog"
       persistent
       @click:outside="closeApproveDialog"
@@ -49,12 +49,12 @@
 
     <v-dialog
       v-model="viewDialog"
-      width="600px"
+      width="800px"
       v-if="viewDialog"
       persistent
       @click:outside="closeViewDialog"
     >
-      <viewForms :parentObj="openItem" />
+      <viewForms :parentObj="openItem" :statusItems="statusItems"/>
     </v-dialog>
   </div>
 </template>

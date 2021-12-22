@@ -46,7 +46,7 @@
                 <v-select
                   v-model="queryObject.isSpecial"
                   :items="isSpecialItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="特殊合同"
                   clearable
@@ -56,7 +56,7 @@
                 <v-select
                   v-model="queryObject.status"
                   :items="statusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="合同状态"
                   clearable
@@ -66,7 +66,7 @@
                 <v-select
                   v-model="queryObject.productionStatus"
                   :items="productionStatusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="生产状态"
                   clearable
@@ -76,7 +76,7 @@
                 <v-select
                   v-model="queryObject.collectionStatus"
                   :items="collectionStatusItems"
-                  item-text="key"
+                  item-text="text"
                   item-value="value"
                   label="回款状态"
                   clearable
@@ -99,6 +99,9 @@
         style="margin-top: 10px"
         :queryObject="queryObject"
         ref="payments"
+        :payTypeItems="payTypeItems"
+        :invoiceTypeItems="invoiceTypeItems"
+        :collectionStatusItems="collectionStatusItems"
       />
     </v-card-subtitle>
   </v-card>
@@ -106,13 +109,25 @@
 
 <script>
 import payments from "@/components/my/Payments";
-import { queryRegions } from "@/api/dictionary";
+import {
+  queryRegions,
+  queryContractStatus,
+  queryContractProductionStatus,
+  queryContractCollectionStatus,
+  queryContractPayTypes,
+  queryContractInvoiceTypes,
+} from "@/api/dictionary";
 export default {
   components: {
     payments,
   },
   data: () => ({
     regionItems: [],
+    statusItems: [],
+    productionStatusItems: [],
+    collectionStatusItems: [],
+    payTypeItems: [],
+    invoiceTypeItems: [],
     queryObject: {
       regionUID: "",
       companyName: "",
@@ -125,31 +140,47 @@ export default {
       employeeUID: "",
     },
     isSpecialItems: [
-      { key: "是", value: 1 },
-      { key: "否", value: 2 },
-    ],
-    statusItems: [
-      { key: "审核驳回", value: -1 },
-      { key: "待审核", value: 1 },
-      { key: "未完成", value: 2 },
-      { key: "已完成", value: 3 },
-    ],
-    productionStatusItems: [
-      { key: "生产中", value: 1 },
-      { key: "生产完成", value: 2 },
-    ],
-    collectionStatusItems: [
-      { key: "回款中", value: 1 },
-      { key: "回款完成", value: 2 },
+      { text: "是", value: 1 },
+      { text: "否", value: 2 },
     ],
   }),
   created() {
     this.getRegionItems();
+    this.getStatusItems();
+    this.getProductionStatusItems();
+    this.getCollectionStatusItems();
+    this.getPayTypeItems();
+    this.getInvoiceTypeItems();
   },
   methods: {
     getRegionItems() {
       queryRegions().then((res) => {
         this.regionItems = res.data;
+      });
+    },
+    getStatusItems() {
+      queryContractStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
+    getProductionStatusItems() {
+      queryContractProductionStatus().then((res) => {
+        this.productionStatusItems = res.data;
+      });
+    },
+    getCollectionStatusItems() {
+      queryContractCollectionStatus().then((res) => {
+        this.collectionStatusItems = res.data;
+      });
+    },
+    getPayTypeItems() {
+      queryContractPayTypes().then((res) => {
+        this.payTypeItems = res.data;
+      });
+    },
+    getInvoiceTypeItems() {
+      queryContractInvoiceTypes().then((res) => {
+        this.invoiceTypeItems = res.data;
       });
     },
     query() {

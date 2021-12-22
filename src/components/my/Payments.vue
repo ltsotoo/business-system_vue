@@ -12,12 +12,16 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
-      <template v-slot:[`item.invoiceType`]="{ item }">
-        {{ invoiceTypeToText(item.invoiceType) }}
-      </template>
       <template v-slot:[`item.payType`]="{ item }">
         {{ payTypeToText(item.payType) }}
       </template>
+      <template v-slot:[`item.invoiceType`]="{ item }">
+        {{ invoiceTypeToText(item.invoiceType) }}
+      </template>
+      <template v-slot:[`item.collectionStatus`]="{ item }">
+        {{ collectionStatusToText(item.collectionStatus) }}
+      </template>
+
       <template v-slot:[`item.invoiceContent`]="{ item }">
         <v-textarea
           auto-grow
@@ -28,22 +32,38 @@
         ></v-textarea>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success">
-          <v-icon left> mdi-eye </v-icon>
-          查看详情
-        </v-btn>
-        <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
-          <v-icon left> mdi-pencil </v-icon>
-          添加发票
-        </v-btn>
-        <v-btn text color="primary" @click="openAddPaymentDialog(item)">
-          <v-icon left> mdi-pencil </v-icon>
-          添加回款
-        </v-btn>
-        <v-btn text color="primary">
-          <v-icon left> mdi-pencil </v-icon>
-          回款完成
-        </v-btn>
+        <v-row>
+          <v-col>
+            <v-btn text color="success">
+              <v-icon left> mdi-eye </v-icon>
+              查看详情
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
+              <v-icon left> mdi-pencil </v-icon>
+              添加发票
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-btn text color="primary" @click="openAddPaymentDialog(item)">
+              <v-icon left> mdi-pencil </v-icon>
+              添加回款
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-btn text color="primary">
+              <v-icon left> mdi-pencil </v-icon>
+              回款完成
+            </v-btn>
+          </v-col>
+        </v-row>
       </template>
     </v-data-table>
 
@@ -55,21 +75,31 @@
       @click:outside="closeAddInvoiceDialog"
     >
       <v-card>
-        <v-card-title>开票需求</v-card-title>
+        <v-card-title></v-card-title>
         <v-card-subtitle>
           <v-form readonly>
             <v-row>
-              <v-col cols="6">
-                <v-text-field v-model="openItem.payType" label="付款类型">
-                </v-text-field>
+              <v-col cols="4">
+                <div class="text-h5">
+                  付款类型:{{ payTypeToText(openItem.payType) }}
+                </div>
               </v-col>
-              <v-col cols="6">
-                <v-text-field v-model="openItem.invoiceType" label="开票类型">
-                </v-text-field>
+              <v-col cols="4">
+                <div class="text-h5">
+                  开票类型:{{ invoiceTypeToText(openItem.invoiceType) }}
+                </div>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="4">
+                <div class="text-h5">发票总金额:{{ openItem.totalAmount }}</div>
+              </v-col>
+              <v-col
+                cols="12"
+                v-if="
+                  openItem.invoiceContent && openItem.invoiceContent.length > 0
+                "
+              >
                 <v-textarea
-                  v-model="openItem.invoiceText"
+                  v-model="openItem.invoiceContent"
                   label="开票备注"
                   rows="1"
                   auto-grow
@@ -81,13 +111,13 @@
         </v-card-subtitle>
       </v-card>
       <invoiceViewForms
-        :openUID="openItem.UID"
-        style="margin-top: 1px"
+        :openItem="openItem"
+        style="margin-top: 3px"
       ></invoiceViewForms>
       <invoiceAddForms
-        :openUID="openItem.UID"
+        :openItem="openItem"
         :closeDialog="closeAddInvoiceDialog"
-        style="margin-top: 1px"
+        style="margin-top: 3px"
       />
     </v-dialog>
 
@@ -98,9 +128,11 @@
       persistent
       @click:outside="closeAddPaymentDialog"
     >
+      <paymentViewForms :openItem="openItem"></paymentViewForms>
       <paymentAddForms
         :openItem="openItem"
         :closeDialog="closeAddPaymentDialog"
+        style="margin-top: 3px"
       />
     </v-dialog>
   </div>
@@ -112,6 +144,7 @@ import { queryContracts } from "@/api/contract";
 import invoiceViewForms from "@/components/invoice/ViewForms";
 import invoiceAddForms from "@/components/invoice/AddForms";
 import paymentAddForms from "@/components/payment/AddFroms";
+import paymentViewForms from "@/components/payment/ViewForms";
 
 export default {
   components: {
@@ -119,10 +152,23 @@ export default {
     invoiceAddForms,
 
     paymentAddForms,
+    paymentViewForms,
   },
   props: {
     queryObject: {
       type: Object,
+    },
+    payTypeItems: {
+      type: Array,
+      default: () => [],
+    },
+    invoiceTypeItems: {
+      type: Array,
+      default: () => [],
+    },
+    collectionStatusItems: {
+      type: Array,
+      default: () => [],
     },
   },
   data: () => ({
@@ -158,27 +204,34 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额",
-        align: "center",
-        value: "totalAmount",
-        sortable: false,
-      },
-      {
         text: "付款类型",
         align: "center",
         value: "payType",
         sortable: false,
       },
       {
-        text: "开票类型",
+        text: "总金额",
         align: "center",
-        value: "invoiceType",
+        value: "totalAmount",
         sortable: false,
       },
+
       {
         text: "总回款额(CNY)",
         align: "center",
         value: "paymentTotalAmount",
+        sortable: false,
+      },
+      {
+        text: "总回款额(USD)",
+        align: "center",
+        value: "paymentTotalAmountUSD",
+        sortable: false,
+      },
+      {
+        text: "开票类型",
+        align: "center",
+        value: "invoiceType",
         sortable: false,
       },
       {
@@ -190,7 +243,7 @@ export default {
       {
         text: "回款状态",
         align: "center",
-        value: "statusText",
+        value: "collectionStatus",
         sortable: false,
       },
       {
@@ -230,40 +283,37 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
-        this.stautsToText();
       });
     },
-    stautsToText() {
-      this.object.forEach(function (e) {
-        switch (e.collectionStatus) {
-          case 1:
-            e.statusText = "回款中";
-            return;
-          case 2:
-            e.statusText = "回款完成";
-            return;
+    collectionStatusToText(collectionStatus) {
+      var temp = "";
+      this.collectionStatusItems.some((item) => {
+        if (item.value == collectionStatus) {
+          temp = item.text;
+          return;
         }
       });
+      return temp;
     },
     invoiceTypeToText(invoiceType) {
-      switch (invoiceType) {
-        case 1:
-          return "不开发票";
-        case 2:
-          return "普票";
-        case 3:
-          return "专票";
-        case 4:
-          return "形式发票";
-      }
+      var temp = "";
+      this.invoiceTypeItems.some((item) => {
+        if (item.value == invoiceType) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
     payTypeToText(payType) {
-      switch (payType) {
-        case 1:
-          return "人民币";
-        case 2:
-          return "美元";
-      }
+      var temp = "";
+      this.payTypeItems.some((item) => {
+        if (item.value == payType) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
 
     openAddInvoiceDialog(item) {

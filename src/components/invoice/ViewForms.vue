@@ -7,7 +7,7 @@
           <v-col cols="2">
             <v-text-field label="录入时间" v-model="item.CreatedAt" />
           </v-col>
-          <v-col cols="5">
+          <v-col cols="4">
             <v-text-field label="发票编号" v-model="item.code" />
           </v-col>
           <v-col cols="2">
@@ -16,8 +16,8 @@
           <v-col cols="2">
             <v-text-field label="回款总金额" v-model="item.paymentMoney" />
           </v-col>
-          <v-col cols="1">
-            <v-text-field label="状态" v-model="item.status" />
+          <v-col cols="2">
+            <v-text-field label="状态" v-model="item.statusText" />
           </v-col>
         </v-row>
       </v-form>
@@ -27,22 +27,41 @@
 
 <script>
 import { queryInvoices } from "@/api/invoice";
+import { queryInvoiceStatus } from "@/api/dictionary";
 export default {
   props: {
-    openUID: {
-      type: String,
+    openItem: {
+      type: Object,
     },
   },
   data: () => ({
+    statusItems: [],
     invoiceItems: [],
   }),
   created() {
+    this.getStatusItems();
     this.getInvoiceItems();
   },
   methods: {
+    getStatusItems() {
+      queryInvoiceStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     getInvoiceItems() {
-      queryInvoices({ contractUID: this.openUID }).then((res) => {
+      queryInvoices({ contractUID: this.openItem.UID }).then((res) => {
         this.invoiceItems = res.data;
+        this.statusToText();
+      });
+    },
+    statusToText() {
+      this.invoiceItems.forEach((item) => {
+        this.statusItems.some((status) => {
+          if (item.status == status.value) {
+            item.statusText = status.text;
+            return;
+          }
+        });
       });
     },
   },

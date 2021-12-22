@@ -70,6 +70,10 @@ export default {
     parentObj: {
       type: Object,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     object: {
@@ -85,6 +89,19 @@ export default {
   }),
   created() {
     this.object = this.parentObj;
+    this.object.statusText = this.statusToText(this.parentObj.status);
+  },
+  methods: {
+    statusToText(status) {
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
+    },
   },
 };
 </script>

@@ -55,7 +55,14 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <contractViewForms :openUID="openUID" :isIndex="true" />
+      <contractViewForms
+        :openUID="openUID"
+        :isIndex="true"
+        :statusItems="statusItems"
+        :productionStatusItems="productionStatusItems"
+        :collectionStatusItems="collectionStatusItems"
+        :payTypeItems="payTypeItems"
+      />
     </v-dialog>
 
     <v-dialog
@@ -83,6 +90,7 @@
 <script>
 import contractViewForms from "@/components/contract/ViewForms";
 import { delContract, queryContracts } from "@/api/contract";
+import { queryContractPayTypes } from "@/api/dictionary";
 export default {
   components: {
     contractViewForms,
@@ -105,6 +113,7 @@ export default {
     },
   },
   data: () => ({
+    payTypeItems: [],
     headers: [
       {
         text: "合同编号",
@@ -137,21 +146,27 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额",
-        align: "center",
-        value: "totalAmount",
-        sortable: false,
-      },
-      {
         text: "付款类型",
         align: "center",
         value: "payType",
         sortable: false,
       },
       {
+        text: "总金额",
+        align: "center",
+        value: "totalAmount",
+        sortable: false,
+      },
+      {
         text: "总回款额(CNY)",
         align: "center",
         value: "paymentTotalAmount",
+        sortable: false,
+      },
+      {
+        text: "总回款额(USD)",
+        align: "center",
+        value: "paymentTotalAmountUSD",
         sortable: false,
       },
       {
@@ -186,9 +201,15 @@ export default {
     viewDialog: false,
   }),
   created() {
+    this.getPayTypeItems();
     this.getObject();
   },
   methods: {
+    getPayTypeItems() {
+      queryContractPayTypes().then((res) => {
+        this.payTypeItems = res.data;
+      });
+    },
     getObject() {
       var employeeUID = localStorage.getItem("uid");
       if (employeeUID && employeeUID != "") {
@@ -262,11 +283,14 @@ export default {
       return "green";
     },
     payTypeToText(payType) {
-      if (payType == 1) {
-        return "人民币";
-      } else if (payType == 2) {
-        return "美元";
-      }
+      var temp = "";
+      this.payTypeItems.some((item) => {
+        if (item.value == payType) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
     openViewDialog(item) {
       this.openUID = item.UID;

@@ -62,6 +62,10 @@ export default {
     uid: {
       type: String,
     },
+    statusItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     object: {
@@ -80,16 +84,14 @@ export default {
       });
     },
     statusToText(status) {
-      switch (status) {
-        case -1:
-          return "驳回";
-        case 1:
-          return "未审批";
-        case 2:
-          return "未完成";
-        case 3:
-          return "已完成";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

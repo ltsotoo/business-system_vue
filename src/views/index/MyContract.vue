@@ -126,6 +126,9 @@ export default {
   },
   data: () => ({
     regionItems: [],
+    statusItems: [],
+    productionStatusItems: [],
+    collectionStatusItems: [],
     queryObject: {
       regionUID: "",
       no: "",
@@ -141,9 +144,6 @@ export default {
       { text: "是", value: 1 },
       { text: "否", value: 2 },
     ],
-    statusItems: [],
-    productionStatusItems: [],
-    collectionStatusItems: [],
   }),
   created() {
     this.getRegionItems();
@@ -154,18 +154,18 @@ export default {
   methods: {
     getStatusItems() {
       queryContractStatus().then((res) => {
-        this.statusItems = res.data
-      })
+        this.statusItems = res.data;
+      });
     },
     getProductionStatusItems() {
       queryContractProductionStatus().then((res) => {
-        this.productionStatusItems = res.data
-      })
+        this.productionStatusItems = res.data;
+      });
     },
     getCollectionStatusItems() {
       queryContractCollectionStatus().then((res) => {
-        this.collectionStatusItems = res.data
-      })
+        this.collectionStatusItems = res.data;
+      });
     },
     query() {
       this.$refs.contracts.getObject();

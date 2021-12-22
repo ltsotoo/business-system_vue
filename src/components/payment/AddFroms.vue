@@ -3,56 +3,78 @@
     <v-card-title>回款记录添加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
-        <div v-if="this.openItem.payType == 1">
-          <v-row>
-            <v-col cols="4">
-              <v-select
-                v-model="task"
-                :items="taskItems"
-                item-text="product.name"
-                label="产品"
-                return-object
-                @change="setTaskUID"
-              ></v-select>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="task.totalPrice"
-                label="总金额(元)"
-                disabled
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="task.paymentTotalPrice"
-                label="已回款金额(元)"
-                disabled
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="4"></v-col>
-          </v-row>
-        </div>
         <v-row>
-          <v-col cols="4">
+          <v-col cols="3">
             <v-select
-              v-model="object.invoiceUID"
-              item-text="code"
-              item-value="UID"
-              :items="invoiceItems"
-              label="发票"
-              clearable
+              v-model="task"
+              :items="taskItems"
+              item-text="product.name"
+              label="产品"
+              return-object
+              @change="setTaskUID"
             ></v-select>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="3">
+            <v-text-field v-model="task.totalPrice" label="总金额" disabled>
+            </v-text-field>
+          </v-col>
+          <v-col cols="3">
             <v-text-field
-              label="回款金额(元)"
+              v-model="task.paymentTotalPrice"
+              label="已回款金额(CNY)"
+              disabled
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="3" v-if="openItem.payType == 2">
+            <v-text-field
+              v-model="task.paymentTotalPriceUSD"
+              label="已回款金额(USD)"
+              disabled
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row v-if="openItem.invoiceType > 1">
+          <v-col cols="3">
+            <v-select
+              v-model="invoice"
+              :items="invoiceItems"
+              item-text="code"
+              label="发票"
+              return-object
+              @change="setInvoiceUID"
+            ></v-select>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field v-model="invoice.money" label="总金额" disabled>
+            </v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-model="invoice.paymentMoney"
+              label="已回款金额"
+              disabled
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="openItem.payType == 2" cols="3">
+            <v-text-field
+              label="回款金额(美元)"
+              v-model.number="object.moneyUSD"
+              :rules="rules.money"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              label="回款金额(人民币)"
               v-model.number="object.money"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="3">
             <v-menu
               ref="contractDateMenu"
               v-model="contractDateMenu"
@@ -86,7 +108,9 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
+        提交
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -108,17 +132,27 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     taskItems: [],
+    invoiceItems: [],
     task: {
       UID: "",
       totalPrice: 0,
       paymentTotalPrice: 0,
+      paymentTotalPriceUSD: 0,
     },
-    invoiceItems: [],
+    invoice: {
+      UID: "",
+      code: "",
+      money: 0,
+      paymentMoney: 0,
+    },
     contractDateMenu: false,
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     object: {
       contractUID: "",
@@ -127,15 +161,14 @@ export default {
       paymentDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
+      moneyUSD: "",
       money: "",
     },
   }),
   created() {
-    this.getInvoiceItems();
     this.object.contractUID = this.openItem.UID;
-    if (this.openItem.payType == 1) {
-      this.getTaskItems();
-    }
+    this.getTaskItems();
+    this.getInvoiceItems();
   },
   methods: {
     getTaskItems() {
@@ -149,32 +182,75 @@ export default {
       });
     },
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         addPayment(this.object).then((res) => {
           this.$message.success("添加成功了!");
           this.closeDialog();
         });
+      } else {
+        this.submitDisabled = false;
       }
     },
     validateForm() {
-      if (this.openItem.payType == 1) {
-        if (this.object.taskUID == "") {
-          this.$message.error("任务必选");
+      if (this.object.taskUID == "") {
+        this.$message.error("产品任务必选");
+        return false;
+      }
+
+      if (this.openItem.invoiceType > 1) {
+        if (this.object.invoiceUID == "") {
+          this.$message.error("发票必选");
           return false;
         }
+
+        if (this.openItem.payType == 1) {
+          if (
+            this.object.money >
+            this.invoice.money - this.invoice.paymentMoney
+          ) {
+            this.$message.error("回款金额必须不大于该发票剩余回款量");
+            return false;
+          }
+        } else if (this.openItem.payType == 2) {
+          if (
+            this.object.moneyUSD >
+            this.invoice.money - this.invoice.paymentMoney
+          ) {
+            this.$message.error("回款金额必须不大于该发票剩余回款量");
+            return false;
+          }
+        }
+      }
+
+      if (this.openItem.payType == 1) {
         if (
           this.object.money >
           this.task.totalPrice - this.task.paymentTotalPrice
         ) {
-          this.$message.error("回款金额必须不大于该任务剩余回款量");
+          this.$message.error("回款金额必须不大于该产品任务剩余回款量");
+          return false;
+        }
+      } else if (this.openItem.payType == 2) {
+        if (
+          this.object.moneyUSD >
+          this.task.totalPrice - this.task.paymentTotalPrice
+        ) {
+          this.$message.error("回款金额必须不大于该产品任务剩余回款量");
           return false;
         }
       }
+
       return this.$refs.form.validate();
     },
     setTaskUID() {
       this.object.taskUID = this.task.UID;
-      this.object.money = this.task.totalPrice - this.task.paymentTotalPrice;
+      if (this.openItem.payType == 1) {
+        this.object.money = this.task.totalPrice - this.task.paymentTotalPrice;
+      }
+    },
+    setInvoiceUID() {
+      this.object.invoiceUID = this.invoice.UID;
     },
   },
 };

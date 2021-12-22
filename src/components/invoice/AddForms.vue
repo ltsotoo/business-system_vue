@@ -7,14 +7,14 @@
           <v-col cols="3">
             <v-text-field
               v-model.number="object.money"
-              label="金额(元)"
+              label="金额"
               :rules="rules.money"
             >
             </v-text-field>
           </v-col>
           <v-col cols="9">
             <v-text-field
-              v-model.number="object.code"
+              v-model="object.code"
               label="发票号"
               :rules="rules.must"
               counter
@@ -27,7 +27,7 @@
     </v-card-subtitle>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" rounded @click="submit"> 提交 </v-btn>
+      <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled"> 提交 </v-btn>
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
       <v-spacer></v-spacer>
@@ -39,17 +39,20 @@
 import { createInvoice } from "@/api/invoice";
 export default {
   props: {
-    openUID: {
-      type: String,
+    openItem: {
+      type: Object,
     },
     closeDialog: {
       type: Function,
     },
   },
   data: () => ({
+    submitDisabled: false,
     rules: {
       must: [(v) => !!v || "必填项"],
-      money: [(v) => /^[0-9]*(\.[0-9]{1,3})?$/.test(v) || "大于等于零"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     object: {
       contractUID: "",
@@ -58,15 +61,18 @@ export default {
     },
   }),
   created() {
-    this.object.contractUID = this.openUID;
+    this.object.contractUID = this.openItem.UID;
   },
   methods: {
     submit() {
+      this.submitDisabled = true;
       if (this.validateForm()) {
         createInvoice(this.object).then((res) => {
           this.$message.success("添加成功了!");
           this.closeDialog();
         });
+      }else{
+        this.submitDisabled = false;
       }
     },
     validateForm() {
