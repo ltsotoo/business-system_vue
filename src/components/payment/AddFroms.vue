@@ -127,6 +127,9 @@ export default {
     openItem: {
       type: Object,
     },
+    refresh: {
+      type: Function,
+    },
     closeDialog: {
       type: Function,
     },
@@ -177,7 +180,7 @@ export default {
       });
     },
     getInvoiceItems() {
-      queryInvoices({ contractUID: this.object.contractUID }).then((res) => {
+      queryInvoices(this.object.contractUID).then((res) => {
         this.invoiceItems = res.data;
       });
     },
@@ -186,6 +189,7 @@ export default {
       if (this.validateForm()) {
         addPayment(this.object).then((res) => {
           this.$message.success("添加成功了!");
+          this.refresh();
           this.closeDialog();
         });
       } else {

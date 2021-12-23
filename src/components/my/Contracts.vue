@@ -56,7 +56,7 @@
       @click:outside="closeViewDialog"
     >
       <contractViewForms
-        :openUID="openUID"
+        :openItem="openItem"
         :isIndex="true"
         :statusItems="statusItems"
         :productionStatusItems="productionStatusItems"
@@ -293,11 +293,11 @@ export default {
       return temp;
     },
     openViewDialog(item) {
-      this.openUID = item.UID;
+      this.openItem = item;
       this.viewDialog = true;
     },
     closeViewDialog() {
-      this.openUID = "";
+      this.openItem = {};
       this.viewDialog = false;
     },
     openDeleteDialog(uid) {

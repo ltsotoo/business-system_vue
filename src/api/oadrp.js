@@ -1,5 +1,12 @@
 import request from './base'
 
+export const topList = () => {
+    return request({
+        url: '/topList',
+        method: 'GET',
+    })
+}
+
 export const entryOffice = (office) => {
     return request({
         url: '/office',

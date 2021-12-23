@@ -172,7 +172,7 @@
       v-if="object.tasks"
       :refresh="refreshAll"
     />
-    <viewPayments style="margin-top: 5px" :openItem="object"></viewPayments>
+    <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
 
     <v-card style="margin-top: 5px">
       <v-card-title></v-card-title>
@@ -228,9 +228,9 @@ export default {
       type: Number,
       default: 0,
     },
-    openUID: {
-      type: String,
-      default: "",
+    openItem: {
+      type: Object,
+      default: {},
     },
     refresh: {
       type: Function,
@@ -315,7 +315,7 @@ export default {
       });
     },
     getObject() {
-      queryContract(this.openUID).then((res) => {
+      queryContract(this.openItem.UID).then((res) => {
         this.object = res.data;
         this.changeText(res.data);
       });
@@ -333,7 +333,7 @@ export default {
     },
 
     reject() {
-      rejectContract({ UID: this.openUID }).then((res) => {
+      rejectContract({ UID: this.openItem.UID }).then((res) => {
         this.$message.success("合同驳回成功！");
         this.refresh();
         this.closeDialog();

@@ -34,7 +34,7 @@
       <template v-slot:[`item.actions`]="{ item }">
         <v-row>
           <v-col>
-            <v-btn text color="success">
+            <v-btn text color="success" @click="openViewDialog(item)">
               <v-icon left> mdi-eye </v-icon>
               查看详情
             </v-btn>
@@ -58,7 +58,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-btn text color="primary">
+            <v-btn text color="primary" @click="openApproveDialog(item)">
               <v-icon left> mdi-pencil </v-icon>
               回款完成
             </v-btn>
@@ -66,6 +66,16 @@
         </v-row>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="viewDialog"
+      v-if="viewDialog"
+      width="1200px"
+      persistent
+      @click:outside="closeViewDialog"
+    >
+      <paymentView :openItem="openItem" />
+    </v-dialog>
 
     <v-dialog
       v-model="addInvoiceDialog"
@@ -128,23 +138,49 @@
       persistent
       @click:outside="closeAddPaymentDialog"
     >
-      <paymentViewForms :openItem="openItem"></paymentViewForms>
+      <paymentView :openItem="openItem"></paymentView>
       <paymentAddForms
         :openItem="openItem"
+        :refresh="getObject"
         :closeDialog="closeAddPaymentDialog"
         style="margin-top: 3px"
       />
+    </v-dialog>
+
+    <v-dialog
+      v-model="approveDialog"
+      v-if="approveDialog"
+      width="1200px"
+      persistent
+      @click:outside="closeApproveDialog"
+    >
+      <paymentView :openItem="openItem"></paymentView>
+      <v-card style="margin-top: 3px">
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            rounded
+            @click="approve"
+            :disabled="submitDisabled"
+          >
+            完成
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </div>
 </template>
 
 <script>
 import { queryContracts } from "@/api/contract";
+import { finishPayments } from "@/api/payment";
 
 import invoiceViewForms from "@/components/invoice/ViewForms";
 import invoiceAddForms from "@/components/invoice/AddForms";
 import paymentAddForms from "@/components/payment/AddFroms";
-import paymentViewForms from "@/components/payment/ViewForms";
+import paymentView from "@/components/payment/View";
 
 export default {
   components: {
@@ -152,7 +188,7 @@ export default {
     invoiceAddForms,
 
     paymentAddForms,
-    paymentViewForms,
+    paymentView,
   },
   props: {
     queryObject: {
@@ -261,8 +297,10 @@ export default {
     },
     object: [],
     openItem: {},
+    viewDialog: false,
     addInvoiceDialog: false,
     addPaymentDialog: false,
+    approveDialog: false,
   }),
   created() {
     this.getObject();
@@ -283,6 +321,15 @@ export default {
         if (this.options.total != 0) {
           this.object = res.data;
         }
+      });
+    },
+    approve() {
+      finishPayments({
+        UID: this.openItem.UID,
+        isFinalCollectionStatus: true,
+      }).then((res) => {
+        this.closeApproveDialog();
+        this.getObject();
       });
     },
     collectionStatusToText(collectionStatus) {
@@ -315,6 +362,14 @@ export default {
       });
       return temp;
     },
+    openViewDialog(item) {
+      this.openItem = item;
+      this.viewDialog = true;
+    },
+    closeViewDialog() {
+      this.openItem = {};
+      this.viewDialog = false;
+    },
 
     openAddInvoiceDialog(item) {
       this.openItem = item;
@@ -332,6 +387,15 @@ export default {
     closeAddPaymentDialog() {
       this.openItem = {};
       this.addPaymentDialog = false;
+    },
+
+    openApproveDialog(item) {
+      this.openItem = item;
+      this.approveDialog = true;
+    },
+    closeApproveDialog() {
+      this.openItem = {};
+      this.approveDialog = false;
     },
   },
 };

@@ -30,14 +30,17 @@ export const approve = (uid) => {
     })
 }
 
-export const queryInvoices = (invoice, pageSize, pageNo) => {
+export const queryInvoices = (contractUID) => {
     return request({
-        url: '/invoices',
-        method: 'post',
-        data: invoice,
-        params: {
-            "pageSize": pageSize,
-            "PageNo": pageNo,
-        }
+        url: '/invoices/' + contractUID,
+        method: 'GET',
+    })
+}
+
+export const queryInvoicesAndPayments = (contract) => {
+    return request({
+        url: '/invoicesAndPayments',
+        method: 'POST',
+        data: contract,
     })
 }

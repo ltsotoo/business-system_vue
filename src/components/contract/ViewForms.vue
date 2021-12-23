@@ -178,13 +178,7 @@
       :parentObject="object.tasks"
       v-else
     />
-    <viewPayments style="margin-top: 5px" :openItem="object"></viewPayments>
-
-    <viewPushMoney
-      style="margin-top: 5px"
-      :parentObj="object"
-      v-if="object.status == 3"
-    />
+    <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
   </div>
 </template>
 
@@ -192,7 +186,6 @@
 import taskDataTable from "../task/ViewDataTable";
 import myViewTask from "../my/ViewTask";
 import viewPayments from "../payment/View";
-import viewPushMoney from "./ViewPushMoney.vue";
 import { queryContract } from "@/api/contract";
 import { queryContractInvoiceTypes } from "@/api/dictionary";
 export default {
@@ -200,12 +193,11 @@ export default {
     taskDataTable,
     myViewTask,
     viewPayments,
-    viewPushMoney,
   },
   props: {
-    openUID: {
-      type: String,
-      default: "",
+    openItem: {
+      type: Object,
+      default: {},
     },
     refresh: {
       type: Function,
@@ -285,7 +277,7 @@ export default {
       });
     },
     getObject() {
-      queryContract(this.openUID).then((res) => {
+      queryContract(this.openItem.UID).then((res) => {
         this.object = res.data;
         this.changeText(res.data);
       });

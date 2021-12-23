@@ -49,7 +49,7 @@ export default {
       });
     },
     getInvoiceItems() {
-      queryInvoices({ contractUID: this.openItem.UID }).then((res) => {
+      queryInvoices(this.openItem.UID).then((res) => {
         this.invoiceItems = res.data;
         this.statusToText();
       });

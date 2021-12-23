@@ -32,7 +32,7 @@
         {{ stautsToText(item) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success" @click="openViewDialog(item.UID)">
+        <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
@@ -48,7 +48,7 @@
         <v-btn
           text
           color="primary"
-          @click="openEditDialog(item.UID)"
+          @click="openEditDialog(item)"
           v-if="item.status == 2"
         >
           <v-icon left> mdi-pencil </v-icon>
@@ -65,7 +65,7 @@
       @click:outside="closeViewDialog"
     >
       <contractViewForms
-        :openUID="options.openUID"
+        :openItem="options.openItem"
         :statusItems="statusItems"
         :productionStatusItems="productionStatusItems"
         :collectionStatusItems="collectionStatusItems"
@@ -100,7 +100,7 @@
       @click:outside="closeEditDialog"
     >
       <contractEditForms
-        :openUID="options.openUID"
+        :openItem="options.openItem"
         :openType="editNum"
         :refresh="getObject"
         :closeDialog="closeEditDialog"
@@ -225,6 +225,7 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
+      openItem: {},
       approveDialog: false,
       viewDialog: false,
       editDialog: false,
@@ -259,12 +260,12 @@ export default {
         }
       });
     },
-    openViewDialog(uid) {
-      this.options.openUID = uid;
+    openViewDialog(item) {
+      this.options.openItem = item;
       this.options.viewDialog = true;
     },
     closeViewDialog() {
-      this.options.openUID = "";
+      this.options.openItem = {};
       this.options.viewDialog = false;
     },
     openApproveDialog(uid) {
@@ -275,12 +276,12 @@ export default {
       this.options.openUID = "";
       this.options.approveDialog = false;
     },
-    openEditDialog(uid) {
-      this.options.openUID = uid;
+    openEditDialog(item) {
+      this.options.openItem = item;
       this.options.editDialog = true;
     },
     closeEditDialog() {
-      this.options.openUID = "";
+      this.options.openItem = {};
       this.options.editDialog = false;
     },
     compareColor(date) {
