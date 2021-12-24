@@ -47,13 +47,13 @@
                       >
                       </v-text-field>
                       <v-text-field
-                        label="目标任务量(元)"
-                        v-model="object[i + 1].taskLoad"
+                        label="完成任务量(元)"
+                        v-model="object[i + 1].targetLoad"
                       >
                       </v-text-field>
                       <v-text-field
-                        label="完成任务量(元)"
-                        v-model="object[i + 1].targetLoad"
+                        label="目标任务量(元)"
+                        v-model="object[i + 1].taskLoad"
                       >
                       </v-text-field>
                     </v-col>
@@ -77,13 +77,13 @@
                       >
                       </v-text-field>
                       <v-text-field
-                        label="目标任务量(元)"
-                        v-model="object[i + 2].taskLoad"
+                        label="完成任务量(元)"
+                        v-model="object[i + 2].targetLoad"
                       >
                       </v-text-field>
                       <v-text-field
-                        label="完成任务量(元)"
-                        v-model="object[i + 2].targetLoad"
+                        label="目标任务量(元)"
+                        v-model="object[i + 2].taskLoad"
                       >
                       </v-text-field>
                     </v-col>
@@ -107,13 +107,13 @@
                       >
                       </v-text-field>
                       <v-text-field
-                        label="目标任务量(元)"
-                        v-model="object[i + 3].taskLoad"
+                        label="完成任务量(元)"
+                        v-model="object[i + 3].targetLoad"
                       >
                       </v-text-field>
                       <v-text-field
-                        label="完成任务量(元)"
-                        v-model="object[i + 3].targetLoad"
+                        label="目标任务量(元)"
+                        v-model="object[i + 3].taskLoad"
                       >
                       </v-text-field>
                     </v-col>

@@ -121,12 +121,7 @@
       />
     </v-dialog>
 
-    <v-dialog
-      v-model="nextDialog"
-      width="1000px"
-      persistent
-      v-if="nextDialog"
-    >
+    <v-dialog v-model="nextDialog" width="1000px" persistent v-if="nextDialog">
       <v-card>
         <v-card-title></v-card-title>
         <v-card-subtitle>
@@ -150,7 +145,7 @@
 </template>
 
 <script>
-import { queryMyTasks, queryTaskRemarks } from "@/api/task";
+import { queryTasks, queryTaskRemarks } from "@/api/task";
 import { next } from "@/api/task_flow";
 import viewTaskRemarks from "@/components/task/ViewTaskRemarks";
 export default {
@@ -228,7 +223,8 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryMyTasks(
+      this.queryObject.employeeUID = localStorage.getItem("uid");
+      queryTasks(
         this.queryObject,
         this.options.itemsPerPage,
         this.options.page

@@ -64,7 +64,6 @@ const routes = [
         component: () => import('@/views/contract/Entry.vue'),
         meta: { login_require: true, title: "中研环科-录入合同" },
       },
-
       {
         path: 'preResearch',
         component: () => import('@/views/preResearch/Index.vue'),

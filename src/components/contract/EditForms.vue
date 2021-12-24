@@ -180,6 +180,17 @@
         <v-row justify="center">
           <v-spacer></v-spacer>
           <v-col cols="auto">
+            <v-btn
+              x-large
+              color="error"
+              @click="openRejectCollectionStatusDialog"
+              :disabled="openItem.collectionStatus == 1"
+            >
+              回款状态驳回
+            </v-btn>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="auto">
             <v-btn x-large color="error" @click="openRejectDialog">
               合同驳回
             </v-btn>
@@ -188,6 +199,34 @@
         </v-row>
       </v-card-subtitle>
     </v-card>
+
+    <v-dialog
+      v-model="rejectCollectionStatusDialog"
+      v-if="rejectCollectionStatusDialog"
+      width="600px"
+      persistent
+      @click:outside="closeRejectCollectionStatusDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5"
+          >您确定驳回该合同的回款状态吗?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="rejectCollectionStatus"
+            >确定</v-btn
+          >
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            rounded
+            @click="closeRejectCollectionStatusDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="rejectDialog"
@@ -218,6 +257,7 @@ import viewPayments from "../payment/View";
 import { queryContract } from "@/api/contract";
 import { rejectContract } from "@/api/contract_flow";
 import { queryContractInvoiceTypes } from "@/api/dictionary";
+import { changeCollectionStatus } from "@/api/payment";
 export default {
   components: {
     editTaskDataTable,
@@ -302,6 +342,7 @@ export default {
       isSpecial: "否",
     },
 
+    rejectCollectionStatusDialog: false,
     rejectDialog: false,
   }),
   created() {
@@ -330,6 +371,23 @@ export default {
     },
     closeRejectDialog() {
       this.rejectDialog = false;
+    },
+    openRejectCollectionStatusDialog() {
+      this.rejectCollectionStatusDialog = true;
+    },
+    closeRejectCollectionStatusDialog() {
+      this.rejectCollectionStatusDialog = false;
+    },
+
+    rejectCollectionStatus() {
+      changeCollectionStatus({
+        UID: this.openItem.UID,
+        isFinalCollectionStatus: false,
+      }).then((res) => {
+        this.$message.success("合同回款状态驳回成功！");
+        this.refresh();
+        this.closeDialog();
+      });
     },
 
     reject() {

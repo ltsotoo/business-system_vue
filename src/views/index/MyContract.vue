@@ -7,6 +7,14 @@
           <v-col cols="10">
             <v-row>
               <v-col cols="3">
+                <v-text-field
+                  label="合同编号"
+                  v-model.trim="queryObject.no"
+                  clearable
+                  maxlength="20"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
                 <v-select
                   v-model="queryObject.regionUID"
                   :items="regionItems"
@@ -31,26 +39,8 @@
                   maxlength="20"
                 ></v-text-field>
               </v-col>
-              <v-col cols="3">
-                <v-text-field
-                  label="合同编号"
-                  v-model.trim="queryObject.no"
-                  clearable
-                  maxlength="20"
-                ></v-text-field>
-              </v-col>
             </v-row>
             <v-row>
-              <v-col cols="3">
-                <v-select
-                  v-model="queryObject.isSpecial"
-                  :items="isSpecialItems"
-                  item-text="text"
-                  item-value="value"
-                  label="特殊合同"
-                  clearable
-                ></v-select>
-              </v-col>
               <v-col cols="3">
                 <v-select
                   v-model="queryObject.status"
@@ -78,6 +68,94 @@
                   item-text="text"
                   item-value="value"
                   label="回款状态"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.payType"
+                  :items="payTypeItems"
+                  item-text="text"
+                  item-value="value"
+                  label="付款类型"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col cols="3">
+                <v-menu
+                  ref="startMenu"
+                  v-model="startMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="queryObject.startDate"
+                      label="开始时间"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      clearable
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="zh-cn"
+                    scrollable
+                    no-title
+                    v-model="queryObject.startDate"
+                    @change="$refs.yearMenu.save(queryObject.startDate)"
+                  >
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="3">
+                <v-menu
+                  ref="endMenu"
+                  v-model="endMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="queryObject.endDate"
+                      label="结束时间"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      clearable
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="zh-cn"
+                    scrollable
+                    no-title
+                    v-model="queryObject.endDate"
+                    @change="$refs.yearMenu.save(queryObject.endDate)"
+                  >
+                  </v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.isSpecial"
+                  :items="isSpecialItems"
+                  item-text="text"
+                  item-value="value"
+                  label="特殊合同"
+                  clearable
+                ></v-select>
+              </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.isPreDeposit"
+                  :items="isPreDepositItems"
+                  item-text="text"
+                  item-value="value"
+                  label="预存款合同"
                   clearable
                 ></v-select>
               </v-col>
@@ -116,6 +194,7 @@
 import {
   queryRegions,
   queryContractStatus,
+  queryContractPayTypes,
   queryContractProductionStatus,
   queryContractCollectionStatus,
 } from "@/api/dictionary";
@@ -127,20 +206,31 @@ export default {
   data: () => ({
     regionItems: [],
     statusItems: [],
+    payTypeItems: [],
     productionStatusItems: [],
     collectionStatusItems: [],
+    startMenu: false,
+    endMenu: false,
     queryObject: {
       regionUID: "",
       no: "",
       companyName: "",
       customerName: "",
+      payType: null,
       isSpecial: 0,
+      isPreDeposit: 0,
       status: 2,
       productionStatus: 0,
       collectionStatus: 0,
       employeeUID: "",
+      startDate: new Date().getFullYear() + "-01-01",
+      endDate: new Date().getFullYear() + "-12-31",
     },
     isSpecialItems: [
+      { text: "是", value: 1 },
+      { text: "否", value: 2 },
+    ],
+    isPreDepositItems: [
       { text: "是", value: 1 },
       { text: "否", value: 2 },
     ],
@@ -148,6 +238,7 @@ export default {
   created() {
     this.getRegionItems();
     this.getStatusItems();
+    this.getPayTypeItems();
     this.getProductionStatusItems();
     this.getCollectionStatusItems();
   },
@@ -155,6 +246,11 @@ export default {
     getStatusItems() {
       queryContractStatus().then((res) => {
         this.statusItems = res.data;
+      });
+    },
+    getPayTypeItems() {
+      queryContractPayTypes().then((res) => {
+        this.payTypeItems = res.data;
       });
     },
     getProductionStatusItems() {

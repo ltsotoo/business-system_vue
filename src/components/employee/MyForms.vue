@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { queryMy } from "@/api/employee";
+import { queryEmployee } from "@/api/employee";
 import editPwd from "./EditPwd";
 export default {
   components: {
@@ -149,7 +149,7 @@ export default {
   },
   methods: {
     getObject() {
-      queryMy().then((res) => {
+      queryEmployee(localStorage.getItem("uid")).then((res) => {
         this.object = res.data;
       });
     },

@@ -170,12 +170,6 @@ export default {
         sortable: false,
       },
       {
-        text: "特殊合同",
-        align: "center",
-        value: "isSpecial",
-        sortable: false,
-      },
-      {
         text: "状态",
         align: "center",
         value: "status",

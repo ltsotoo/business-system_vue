@@ -34,15 +34,3 @@ export const queryExpenses = (queryObject, pageSize, pageNo) => {
         }
     })
 }
-
-export const queryMyExpenses = (queryObject, pageSize, pageNo) => {
-    return request({
-        url: '/myexpenses',
-        method: 'POST',
-        data: queryObject,
-        params: {
-            "pageSize": pageSize,
-            "pageNo": pageNo,
-        }
-    })
-}

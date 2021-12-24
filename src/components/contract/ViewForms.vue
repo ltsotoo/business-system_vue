@@ -10,8 +10,8 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="object.region.text"
-                label="省份"
+                v-model="object.CreatedAt"
+                label="录入时间"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -31,8 +31,8 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.CreatedAt"
-                label="录入时间"
+                v-model="object.region.text"
+                label="省份"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -89,6 +89,18 @@
                 label="特殊合同"
               ></v-text-field>
             </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.isPreDeposit"
+                label="是否预存款"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" v-if="object.isPreDeposit">
+              <v-text-field
+                v-model="object.preDeposit"
+                label="预存款金额(元)"
+              ></v-text-field>
+            </v-col>
           </v-row>
 
           <v-row>
@@ -108,6 +120,12 @@
               <v-text-field
                 v-model="object.paymentTotalAmount"
                 label="回款总金额(CNY)"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.paymentTotalAmountUSD"
+                label="回款总金额(USD)"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -236,6 +254,8 @@ export default {
       endDeliveryDate: "",
       invoiceType: null,
       isSpecial: null,
+      isPreDeposit: null,
+      preDeposit: 0,
       totalAmount: null,
       invoiceContent: "",
       contractUnit: {},
@@ -264,6 +284,7 @@ export default {
       collectionStatus: "",
       invoiceType: "",
       isSpecial: "否",
+      isPreDeposit: "否",
     },
   }),
   created() {
@@ -317,6 +338,10 @@ export default {
 
       if (data.isSpecial == true) {
         this.text.isSpecial = "是";
+      }
+
+      if (data.isPreDeposit == true) {
+        this.text.isPreDeposit = "是";
       }
     },
   },

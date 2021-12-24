@@ -8,13 +8,6 @@ export const addPayment = (payment) => {
     })
 }
 
-export const queryPayments = (contractUID) => {
-    return request({
-        url: '/payments/' + contractUID,
-        method: 'GET',
-    })
-}
-
 export const editPayment = (payment) => {
     return request({
         url: '/payment',
@@ -23,9 +16,9 @@ export const editPayment = (payment) => {
     })
 }
 
-export const finishPayments = (object) => {
+export const changeCollectionStatus = (object) => {
     return request({
-        url: '/finishPayments',
+        url: '/changeCollectionStatus',
         method: 'POST',
         data: object,
     })

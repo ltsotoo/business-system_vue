@@ -158,14 +158,7 @@
       <v-card style="margin-top: 3px">
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            rounded
-            @click="approve"
-            :disabled="submitDisabled"
-          >
-            完成
-          </v-btn>
+          <v-btn color="primary" rounded @click="approve"> 完成 </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -175,7 +168,7 @@
 
 <script>
 import { queryContracts } from "@/api/contract";
-import { finishPayments } from "@/api/payment";
+import { changeCollectionStatus } from "@/api/payment";
 
 import invoiceViewForms from "@/components/invoice/ViewForms";
 import invoiceAddForms from "@/components/invoice/AddForms";
@@ -324,12 +317,12 @@ export default {
       });
     },
     approve() {
-      finishPayments({
+      changeCollectionStatus({
         UID: this.openItem.UID,
         isFinalCollectionStatus: true,
       }).then((res) => {
+        this.$message.success("合同回款状态修改成功！");
         this.closeApproveDialog();
-        this.getObject();
       });
     },
     collectionStatusToText(collectionStatus) {

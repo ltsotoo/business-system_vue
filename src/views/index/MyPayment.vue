@@ -9,28 +9,23 @@
             <v-row>
               <v-col cols="3">
                 <v-select
-                  v-model="queryObject.regionUID"
-                  :items="regionItems"
+                  v-model="queryObject.collectionStatus"
+                  :items="collectionStatusItems"
                   item-text="text"
-                  item-value="UID"
-                  label="省份"
+                  item-value="value"
+                  label="回款状态"
                   clearable
                 ></v-select>
               </v-col>
               <v-col cols="3">
-                <v-text-field
-                  label="客户单位"
-                  v-model.trim="queryObject.companyName"
+                <v-select
+                  v-model="queryObject.invoiceType"
+                  :items="invoiceTypeItems"
+                  item-text="text"
+                  item-value="value"
+                  label="开票类型"
                   clearable
-                ></v-text-field>
-              </v-col>
-              <v-col cols="3">
-                <v-text-field
-                  label="客户名称"
-                  v-model.trim="queryObject.customerName"
-                  clearable
-                  maxlength="20"
-                ></v-text-field>
+                ></v-select>
               </v-col>
               <v-col cols="3">
                 <v-text-field
@@ -40,47 +35,73 @@
                   maxlength="20"
                 ></v-text-field>
               </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  label="业务员"
+                  v-model.trim="queryObject.employeeName"
+                  clearable
+                  maxlength="20"
+                ></v-text-field>
+              </v-col>
             </v-row>
             <v-row>
               <v-col cols="3">
-                <v-select
-                  v-model="queryObject.isSpecial"
-                  :items="isSpecialItems"
-                  item-text="text"
-                  item-value="value"
-                  label="特殊合同"
-                  clearable
-                ></v-select>
+                <v-menu
+                  ref="startMenu"
+                  v-model="startMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="queryObject.startDate"
+                      label="开始时间"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      clearable
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="zh-cn"
+                    scrollable
+                    no-title
+                    v-model="queryObject.startDate"
+                    @change="$refs.yearMenu.save(queryObject.startDate)"
+                  >
+                  </v-date-picker>
+                </v-menu>
               </v-col>
               <v-col cols="3">
-                <v-select
-                  v-model="queryObject.status"
-                  :items="statusItems"
-                  item-text="text"
-                  item-value="value"
-                  label="合同状态"
-                  clearable
-                ></v-select>
-              </v-col>
-              <v-col cols="3">
-                <v-select
-                  v-model="queryObject.productionStatus"
-                  :items="productionStatusItems"
-                  item-text="text"
-                  item-value="value"
-                  label="生产状态"
-                  clearable
-                ></v-select>
-              </v-col>
-              <v-col cols="3">
-                <v-select
-                  v-model="queryObject.collectionStatus"
-                  :items="collectionStatusItems"
-                  item-text="text"
-                  item-value="value"
-                  label="回款状态"
-                  clearable
-                ></v-select>
+                <v-menu
+                  ref="endMenu"
+                  v-model="endMenu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="queryObject.endDate"
+                      label="结束时间"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      clearable
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="zh-cn"
+                    scrollable
+                    no-title
+                    v-model="queryObject.endDate"
+                    @change="$refs.yearMenu.save(queryObject.endDate)"
+                  >
+                  </v-date-picker>
+                </v-menu>
               </v-col>
             </v-row>
           </v-col>
@@ -110,9 +131,6 @@
 <script>
 import payments from "@/components/my/Payments";
 import {
-  queryRegions,
-  queryContractStatus,
-  queryContractProductionStatus,
   queryContractCollectionStatus,
   queryContractPayTypes,
   queryContractInvoiceTypes,
@@ -122,52 +140,26 @@ export default {
     payments,
   },
   data: () => ({
-    regionItems: [],
-    statusItems: [],
-    productionStatusItems: [],
     collectionStatusItems: [],
     payTypeItems: [],
     invoiceTypeItems: [],
+    startMenu: false,
+    endMenu: false,
     queryObject: {
-      regionUID: "",
-      companyName: "",
-      customerName: "",
       no: "",
-      isSpecial: 0,
-      status: 0,
-      productionStatus: 0,
-      collectionStatus: 0,
-      employeeUID: "",
+      employeeName: "",
+      collectionStatus: 1,
+      invoiceType: 0,
+      startDate: "",
+      endDate: "",
     },
-    isSpecialItems: [
-      { text: "是", value: 1 },
-      { text: "否", value: 2 },
-    ],
   }),
   created() {
-    this.getRegionItems();
-    this.getStatusItems();
-    this.getProductionStatusItems();
     this.getCollectionStatusItems();
     this.getPayTypeItems();
     this.getInvoiceTypeItems();
   },
   methods: {
-    getRegionItems() {
-      queryRegions().then((res) => {
-        this.regionItems = res.data;
-      });
-    },
-    getStatusItems() {
-      queryContractStatus().then((res) => {
-        this.statusItems = res.data;
-      });
-    },
-    getProductionStatusItems() {
-      queryContractProductionStatus().then((res) => {
-        this.productionStatusItems = res.data;
-      });
-    },
     getCollectionStatusItems() {
       queryContractCollectionStatus().then((res) => {
         this.collectionStatusItems = res.data;

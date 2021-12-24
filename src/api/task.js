@@ -8,18 +8,6 @@ export const queryTasks = (queryObject) => {
     })
 }
 
-export const queryMyTasks = (queryObject, pageSize, pageNo) => {
-    return request({
-        url: '/mytasks',
-        method: 'POST',
-        data: queryObject,
-        params: {
-            "pageSize": pageSize,
-            "pageNo": pageNo,
-        }
-    })
-}
-
 export const queryTaskRemarks = (taskUID) => {
     return request({
         url: '/taskRemarks',

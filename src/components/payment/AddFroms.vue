@@ -202,49 +202,6 @@ export default {
         return false;
       }
 
-      if (this.openItem.invoiceType > 1) {
-        if (this.object.invoiceUID == "") {
-          this.$message.error("发票必选");
-          return false;
-        }
-
-        if (this.openItem.payType == 1) {
-          if (
-            this.object.money >
-            this.invoice.money - this.invoice.paymentMoney
-          ) {
-            this.$message.error("回款金额必须不大于该发票剩余回款量");
-            return false;
-          }
-        } else if (this.openItem.payType == 2) {
-          if (
-            this.object.moneyUSD >
-            this.invoice.money - this.invoice.paymentMoney
-          ) {
-            this.$message.error("回款金额必须不大于该发票剩余回款量");
-            return false;
-          }
-        }
-      }
-
-      if (this.openItem.payType == 1) {
-        if (
-          this.object.money >
-          this.task.totalPrice - this.task.paymentTotalPrice
-        ) {
-          this.$message.error("回款金额必须不大于该产品任务剩余回款量");
-          return false;
-        }
-      } else if (this.openItem.payType == 2) {
-        if (
-          this.object.moneyUSD >
-          this.task.totalPrice - this.task.paymentTotalPrice
-        ) {
-          this.$message.error("回款金额必须不大于该产品任务剩余回款量");
-          return false;
-        }
-      }
-
       return this.$refs.form.validate();
     },
     setTaskUID() {

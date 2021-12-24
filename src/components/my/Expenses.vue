@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { queryMyExpenses } from "@/api/expense";
+import { queryExpenses } from "@/api/expense";
 export default {
   props: {
     queryObject: {
@@ -116,7 +116,8 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      queryMyExpenses(
+      this.queryObject.EmployeeUID = localStorage.getItem("uid") 
+      queryExpenses(
         this.queryObject,
         this.options.itemsPerPage,
         this.options.page

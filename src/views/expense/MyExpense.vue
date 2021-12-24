@@ -7,7 +7,7 @@
         <v-form ref="queryForm">
           <v-row align="baseline">
             <v-spacer></v-spacer>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-select
                 v-model="queryObject.type"
                 :items="typeItems"
@@ -17,7 +17,7 @@
                 clearable
               ></v-select>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-select
                 v-model="queryObject.status"
                 :items="statusItems"
@@ -26,6 +26,64 @@
                 label="状态"
                 clearable
               ></v-select>
+            </v-col>
+            <v-col cols="2">
+              <v-menu
+                ref="startMenu"
+                v-model="startMenu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="queryObject.startDate"
+                    label="开始时间"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    clearable
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  locale="zh-cn"
+                  scrollable
+                  no-title
+                  v-model="queryObject.startDate"
+                  @change="$refs.yearMenu.save(queryObject.startDate)"
+                >
+                </v-date-picker>
+              </v-menu>
+            </v-col>
+            <v-col cols="2">
+              <v-menu
+                ref="endMenu"
+                v-model="endMenu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="queryObject.endDate"
+                    label="结束时间"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    clearable
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  locale="zh-cn"
+                  scrollable
+                  no-title
+                  v-model="queryObject.endDate"
+                  @change="$refs.yearMenu.save(queryObject.endDate)"
+                >
+                </v-date-picker>
+              </v-menu>
             </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
@@ -68,9 +126,13 @@ export default {
   data: () => ({
     typeItems: [],
     statusItems: [],
+    startMenu: false,
+    endMenu: false,
     queryObject: {
       type: 0,
       status: 0,
+      startDate: "",
+      endDate: "",
     },
     addDialog: false,
   }),
