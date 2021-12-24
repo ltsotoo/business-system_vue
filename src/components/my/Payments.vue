@@ -40,30 +40,32 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
-            <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
-              <v-icon left> mdi-pencil </v-icon>
-              添加发票
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn text color="primary" @click="openAddPaymentDialog(item)">
-              <v-icon left> mdi-pencil </v-icon>
-              添加回款
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn text color="primary" @click="openApproveDialog(item)">
-              <v-icon left> mdi-pencil </v-icon>
-              回款完成
-            </v-btn>
-          </v-col>
-        </v-row>
+        <div v-if="item.collectionStatus == 1">
+          <v-row>
+            <v-col>
+              <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
+                <v-icon left> mdi-pencil </v-icon>
+                添加发票
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn text color="primary" @click="openAddPaymentDialog(item)">
+                <v-icon left> mdi-pencil </v-icon>
+                添加回款
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-btn text color="primary" @click="openApproveDialog(item)">
+                <v-icon left> mdi-pencil </v-icon>
+                回款完成
+              </v-btn>
+            </v-col>
+          </v-row>
+        </div>
       </template>
     </v-data-table>
 
@@ -322,6 +324,7 @@ export default {
         isFinalCollectionStatus: true,
       }).then((res) => {
         this.$message.success("合同回款状态修改成功！");
+        this.getObject();
         this.closeApproveDialog();
       });
     },

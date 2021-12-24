@@ -36,6 +36,10 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
+        <v-btn text color="success" @click="openAddTaskDialog(item)">
+          <v-icon left> mdi-eye </v-icon>
+          添加生产任务
+        </v-btn>
         <v-btn
           text
           color="error"
@@ -84,16 +88,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-model="addTaskDialog"
+      v-if="addTaskDialog"
+      width="90%"
+      persistent
+      @click:outside="closeAddTaskDialog"
+    >
+    <taskAdd :contract="openItem"/>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import contractViewForms from "@/components/contract/ViewForms";
+import taskAdd from "@/components/task/Add";
 import { delContract, queryContracts } from "@/api/contract";
 import { queryContractPayTypes } from "@/api/dictionary";
 export default {
   components: {
     contractViewForms,
+    taskAdd,
   },
   props: {
     queryObject: {
@@ -193,6 +209,7 @@ export default {
     openUID: "",
     deleteDialog: false,
     viewDialog: false,
+    addTaskDialog: false,
   }),
   created() {
     this.getPayTypeItems();
@@ -285,6 +302,14 @@ export default {
         }
       });
       return temp;
+    },
+    openAddTaskDialog(item) {
+      this.openItem = item;
+      this.addTaskDialog = true;
+    },
+    closeAddTaskDialog() {
+      this.openItem = {};
+      this.addTaskDialog = false;
     },
     openViewDialog(item) {
       this.openItem = item;

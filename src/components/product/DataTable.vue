@@ -14,24 +14,25 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <div>
+        <v-row>
           <v-btn text color="success" @click="openViewDialog(item)">
             <v-icon left> mdi-eye </v-icon>
             查看
           </v-btn>
-          <v-btn text color="primary" @click="openEditBaseDialog(item)">
-            <v-icon left> mdi-pencil </v-icon>
-            基础编辑
-          </v-btn>
-          <v-btn text color="primary" @click="openEditNumberDialog(item.UID)">
-            <v-icon left> mdi-pencil </v-icon>
-            库存编辑
-          </v-btn>
-          <v-btn text color="primary" @click="openEditPriceDialog(item.UID)">
-            <v-icon left> mdi-pencil </v-icon>
-            价格编辑
-          </v-btn>
-          <!-- <v-btn
+          <div v-if="!isCart">
+            <v-btn text color="primary" @click="openEditBaseDialog(item)">
+              <v-icon left> mdi-pencil </v-icon>
+              基础编辑
+            </v-btn>
+            <v-btn text color="primary" @click="openEditNumberDialog(item.UID)">
+              <v-icon left> mdi-pencil </v-icon>
+              库存编辑
+            </v-btn>
+            <v-btn text color="primary" @click="openEditPriceDialog(item.UID)">
+              <v-icon left> mdi-pencil </v-icon>
+              价格编辑
+            </v-btn>
+            <!-- <v-btn
             text
             color="error"
             @click="openDeleteDialog(item.UID)"
@@ -41,7 +42,14 @@
             <v-icon left> mdi-delete </v-icon>
             删除
           </v-btn> -->
-        </div>
+          </div>
+          <div v-if="isCart">
+            <v-btn text color="primary" @click="openP2CDialog(item)">
+              <v-icon left> mdi-plus-thick </v-icon>
+              添加
+            </v-btn>
+          </div>
+        </v-row>
       </template>
     </v-data-table>
 
@@ -134,10 +142,10 @@ export default {
     productEditPrice,
   },
   props: {
-    openType: {
+    isCart: {
       //0:录入 1:查看 2:编辑
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
     queryObject: {
       type: Object,
@@ -217,7 +225,6 @@ export default {
       page: 1,
       itemsPerPage: 10,
       openUID: "",
-      openType: null,
       viewDialog: false,
       editBaseDialog: false,
       editNumberDialog: false,
@@ -294,6 +301,11 @@ export default {
         this.getObject();
         this.closeDeleteDialog();
       });
+    },
+
+    //合同录入时添加购物车用
+    openP2CDialog(item) {
+      this.$emit("child-event", item);
     },
   },
 };

@@ -294,6 +294,7 @@
       <entryProductDT
         :queryObject="queryObject"
         @child-event="openP2CDialog"
+        :isCart="true"
         ref="entryProductDT"
       />
       <v-card-title>已选择产品列表：</v-card-title>
@@ -390,7 +391,7 @@
 </template>
 
 <script>
-import entryProductDT from "./EntryProductDT";
+import entryProductDT from "@/components/product/DataTable";
 import entryCartDT from "./EntryCartDT";
 import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryRegions, queryContractUnits } from "@/api/dictionary";
