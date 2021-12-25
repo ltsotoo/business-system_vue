@@ -8,6 +8,14 @@
         :items-per-page="5"
         class="elevation-1"
       >
+        <template v-slot:[`item.standardPrice`]="{ item }">
+          <div>
+            <v-col> 人民币：{{ item.standardPrice }} </v-col>
+          </div>
+          <div>
+            <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
+          </div>
+        </template>
         <template v-slot:[`item.remarks`]="{ item }">
           <v-textarea
             auto-grow
@@ -36,7 +44,23 @@
           {{ stautsToText(item.status) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+          <div v-if="item.status == 0">
+            <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+              <v-icon left> mdi-pencil </v-icon>
+              分配
+            </v-btn>
+            <v-btn text color="error" @click="openRejectDialog(item)">
+              <v-icon left> mdi-pencil </v-icon>
+              驳回
+            </v-btn>
+          </div>
+
+          <v-btn
+            text
+            color="primary"
+            @click="openApproveDialog(item.UID)"
+            v-if="item.status > 0"
+          >
             <v-icon left> mdi-pencil </v-icon>
             重置
           </v-btn>
@@ -52,10 +76,32 @@
         :openType="2"
       />
     </v-dialog>
+
+    <v-dialog
+      v-model="rejectDialog"
+      v-if="rejectDialog"
+      width="800px"
+      persistent
+      @click:outside="closeRejectDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定驳回该任务吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="reject">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeRejectDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import { queryTaskStatus } from "@/api/dictionary";
+import { rejectTask } from "@/api/task";
 import approve from "./Approve";
 export default {
   components: {
@@ -71,6 +117,8 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
+    statusItems: [],
     headers: [
       {
         text: "产品",
@@ -80,7 +128,12 @@ export default {
       },
       { text: "数量", align: "center", value: "number", sortable: false },
       { text: "单位", align: "center", value: "unit", sortable: false },
-      { text: "标准价格", align: "center", value: "unit", sortable: false },
+      {
+        text: "标准价格",
+        align: "center",
+        value: "standardPrice",
+        sortable: false,
+      },
       { text: "单价", value: "price", sortable: false },
       { text: "总价", value: "totalPrice", sortable: false },
       {
@@ -111,7 +164,11 @@ export default {
     },
     openUID: "",
     approveDialog: false,
+    rejectDialog: false,
   }),
+  created() {
+    this.getStatusItems();
+  },
   methods: {
     openApproveDialog(uid) {
       this.openUID = uid;
@@ -121,23 +178,36 @@ export default {
       this.openUID = "";
       this.approveDialog = false;
     },
+    getStatusItems() {
+      queryTaskStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     stautsToText(status) {
-      switch (status) {
-        case 0:
-          return "待审批";
-        case 1:
-          return "待设计";
-        case 2:
-          return "待采购";
-        case 3:
-          return "待入/出库";
-        case 4:
-          return "待装配";
-        case 5:
-          return "待发货";
-        case 6:
-          return "已发货";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
+    },
+    openRejectDialog(item) {
+      this.openUID = item.UID;
+      this.rejectDialog = true;
+    },
+    closeRejectDialog() {
+      this.openUID = "";
+      this.rejectDialog = false;
+    },
+    reject() {
+      this.submitDisabled = true;
+      rejectTask(this.openUID).then((res) => {
+        this.$message.success("驳回成功！");
+        this.refresh();
+        this.closeRejectDialog();
+      });
     },
   },
 };

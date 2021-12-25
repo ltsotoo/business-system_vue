@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { queryTaskRemarksStatus } from "@/api/dictionary";
 export default {
   props: {
     taskRemarks: {
@@ -57,20 +58,27 @@ export default {
       default: "",
     },
   },
+  data: () => ({
+    statusItems: [],
+  }),
+  created() {
+    this.getStatusItems();
+  },
   methods: {
+    getStatusItems() {
+      queryTaskRemarksStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     statusToLabel(status) {
-      switch (status) {
-        case 1:
-          return "技术负责人备注";
-        case 2:
-          return "采购负责人备注";
-        case 3:
-          return "仓库负责人备注";
-        case 4:
-          return "装配负责人备注";
-        case 5:
-          return "物流负责人备注";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
   },
 };

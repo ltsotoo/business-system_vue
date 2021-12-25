@@ -14,6 +14,14 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.standardPrice`]="{ item }">
+        <div>
+          <v-col> 人民币：{{ item.standardPrice }} </v-col>
+        </div>
+        <div>
+          <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
+        </div>
+      </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
       </template>
@@ -61,6 +69,7 @@
 <script>
 import approve from "./Approve";
 import { queryTasks } from "@/api/task";
+import { queryTaskStatus } from "@/api/dictionary";
 export default {
   components: {
     approve,
@@ -96,7 +105,7 @@ export default {
       {
         text: "标准定价(元)",
         align: "center",
-        value: "product.purchasedPrice",
+        value: "standardPrice",
         sortable: false,
       },
       {
@@ -133,9 +142,15 @@ export default {
     approveDialog: false,
   }),
   created() {
+    this.getStatusItems();
     this.getObject();
   },
   methods: {
+    getStatusItems() {
+      queryTaskStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     getObject() {
       this.options.loading = true;
       queryTasks({ contractUID: this.openUID }).then((res) => {
@@ -150,22 +165,14 @@ export default {
       });
     },
     stautsToText(status) {
-      switch (status) {
-        case 0:
-          return "待分配";
-        case 1:
-          return "待设计";
-        case 2:
-          return "待采购";
-        case 3:
-          return "待入/出库";
-        case 4:
-          return "待装配";
-        case 5:
-          return "待发货";
-        case 6:
-          return "已发货";
-      }
+      var temp = "";
+      this.statusItems.some((item) => {
+        if (item.value == status) {
+          temp = item.text;
+          return;
+        }
+      });
+      return temp;
     },
     openApproveDialog(item) {
       this.openItem = item;

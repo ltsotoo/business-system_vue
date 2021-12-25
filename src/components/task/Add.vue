@@ -26,7 +26,7 @@
     <v-card style="margin-top: 3px">
       <v-card-title></v-card-title>
       <v-card-subtitle>
-        <v-form ref="queryForm">
+        <v-form>
           <v-row align="baseline">
             <v-spacer></v-spacer>
             <v-col cols="2">
@@ -79,7 +79,7 @@
             <span class="text-h5">{{ openItem.name }}</span>
           </v-card-title>
           <v-card-subtitle>
-            <v-form ref="cartForm">
+            <v-form ref="form">
               <v-row>
                 <v-col cols="6">
                   <v-text-field
@@ -116,7 +116,12 @@
           </v-card-subtitle>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" rounded @click="addTaskToContract">
+            <v-btn
+              color="primary"
+              rounded
+              @click="addTaskToContract"
+              :disabled="submitDisabled"
+            >
               添加
             </v-btn>
             <v-spacer></v-spacer>
@@ -145,6 +150,7 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
     typeItems: [],
     queryObject: {
       typeUID: "",
@@ -192,25 +198,35 @@ export default {
     },
 
     addTaskToContract() {
-      if (this.contract.payType == 1) {
-        this.openItem.price = this.openItem.standardPrice;
-      }
-      if (this.contract.payType == 2) {
-        this.openItem.price = this.openItem.standardPriceUSD;
-      }
-      this.openItem.contractUID = this.contract.UID;
-      this.openItem.totalPrice = this.openItem.number * this.openItem.price;
-      addTask(this.openItem).then((res) => {
-        this.$message.success("合同产品添加成功！");
+      this.submitDisabled = true;
+      if (this.validateForm()) {
         if (this.contract.payType == 1) {
-          this.contract.preDeposit =
-            this.contract.preDeposit - this.openItem.price;
-        } else if (this.contract.payType == 2) {
-          this.contract.preDeposit =
-            this.contract.preDeposit - this.openItem.price;
+          this.openItem.price = this.openItem.standardPrice;
         }
-        this.closeP2CDialog();
-      });
+        if (this.contract.payType == 2) {
+          this.openItem.price = this.openItem.standardPriceUSD;
+        }
+        this.openItem.contractUID = this.contract.UID;
+        this.openItem.totalPrice = this.openItem.number * this.openItem.price;
+        addTask(this.openItem).then((res) => {
+          this.$message.success("合同产品添加成功！");
+          if (this.contract.payType == 1) {
+            this.contract.preDeposit =
+              this.contract.preDeposit - this.openItem.totalPrice;
+          } else if (this.contract.payType == 2) {
+            this.contract.preDeposit =
+              this.contract.preDeposit - this.openItem.totalPrice;
+          }
+          this.closeP2CDialog();
+          this.submitDisabled = false;
+        });
+      } else {
+        this.submitDisabled = false;
+      }
+    },
+
+    validateForm() {
+      return this.$refs.form.validate();
     },
   },
 };

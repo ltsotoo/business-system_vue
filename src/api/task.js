@@ -25,3 +25,10 @@ export const queryTaskRemarks = (taskUID) => {
         }
     })
 }
+
+export const rejectTask = (taskUID) => {
+    return request({
+        url: '/rejectTask/' + taskUID,
+        method: 'PUT',
+    })
+}

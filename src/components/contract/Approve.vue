@@ -10,6 +10,12 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
+                v-model="object.CreatedAt"
+                label="录入日期"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
                 v-model="object.office.name"
                 label="办事处"
               ></v-text-field>
@@ -46,14 +52,8 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.CreatedAt"
-                label="录入日期"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
                 v-model="object.contractDate"
-                label="签订日期"
+                label="合同签订日期"
               ></v-text-field>
             </v-col>
             <v-col cols="3">
@@ -62,10 +62,31 @@
                 label="合同交货日期"
               ></v-text-field>
             </v-col>
+          </v-row>
+
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="object.contractUnit.text"
                 label="签订单位"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.isSpecial"
+                label="特殊合同"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                v-model="text.isPreDeposit"
+                label="是否预存款"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" v-if="object.isPreDeposit">
+              <v-text-field
+                v-model="object.preDeposit"
+                label="预存款金额(元)"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -92,19 +113,13 @@
                 label="开票类型"
               ></v-text-field>
             </v-col>
-            <v-col cols="3">
-              <v-text-field
-                v-model="text.isSpecial"
-                label="特殊合同"
-              ></v-text-field>
-            </v-col>
 
-            <v-col cols="12" v-if="object.invoiceType != 1">
+            <v-col cols="12">
               <v-textarea
                 v-model="object.invoiceContent"
                 label="开票内容"
+                rows="1"
                 auto-grow
-                rows="3"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -206,6 +221,7 @@ export default {
       collectionStatus: "-",
       invoiceType: "",
       isSpecial: "否",
+      isPreDeposit: "否",
     },
   }),
   created() {
@@ -281,6 +297,10 @@ export default {
 
       if (data.isSpecial == true) {
         this.text.isSpecial = "是";
+      }
+
+      if (data.isPreDeposit == true) {
+        this.text.isPreDeposit = "是";
       }
     },
   },

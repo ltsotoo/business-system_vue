@@ -11,7 +11,7 @@ export const contractApprove = (data) => {
 export const rejectContract = (contract) => {
     return request({
         url: '/rejectContract',
-        method: 'POST',
+        method: 'PUT',
         data: contract
     })
 }

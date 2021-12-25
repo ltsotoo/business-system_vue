@@ -86,6 +86,13 @@ export const queryInvoiceStatus = () => {
     return queryDictionaries("InvoiceStatus", "")
 }
 
+export const queryTaskStatus = () => {
+    return queryDictionaries("TaskStatus", "")
+}
+
+export const queryTaskRemarksStatus = () => {
+    return queryDictionaries("TaskRemarksStatus", "")
+}
 
 
 

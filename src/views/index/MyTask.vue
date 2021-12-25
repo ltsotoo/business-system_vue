@@ -21,33 +21,40 @@
           <v-spacer></v-spacer>
         </v-row>
       </v-form>
-      <tasks style="margin-top: 10px" :queryObject="queryObject" ref="tasks" />
+      <tasks
+        style="margin-top: 10px"
+        :queryObject="queryObject"
+        :statusItems="statusItems"
+        ref="tasks"
+      />
     </v-card-subtitle>
   </v-card>
 </template>
 
 <script>
+import { queryTaskStatus } from "@/api/dictionary";
 import tasks from "@/components/my/Tasks";
 export default {
   components: {
     tasks,
   },
   data: () => ({
-    statusItems: [
-      { text: "待设计", value: 1 },
-      { text: "待采购", value: 2 },
-      { text: "待入/出库", value: 3 },
-      { text: "待装配", value: 4 },
-      { text: "待发货", value: 5 },
-      { text: "已发货", value: 6 },
-    ],
+    statusItems: [],
     queryObject: {
-      status: 0,
+      status: null,
     },
   }),
+  created() {
+    this.getStatusItems();
+  },
   methods: {
     query() {
       this.$refs.tasks.getObject();
+    },
+    getStatusItems() {
+      queryTaskStatus().then((res) => {
+        this.statusItems = res.data;
+      });
     },
   },
 };

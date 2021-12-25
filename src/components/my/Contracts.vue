@@ -36,9 +36,9 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="success" @click="openAddTaskDialog(item)">
-          <v-icon left> mdi-eye </v-icon>
-          添加生产任务
+        <v-btn text color="primary" @click="openAddTaskDialog(item)">
+          <v-icon left> mdi-plus-thick </v-icon>
+          预存款采购
         </v-btn>
         <v-btn
           text
