@@ -43,6 +43,17 @@
               </v-row>
               <v-row>
                 <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.officeUID"
+                    :items="officeItems"
+                    item-text="name"
+                    item-value="UID"
+                    label="办事处"
+                    :clearable="nos.includes('02-01-02')"
+                    :readonly="nos.includes('02-01-01')"
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
                   <v-text-field
                     label="业务员"
                     v-model.trim="queryObject.employeeName"
@@ -50,38 +61,6 @@
                     maxlength="20"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="3">
-                  <v-select
-                    v-model="queryObject.status"
-                    :items="statusItems"
-                    item-text="text"
-                    item-value="value"
-                    label="合同状态"
-                    clearable
-                  ></v-select>
-                </v-col>
-                <v-col cols="3">
-                  <v-select
-                    v-model="queryObject.productionStatus"
-                    :items="productionStatusItems"
-                    item-text="text"
-                    item-value="value"
-                    label="生产状态"
-                    clearable
-                  ></v-select>
-                </v-col>
-                <v-col cols="3">
-                  <v-select
-                    v-model="queryObject.collectionStatus"
-                    :items="collectionStatusItems"
-                    item-text="text"
-                    item-value="value"
-                    label="回款状态"
-                    clearable
-                  ></v-select>
-                </v-col>
-              </v-row>
-              <v-row>
                 <v-col cols="3">
                   <v-menu
                     ref="startMenu"
@@ -140,6 +119,28 @@
                     </v-date-picker>
                   </v-menu>
                 </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.isSpecial"
+                    :items="isSpecialItems"
+                    item-text="text"
+                    item-value="value"
+                    label="特殊合同"
+                    clearable
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.isPreDeposit"
+                    :items="isPreDepositItems"
+                    item-text="text"
+                    item-value="value"
+                    label="预存款合同"
+                    clearable
+                  ></v-select>
+                </v-col>
                 <v-col cols="3">
                   <v-select
                     v-model="queryObject.payType"
@@ -164,21 +165,31 @@
               <v-row>
                 <v-col cols="3">
                   <v-select
-                    v-model="queryObject.isSpecial"
-                    :items="isSpecialItems"
+                    v-model="queryObject.status"
+                    :items="statusItems"
                     item-text="text"
                     item-value="value"
-                    label="特殊合同"
+                    label="合同状态"
                     clearable
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
                   <v-select
-                    v-model="queryObject.isPreDeposit"
-                    :items="isPreDepositItems"
+                    v-model="queryObject.productionStatus"
+                    :items="productionStatusItems"
                     item-text="text"
                     item-value="value"
-                    label="预存款合同"
+                    label="生产状态"
+                    clearable
+                  ></v-select>
+                </v-col>
+                <v-col cols="3">
+                  <v-select
+                    v-model="queryObject.collectionStatus"
+                    :items="collectionStatusItems"
+                    item-text="text"
+                    item-value="value"
+                    label="回款状态"
                     clearable
                   ></v-select>
                 </v-col>
@@ -218,11 +229,15 @@ import {
   queryContractProductionStatus,
   queryContractCollectionStatus,
 } from "@/api/dictionary";
+import { queryOffices } from "@/api/oadrp";
 export default {
   components: {
     contractDataTable,
   },
   data: () => ({
+    nos: [],
+
+    officeItems: [],
     regionItems: [],
     payTypeItems: [],
     invoiceTypeItems: [],
@@ -233,6 +248,7 @@ export default {
     endMenu: false,
     queryObject: {
       no: "",
+      officeUID: "",
       employeeName: "",
       regionUID: "",
       companyName: "",
@@ -256,6 +272,13 @@ export default {
     ],
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+    if (this.nos.includes("02-01-01")) {
+      this.queryObject.officeUID = localStorage.getItem("office");
+    }
+    this.getOfficeItems();
     this.getRegionItems();
     this.getStatusItems();
     this.getPayTypeItems();
@@ -264,6 +287,11 @@ export default {
     this.getCollectionStatusItems();
   },
   methods: {
+    getOfficeItems() {
+      queryOffices().then((res) => {
+        this.officeItems = res.data;
+      });
+    },
     getStatusItems() {
       queryContractStatus().then((res) => {
         this.statusItems = res.data;

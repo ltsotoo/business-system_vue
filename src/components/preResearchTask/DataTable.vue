@@ -24,7 +24,7 @@
           text
           color="primary"
           @click="openApproveDialog(item.UID)"
-          v-if="item.status == 2"
+          v-if="item.status == 2 && nos.includes('03-02-02')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -54,7 +54,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <viewForms :parentObj="openItem" :statusItems="statusItems"/>
+      <viewForms :parentObj="openItem" :statusItems="statusItems" />
     </v-dialog>
   </div>
 </template>
@@ -86,6 +86,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "开始时间",
@@ -150,6 +152,9 @@ export default {
     approveDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

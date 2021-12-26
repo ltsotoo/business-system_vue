@@ -106,9 +106,12 @@ export default {
               window.encodeURIComponent(JSON.stringify(res.data.urls))
             )
           );
+          // localStorage.setItem("nos", res.data.nos);
           localStorage.setItem(
             "nos",
-            window.btoa(window.encodeURIComponent(JSON.stringify(res.data.nos)))
+            window.btoa(
+              window.encodeURIComponent(JSON.stringify(res.data.nos))
+            )
           );
           this.goToIndex();
         });

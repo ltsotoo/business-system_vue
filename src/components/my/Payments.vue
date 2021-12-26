@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <div v-if="item.collectionStatus == 1">
-          <v-row>
+          <v-row v-if="nos.includes('00-04-01')">
             <v-col>
               <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>
@@ -49,7 +49,7 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="nos.includes('00-04-02')">
             <v-col>
               <v-btn text color="primary" @click="openAddPaymentDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>
@@ -57,7 +57,7 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="nos.includes('00-04-03')">
             <v-col>
               <v-btn text color="primary" @click="openApproveDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>
@@ -203,6 +203,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "合同编号",
@@ -298,6 +300,9 @@ export default {
     approveDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

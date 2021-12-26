@@ -85,22 +85,22 @@ export default {
     },
     systemItems: [
       { title: "首页", icon: "mdi-home", url: "/index" },
-      { title: "我的报销", icon: "mdi-currency-usd", url: "/myExpense" },
-      { title: "合同管理", icon: "mdi-folder", url: "/contract" },
-      { title: "预设计管理", icon: "mdi-note", url: "/preResearch" },
-      { title: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
-      { title: "产品管理", icon: "mdi-cube", url: "/product" },
-      { title: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
-      { title: "企业管理", icon: "mdi-domain", url: "/enterprise" },
-      { title: "财务管理", icon: "mdi-credit-card", url: "/expense" },
+      // { title: "我的报销", icon: "mdi-currency-usd", url: "/myExpense" },
+      // { title: "合同管理", icon: "mdi-folder", url: "/contract" },
+      // { title: "预设计管理", icon: "mdi-note", url: "/preResearch" },
+      // { title: "客户管理", icon: "mdi-account-multiple", url: "/customer" },
+      // { title: "产品管理", icon: "mdi-cube", url: "/product" },
+      // { title: "供应商管理", icon: "mdi-account-group", url: "/supplier" },
+      // { title: "企业管理", icon: "mdi-domain", url: "/enterprise" },
+      // { title: "财务管理", icon: "mdi-credit-card", url: "/expense" },
     ],
     items: [],
   }),
   created() {
     this.object.name = localStorage.getItem("name");
-    // this.items = JSON.parse(
-    //   decodeURIComponent(window.atob(localStorage.getItem("urls")))
-    // );
+    this.items = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("urls")))
+    );
   },
   methods: {
     exit() {

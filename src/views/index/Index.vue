@@ -1,12 +1,27 @@
 <template>
   <v-container>
     <topList />
-    <myExpenseForms style="margin-top: 10px"/>
-    <myContract style="margin-top: 10px" />
-    <myTask style="margin-top: 10px" />
-    <myPayment style="margin-top: 10px" />
-    <myPreResearch style="margin-top: 10px" />
-    <myPreResearchTask style="margin-top: 10px" />
+    <myExpenseForms style="margin-top: 10px" />
+    <myContract style="margin-top: 10px" v-if="nos.includes('00-02-01')" />
+    <myTask
+      style="margin-top: 10px"
+      v-if="
+        nos.includes('00-03-01') ||
+        nos.includes('00-03-02') ||
+        nos.includes('00-03-03') ||
+        nos.includes('00-03-04')
+      "
+    />
+    <myPayment
+      style="margin-top: 10px"
+      v-if="
+        nos.includes('00-04-01') ||
+        nos.includes('00-04-02') ||
+        nos.includes('00-04-03')
+      "
+    />
+    <myPreResearch style="margin-top: 10px" v-if="nos.includes('00-05-01')" />
+    <myPreResearchTask style="margin-top: 10px" v-if="nos.includes('00-05-02')"/>
   </v-container>
 </template>
 
@@ -28,7 +43,13 @@ export default {
     myPreResearchTask,
     myPayment,
   },
-  data: () => ({}),
-  created() {},
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
 };
 </script>

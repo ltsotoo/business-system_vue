@@ -1,10 +1,11 @@
 <template>
   <v-container>
-    <preResearch ref="preResearch" :refresh="refreshPreResearchTask"/>
+    <preResearch ref="preResearch" :refresh="refreshPreResearchTask" v-if="nos.includes('03-01-01')"/>
     <preResearchTask
       style="margin-top: 20px"
       ref="preResearchTask"
       :refresh="refreshPreResearch"
+      v-if="nos.includes('03-02-01')"
     />
   </v-container>
 </template>
@@ -16,6 +17,14 @@ export default {
   components: {
     preResearch,
     preResearchTask,
+  },
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
   methods: {
     refreshPreResearch() {

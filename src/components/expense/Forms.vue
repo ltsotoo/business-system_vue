@@ -1,5 +1,5 @@
 <template>
-  <v-card >
+  <v-card>
     <v-card-title>发起报销</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
@@ -62,6 +62,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     submitDisabled: false,
     expenseTypeItems: [],
     object: {
@@ -78,11 +80,25 @@ export default {
   }),
   created() {
     this.getExpenseTypeItems();
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
   methods: {
     getExpenseTypeItems() {
       queryExpenseTypes().then((res) => {
-        this.expenseTypeItems = res.data;
+        if (this.nos.includes("01-01-01")) {
+          this.expenseTypeItems.push(res.data[0]);
+        }
+        if (this.nos.includes("01-01-02")) {
+          this.expenseTypeItems.push(res.data[1]);
+        }
+        if (this.nos.includes("01-01-03")) {
+          this.expenseTypeItems.push(res.data[2]);
+        }
+        if (this.nos.includes("01-01-04")) {
+          this.expenseTypeItems.push(res.data[3]);
+        }
       });
     },
     submit() {

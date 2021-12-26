@@ -1,9 +1,10 @@
 <template>
-  <v-card >
+  <v-card>
     <v-card-title v-if="openType == 0">供应商添加</v-card-title>
+    <v-card-title v-if="openType == 1">供应商查看</v-card-title>
     <v-card-title v-if="openType == 2">供应商编辑</v-card-title>
     <v-card-subtitle>
-      <v-form ref="form">
+      <v-form ref="form" :readonly="openType == 1">
         <v-row>
           <v-col cols="6">
             <v-text-field
@@ -65,10 +66,28 @@
               maxlength="50"
             ></v-text-field>
           </v-col>
+          <v-col cols="12">
+            <v-textarea
+              label="主营产品概述"
+              v-model="object.description"
+              rows="3"
+              counter
+              maxlength="500"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea
+              label="备注"
+              v-model="object.remark"
+              rows="3"
+              counter
+              maxlength="500"
+            ></v-textarea>
+          </v-col>
         </v-row>
       </v-form>
     </v-card-subtitle>
-    <v-card-actions>
+    <v-card-actions v-if="openType != 1">
       <v-spacer></v-spacer>
       <v-btn color="primary" rounded @click="submit" :disabled="submitDisabled">
         提交
@@ -108,6 +127,8 @@ export default {
       wechatID: "",
       email: "",
       web: "",
+      description: "",
+      remark: "",
     },
     rules: {
       must: [(v) => !!v || "必填项"],
@@ -120,7 +141,7 @@ export default {
     },
   }),
   created() {
-    if (this.openType == 2) {
+    if (this.openType != 0) {
       this.object = this.parentObj;
     }
   },

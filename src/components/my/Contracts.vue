@@ -36,7 +36,7 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openAddTaskDialog(item)">
+        <v-btn text color="primary" @click="openAddTaskDialog(item)" v-if="item.isPreDeposit && item.status == 2">
           <v-icon left> mdi-plus-thick </v-icon>
           预存款采购
         </v-btn>
@@ -96,7 +96,7 @@
       persistent
       @click:outside="closeAddTaskDialog"
     >
-    <taskAdd :contract="openItem"/>
+      <taskAdd :contract="openItem" />
     </v-dialog>
   </div>
 </template>

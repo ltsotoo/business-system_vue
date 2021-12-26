@@ -28,7 +28,7 @@
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
+            <v-btn rounded color="success" @click="openAddDialog" v-if="nos.includes('04-02-03')"> 添加 </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -72,6 +72,7 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
     regionItems: [],
     queryObject: {
       regionUID: "",
@@ -80,6 +81,9 @@ export default {
     addDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getRegionItems();
   },
   methods: {

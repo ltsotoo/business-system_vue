@@ -40,7 +40,7 @@
           text
           color="primary"
           @click="openApproveDialog(item.UID)"
-          v-if="item.status == 1"
+          v-if="item.status == 1 && nos.includes('02-01-03')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -49,7 +49,7 @@
           text
           color="primary"
           @click="openEditDialog(item)"
-          v-if="item.status == 2"
+          v-if="item.status == 2 && nos.includes('02-01-04')"
         >
           <v-icon left> mdi-pencil </v-icon>
           编辑
@@ -144,6 +144,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     payTypeItems: [],
     headers: [
       {
@@ -234,6 +236,9 @@ export default {
     object: [],
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getPayTypeItems();
     this.getObject();
   },

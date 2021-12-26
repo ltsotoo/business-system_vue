@@ -14,14 +14,14 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditDialog(item)">
+        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('04-01-02')">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
-        <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+        <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
           <v-icon left> mdi-delete </v-icon>
           删除
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
 
@@ -75,6 +75,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "单位",
@@ -132,6 +134,9 @@ export default {
     object: [],
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

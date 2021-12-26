@@ -24,7 +24,7 @@
           text
           color="primary"
           @click="openApproveDialog(item)"
-          v-if="item.status == 1"
+          v-if="item.status == 1 && nos.includes('03-01-02')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
           审批
@@ -81,6 +81,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "发起时间",
@@ -132,6 +134,9 @@ export default {
     approveDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

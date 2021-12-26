@@ -14,10 +14,10 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <!-- <v-btn text color="success" @click="openViewDialog(item)">
+        <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看
-        </v-btn> -->
+        </v-btn>
         <v-btn text color="primary" @click="openEditDialog(item)">
           <v-icon left> mdi-pencil </v-icon>
           编辑
@@ -40,7 +40,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <supplierView :parentObj="options.openItem" />
+      <supplierForms :parentObj="options.openItem" openType="1" />
     </v-dialog>
 
     <v-dialog
@@ -83,13 +83,11 @@
 
 <script>
 import supplierForms from "./Forms";
-import supplierView from "./View";
 import { delSupplier, querySuppliers } from "@/api/supplier";
 
 export default {
   components: {
     supplierForms,
-    supplierView,
   },
   props: {
     queryObject: {

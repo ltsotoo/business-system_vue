@@ -172,7 +172,12 @@
           <v-spacer></v-spacer>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" dark @click="goToEntry">
+            <v-btn
+              rounded
+              color="success"
+              dark
+              @click="goToEntry"
+            >
               录入
             </v-btn>
           </v-col>
