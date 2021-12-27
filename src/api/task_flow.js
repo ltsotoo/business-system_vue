@@ -7,3 +7,11 @@ export const taskFlowApprove = (data) => {
         data: data
     })
 }
+
+export const next = (data) => {
+    return request({
+        url: '/task/flow/next',
+        method: 'PUT',
+        data: data
+    })
+}
