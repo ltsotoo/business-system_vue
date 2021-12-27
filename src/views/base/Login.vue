@@ -100,7 +100,7 @@ export default {
           localStorage.setItem("uid", res.data.employee.UID);
           localStorage.setItem("department", res.data.employee.departmentUID);
           localStorage.setItem("office", res.data.employee.officeUID);
-          if (res.data.urls) {
+          if (res.data.urls == null) {
             localStorage.setItem(
               "urls",
               window.btoa(
@@ -110,11 +110,10 @@ export default {
           } else {
             localStorage.setItem(
               "urls",
-              window.btoa(window.encodeURIComponent(this.urls))
+              window.btoa(window.encodeURIComponent(JSON.stringify("")))
             );
           }
-
-          if (res.data.nos) {
+          if (res.data.nos == null) {
             localStorage.setItem(
               "nos",
               window.btoa(
