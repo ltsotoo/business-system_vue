@@ -4,6 +4,14 @@
     <v-card-title v-if="openType == 2">任务重置</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
+        <v-row v-if="isSpecial">
+          <v-col>
+            <v-text-field
+              label="特殊合同提成百分比(%)"
+              v-model.number="query.pushMoneyPercentages"
+            ></v-text-field>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col cols="4">
             <v-select
@@ -189,9 +197,13 @@
 <script>
 import { queryOffices, queryDepartments } from "@/api/oadrp";
 import { queryEmployees } from "@/api/employee";
-import { taskApprove } from "@/api/task_flow";
+import { taskFlowApprove } from "@/api/task_flow";
 export default {
   props: {
+    isSpecial: {
+      type: Boolean,
+      default: false,
+    },
     openType: {
       type: Number,
       default: 0,
@@ -230,6 +242,7 @@ export default {
       purchaseDays: 0,
       isReset: false,
       aRemarks: "",
+      pushMoneyPercentages: 0,
     },
     officeUID1: "",
     officeUID2: "",
@@ -357,7 +370,7 @@ export default {
     submit() {
       var _this = this;
       if (this.validateForm()) {
-        taskApprove(this.query).then((res) => {
+        taskFlowApprove(this.query).then((res) => {
           _this.parentFun(_this.openUID);
           _this.closeDialog();
         });

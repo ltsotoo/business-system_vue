@@ -39,7 +39,7 @@
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="openAddDialog">
+              <v-btn rounded color="success" dark @click="openAddDialog" v-if="nos.includes('07-02-02')">
                 添加
               </v-btn>
             </v-col>
@@ -48,7 +48,11 @@
         </v-form>
       </v-card-subtitle>
       <div style="margin-top: 10px"></div>
-      <bidBondDataTable ref="bidBondDataTable" :queryObject="queryObject" :statusItems="statusItems"/>
+      <bidBondDataTable
+        ref="bidBondDataTable"
+        :queryObject="queryObject"
+        :statusItems="statusItems"
+      />
     </v-card>
 
     <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
@@ -68,6 +72,8 @@ export default {
     bidBondAddForms,
   },
   data: () => ({
+    nos: [],
+
     statusItems: [],
     officeItems: [],
     queryObject: {
@@ -79,6 +85,9 @@ export default {
     addDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getStatusItems();
     this.getOfficeItems();
   },

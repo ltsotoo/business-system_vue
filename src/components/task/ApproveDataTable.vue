@@ -57,6 +57,7 @@
 
     <v-dialog v-model="approveDialog" v-if="approveDialog" width="800px">
       <approve
+        :isSpecial="isSpecial"
         :openUID="openItem.UID"
         ref="approve"
         :parentFun="getObject"
@@ -78,6 +79,10 @@ export default {
     openUID: {
       type: String,
       default: "",
+    },
+    isSpecial: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({

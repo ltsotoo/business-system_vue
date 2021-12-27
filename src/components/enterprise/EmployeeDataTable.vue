@@ -13,23 +13,23 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openEditBaseDialog(item.UID)">
+        <v-btn text color="primary" @click="openEditBaseDialog(item.UID)" v-if="nos.includes('08-03-04')">
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
         </v-btn>
-        <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)">
+        <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)" v-if="nos.includes('08-03-05')">
           <v-icon left> mdi-pencil </v-icon>
           财务编辑
         </v-btn>
-        <v-btn text color="primary" @click="openEditRoleDialog(item.UID)">
+        <v-btn text color="primary" @click="openEditRoleDialog(item.UID)" v-if="nos.includes('08-03-06')">
           <v-icon left> mdi-pencil </v-icon>
           人事编辑
         </v-btn>
-        <v-btn text color="primary" @click="openResetPwdDialog(item)">
+        <v-btn text color="primary" @click="openResetPwdDialog(item)" v-if="nos.includes('08-03-07')">
           <v-icon left> mdi-pencil </v-icon>
           重置密码
         </v-btn>
-        <v-btn text color="error" @click="openDelDialog(item.UID)">
+        <v-btn text color="error" @click="openDelDialog(item.UID)" v-if="nos.includes('08-03-08')">
           <v-icon left> mdi-delete </v-icon>
           停用
         </v-btn>
@@ -118,6 +118,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "编号",
@@ -165,7 +167,11 @@ export default {
     delDialog: false,
     resetPwdDialog: false,
   }),
-  created() {},
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     getObject() {
       queryEmployees(this.queryObject).then((res) => {

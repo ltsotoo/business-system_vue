@@ -143,6 +143,7 @@
     <taskApproveDataTable
       style="margin-top: 1px"
       ref="taskApproveDataTable"
+      :isSpecial="isSpecial"
       :openType="4"
       :openUID="openUID"
       :parentObject="object.tasks"
@@ -171,6 +172,10 @@ export default {
     taskApproveDataTable,
   },
   props: {
+    isSpecial: {
+      type: Boolean,
+      default: false,
+    },
     openUID: {
       type: String,
       default: "",

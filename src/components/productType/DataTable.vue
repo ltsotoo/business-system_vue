@@ -9,7 +9,7 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditDialog(item)">
+        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('05-02-03')">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -68,11 +68,13 @@ export default {
     queryObject: {
       type: Object,
     },
-    refresh:{
-      type:Function
-    }
+    refresh: {
+      type: Function,
+    },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "名称",
@@ -131,6 +133,9 @@ export default {
     deleteDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

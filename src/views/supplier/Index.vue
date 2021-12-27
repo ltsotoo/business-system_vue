@@ -35,7 +35,7 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="openAddDialog">
+              <v-btn rounded color="success" dark @click="openAddDialog" v-if="nos.includes('06-01-02')">
                 添加
               </v-btn>
             </v-col>
@@ -65,6 +65,8 @@ export default {
     supplierForms,
   },
   data: () => ({
+    nos: [],
+
     queryObject: {
       name: "",
       linkman: "",
@@ -72,6 +74,11 @@ export default {
     },
     addDialog: false,
   }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     query() {
       this.$refs.supplierDataTable.getObject();

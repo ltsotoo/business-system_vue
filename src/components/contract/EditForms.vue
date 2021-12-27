@@ -187,6 +187,7 @@
     </v-card>
     <editTaskDataTable
       style="margin-top: 5px"
+      :isSpecial="isSpecial"
       :parentObject="object.tasks"
       v-if="object.tasks"
       :refresh="refreshAll"
@@ -197,6 +198,17 @@
       <v-card-title></v-card-title>
       <v-card-subtitle>
         <v-row justify="center">
+          <v-spacer></v-spacer>
+          <v-col cols="auto">
+            <v-btn
+              x-large
+              color="error"
+              @click="openProductionToFinishDialog"
+              :disabled="!openItem.isPreDeposit"
+            >
+              预存款合同完成
+            </v-btn>
+          </v-col>
           <v-spacer></v-spacer>
           <v-col cols="auto">
             <v-btn
@@ -218,6 +230,31 @@
         </v-row>
       </v-card-subtitle>
     </v-card>
+
+    <v-dialog
+      v-model="productionToFinishDialog"
+      v-if="productionToFinishDialog"
+      width="600px"
+      persistent
+      @click:outside="closeProductionToFinishDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5"
+          >您确定该预存款合同已经完成了吗?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="approveToFinish"
+            >确定</v-btn
+          >
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeProductionToFinishDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="rejectCollectionStatusDialog"
@@ -274,7 +311,10 @@
 import editTaskDataTable from "../task/EditDataTable";
 import viewPayments from "../payment/View";
 import { queryContract } from "@/api/contract";
-import { rejectContract } from "@/api/contract_flow";
+import {
+  rejectContract,
+  taskFlowApproveProductionStatusToFinish,
+} from "@/api/contract_flow";
 import { queryContractInvoiceTypes } from "@/api/dictionary";
 import { changeCollectionStatus } from "@/api/payment";
 export default {
@@ -283,6 +323,10 @@ export default {
     viewPayments,
   },
   props: {
+    isSpecial: {
+      type: Boolean,
+      default: false,
+    },
     openType: {
       type: Number,
       default: 0,
@@ -364,6 +408,7 @@ export default {
 
     rejectCollectionStatusDialog: false,
     rejectDialog: false,
+    productionToFinishDialog: false,
   }),
   created() {
     this.getInvoiceTypeItems();
@@ -385,7 +430,22 @@ export default {
       this.refresh();
       this.getObject();
     },
+    approveToFinish() {
+      taskFlowApproveProductionStatusToFinish({ UID: this.openItem.UID }).then(
+        (res) => {
+          this.$message.success("该预存款合同已完成！");
+          this.refresh();
+          this.closeDialog();
+        }
+      );
+    },
 
+    openProductionToFinishDialog() {
+      this.productionToFinishDialog = true;
+    },
+    closeProductionToFinishDialog() {
+      this.productionToFinishDialog = false;
+    },
     openRejectDialog() {
       this.rejectDialog = true;
     },

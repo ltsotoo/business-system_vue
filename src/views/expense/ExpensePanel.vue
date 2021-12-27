@@ -34,7 +34,8 @@
                   item-text="name"
                   item-value="UID"
                   label="办事处"
-                  clearable
+                  :clearable="nos.includes('07-01-02')"
+                  :readonly="nos.includes('07-01-01')"
                 ></v-select>
               </v-col>
               <v-col cols="3">
@@ -132,6 +133,8 @@ export default {
     expenseDataTable,
   },
   data: () => ({
+    nos: [],
+
     expenseTypeItems: [],
     statusItems: [],
     officeItems: [],
@@ -154,6 +157,12 @@ export default {
     },
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+    if (this.nos.includes("07-01-01")) {
+      this.queryObject.officeUID = localStorage.getItem("office");
+    }
     this.getExpenseTypeItems();
     this.getStatusItems();
     this.getOfficeItems();

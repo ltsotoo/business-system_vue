@@ -9,7 +9,12 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditNameDialog(item)">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditNameDialog(item)"
+          v-if="nos.includes('08-02-04')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -80,6 +85,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "公司(办事处)",
@@ -107,6 +114,11 @@ export default {
     delDialog: false,
     editNameDialog: false,
   }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     getObject() {
       queryDepartments(this.queryObject).then((res) => {

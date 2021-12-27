@@ -21,28 +21,28 @@
           text
           color="primary"
           @click="openApprovalDialog(item)"
-          v-if="item.status == 1"
+          v-if="item.status == 1 && nos.includes('07-01-03')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
-          审批
+          办事处审批
         </v-btn>
         <v-btn
           text
           color="primary"
           @click="openApprovalDialog(item)"
-          v-if="item.status == 2"
+          v-if="item.status == 2 && nos.includes('07-01-04')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
-          审批
+          财务审批
         </v-btn>
         <v-btn
           text
           color="primary"
           @click="openApprovalDialog(item)"
-          v-if="item.status == 3"
+          v-if="item.status == 3 && nos.includes('07-01-05')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
-          付款
+          出纳付款
         </v-btn>
       </template>
     </v-data-table>
@@ -78,6 +78,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "类型",
@@ -157,6 +159,9 @@ export default {
     openUID: "",
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

@@ -19,7 +19,7 @@
             </v-col>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" @click="openAddDialog">
+              <v-btn rounded color="success" @click="openAddDialog" v-if="nos.includes('05-02-02')">
                 添加
               </v-btn>
             </v-col>
@@ -58,12 +58,18 @@ export default {
     productTypeForms,
   },
   data: () => ({
+    nos: [],
     dictionaryTypeItems: [],
     queryObject: {
       name: "",
     },
     addDialog: false,
   }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
   methods: {
     query() {
       this.$refs.productTypeDataTable.getObject();

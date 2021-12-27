@@ -97,10 +97,12 @@ router.beforeEach((to, from, next) => {
           decodeURIComponent(window.atob(localStorage.getItem("urls")))
         );
         var can = false
-        for (let i = 0; i < item.length; i++) {
-          if (item[i].no == to.meta.no) {
-            can = true
-            break
+        if (item != null) {
+          for (let i = 0; i < item.length; i++) {
+            if (item[i].no == to.meta.no) {
+              can = true
+              break
+            }
           }
         }
         if (can) {

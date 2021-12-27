@@ -22,19 +22,29 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <div v-if="item.status == 1">
-          <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+          <v-btn
+            text
+            color="primary"
+            @click="openApproveDialog(item.UID)"
+            v-if="nos.includes('07-02-04')"
+          >
             <v-icon left> mdi-pencil </v-icon>
             回款
           </v-btn>
-          <v-btn text color="primary" @click="openEditDialog(item)">
+          <v-btn
+            text
+            color="primary"
+            @click="openEditDialog(item)"
+            v-if="nos.includes('07-02-03')"
+          >
             <v-icon left> mdi-pencil </v-icon>
             编辑
           </v-btn>
-          <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
+        </div>
+        <!-- <v-btn text color="error" @click="openDeleteDialog(item.UID)">
             <v-icon left> mdi-delete </v-icon>
             删除
           </v-btn> -->
-        </div>
       </template>
     </v-data-table>
 
@@ -112,6 +122,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "录入时间",
@@ -182,6 +194,9 @@ export default {
     approveDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

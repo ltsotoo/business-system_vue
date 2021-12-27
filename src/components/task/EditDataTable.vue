@@ -70,6 +70,7 @@
 
     <v-dialog v-model="approveDialog" v-if="approveDialog" width="800px">
       <approve
+        :isSpecial="isSpecial"
         :openUID="openUID"
         :parentFun="refresh"
         :closeDialog="closeApproveDialog"
@@ -108,6 +109,10 @@ export default {
     approve,
   },
   props: {
+    isSpecial: {
+      type: Boolean,
+      default: false,
+    },
     parentObject: {
       type: Array,
       default: () => [],

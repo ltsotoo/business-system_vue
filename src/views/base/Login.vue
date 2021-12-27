@@ -100,19 +100,34 @@ export default {
           localStorage.setItem("uid", res.data.employee.UID);
           localStorage.setItem("department", res.data.employee.departmentUID);
           localStorage.setItem("office", res.data.employee.officeUID);
-          localStorage.setItem(
-            "urls",
-            window.btoa(
-              window.encodeURIComponent(JSON.stringify(res.data.urls))
-            )
-          );
-          // localStorage.setItem("nos", res.data.nos);
-          localStorage.setItem(
-            "nos",
-            window.btoa(
-              window.encodeURIComponent(JSON.stringify(res.data.nos))
-            )
-          );
+          if (res.data.urls) {
+            localStorage.setItem(
+              "urls",
+              window.btoa(
+                window.encodeURIComponent(JSON.stringify(res.data.urls))
+              )
+            );
+          } else {
+            localStorage.setItem(
+              "urls",
+              window.btoa(window.encodeURIComponent(this.urls))
+            );
+          }
+
+          if (res.data.nos) {
+            localStorage.setItem(
+              "nos",
+              window.btoa(
+                window.encodeURIComponent(JSON.stringify(res.data.nos))
+              )
+            );
+          } else {
+            localStorage.setItem(
+              "nos",
+              window.btoa(window.encodeURIComponent([]))
+            );
+          }
+
           this.goToIndex();
         });
         this.verifyCode.refresh();

@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <expensePanel />
-    <bidBondPanel style="margin-top: 30px" />
+    <expensePanel v-if="nos.includes('07-01-01') || nos.includes('07-01-02')" />
+    <bidBondPanel style="margin-top: 30px" v-if="nos.includes('07-02-01')"/>
   </v-container>
 </template>
 
@@ -12,6 +12,14 @@ export default {
   components: {
     expensePanel,
     bidBondPanel,
+  },
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
   },
 };
 </script>

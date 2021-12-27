@@ -1,15 +1,20 @@
 <template>
   <v-container>
-    <v-expansion-panels multiple>
-      <officePanel />
-      <departmentPanel />
-      <employeePanel />
-    </v-expansion-panels>
+    <officePanel v-if="nos.includes('08-01-01')" />
+    <departmentPanel
+      style="margin-top: 10px"
+      v-if="nos.includes('08-02-01') || nos.includes('08-02-02')"
+    />
+    <employeePanel
+      style="margin-top: 10px"
+      v-if="nos.includes('08-03-01') || nos.includes('08-03-02')"
+    />
+
+    <settingRole style="margin-top: 30px" v-if="nos.includes('08-04-01')" />
+    <settingRegion style="margin-top: 10px" v-if="nos.includes('08-05-01')" />
+    <settingUnit style="margin-top: 10px" v-if="nos.includes('08-06-01')" />
 
     <v-expansion-panels multiple style="margin-top: 30px">
-      <settingRole />
-      <settingRegion />
-      <settingUnit />
       <!-- <YearClearingPanel /> -->
     </v-expansion-panels>
   </v-container>
@@ -35,7 +40,13 @@ export default {
     settingRegion,
     settingUnit,
   },
-  data: () => ({}),
-  created() {},
+  data: () => ({
+    nos: [],
+  }),
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+  },
 };
 </script>

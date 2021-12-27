@@ -20,15 +20,15 @@
             查看
           </v-btn>
           <div v-if="!isCart">
-            <v-btn text color="primary" @click="openEditBaseDialog(item)">
+            <v-btn text color="primary" @click="openEditBaseDialog(item)" v-if="nos.includes('05-01-03')">
               <v-icon left> mdi-pencil </v-icon>
               基础编辑
             </v-btn>
-            <v-btn text color="primary" @click="openEditNumberDialog(item.UID)">
+            <v-btn text color="primary" @click="openEditNumberDialog(item.UID)" v-if="nos.includes('05-01-04')">
               <v-icon left> mdi-pencil </v-icon>
               库存编辑
             </v-btn>
-            <v-btn text color="primary" @click="openEditPriceDialog(item.UID)">
+            <v-btn text color="primary" @click="openEditPriceDialog(item.UID)" v-if="nos.includes('05-01-05')">
               <v-icon left> mdi-pencil </v-icon>
               价格编辑
             </v-btn>
@@ -156,6 +156,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "类型",
@@ -235,6 +237,9 @@ export default {
     object: [],
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

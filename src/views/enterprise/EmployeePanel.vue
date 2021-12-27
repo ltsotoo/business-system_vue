@@ -1,9 +1,7 @@
 <template>
-  <v-expansion-panel @click="clickPanel">
-    <v-expansion-panel-header :class="[`text-h4`]">
-      员工管理
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+  <v-card>
+    <v-card-title>员工管理</v-card-title>
+    <v-card-subtitle>
       <v-form ref="employeeQueryForm">
         <v-row align="baseline">
           <v-spacer></v-spacer>
@@ -15,7 +13,8 @@
               item-value="UID"
               label="办事处"
               @change="getDepartmentItems"
-              clearable
+              :clearable="nos.includes('08-03-01')"
+              :readonly="nos.includes('08-03-02')"
             ></v-select>
           </v-col>
           <v-col cols="2">
@@ -51,7 +50,14 @@
           </v-col>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn rounded color="success" @click="openAddDialog"> 添加 </v-btn>
+            <v-btn
+              rounded
+              color="success"
+              @click="openAddDialog"
+              v-if="nos.includes('08-03-03')"
+            >
+              添加
+            </v-btn>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -71,8 +77,8 @@
           :refresh="queryEmployees"
         />
       </v-dialog>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </v-card-subtitle>
+  </v-card>
 </template>
 
 <script>
@@ -85,6 +91,8 @@ export default {
     employeeFormsAdd,
   },
   data: () => ({
+    nos: [],
+
     officeItems: [],
     departmentItems: [],
     queryObject: {
@@ -95,7 +103,16 @@ export default {
     },
     addDialog: false,
   }),
-  created() {},
+  created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
+    if (this.nos.includes("08-03-02")) {
+      this.queryObject.officeUID = localStorage.getItem("office");
+      this.getDepartmentItems();
+    }
+    this.getOfficeItems();
+  },
   methods: {
     getOfficeItems() {
       queryOffices().then((res) => {
@@ -115,16 +132,6 @@ export default {
     },
     queryEmployees() {
       this.$refs.employeeDataTable.getObject();
-    },
-    clickPanel(event) {
-      if (
-        !event.currentTarget.classList.contains(
-          "v-expansion-panel-header--active"
-        ) &&
-        this.officeItems.length == 0
-      ) {
-        this.getOfficeItems();
-      }
     },
 
     openAddDialog() {

@@ -9,7 +9,7 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditNameDialog(item)">
+        <v-btn text color="primary" @click="openEditNameDialog(item)" v-if="nos.includes('08-01-03')">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -46,7 +46,9 @@
       @click:outside="closeDelDialog"
     >
       <v-card>
-        <v-card-title class="text-h5">您确定要删除该公司(办事处)吗?</v-card-title>
+        <v-card-title class="text-h5"
+          >您确定要删除该公司(办事处)吗?</v-card-title
+        >
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="error" rounded @click="delObject">确定</v-btn>
@@ -72,6 +74,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "公司(办事处)编号",
@@ -123,6 +127,9 @@ export default {
     editNameDialog: false,
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

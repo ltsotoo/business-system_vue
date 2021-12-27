@@ -18,7 +18,7 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openEditDialog(item)">
+        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('06-01-03')">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -95,6 +95,8 @@ export default {
     },
   },
   data: () => ({
+    nos: [],
+
     headers: [
       {
         text: "名称",
@@ -159,6 +161,9 @@ export default {
     object: [],
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getObject();
   },
   methods: {

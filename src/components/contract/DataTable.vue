@@ -39,7 +39,7 @@
         <v-btn
           text
           color="primary"
-          @click="openApproveDialog(item.UID)"
+          @click="openApproveDialog(item)"
           v-if="item.status == 1 && nos.includes('02-01-03')"
         >
           <v-icon left> mdi-file-edit-outline </v-icon>
@@ -81,7 +81,8 @@
       width="1440px"
     >
       <approve
-        :openUID="options.openUID"
+        :isSpecial="options.openItem.isSpecial"
+        :openUID="options.openItem.UID"
         ref="approve"
         :parentFun="getObject"
         :closeDialog="closeApproveDialog"
@@ -100,6 +101,7 @@
       @click:outside="closeEditDialog"
     >
       <contractEditForms
+        :isSpecial="options.openItem.isSpecial"
         :openItem="options.openItem"
         :openType="editNum"
         :refresh="getObject"
@@ -273,12 +275,12 @@ export default {
       this.options.openItem = {};
       this.options.viewDialog = false;
     },
-    openApproveDialog(uid) {
-      this.options.openUID = uid;
+    openApproveDialog(item) {
+      this.options.openItem = item;
       this.options.approveDialog = true;
     },
     closeApproveDialog() {
-      this.options.openUID = "";
+      this.options.openItem = {};
       this.options.approveDialog = false;
     },
     openEditDialog(item) {
