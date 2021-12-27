@@ -22,6 +22,7 @@
             label="办事处提成金额(元)"
             v-model="employee.office.money"
             readonly
+            v-if="nos.includes('00-02-01')"
           ></v-text-field>
         </v-col>
         <v-col cols="3">
@@ -29,6 +30,7 @@
             label="办事处年底提成金额(元)"
             v-model="employee.office.moneyCold"
             readonly
+            v-if="nos.includes('00-02-01')"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -40,6 +42,8 @@
 import { queryEmployee } from "@/api/employee.js";
 export default {
   data: () => ({
+    nos: [],
+
     employee: {
       money: null,
       office: {
@@ -48,6 +52,9 @@ export default {
     },
   }),
   created() {
+    this.nos = JSON.parse(
+      decodeURIComponent(window.atob(localStorage.getItem("nos")))
+    );
     this.getEmployee();
   },
   methods: {

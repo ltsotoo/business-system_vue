@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <topList />
+    <topList v-if="nos.includes('00-01-01') || nos.includes('00-01-02')" />
     <myExpenseForms style="margin-top: 10px" />
     <myContract style="margin-top: 10px" v-if="nos.includes('00-02-01')" />
     <myTask
@@ -21,7 +21,10 @@
       "
     />
     <myPreResearch style="margin-top: 10px" v-if="nos.includes('00-05-01')" />
-    <myPreResearchTask style="margin-top: 10px" v-if="nos.includes('00-05-02')"/>
+    <myPreResearchTask
+      style="margin-top: 10px"
+      v-if="nos.includes('00-05-02')"
+    />
   </v-container>
 </template>
 
