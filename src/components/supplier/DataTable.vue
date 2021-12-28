@@ -18,7 +18,12 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('06-01-03')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditDialog(item)"
+          v-if="nos.includes('06-01-03')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -111,12 +116,6 @@ export default {
         sortable: false,
       },
       {
-        text: "地址",
-        align: "center",
-        value: "address",
-        sortable: false,
-      },
-      {
         text: "联系人",
         align: "center",
         value: "linkman",
@@ -126,18 +125,6 @@ export default {
         text: "联系电话",
         align: "center",
         value: "phone",
-        sortable: false,
-      },
-      {
-        text: "微信号",
-        align: "center",
-        value: "wechatID",
-        sortable: false,
-      },
-      {
-        text: "电子邮箱",
-        align: "center",
-        value: "email",
         sortable: false,
       },
       {
@@ -161,9 +148,11 @@ export default {
     object: [],
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getObject();
   },
   methods: {

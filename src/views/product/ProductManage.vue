@@ -38,7 +38,13 @@
             <v-spacer></v-spacer>
             <v-divider vertical></v-divider>
             <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="openAddDialog" v-if="nos.includes('05-01-02')">
+              <v-btn
+                rounded
+                color="success"
+                dark
+                @click="openAddDialog"
+                v-if="nos.includes('05-01-02')"
+              >
                 添加
               </v-btn>
             </v-col>
@@ -77,9 +83,11 @@ export default {
     addDialog: false,
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getTypeItems();
   },
   methods: {

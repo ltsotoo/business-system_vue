@@ -52,9 +52,10 @@ export default {
     },
   }),
   created() {
-    var nos1 = decodeURIComponent(window.atob(localStorage.getItem("nos")));
-    if (!(nos1 == "null")) {
-      this.nos = JSON.parse(nos1);
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
     }
     this.getEmployee();
   },

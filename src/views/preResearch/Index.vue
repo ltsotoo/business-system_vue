@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <preResearch ref="preResearch" :refresh="refreshPreResearchTask" v-if="nos.includes('03-01-01')"/>
+    <preResearch
+      ref="preResearch"
+      :refresh="refreshPreResearchTask"
+      v-if="nos.includes('03-01-01')"
+    />
     <preResearchTask
       style="margin-top: 20px"
       ref="preResearchTask"
@@ -22,9 +26,11 @@ export default {
     nos: [],
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
   },
   methods: {
     refreshPreResearch() {

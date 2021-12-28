@@ -3,33 +3,62 @@
     <v-data-table
       :headers="headers"
       :items="object"
-      :items-per-page="5"
+      :server-items-length="options.total"
       :footer-props="{
         itemsPerPageOptions: [5, 10, 20],
       }"
+      :loading="options.loading"
+      :options.sync="options"
+      @update:page="getObject"
+      @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="success" @click="openViewDialog(item.UID)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openEditBaseDialog(item.UID)" v-if="nos.includes('08-03-04')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditBaseDialog(item.UID)"
+          v-if="nos.includes('08-03-04')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           基础编辑
         </v-btn>
-        <v-btn text color="primary" @click="openEditExpenseDialog(item.UID)" v-if="nos.includes('08-03-05')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditExpenseDialog(item.UID)"
+          v-if="nos.includes('08-03-05')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           财务编辑
         </v-btn>
-        <v-btn text color="primary" @click="openEditRoleDialog(item.UID)" v-if="nos.includes('08-03-06')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditRoleDialog(item.UID)"
+          v-if="nos.includes('08-03-06')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           人事编辑
         </v-btn>
-        <v-btn text color="primary" @click="openResetPwdDialog(item)" v-if="nos.includes('08-03-07')">
+        <v-btn
+          text
+          color="primary"
+          @click="openResetPwdDialog(item)"
+          v-if="nos.includes('08-03-07')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           重置密码
         </v-btn>
-        <v-btn text color="error" @click="openDelDialog(item.UID)" v-if="nos.includes('08-03-08')">
+        <v-btn
+          text
+          color="error"
+          @click="openDelDialog(item.UID)"
+          v-if="nos.includes('08-03-08')"
+        >
           <v-icon left> mdi-delete </v-icon>
           停用
         </v-btn>
@@ -159,6 +188,12 @@ export default {
         sortable: false,
       },
     ],
+    options: {
+      loading: false,
+      total: 0,
+      page: 1,
+      itemsPerPage: 10,
+    },
     object: [],
     openUID: "",
     viewDialog: false,
@@ -168,14 +203,28 @@ export default {
     resetPwdDialog: false,
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
   },
   methods: {
     getObject() {
-      queryEmployees(this.queryObject).then((res) => {
-        this.object = res.data;
+      this.options.loading = true;
+      queryEmployees(
+        this.queryObject,
+        this.options.itemsPerPage,
+        this.options.page
+      ).then((res) => {
+        this.options.loading = false;
+        if (res.total < this.options.total) {
+          this.options.page = 1;
+        }
+        this.options.total = res.total;
+        if (this.options.total != 0) {
+          this.object = res.data;
+        }
       });
     },
     delObject() {

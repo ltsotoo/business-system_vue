@@ -10,19 +10,23 @@
                 <v-card-title>{{ i + 1 }}:{{ object[i].name }}</v-card-title>
                 <v-card-subtitle>
                   <v-row>
-                    <v-col>
+                    <v-col cols="4">
                       <v-text-field
                         label="完成百分比(%)"
                         v-model="object[i].finalPercentages"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="完成任务量(元)"
+                        label="完成任务量(CNY)"
                         v-model="object[i].targetLoad"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="目标任务量(元)"
+                        label="目标任务量(CNY)"
                         v-model="object[i].taskLoad"
                       >
                       </v-text-field>
@@ -40,19 +44,23 @@
                 >
                 <v-card-subtitle>
                   <v-row>
-                    <v-col>
+                    <v-col cols="4">
                       <v-text-field
                         label="完成百分比(%)"
                         v-model="object[i + 1].finalPercentages"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="完成任务量(元)"
+                        label="完成任务量(CNY)"
                         v-model="object[i + 1].targetLoad"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="目标任务量(元)"
+                        label="目标任务量(CNY)"
                         v-model="object[i + 1].taskLoad"
                       >
                       </v-text-field>
@@ -70,19 +78,23 @@
                 >
                 <v-card-subtitle>
                   <v-row>
-                    <v-col>
+                    <v-col cols="4">
                       <v-text-field
                         label="完成百分比(%)"
                         v-model="object[i + 2].finalPercentages"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="完成任务量(元)"
+                        label="完成任务量(CNY)"
                         v-model="object[i + 2].targetLoad"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="目标任务量(元)"
+                        label="目标任务量(CNY)"
                         v-model="object[i + 2].taskLoad"
                       >
                       </v-text-field>
@@ -100,19 +112,23 @@
                 >
                 <v-card-subtitle>
                   <v-row>
-                    <v-col>
+                    <v-col cols="4">
                       <v-text-field
                         label="完成百分比(%)"
                         v-model="object[i + 3].finalPercentages"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="完成任务量(元)"
+                        label="完成任务量(CNY)"
                         v-model="object[i + 3].targetLoad"
                       >
                       </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field
-                        label="目标任务量(元)"
+                        label="目标任务量(CNY)"
                         v-model="object[i + 3].taskLoad"
                       >
                       </v-text-field>

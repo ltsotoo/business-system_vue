@@ -9,7 +9,12 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditNameDialog(item)" v-if="nos.includes('08-01-03')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditNameDialog(item)"
+          v-if="nos.includes('08-01-03')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -127,9 +132,11 @@ export default {
     editNameDialog: false,
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getObject();
   },
   methods: {

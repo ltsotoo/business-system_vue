@@ -37,7 +37,7 @@ export const queryBidBonds = (bidBond, pageSize, pageNo) => {
         data: bidBond,
         params: {
             "pageSize": pageSize,
-            "PageNo": pageNo,
+            "pageNo": pageNo,
         }
     })
 }

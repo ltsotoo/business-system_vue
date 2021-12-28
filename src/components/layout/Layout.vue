@@ -98,9 +98,10 @@ export default {
   }),
   created() {
     this.object.name = localStorage.getItem("name");
-    var urls1 = decodeURIComponent(window.atob(localStorage.getItem("urls")));
-    if (!(urls1 == "null")) {
-      this.items = JSON.parse(urls1);
+    if (localStorage.getItem("urls") != "") {
+      this.items = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("urls")))
+      );
     }
   },
   methods: {

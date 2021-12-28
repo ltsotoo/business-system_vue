@@ -79,10 +79,12 @@ export default {
     },
   }),
   created() {
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getExpenseTypeItems();
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
   },
   methods: {
     getExpenseTypeItems() {

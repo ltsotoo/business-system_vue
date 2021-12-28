@@ -1,7 +1,10 @@
 <template>
   <v-container>
-    <productManage v-if="nos.includes('05-01-01')"/>
-    <settingProductType style="margin-top: 30px" v-if="nos.includes('05-02-01')"/>
+    <productManage v-if="nos.includes('05-01-01')" />
+    <settingProductType
+      style="margin-top: 30px"
+      v-if="nos.includes('05-02-01')"
+    />
   </v-container>
 </template>
 
@@ -18,9 +21,11 @@ export default {
     nos: [],
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
   },
 };
 </script>

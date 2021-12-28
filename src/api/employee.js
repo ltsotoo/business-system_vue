@@ -26,18 +26,18 @@ export const editEmployee = (employee) => {
 export const queryEmployee = (uid) => {
     return request({
         url: '/employee/' + uid,
-        method: 'get',
+        method: 'GET',
     })
 }
 
 export const queryEmployees = (employee, pageSize, pageNo) => {
     return request({
         url: '/employees',
-        method: 'post',
+        method: 'POST',
         data: employee,
         params: {
             "pageSize": pageSize,
-            "PageNo": pageNo,
+            "pageNo": pageNo,
         }
     })
 }

@@ -36,7 +36,16 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openAddTaskDialog(item)" v-if="item.isPreDeposit && item.status == 2">
+        <v-btn text color="success" @click="openEditDialog(item)">
+          <v-icon left> mdi-edit </v-icon>
+          编辑
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
+          @click="openAddTaskDialog(item)"
+          v-if="item.isPreDeposit && item.status == 2"
+        >
           <v-icon left> mdi-plus-thick </v-icon>
           预存款采购
         </v-btn>
@@ -51,6 +60,18 @@
         </v-btn>
       </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="editDialog"
+      v-if="editDialog"
+      width="1440px"
+      persistent
+      @click:outside="closeEditDialog"
+    >
+      <v-card>
+        <v-card-title>123</v-card-title>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       v-model="viewDialog"
@@ -207,6 +228,7 @@ export default {
     object: [],
 
     openUID: "",
+    editDialog: false,
     deleteDialog: false,
     viewDialog: false,
     addTaskDialog: false,
@@ -326,6 +348,14 @@ export default {
     closeDeleteDialog() {
       this.openUID = "";
       this.deleteDialog = false;
+    },
+    openEditDialog(item) {
+      this.openItem = item;
+      this.editDialog = true;
+    },
+    closeEditDialog() {
+      this.openItem = {};
+      this.editDialog = false;
     },
     deleteItem() {
       delContract(this.openUID).then((res) => {

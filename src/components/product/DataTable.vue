@@ -14,42 +14,63 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-row>
-          <v-btn text color="success" @click="openViewDialog(item)">
-            <v-icon left> mdi-eye </v-icon>
-            查看
-          </v-btn>
-          <div v-if="!isCart">
-            <v-btn text color="primary" @click="openEditBaseDialog(item)" v-if="nos.includes('05-01-03')">
+        <v-row no-gutters>
+          <v-col cols="12">
+            <v-btn text color="success" @click="openViewDialog(item)">
+              <v-icon left> mdi-eye </v-icon>
+              查看
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              text
+              color="primary"
+              @click="openEditBaseDialog(item)"
+              v-if="!isCart && nos.includes('05-01-03')"
+            >
               <v-icon left> mdi-pencil </v-icon>
               基础编辑
             </v-btn>
-            <v-btn text color="primary" @click="openEditNumberDialog(item.UID)" v-if="nos.includes('05-01-04')">
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              text
+              color="primary"
+              @click="openEditNumberDialog(item.UID)"
+              v-if="!isCart && nos.includes('05-01-04')"
+            >
               <v-icon left> mdi-pencil </v-icon>
               库存编辑
             </v-btn>
-            <v-btn text color="primary" @click="openEditPriceDialog(item.UID)" v-if="nos.includes('05-01-05')">
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              text
+              color="primary"
+              @click="openEditPriceDialog(item.UID)"
+              v-if="!isCart && nos.includes('05-01-05')"
+            >
               <v-icon left> mdi-pencil </v-icon>
               价格编辑
             </v-btn>
-            <!-- <v-btn
-            text
-            color="error"
-            @click="openDeleteDialog(item.UID)"
-            dark
-            disabled
-          >
-            <v-icon left> mdi-delete </v-icon>
-            删除
-          </v-btn> -->
-          </div>
-          <div v-if="isCart">
-            <v-btn text color="primary" @click="openP2CDialog(item)">
-              <v-icon left> mdi-plus-thick </v-icon>
-              添加
+          </v-col>
+          <!-- <v-col cols="12">
+            <v-btn
+              text
+              color="error"
+              @click="openDeleteDialog(item.UID)"
+              v-if="!isCart"
+            >
+              <v-icon left> mdi-delete </v-icon>
+              删除
             </v-btn>
-          </div>
+          </v-col> -->
         </v-row>
+
+        <v-btn text color="primary" @click="openP2CDialog(item)" v-if="isCart">
+          <v-icon left> mdi-plus-thick </v-icon>
+          添加
+        </v-btn>
       </template>
     </v-data-table>
 
@@ -218,6 +239,7 @@ export default {
         align: "center",
         value: "actions",
         sortable: false,
+        width: "10%",
       },
     ],
 
@@ -237,9 +259,11 @@ export default {
     object: [],
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getObject();
   },
   methods: {

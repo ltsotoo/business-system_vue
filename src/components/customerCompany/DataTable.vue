@@ -14,11 +14,21 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openAddCustomerDialog(item)" v-if="nos.includes('04-02-04')">
+        <v-btn
+          text
+          color="primary"
+          @click="openAddCustomerDialog(item)"
+          v-if="nos.includes('04-02-04')"
+        >
           <v-icon left> mdi-plus-thick </v-icon>
           添加客户
         </v-btn>
-        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('04-02-02')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditDialog(item)"
+          v-if="nos.includes('04-02-02')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -146,9 +156,11 @@ export default {
     addCustomerDialog: false,
   }),
   created() {
-    this.nos = JSON.parse(
-      decodeURIComponent(window.atob(localStorage.getItem("nos")))
-    );
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getObject();
   },
   methods: {
