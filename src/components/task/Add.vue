@@ -104,7 +104,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-textarea
-                    label="备注(阐述售价价格和定制要求)"
+                    label="备注(阐述定价原因和客户定制要求)"
                     v-model="openItem.remarks"
                     rows="6"
                     counter

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <v-card-title>录入合同</v-card-title>
+      <v-card-title>编辑合同</v-card-title>
     </v-card>
 
     <v-card style="margin-top: 10px">
@@ -29,7 +29,7 @@
               </v-text-field>
             </v-col>
           </v-row>
-          <v-row align="center">
+          <v-row>
             <v-col cols="12" v-if="!object.isOld">
               <v-radio-group v-model="object.isEntryCustomer" row>
                 <template v-slot:label>
@@ -46,6 +46,7 @@
                 item-value="UID"
                 :items="regionItems"
                 label="省份"
+                :rules="rules.must"
                 @change="getCompanyItems"
               ></v-select>
             </v-col>
@@ -376,13 +377,13 @@
                 <v-text-field
                   v-if="object.payType == 1"
                   label="价格(CNY)"
-                  v-model.number="openItem.price"
+                  v-model.number="openItem.standardPrice"
                   :rules="rules.money"
                 ></v-text-field>
                 <v-text-field
                   v-if="object.payType == 2"
                   label="价格(USD)"
-                  v-model.number="openItem.price"
+                  v-model.number="openItem.standardPriceUSD"
                   :rules="rules.money"
                 ></v-text-field>
               </v-col>
@@ -439,6 +440,18 @@ import { queryRegions, queryContractUnits } from "@/api/dictionary";
 import { queryProductTypes } from "@/api/productType";
 import { saveContract, entryContract } from "@/api/contract";
 export default {
+  props: {
+    parentObj: {
+      type: Object,
+      default: {},
+    },
+    refresh: {
+      type: Function,
+    },
+    closeDialog: {
+      type: Function,
+    },
+  },
   components: {
     entryProductDT,
     entryCartDT,
@@ -498,7 +511,6 @@ export default {
       name: "",
       specification: "",
     },
-    companyName: "",
 
     cartItems: [],
     openItem: {},
@@ -507,11 +519,30 @@ export default {
     submitBtnDisable: false,
   }),
   created() {
+    this.object = this.parentObj;
     this.getRegionItems();
     this.getContractUnitItems();
     this.getTypeItems();
+    this.init();
   },
   methods: {
+    init() {
+      if (
+        this.object.customer.companyUID &&
+        this.object.customer.companyUID != ""
+      ) {
+        queryCompanys({ regionUID: this.object.regionUID }).then((res) => {
+          this.companyItems = res.data;
+        });
+      }
+      if (this.object.customerUID && this.object.customerUID != "") {
+        queryCustomers({ companyUID: this.object.customer.companyUID }).then(
+          (res) => {
+            this.customerItems = res.data;
+          }
+        );
+      }
+    },
     getRegionItems() {
       queryRegions().then((res) => {
         this.regionItems = res.data;
@@ -561,11 +592,6 @@ export default {
       this.openItem.unit = product.unit;
       this.openItem.standardPrice = product.standardPrice;
       this.openItem.standardPriceUSD = product.standardPriceUSD;
-      if (this.object.payType == 1) {
-        this.openItem.price = this.openItem.standardPrice;
-      } else if (this.object.payType == 2) {
-        this.openItem.price = this.openItem.standardPriceUSD;
-      }
 
       this.p2cDialog = true;
     },
@@ -587,6 +613,12 @@ export default {
             return;
           }
         });
+        if (this.object.payType == 1) {
+          this.openItem.price = this.openItem.standardPrice;
+        }
+        if (this.object.payType == 2) {
+          this.openItem.price = this.openItem.standardPriceUSD;
+        }
         if (isNew) {
           this.openItem.totalPrice = this.openItem.number * this.openItem.price;
           this.object.totalAmount += this.openItem.totalPrice;
@@ -629,29 +661,23 @@ export default {
     },
 
     submit() {
-      var _this = this;
       this.submitBtnDisable = true;
       if (this.validateForm()) {
         this.object.tasks = this.cartItems;
         entryContract(this.object).then((res) => {
           this.$message.success("录入成功了!");
-          setTimeout(function () {
-            _this.$router.replace("/index");
-          }, 1000);
+          this.refresh();
+          this.closeDialog();
         });
-      } else {
-        this.submitBtnDisable = false;
       }
     },
 
     submitSave() {
-      var _this = this;
       this.submitBtnDisable = true;
       saveContract(this.object).then((res) => {
         this.$message.success("保存成功了!");
-        setTimeout(function () {
-          _this.$router.replace("/index");
-        }, 1000);
+        this.refresh();
+        this.closeDialog();
       });
     },
   },

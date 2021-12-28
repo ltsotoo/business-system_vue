@@ -15,6 +15,7 @@
             label="业务费用金额(元)"
             v-model="employee.office.businessMoney"
             readonly
+            v-if="nos.includes('00-02-01')"
           ></v-text-field>
         </v-col>
         <v-col cols="3">

@@ -36,8 +36,13 @@
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="success" @click="openEditDialog(item)">
-          <v-icon left> mdi-edit </v-icon>
+        <v-btn
+          text
+          color="primary"
+          @click="openEditDialog(item)"
+          v-if="item.status == 0"
+        >
+          <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
         <v-btn
@@ -53,7 +58,7 @@
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          v-if="item.status == -1 || item.status == 1"
+          v-if="item.status == -1"
         >
           <v-icon left> mdi-delete </v-icon>
           删除
@@ -64,12 +69,12 @@
     <v-dialog
       v-model="editDialog"
       v-if="editDialog"
-      width="1440px"
+      width="100%"
       persistent
       @click:outside="closeEditDialog"
     >
       <v-card>
-        <v-card-title>123</v-card-title>
+        <contractEditMyForms :parentObj="openItem" :refresh="getObject" :closeDialog="closeEditDialog"/>
       </v-card>
     </v-dialog>
 
@@ -124,12 +129,14 @@
 
 <script>
 import contractViewForms from "@/components/contract/ViewForms";
+import contractEditMyForms from "@/components/contract/EditMyForms";
 import taskAdd from "@/components/task/Add";
 import { delContract, queryContracts } from "@/api/contract";
 import { queryContractPayTypes } from "@/api/dictionary";
 export default {
   components: {
     contractViewForms,
+    contractEditMyForms,
     taskAdd,
   },
   props: {
@@ -350,7 +357,7 @@ export default {
       this.deleteDialog = false;
     },
     openEditDialog(item) {
-      this.openItem = item;
+      this.openItem = JSON.parse(JSON.stringify(item));
       this.editDialog = true;
     },
     closeEditDialog() {

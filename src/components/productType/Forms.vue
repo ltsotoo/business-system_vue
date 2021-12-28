@@ -17,35 +17,35 @@
           <v-col cols="12">
             <v-text-field
               v-model.number="object.pushMoneyPercentages"
-              label="标准提成百分比(小数)"
+              label="标准提成百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.pushMoneyPercentagesUp"
-              label="提成上涨百分比(小数)"
+              label="提成上涨百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.pushMoneyPercentagesDown"
-              label="提成下降百分比(小数)"
+              label="提成下降百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.businessMoneyPercentages"
-              label="标准业务费用百分比(小数)"
+              label="标准业务费用百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.businessMoneyPercentagesUp"
-              label="业务费用上涨百分比(小数)"
+              label="业务费用上涨百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>

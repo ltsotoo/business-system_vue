@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <div v-if="item.collectionStatus == 1">
-          <v-row v-if="nos.includes('00-04-01')">
+          <v-row v-if="nos.includes('00-04-01') && item.invoiceType != 1">
             <v-col>
               <v-btn text color="primary" @click="openAddInvoiceDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>

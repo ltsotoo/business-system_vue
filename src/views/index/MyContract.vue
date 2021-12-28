@@ -39,8 +39,6 @@
                   maxlength="20"
                 ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row>
               <v-col cols="3">
                 <v-select
                   v-model="queryObject.status"
@@ -161,23 +159,17 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col cols="auto">
+          <v-col cols="0.5">
             <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
           </v-col>
-          <v-col cols="auto">
+          <v-col cols="0.5">
             <v-btn rounded color="primary" dark @click="resetQueryForm">
               重置
             </v-btn>
           </v-col>
-          <v-spacer></v-spacer>
           <v-divider vertical></v-divider>
           <v-col cols="auto">
-            <v-btn
-              rounded
-              color="success"
-              dark
-              @click="goToEntry"
-            >
+            <v-btn rounded color="success" dark @click="goToEntry">
               录入
             </v-btn>
           </v-col>
@@ -210,7 +202,7 @@ export default {
   },
   data: () => ({
     regionItems: [],
-    statusItems: [],
+    statusItems: [{ text: "暂存", value: 0 }],
     payTypeItems: [],
     productionStatusItems: [],
     collectionStatusItems: [],
@@ -250,7 +242,9 @@ export default {
   methods: {
     getStatusItems() {
       queryContractStatus().then((res) => {
-        this.statusItems = res.data;
+        res.data.forEach((item) => {
+          this.statusItems.push(item)
+        });
       });
     },
     getPayTypeItems() {

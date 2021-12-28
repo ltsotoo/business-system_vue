@@ -9,28 +9,7 @@
       <v-card-subtitle>
         <v-form ref="form">
           <v-row>
-            <v-col cols="auto">
-              <v-radio-group v-model="object.isOld" row>
-                <template v-slot:label>
-                  <div>老合同录入</div>
-                </template>
-                <v-radio label="是" :value="true"></v-radio>
-                <v-radio label="否" :value="false"></v-radio>
-              </v-radio-group>
-            </v-col>
-            <v-col cols="6">
-              <v-text-field
-                label="合同编号"
-                v-model.trim="object.no"
-                counter
-                maxlength="50"
-                v-if="object.isOld"
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row align="center">
-            <v-col cols="12" v-if="!object.isOld">
+            <v-col cols="12">
               <v-radio-group v-model="object.isEntryCustomer" row>
                 <template v-slot:label>
                   <div>客户类型</div>
@@ -46,6 +25,7 @@
                 item-value="UID"
                 :items="regionItems"
                 label="省份"
+                :rules="rules.must"
                 @change="getCompanyItems"
               ></v-select>
             </v-col>
@@ -63,11 +43,7 @@
             <v-col cols="4" v-if="object.isEntryCustomer == true">
               <v-select
                 v-model="object.customerUID"
-                :item-text="
-                  (item) => {
-                    return item.name + '(联系电话：' + item.phone + ')';
-                  }
-                "
+                item-text="name"
                 item-value="UID"
                 :items="customerItems"
                 label="客户名称"
@@ -192,7 +168,7 @@
                 <v-radio label="美元" :value="2"></v-radio>
               </v-radio-group>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-text-field
                 label="合同总金额(CNY)"
                 v-model="object.totalAmount"
@@ -206,7 +182,7 @@
                 v-if="object.payType == 2"
               ></v-text-field>
             </v-col>
-            <v-col cols="8"></v-col>
+            <v-col cols="6"></v-col>
             <v-col cols="2">
               <v-radio-group v-model.number="object.isPreDeposit" row>
                 <template v-slot:label>
@@ -216,7 +192,7 @@
                 <v-radio label="否" :value="false"></v-radio>
               </v-radio-group>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="4">
               <v-text-field
                 v-if="object.isPreDeposit"
                 label="预存款金额"
@@ -225,7 +201,7 @@
               >
               </v-text-field>
             </v-col>
-            <v-col cols="8"></v-col>
+            <v-col cols="6"></v-col>
             <v-col cols="12">
               <v-radio-group v-model.number="object.isSpecial" row>
                 <template v-slot:label>
@@ -272,7 +248,7 @@
       </v-card-subtitle>
     </v-card>
 
-    <v-card style="margin-top: 10px" v-if="!object.isPreDeposit">
+    <v-card style="margin-top: 10px">
       <v-card-title>产品库：</v-card-title>
       <v-card-subtitle>
         <v-form ref="queryForm">
@@ -330,31 +306,14 @@
     </v-card>
 
     <v-row style="margin: 10px" justify="center">
-      <v-col cols="2"> </v-col>
-      <v-col cols="1">
-        <v-btn
-          x-large
-          color="success"
-          @click="submitSave"
-          :disabled="submitBtnDisable"
-        >
-          暂存
-        </v-btn>
-      </v-col>
-      <v-col cols="2"> </v-col>
-      <v-col cols="2">
-        <v-btn
-          x-large
-          color="success"
-          @click="submit"
-          :disabled="
-            submitBtnDisable || (!object.isPreDeposit && cartItems.length == 0)
-          "
-        >
-          提交
-        </v-btn>
-      </v-col>
-      <v-col cols="5"></v-col>
+      <v-btn
+        x-large
+        color="success"
+        @click="submit"
+        :disabled="submitBtnDisable || cartItems.length == 0"
+      >
+        提交
+      </v-btn>
     </v-row>
 
     <v-dialog v-model="p2cDialog" v-if="p2cDialog" width="800px" persistent>
@@ -376,13 +335,13 @@
                 <v-text-field
                   v-if="object.payType == 1"
                   label="价格(CNY)"
-                  v-model.number="openItem.price"
+                  v-model.number="openItem.standardPrice"
                   :rules="rules.money"
                 ></v-text-field>
                 <v-text-field
                   v-if="object.payType == 2"
                   label="价格(USD)"
-                  v-model.number="openItem.price"
+                  v-model.number="openItem.standardPriceUSD"
                   :rules="rules.money"
                 ></v-text-field>
               </v-col>
@@ -437,7 +396,7 @@ import entryCartDT from "./EntryCartDT";
 import { queryCompanys, queryCustomers } from "@/api/customer";
 import { queryRegions, queryContractUnits } from "@/api/dictionary";
 import { queryProductTypes } from "@/api/productType";
-import { saveContract, entryContract } from "@/api/contract";
+import { entryContract } from "@/api/contract";
 export default {
   components: {
     entryProductDT,
@@ -490,15 +449,12 @@ export default {
         researchGroup: "",
         phone: "",
       },
-
-      isOld: true,
     },
     queryObject: {
       typeUID: "",
       name: "",
       specification: "",
     },
-    companyName: "",
 
     cartItems: [],
     openItem: {},
@@ -561,11 +517,6 @@ export default {
       this.openItem.unit = product.unit;
       this.openItem.standardPrice = product.standardPrice;
       this.openItem.standardPriceUSD = product.standardPriceUSD;
-      if (this.object.payType == 1) {
-        this.openItem.price = this.openItem.standardPrice;
-      } else if (this.object.payType == 2) {
-        this.openItem.price = this.openItem.standardPriceUSD;
-      }
 
       this.p2cDialog = true;
     },
@@ -587,6 +538,12 @@ export default {
             return;
           }
         });
+        if (this.object.payType == 1) {
+          this.openItem.price = this.openItem.standardPrice;
+        }
+        if (this.object.payType == 2) {
+          this.openItem.price = this.openItem.standardPriceUSD;
+        }
         if (isNew) {
           this.openItem.totalPrice = this.openItem.number * this.openItem.price;
           this.object.totalAmount += this.openItem.totalPrice;
@@ -642,17 +599,6 @@ export default {
       } else {
         this.submitBtnDisable = false;
       }
-    },
-
-    submitSave() {
-      var _this = this;
-      this.submitBtnDisable = true;
-      saveContract(this.object).then((res) => {
-        this.$message.success("保存成功了!");
-        setTimeout(function () {
-          _this.$router.replace("/index");
-        }, 1000);
-      });
     },
   },
 };

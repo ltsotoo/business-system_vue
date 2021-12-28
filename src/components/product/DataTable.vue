@@ -247,7 +247,7 @@ export default {
       loading: false,
       total: 1,
       page: 1,
-      itemsPerPage: 10,
+      itemsPerPage: 5,
       openUID: "",
       viewDialog: false,
       editBaseDialog: false,

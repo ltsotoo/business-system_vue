@@ -9,6 +9,7 @@
             <v-text-field
               label="特殊合同提成百分比(%)"
               v-model.number="query.pushMoneyPercentages"
+              :rules="rules.money"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -27,27 +28,17 @@
         <div v-if="query.type > 2">
           <v-row align="center">
             <v-col cols="1"> 技术: </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-select
                 v-model="officeUID1"
                 :items="officeItems"
                 item-text="name"
                 item-value="UID"
                 label="办事处"
-                @change="getDepartmentItems1"
-              ></v-select>
-            </v-col>
-            <v-col cols="3">
-              <v-select
-                v-model="departmentUID1"
-                :items="departmentItems1"
-                item-text="name"
-                item-value="UID"
-                label="部门"
                 @change="getEmployeeItems1"
               ></v-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-select
                 v-model="query.technicianManUID"
                 :items="employeeItems1"
@@ -57,7 +48,7 @@
                 :rules="rules.must"
               ></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 v-model.number="query.technicianDays"
                 label="技术工作天数"
@@ -70,27 +61,17 @@
         <div v-if="query.type > 1">
           <v-row align="center">
             <v-col cols="1"> 采购: </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-select
                 v-model="officeUID2"
                 :items="officeItems"
                 item-text="name"
                 item-value="UID"
                 label="办事处"
-                @change="getDepartmentItems2"
-              ></v-select>
-            </v-col>
-            <v-col cols="3">
-              <v-select
-                v-model="departmentUID2"
-                :items="departmentItems2"
-                item-text="name"
-                item-value="UID"
-                label="部门"
                 @change="getEmployeeItems2"
               ></v-select>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="4">
               <v-select
                 v-model="query.purchaseManUID"
                 :items="employeeItems2"
@@ -100,7 +81,7 @@
                 :rules="rules.must"
               ></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-text-field
                 v-model.number="query.purchaseDays"
                 label="采购工作天数"
@@ -112,27 +93,17 @@
         </div>
         <v-row align="center">
           <v-col cols="1"> 仓库: </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               v-model="officeUID3"
               :items="officeItems"
               item-text="name"
               item-value="UID"
               label="办事处"
-              @change="getDepartmentItems3"
-            ></v-select>
-          </v-col>
-          <v-col cols="3">
-            <v-select
-              v-model="departmentUID3"
-              :items="departmentItems3"
-              item-text="name"
-              item-value="UID"
-              label="部门"
               @change="getEmployeeItems3"
             ></v-select>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               v-model="query.inventoryManUID"
               :items="employeeItems3"
@@ -145,27 +116,17 @@
         </v-row>
         <v-row align="center">
           <v-col cols="1"> 物流: </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               v-model="officeUID4"
               :items="officeItems"
               item-text="name"
               item-value="UID"
               label="办事处"
-              @change="getDepartmentItems4"
-            ></v-select>
-          </v-col>
-          <v-col cols="3">
-            <v-select
-              v-model="departmentUID4"
-              :items="departmentItems4"
-              item-text="name"
-              item-value="UID"
-              label="部门"
               @change="getEmployeeItems4"
             ></v-select>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="4">
             <v-select
               v-model="query.shipmentManUID"
               :items="employeeItems4"
@@ -195,8 +156,8 @@
 </template>
 
 <script>
-import { queryOffices, queryDepartments } from "@/api/oadrp";
-import { queryEmployees } from "@/api/employee";
+import { queryOffices } from "@/api/oadrp";
+import { querySPEmployees } from "@/api/employee";
 import { taskFlowApprove } from "@/api/task_flow";
 export default {
   props: {
@@ -224,7 +185,10 @@ export default {
   data: () => ({
     rules: {
       must: [(v) => !!v || "必填项"],
-      number: [(v) => /^[0-9]*$/.test(v) || "大于等于零的整数"],
+      number: [(v) => /^((0)|([1-9]\d*))$/.test(v) || "大于等于零的整数"],
+      money: [
+        (v) => /^\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
     typeItems: [
       { key: "标准/第三方有库存", value: 1 },
@@ -248,15 +212,7 @@ export default {
     officeUID2: "",
     officeUID3: "",
     officeUID4: "",
-    departmentUID1: "",
-    departmentUID2: "",
-    departmentUID3: "",
-    departmentUID4: "",
     officeItems: [],
-    departmentItems1: [],
-    departmentItems2: [],
-    departmentItems3: [],
-    departmentItems4: [],
     employeeItems1: [],
     employeeItems2: [],
     employeeItems3: [],
@@ -275,61 +231,12 @@ export default {
         this.officeItems = res.data;
       });
     },
-    getDepartmentItems1() {
-      this.departmentItems1 = [];
-      this.employeeItems1 = [];
-      this.departmentUID1 = "";
-      this.query.technicianManUID = "";
-      queryDepartments({
-        officeUID: this.officeUID1,
-        name: "",
-      }).then((res) => {
-        this.departmentItems1 = res.data;
-      });
-    },
-    getDepartmentItems2() {
-      this.departmentItems2 = [];
-      this.employeeItems2 = [];
-      this.departmentUID2 = "";
-      this.query.purchaseManUID = "";
-      queryDepartments({
-        officeUID: this.officeUID2,
-        name: "",
-      }).then((res) => {
-        this.departmentItems2 = res.data;
-      });
-    },
-    getDepartmentItems3() {
-      this.departmentItems3 = [];
-      this.employeeItems3 = [];
-      this.departmentUID3 = "";
-      this.query.inventoryManUID = "";
-      queryDepartments({
-        officeUID: this.officeUID3,
-        name: "",
-      }).then((res) => {
-        this.departmentItems3 = res.data;
-      });
-    },
-    getDepartmentItems4() {
-      this.departmentItems4 = [];
-      this.employeeItems4 = [];
-      this.departmentUID4 = "";
-      this.query.shipmentManUID = "";
-      queryDepartments({
-        officeUID: this.officeUID4,
-        name: "",
-      }).then((res) => {
-        this.departmentItems4 = res.data;
-      });
-    },
     getEmployeeItems1() {
       this.employeeItems1 = [];
       this.query.technicianManUID = "";
-      queryEmployees({
+      querySPEmployees({
         officeUID: this.officeUID1,
-        departmentUID: this.departmentUID1,
-        name: "",
+        permissionUID: "630ebd957a89435baeb5cb1a06228e9c",
       }).then((res) => {
         this.employeeItems1 = res.data;
       });
@@ -337,10 +244,9 @@ export default {
     getEmployeeItems2() {
       this.employeeItems2 = [];
       this.query.purchaseManUID = "";
-      queryEmployees({
+      querySPEmployees({
         officeUID: this.officeUID2,
-        departmentUID: this.departmentUID2,
-        name: "",
+        permissionUID: "ff861728924546fb8d7d0e1591506df5",
       }).then((res) => {
         this.employeeItems2 = res.data;
       });
@@ -348,10 +254,9 @@ export default {
     getEmployeeItems3() {
       this.employeeItems3 = [];
       this.query.inventoryManUID = "";
-      queryEmployees({
+      querySPEmployees({
         officeUID: this.officeUID3,
-        departmentUID: this.departmentUID3,
-        name: "",
+        permissionUID: "a162b3b7567a4d51b53ad70d2b3c76a2",
       }).then((res) => {
         this.employeeItems3 = res.data;
       });
@@ -359,10 +264,9 @@ export default {
     getEmployeeItems4() {
       this.employeeItems4 = [];
       this.query.shipmentManUID = "";
-      queryEmployees({
+      querySPEmployees({
         officeUID: this.officeUID4,
-        departmentUID: this.departmentUID4,
-        name: "",
+        permissionUID: "0f089b7de0394aefaf19902d3fb1a3e4",
       }).then((res) => {
         this.employeeItems4 = res.data;
       });

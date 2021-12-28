@@ -8,7 +8,11 @@
             <v-select
               v-model="task"
               :items="taskItems"
-              item-text="product.name"
+              :item-text="
+                (item) => {
+                  return item.product.name + '/' + item.ID;
+                }
+              "
               label="产品"
               return-object
               @change="setTaskUID"
@@ -147,7 +151,7 @@ export default {
     invoice: {
       UID: "",
       code: "",
-      money: 0,
+      money: "",
       paymentMoney: 0,
     },
     contractDateMenu: false,
@@ -165,7 +169,7 @@ export default {
         .toISOString()
         .substr(0, 10),
       moneyUSD: "",
-      money: "",
+      money: 0,
     },
   }),
   created() {
@@ -201,17 +205,43 @@ export default {
         this.$message.error("产品任务必选");
         return false;
       }
+      if (this.openItem.invoiceType > 1 && this.object.invoiceUID == "") {
+        this.$message.error("发票还未选择");
+        return false;
+      }
+
+      if (this.openItem.payType == 1) {
+        var taskTemp = this.task.totalPrice - this.task.paymentTotalPrice;
+        if (this.object.money > taskTemp) {
+          this.$message.error("回款金额不能大于产品任务剩余回款金额！");
+          return false;
+        }
+        var invoiceTemp = this.invoice.money - this.invoice.paymentMoney;
+        if (this.openItem.invoiceType > 1 && this.object.money > invoiceTemp) {
+          this.$message.error("回款金额不能大于发票剩余回款金额！");
+          return false;
+        }
+      }
 
       return this.$refs.form.validate();
     },
     setTaskUID() {
       this.object.taskUID = this.task.UID;
       if (this.openItem.payType == 1) {
-        this.object.money = this.task.totalPrice - this.task.paymentTotalPrice;
+        var temp = this.task.totalPrice - this.task.paymentTotalPrice;
+        if (this.object.money == "" || this.object.money > temp) {
+          this.object.money = temp;
+        }
       }
     },
     setInvoiceUID() {
       this.object.invoiceUID = this.invoice.UID;
+      if (this.openItem.payType == 1) {
+        var temp = this.invoice.money - this.invoice.paymentMoney;
+        if (this.object.money == "" || this.object.money > temp) {
+          this.object.money = temp;
+        }
+      }
     },
   },
 };

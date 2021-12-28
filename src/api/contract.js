@@ -1,5 +1,13 @@
 import request from './base'
 
+export const saveContract = (contract) => {
+    return request({
+        url: '/contractSave',
+        method: 'POST',
+        data: contract
+    })
+}
+
 export const entryContract = (contract) => {
     return request({
         url: '/contract',

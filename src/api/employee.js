@@ -42,6 +42,14 @@ export const queryEmployees = (employee, pageSize, pageNo) => {
     })
 }
 
+export const querySPEmployees = (queryObj) => {
+    return request({
+        url: '/spEmployees',
+        method: 'POST',
+        data: queryObj,
+    })
+}
+
 export const queryMy = () => {
     return request({
         url: '/my',
