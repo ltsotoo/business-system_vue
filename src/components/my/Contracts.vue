@@ -12,6 +12,10 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.totalAmount`]="{ item }">
+        <div v-if="item.payType == 1">{{ item.totalAmount }}元</div>
+        <div v-if="item.payType == 2">{{ item.totalAmount }}美元</div>
+      </template>
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
         <div v-if="item.status != 3">
           <v-chip :color="compareColor(item.estimatedDeliveryDate)">
@@ -24,9 +28,6 @@
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
-      </template>
-      <template v-slot:[`item.payType`]="{ item }">
-        {{ payTypeToText(item.payType) }}
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item) }}
@@ -74,7 +75,11 @@
       @click:outside="closeEditDialog"
     >
       <v-card>
-        <contractEditMyForms :parentObj="openItem" :refresh="getObject" :closeDialog="closeEditDialog"/>
+        <contractEditMyForms
+          :parentObj="openItem"
+          :refresh="getObject"
+          :closeDialog="closeEditDialog"
+        />
       </v-card>
     </v-dialog>
 
@@ -132,7 +137,6 @@ import contractViewForms from "@/components/contract/ViewForms";
 import contractEditMyForms from "@/components/contract/EditMyForms";
 import taskAdd from "@/components/task/Add";
 import { delContract, queryContracts } from "@/api/contract";
-import { queryContractPayTypes } from "@/api/dictionary";
 export default {
   components: {
     contractViewForms,
@@ -190,12 +194,6 @@ export default {
         sortable: false,
       },
       {
-        text: "付款类型",
-        align: "center",
-        value: "payType",
-        sortable: false,
-      },
-      {
         text: "总金额",
         align: "center",
         value: "totalAmount",
@@ -205,12 +203,6 @@ export default {
         text: "总回款额(CNY)",
         align: "center",
         value: "paymentTotalAmount",
-        sortable: false,
-      },
-      {
-        text: "总回款额(USD)",
-        align: "center",
-        value: "paymentTotalAmountUSD",
         sortable: false,
       },
       {
@@ -241,15 +233,9 @@ export default {
     addTaskDialog: false,
   }),
   created() {
-    this.getPayTypeItems();
     this.getObject();
   },
   methods: {
-    getPayTypeItems() {
-      queryContractPayTypes().then((res) => {
-        this.payTypeItems = res.data;
-      });
-    },
     getObject() {
       var employeeUID = localStorage.getItem("uid");
       if (employeeUID && employeeUID != "") {
@@ -321,16 +307,6 @@ export default {
         return "orange";
       }
       return "green";
-    },
-    payTypeToText(payType) {
-      var temp = "";
-      this.payTypeItems.some((item) => {
-        if (item.value == payType) {
-          temp = item.text;
-          return;
-        }
-      });
-      return temp;
     },
     openAddTaskDialog(item) {
       this.openItem = item;

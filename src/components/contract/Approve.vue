@@ -153,9 +153,13 @@
     <v-card style="margin-top: 1px">
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="pass">通过</v-btn>
+        <v-btn color="primary" rounded @click="pass" :disabled="submitDisabled"
+          >通过</v-btn
+        >
         <v-spacer></v-spacer>
-        <v-btn color="error" rounded @click="fail">驳回</v-btn>
+        <v-btn color="error" rounded @click="fail" :disabled="submitDisabled"
+          >驳回</v-btn
+        >
         <v-spacer></v-spacer>
       </v-card-actions>
     </v-card>
@@ -207,6 +211,8 @@ export default {
     },
   },
   data: () => ({
+    submitDisabled: false,
+
     invoiceTypeItems: [],
     object: {
       contractUnit: {},
@@ -246,8 +252,12 @@ export default {
       });
     },
     pass() {
-      this.object.status = 2;
-      this.submit();
+      if (this.$refs.taskApproveDataTable.check()) {
+        this.object.status = 2;
+        this.submit();
+      } else {
+        this.$message.error("该合同还有产品未分配！");
+      }
     },
     fail() {
       this.object.status = -1;
@@ -255,17 +265,14 @@ export default {
     },
     submit() {
       var _this = this;
-      if (this.$refs.taskApproveDataTable.check()) {
-        contractApprove({
-          UID: this.object.UID,
-          status: this.object.status,
-        }).then((res) => {
-          _this.parentFun();
-          _this.closeDialog();
-        });
-      } else {
-        this.$message.error("该合同还有产品未分配！！！");
-      }
+      this.submitDisabled = true;
+      contractApprove({
+        UID: this.object.UID,
+        status: this.object.status,
+      }).then((res) => {
+        _this.parentFun();
+        _this.closeDialog();
+      });
     },
     changeText(data) {
       this.invoiceTypeItems.some((item) => {

@@ -123,12 +123,6 @@
                 label="回款总金额(CNY)"
               ></v-text-field>
             </v-col>
-            <v-col cols="3" v-if="object.payType != 1">
-              <v-text-field
-                v-model="object.paymentTotalAmountUSD"
-                label="回款总金额(USD)"
-              ></v-text-field>
-            </v-col>
           </v-row>
 
           <v-row>

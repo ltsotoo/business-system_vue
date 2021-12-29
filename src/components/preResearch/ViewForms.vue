@@ -77,10 +77,9 @@ export default {
   },
   methods: {
     getObject() {
-      var _this = this;
       queryPreResearch(this.uid).then((res) => {
         this.object = res.data;
-        this.object.status = _this.statusToText(this.object.status);
+        this.object.status = this.statusToText(this.object.status);
       });
     },
     statusToText(status) {

@@ -122,12 +122,6 @@
                 label="回款总金额(CNY)"
               ></v-text-field>
             </v-col>
-            <v-col cols="3" v-if="object.payType != 1">
-              <v-text-field
-                v-model="object.paymentTotalAmountUSD"
-                label="回款总金额(USD)"
-              ></v-text-field>
-            </v-col>
           </v-row>
 
           <v-row>
@@ -196,6 +190,7 @@
       :parentObject="object.tasks"
       v-else
     />
+    <viewInvoices style="margin-top: 5px" :openItem="openItem"></viewInvoices>
     <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
   </div>
 </template>
@@ -204,6 +199,7 @@
 import taskDataTable from "../task/ViewDataTable";
 import myViewTask from "../my/ViewTask";
 import viewPayments from "../payment/View";
+import viewInvoices from "../invoice/ViewForms";
 import { queryContract } from "@/api/contract";
 import { queryContractInvoiceTypes } from "@/api/dictionary";
 export default {
@@ -211,6 +207,7 @@ export default {
     taskDataTable,
     myViewTask,
     viewPayments,
+    viewInvoices,
   },
   props: {
     openItem: {

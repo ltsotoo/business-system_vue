@@ -23,24 +23,9 @@ export const editInvoice = (invoice) => {
     })
 }
 
-export const approve = (uid) => {
-    return request({
-        url: '/invoice/approve/' + uid,
-        method: 'PUT',
-    })
-}
-
 export const queryInvoices = (contractUID) => {
     return request({
         url: '/invoices/' + contractUID,
         method: 'GET',
-    })
-}
-
-export const queryInvoicesAndPayments = (contract) => {
-    return request({
-        url: '/invoicesAndPayments',
-        method: 'POST',
-        data: contract,
     })
 }

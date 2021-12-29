@@ -520,6 +520,9 @@ export default {
   }),
   created() {
     this.object = this.parentObj;
+    if (this.object.no != "") {
+      this.object.isOld = true;
+    }
     this.getRegionItems();
     this.getContractUnitItems();
     this.getTypeItems();

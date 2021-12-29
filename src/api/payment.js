@@ -23,3 +23,10 @@ export const changeCollectionStatus = (object) => {
         data: object,
     })
 }
+
+export const queryPayments = (contractUID) => {
+    return request({
+        url: '/payments/' + contractUID,
+        method: 'GET',
+    })
+}

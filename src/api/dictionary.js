@@ -82,10 +82,6 @@ export const queryContractPayTypes = () => {
     return queryDictionaries("ContractPayType", "")
 }
 
-export const queryInvoiceStatus = () => {
-    return queryDictionaries("InvoiceStatus", "")
-}
-
 export const queryTaskStatus = () => {
     return queryDictionaries("TaskStatus", "")
 }

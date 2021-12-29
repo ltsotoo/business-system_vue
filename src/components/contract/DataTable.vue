@@ -22,11 +22,16 @@
           {{ item.estimatedDeliveryDate }}
         </div>
       </template>
+      <template v-slot:[`item.totalAmount`]="{ item }">
+        <div v-if="item.payType == 1">
+          {{item.totalAmount}}元
+        </div>
+        <div v-if="item.payType == 2">
+          {{item.totalAmount}}美元
+        </div>
+      </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
-      </template>
-      <template v-slot:[`item.payType`]="{ item }">
-        {{ payTypeToText(item.payType) }}
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item) }}
@@ -120,7 +125,6 @@ import approve from "./Approve";
 import contractEditForms from "./EditForms";
 import contractViewForms from "./ViewForms";
 import { queryContracts } from "@/api/contract";
-import { queryContractPayTypes } from "@/api/dictionary";
 
 export default {
   components: {
@@ -193,15 +197,15 @@ export default {
         sortable: false,
       },
       {
-        text: "总金额",
-        align: "center",
-        value: "totalAmount",
-        sortable: false,
-      },
-      {
         text: "付款类型",
         align: "center",
         value: "payType",
+        sortable: false,
+      },
+      {
+        text: "总金额",
+        align: "center",
+        value: "totalAmount",
         sortable: false,
       },
       {
@@ -243,15 +247,9 @@ export default {
         decodeURIComponent(window.atob(localStorage.getItem("nos")))
       );
     }
-    this.getPayTypeItems();
     this.getObject();
   },
   methods: {
-    getPayTypeItems() {
-      queryContractPayTypes().then((res) => {
-        this.payTypeItems = res.data;
-      });
-    },
     getObject() {
       this.options.loading = true;
       queryContracts(
@@ -338,16 +336,6 @@ export default {
       var temp = "";
       this.collectionStatusItems.some((item) => {
         if (item.value == status) {
-          temp = item.text;
-          return;
-        }
-      });
-      return temp;
-    },
-    payTypeToText(payType) {
-      var temp = "";
-      this.payTypeItems.some((item) => {
-        if (item.value == payType) {
           temp = item.text;
           return;
         }

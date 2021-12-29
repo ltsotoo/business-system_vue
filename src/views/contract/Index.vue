@@ -50,7 +50,7 @@
                     item-value="UID"
                     label="办事处"
                     :clearable="nos.includes('02-01-02')"
-                    :readonly="nos.includes('02-01-01')"
+                    :disabled="nos.includes('02-01-01')"
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
@@ -329,6 +329,9 @@ export default {
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();
+      if (!this.nos.includes("02-01-02") && this.nos.includes("02-01-01")) {
+        this.queryObject.officeUID = localStorage.getItem("office");
+      }
       this.$refs.contractDataTable.getObject();
     },
   },

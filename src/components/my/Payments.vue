@@ -76,7 +76,8 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <paymentView :openItem="openItem" />
+      <invoiceViewForms :openItem="openItem" />
+      <paymentView :openItem="openItem" style="margin-top: 3px"/>
     </v-dialog>
 
     <v-dialog
@@ -248,17 +249,10 @@ export default {
         value: "totalAmount",
         sortable: false,
       },
-
       {
         text: "总回款额(CNY)",
         align: "center",
         value: "paymentTotalAmount",
-        sortable: false,
-      },
-      {
-        text: "总回款额(USD)",
-        align: "center",
-        value: "paymentTotalAmountUSD",
         sortable: false,
       },
       {
