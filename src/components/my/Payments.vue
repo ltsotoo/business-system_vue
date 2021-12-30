@@ -49,7 +49,7 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row v-if="nos.includes('00-04-02')">
+          <v-row v-if="nos.includes('00-04-02') && !item.isPreDeposit">
             <v-col>
               <v-btn text color="primary" @click="openAddPaymentDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>

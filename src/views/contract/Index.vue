@@ -50,7 +50,8 @@
                     item-value="UID"
                     label="办事处"
                     :clearable="nos.includes('02-01-02')"
-                    :disabled="nos.includes('02-01-01')"
+                    :disabled="!nos.includes('02-01-02')
+                    "
                   ></v-select>
                 </v-col>
                 <v-col cols="3">
@@ -213,6 +214,7 @@
           :statusItems="statusItems"
           :productionStatusItems="productionStatusItems"
           :collectionStatusItems="collectionStatusItems"
+          :payTypeItems="payTypeItems"
         />
       </v-card-subtitle>
     </v-card>
@@ -277,7 +279,7 @@ export default {
         decodeURIComponent(window.atob(localStorage.getItem("nos")))
       );
     }
-    if (this.nos.includes("02-01-01")) {
+    if (!this.nos.includes("02-01-02")) {
       this.queryObject.officeUID = localStorage.getItem("office");
     }
     this.getOfficeItems();
@@ -329,7 +331,7 @@ export default {
     },
     resetQueryForm() {
       this.$refs.queryForm.reset();
-      if (!this.nos.includes("02-01-02") && this.nos.includes("02-01-01")) {
+      if (!this.nos.includes("02-01-02")) {
         this.queryObject.officeUID = localStorage.getItem("office");
       }
       this.$refs.contractDataTable.getObject();

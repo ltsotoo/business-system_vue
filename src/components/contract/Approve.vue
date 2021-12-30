@@ -67,12 +67,6 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.contractUnit.text"
-                label="签订单位"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
                 v-model="text.isSpecial"
                 label="特殊合同"
               ></v-text-field>
@@ -86,12 +80,18 @@
             <v-col cols="3" v-if="object.isPreDeposit">
               <v-text-field
                 v-model="object.preDeposit"
-                label="预存款金额(元)"
+                label="预存款金额"
               ></v-text-field>
             </v-col>
           </v-row>
 
           <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractUnit.text"
+                label="签订单位"
+              ></v-text-field>
+            </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="text.payType"
@@ -144,9 +144,9 @@
       style="margin-top: 1px"
       ref="taskApproveDataTable"
       :isSpecial="isSpecial"
-      :openType="4"
       :openUID="openUID"
       :parentObject="object.tasks"
+      :payType="object.payType"
       v-if="object.tasks"
     />
 
@@ -264,14 +264,13 @@ export default {
       this.submit();
     },
     submit() {
-      var _this = this;
       this.submitDisabled = true;
       contractApprove({
         UID: this.object.UID,
         status: this.object.status,
       }).then((res) => {
-        _this.parentFun();
-        _this.closeDialog();
+        this.parentFun();
+        this.closeDialog();
       });
     },
     changeText(data) {

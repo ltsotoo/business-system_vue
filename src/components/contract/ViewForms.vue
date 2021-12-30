@@ -79,12 +79,6 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.contractUnit.text"
-                label="签订单位"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
                 v-model="text.isSpecial"
                 label="特殊合同"
               ></v-text-field>
@@ -97,13 +91,25 @@
             </v-col>
             <v-col cols="3" v-if="object.isPreDeposit">
               <v-text-field
+                v-model="object.preDepositRecord"
+                label="预存款金额"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" v-if="object.isPreDeposit">
+              <v-text-field
                 v-model="object.preDeposit"
-                label="预存款金额(元)"
+                label="剩余预存款金额"
               ></v-text-field>
             </v-col>
           </v-row>
 
           <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractUnit.text"
+                label="签订单位"
+              ></v-text-field>
+            </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="text.payType"
@@ -178,17 +184,12 @@
         </v-form>
       </v-card-subtitle>
     </v-card>
-    <myViewTask
-      style="margin-top: 5px"
-      ref="taskDataTable"
-      :parentObject="object.tasks"
-      v-if="isIndex"
-    />
     <taskDataTable
       style="margin-top: 5px"
       ref="taskDataTable"
       :parentObject="object.tasks"
-      v-else
+      :payType="object.payType"
+      :isIndex="isIndex"
     />
     <viewInvoices style="margin-top: 5px" :openItem="openItem"></viewInvoices>
     <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
@@ -197,7 +198,6 @@
 
 <script>
 import taskDataTable from "../task/ViewDataTable";
-import myViewTask from "../my/ViewTask";
 import viewPayments from "../payment/View";
 import viewInvoices from "../invoice/ViewForms";
 import { queryContract } from "@/api/contract";
@@ -205,7 +205,6 @@ import { queryContractInvoiceTypes } from "@/api/dictionary";
 export default {
   components: {
     taskDataTable,
-    myViewTask,
     viewPayments,
     viewInvoices,
   },

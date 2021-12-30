@@ -9,11 +9,11 @@
         class="elevation-1"
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
-          <div>
-            <v-col> 人民币：{{ item.standardPrice }} </v-col>
+          <div v-if="payType == 1">
+            {{ item.standardPrice }} (元)
           </div>
-          <div>
-            <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
+          <div v-if="payType == 2">
+            {{ item.standardPriceUSD }} (美元)
           </div>
         </template>
         <template v-slot:[`item.startDate`]="{ item }">
@@ -54,10 +54,18 @@
           {{ stautsToText(item.status) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-btn text color="success" @click="openViewDialog(item)">
-            <v-icon left> mdi-eye </v-icon>
-            查看备注
-          </v-btn>
+          <div v-if="isIndex && item.status == 6">
+            <v-btn text color="success" @click="openViewDialog(item)">
+              <v-icon left> mdi-eye </v-icon>
+              查看快递单号
+            </v-btn>
+          </div>
+          <div v-if="!isIndex">
+            <v-btn text color="success" @click="openViewDialog(item)">
+              <v-icon left> mdi-eye </v-icon>
+              查看备注
+            </v-btn>
+          </div>
         </template>
       </v-data-table>
     </v-card>
@@ -92,6 +100,14 @@ export default {
     parentObject: {
       type: Array,
       default: () => [],
+    },
+    payType: {
+      type: Number,
+      default: 0,
+    },
+    isIndex: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({

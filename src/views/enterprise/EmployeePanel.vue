@@ -13,8 +13,8 @@
               item-value="UID"
               label="办事处"
               @change="getDepartmentItems"
-              :clearable="nos.includes('08-03-01')"
-              :readonly="nos.includes('08-03-02')"
+              :clearable="nos.includes('08-03-02')"
+              :readonly="!nos.includes('08-03-02')"
             ></v-select>
           </v-col>
           <v-col cols="2">

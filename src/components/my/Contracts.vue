@@ -50,7 +50,7 @@
           text
           color="primary"
           @click="openAddTaskDialog(item)"
-          v-if="item.isPreDeposit && item.status == 2"
+          v-if="item.isPreDeposit && item.status == 2 && item.productionStatus == 1"
         >
           <v-icon left> mdi-plus-thick </v-icon>
           预存款采购
@@ -159,9 +159,12 @@ export default {
       type: Array,
       default: () => [],
     },
+    payTypeItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
-    payTypeItems: [],
     headers: [
       {
         text: "合同编号",
@@ -191,6 +194,12 @@ export default {
         text: "实际交货日期",
         align: "center",
         value: "endDeliveryDate",
+        sortable: false,
+      },
+      {
+        text: "剩余预存款金额",
+        align: "center",
+        value: "preDeposit",
         sortable: false,
       },
       {

@@ -37,7 +37,6 @@ export default {
     getInvoiceItems() {
       queryInvoices(this.openItem.UID).then((res) => {
         this.invoiceItems = res.data;
-        this.statusToText();
       });
     },
   },

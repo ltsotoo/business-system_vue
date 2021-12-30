@@ -2,6 +2,7 @@
   <v-card>
     <v-card-title v-if="openType == 0">任务分配</v-card-title>
     <v-card-title v-if="openType == 2">任务重置</v-card-title>
+    <v-card-title v-if="openType == 3">预存款任务分配</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row v-if="isSpecial">
@@ -44,7 +45,7 @@
                 :items="employeeItems1"
                 item-text="name"
                 item-value="UID"
-                label="员工"
+                label="技术"
                 :rules="rules.must"
               ></v-select>
             </v-col>
@@ -77,7 +78,7 @@
                 :items="employeeItems2"
                 item-text="name"
                 item-value="UID"
-                label="员工"
+                label="采购"
                 :rules="rules.must"
               ></v-select>
             </v-col>
@@ -109,7 +110,7 @@
               :items="employeeItems3"
               item-text="name"
               item-value="UID"
-              label="员工"
+              label="仓库"
               :rules="rules.must"
             ></v-select>
           </v-col>
@@ -132,7 +133,7 @@
               :items="employeeItems4"
               item-text="name"
               item-value="UID"
-              label="员工"
+              label="物流"
               :rules="rules.must"
             ></v-select>
           </v-col>
@@ -205,6 +206,7 @@ export default {
       technicianDays: 0,
       purchaseDays: 0,
       isReset: false,
+      isPre: false,
       aRemarks: "",
       pushMoneyPercentages: 0,
     },
@@ -223,6 +225,9 @@ export default {
     this.getOfficeItems();
     if (this.openType == 2) {
       this.query.isReset = true;
+    }
+    if (this.openType == 3) {
+      this.query.isPre = true;
     }
   },
   methods: {
@@ -272,11 +277,10 @@ export default {
       });
     },
     submit() {
-      var _this = this;
       if (this.validateForm()) {
         taskFlowApprove(this.query).then((res) => {
-          _this.parentFun(_this.openUID);
-          _this.closeDialog();
+          this.parentFun(this.openUID);
+          this.closeDialog();
         });
       }
     },

@@ -164,11 +164,10 @@ export default {
   },
   methods: {
     getObject() {
-      var _this = this;
       queryPreResearchTask(this.openUID).then((res) => {
         this.object = res.data;
         if (e.status != 1) {
-          _this.realEndDate = res.data.realEndDate.substr(
+          this.realEndDate = res.data.realEndDate.substr(
             0,
             res.data.startDate.indexOf("T")
           );

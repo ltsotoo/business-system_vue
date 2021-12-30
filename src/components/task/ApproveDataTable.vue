@@ -15,12 +15,12 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.standardPrice`]="{ item }">
-        <div>
-          <v-col> 人民币：{{ item.standardPrice }} </v-col>
-        </div>
-        <div>
-          <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
-        </div>
+        <div v-if="payType == 1">
+            {{ item.standardPrice }} (元)
+          </div>
+          <div v-if="payType == 2">
+            {{ item.standardPriceUSD }} (美元)
+          </div>
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
@@ -80,6 +80,10 @@ export default {
       type: String,
       default: "",
     },
+    payType: {
+      type: Number,
+      default: 0,
+    },
     isSpecial: {
       type: Boolean,
       default: false,
@@ -124,7 +128,7 @@ export default {
         align: "center",
         value: "remarks",
         sortable: false,
-        width: "450px",
+        width: "25%",
       },
       {
         text: "负责人",

@@ -14,7 +14,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                label="可用预存款金额"
+                label="剩余预存款金额"
                 v-model="contract.preDeposit"
               ></v-text-field>
             </v-col>
@@ -92,13 +92,13 @@
                   <v-text-field
                     v-if="contract.payType == 1"
                     label="价格(CNY)"
-                    v-model.number="openItem.standardPrice"
+                    v-model.number="openItem.price"
                     :rules="rules.money"
                   ></v-text-field>
                   <v-text-field
                     v-if="contract.payType == 2"
                     label="价格(USD)"
-                    v-model.number="openItem.standardPriceUSD"
+                    v-model.number="openItem.price"
                     :rules="rules.money"
                   ></v-text-field>
                 </v-col>
@@ -189,6 +189,12 @@ export default {
       this.openItem.unit = product.unit;
       this.openItem.standardPrice = product.standardPrice;
       this.openItem.standardPriceUSD = product.standardPriceUSD;
+      if (this.contract.payType == 1) {
+        this.openItem.price = this.openItem.standardPrice;
+      }
+      if (this.contract.payType == 2) {
+        this.openItem.price = this.openItem.standardPriceUSD;
+      }
 
       this.p2cDialog = true;
     },
@@ -200,26 +206,20 @@ export default {
     addTaskToContract() {
       this.submitDisabled = true;
       if (this.validateForm()) {
-        if (this.contract.payType == 1) {
-          this.openItem.price = this.openItem.standardPrice;
-        }
-        if (this.contract.payType == 2) {
-          this.openItem.price = this.openItem.standardPriceUSD;
-        }
         this.openItem.contractUID = this.contract.UID;
         this.openItem.totalPrice = this.openItem.number * this.openItem.price;
-        addTask(this.openItem).then((res) => {
-          this.$message.success("合同产品添加成功！");
-          if (this.contract.payType == 1) {
-            this.contract.preDeposit =
-              this.contract.preDeposit - this.openItem.totalPrice;
-          } else if (this.contract.payType == 2) {
-            this.contract.preDeposit =
-              this.contract.preDeposit - this.openItem.totalPrice;
-          }
-          this.closeP2CDialog();
+        if (this.contract.preDeposit < this.openItem.totalPrice) {
+          this.$message.error("预存款余额不足！");
           this.submitDisabled = false;
-        });
+        } else {
+          addTask(this.openItem).then((res) => {
+            this.contract.preDeposit =
+              this.contract.preDeposit - this.openItem.totalPrice;
+            this.$message.success("合同产品添加成功！");
+            this.closeP2CDialog();
+            this.submitDisabled = false;
+          });
+        }
       } else {
         this.submitDisabled = false;
       }

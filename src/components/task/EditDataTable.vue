@@ -9,11 +9,11 @@
         class="elevation-1"
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
-          <div>
-            <v-col> 人民币：{{ item.standardPrice }} </v-col>
+          <div v-if="payType == 1">
+            {{ item.standardPrice }} (元)
           </div>
-          <div>
-            <v-col> 美元：{{ item.standardPriceUSD }} </v-col>
+          <div v-if="payType == 2">
+            {{ item.standardPriceUSD }} (美元)
           </div>
         </template>
         <template v-slot:[`item.remarks`]="{ item }">
@@ -45,7 +45,7 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div v-if="item.status == 0">
-            <v-btn text color="primary" @click="openApproveDialog(item.UID)">
+            <v-btn text color="primary" @click="openApprovePreDialog(item.UID)">
               <v-icon left> mdi-pencil </v-icon>
               分配
             </v-btn>
@@ -67,6 +67,16 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="approvePreDialog" v-if="approvePreDialog" width="800px">
+      <approve
+        :isSpecial="isSpecial"
+        :openUID="openUID"
+        :parentFun="refresh"
+        :closeDialog="closeApprovePreDialog"
+        :openType="3"
+      />
+    </v-dialog>
 
     <v-dialog v-model="approveDialog" v-if="approveDialog" width="800px">
       <approve
@@ -116,6 +126,10 @@ export default {
     parentObject: {
       type: Array,
       default: () => [],
+    },
+    payType: {
+      type: Number,
+      default: 0,
     },
     refresh: {
       type: Function,
@@ -169,12 +183,18 @@ export default {
     },
     openUID: "",
     approveDialog: false,
+    approvePreDialog: false,
     rejectDialog: false,
   }),
   created() {
     this.getStatusItems();
   },
   methods: {
+    getStatusItems() {
+      queryTaskStatus().then((res) => {
+        this.statusItems = res.data;
+      });
+    },
     openApproveDialog(uid) {
       this.openUID = uid;
       this.approveDialog = true;
@@ -183,11 +203,15 @@ export default {
       this.openUID = "";
       this.approveDialog = false;
     },
-    getStatusItems() {
-      queryTaskStatus().then((res) => {
-        this.statusItems = res.data;
-      });
+    openApprovePreDialog(uid) {
+      this.openUID = uid;
+      this.approvePreDialog = true;
     },
+    closeApprovePreDialog() {
+      this.openUID = "";
+      this.approvePreDialog = false;
+    },
+
     stautsToText(status) {
       var temp = "";
       this.statusItems.some((item) => {

@@ -35,7 +35,7 @@
                   item-value="UID"
                   label="办事处"
                   :clearable="nos.includes('07-01-02')"
-                  :readonly="nos.includes('07-01-01')"
+                  :readonly="!nos.includes('07-01-02')"
                 ></v-select>
               </v-col>
               <v-col cols="3">
@@ -162,7 +162,7 @@ export default {
         decodeURIComponent(window.atob(localStorage.getItem("nos")))
       );
     }
-    if (this.nos.includes("07-01-01")) {
+    if (!this.nos.includes("07-01-02")) {
       this.queryObject.officeUID = localStorage.getItem("office");
     }
     this.getExpenseTypeItems();

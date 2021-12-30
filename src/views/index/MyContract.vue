@@ -182,6 +182,7 @@
         :statusItems="statusItems"
         :productionStatusItems="productionStatusItems"
         :collectionStatusItems="collectionStatusItems"
+        :payTypeItems="payTypeItems"
       />
     </v-card-subtitle>
   </v-card>

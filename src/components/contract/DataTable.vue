@@ -23,12 +23,8 @@
         </div>
       </template>
       <template v-slot:[`item.totalAmount`]="{ item }">
-        <div v-if="item.payType == 1">
-          {{item.totalAmount}}元
-        </div>
-        <div v-if="item.payType == 2">
-          {{item.totalAmount}}美元
-        </div>
+        <div v-if="item.payType == 1">{{ item.totalAmount }}元</div>
+        <div v-if="item.payType == 2">{{ item.totalAmount }}美元</div>
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
@@ -108,7 +104,6 @@
       <contractEditForms
         :isSpecial="options.openItem.isSpecial"
         :openItem="options.openItem"
-        :openType="editNum"
         :refresh="getObject"
         :closeDialog="closeEditDialog"
         :statusItems="statusItems"
@@ -148,11 +143,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    payTypeItems: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     nos: [],
 
-    payTypeItems: [],
     headers: [
       {
         text: "合同编号",
@@ -191,27 +189,15 @@ export default {
         sortable: false,
       },
       {
-        text: "实际交货日期",
+        text: "剩余预存款金额",
         align: "center",
-        value: "endDeliveryDate",
-        sortable: false,
-      },
-      {
-        text: "付款类型",
-        align: "center",
-        value: "payType",
+        value: "preDeposit",
         sortable: false,
       },
       {
         text: "总金额",
         align: "center",
         value: "totalAmount",
-        sortable: false,
-      },
-      {
-        text: "特殊合同",
-        align: "center",
-        value: "isSpecial",
         sortable: false,
       },
       {
@@ -238,7 +224,6 @@ export default {
       viewDialog: false,
       editDialog: false,
     },
-    editNum: 2,
     object: [],
   }),
   created() {

@@ -80,12 +80,6 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                v-model="object.contractUnit.text"
-                label="签订单位"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
                 v-model="text.isSpecial"
                 label="特殊合同"
               ></v-text-field>
@@ -98,13 +92,25 @@
             </v-col>
             <v-col cols="3" v-if="object.isPreDeposit">
               <v-text-field
+                v-model="object.preDepositRecord"
+                label="预存款金额"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3" v-if="object.isPreDeposit">
+              <v-text-field
                 v-model="object.preDeposit"
-                label="预存款金额(元)"
+                label="剩余预存款金额"
               ></v-text-field>
             </v-col>
           </v-row>
 
           <v-row>
+            <v-col cols="3">
+              <v-text-field
+                v-model="object.contractUnit.text"
+                label="签订单位"
+              ></v-text-field>
+            </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="text.payType"
@@ -183,6 +189,7 @@
       style="margin-top: 5px"
       :isSpecial="isSpecial"
       :parentObject="object.tasks"
+      :payType="object.payType"
       v-if="object.tasks"
       :refresh="refreshAll"
     />
@@ -238,9 +245,7 @@
         >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" rounded @click="approveToFinish"
-            >确定</v-btn
-          >
+          <v-btn color="error" rounded @click="approveToFinish">确定</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="primary" rounded @click="closeProductionToFinishDialog"
             >取消</v-btn
@@ -320,10 +325,6 @@ export default {
     isSpecial: {
       type: Boolean,
       default: false,
-    },
-    openType: {
-      type: Number,
-      default: 0,
     },
     openItem: {
       type: Object,

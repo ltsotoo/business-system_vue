@@ -377,13 +377,13 @@
                 <v-text-field
                   v-if="object.payType == 1"
                   label="价格(CNY)"
-                  v-model.number="openItem.standardPrice"
+                  v-model.number="openItem.price"
                   :rules="rules.money"
                 ></v-text-field>
                 <v-text-field
                   v-if="object.payType == 2"
                   label="价格(USD)"
-                  v-model.number="openItem.standardPriceUSD"
+                  v-model.number="openItem.price"
                   :rules="rules.money"
                 ></v-text-field>
               </v-col>
@@ -595,6 +595,11 @@ export default {
       this.openItem.unit = product.unit;
       this.openItem.standardPrice = product.standardPrice;
       this.openItem.standardPriceUSD = product.standardPriceUSD;
+      if (this.object.payType == 1) {
+        this.openItem.price = this.openItem.standardPrice;
+      } else if (this.object.payType == 2) {
+        this.openItem.price = this.openItem.standardPriceUSD;
+      }
 
       this.p2cDialog = true;
     },
@@ -616,12 +621,6 @@ export default {
             return;
           }
         });
-        if (this.object.payType == 1) {
-          this.openItem.price = this.openItem.standardPrice;
-        }
-        if (this.object.payType == 2) {
-          this.openItem.price = this.openItem.standardPriceUSD;
-        }
         if (isNew) {
           this.openItem.totalPrice = this.openItem.number * this.openItem.price;
           this.object.totalAmount += this.openItem.totalPrice;

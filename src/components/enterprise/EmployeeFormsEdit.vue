@@ -215,11 +215,10 @@ export default {
       }
     },
     getObject() {
-      var _this = this;
       queryEmployee(this.openUID).then((res) => {
         this.object = res.data;
         if (res.data.officeUID != "" && res.data.departmentUID != "") {
-          _this.getDepartmentItems();
+          this.getDepartmentItems();
         }
       });
     },

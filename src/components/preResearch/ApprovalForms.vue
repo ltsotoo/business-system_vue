@@ -53,16 +53,6 @@
                 item-text="name"
                 item-value="UID"
                 label="办事处"
-                @change="getDepartmentItems"
-              ></v-select>
-            </v-col>
-            <v-col cols="4">
-              <v-select
-                v-model="departmentUID"
-                :items="departmentItems"
-                item-text="name"
-                item-value="UID"
-                label="部门"
                 @change="getEmployeeItems"
               ></v-select>
             </v-col>
@@ -72,7 +62,7 @@
                 :items="employeeItems"
                 item-text="name"
                 item-value="UID"
-                label="员工"
+                label="技术"
                 :rules="rules.must"
               ></v-select>
             </v-col>
@@ -133,8 +123,8 @@
 </template>
 
 <script>
-import { queryOffices, queryDepartments } from "@/api/oadrp";
-import { queryEmployees } from "@/api/employee";
+import { queryOffices } from "@/api/oadrp";
+import { querySPEmployees } from "@/api/employee";
 import { approve } from "@/api/preResearch";
 export default {
   props: {
@@ -166,11 +156,9 @@ export default {
     },
 
     officeItems: [],
-    departmentItems: [],
     employeeItems: [],
 
     officeUID: "",
-    departmentUID: "",
   }),
   created() {
     this.object = this.preResearch;
@@ -188,27 +176,16 @@ export default {
       });
     },
     getOfficeItems() {
-      this.departmentItems = [];
-      this.departmentUID = "";
-      this.employeeItems = [];
-      this.object.employeeUID = "";
       queryOffices().then((res) => {
         this.officeItems = res.data;
       });
     },
-    getDepartmentItems() {
+    getEmployeeItems() {
       this.employeeItems = [];
       this.object.employeeUID = "";
-      queryDepartments({
+      querySPEmployees({
         officeUID: this.officeUID,
-      }).then((res) => {
-        this.departmentItems = res.data;
-      });
-    },
-    getEmployeeItems() {
-      queryEmployees({
-        officeUID: this.officeUID,
-        departmentUID: this.departmentUID,
+        permissionUID: "630ebd957a89435baeb5cb1a06228e9c",
       }).then((res) => {
         this.employeeItems = res.data;
       });
