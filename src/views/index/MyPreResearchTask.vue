@@ -41,10 +41,12 @@ export default {
   data: () => ({
     statusItems: [],
     queryObject: {
+      employeeUID: "",
       status: 0,
     },
   }),
   created() {
+    this.queryObject.employeeUID = localStorage.getItem("uid");
     this.getStatusItems();
   },
   methods: {

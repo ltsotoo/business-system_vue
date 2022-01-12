@@ -23,15 +23,22 @@
           </v-col>
           <v-col cols="12">
             <v-text-field
+              v-model.number="object.minPushMoneyPercentages"
+              label="最低提成百分比(%)"
+              :rules="rules.money"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
               v-model.number="object.pushMoneyPercentagesUp"
-              label="提成上涨百分比(%)"
+              label="高出价格的提成百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
               v-model.number="object.pushMoneyPercentagesDown"
-              label="提成下降百分比(%)"
+              label="低价提成下降的百分比(%)"
               :rules="rules.money"
             ></v-text-field>
           </v-col>
@@ -45,9 +52,18 @@
           <v-col cols="12">
             <v-text-field
               v-model.number="object.businessMoneyPercentagesUp"
-              label="业务费用上涨百分比(%)"
+              label="高出价格的业务费用百分比(%)"
               :rules="rules.money"
             ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-select
+              v-model="object.isTaskLoad"
+              :items="isTaskLoadItems"
+              item-text="text"
+              item-value="value"
+              label="是否计算任务量"
+            ></v-select>
           </v-col>
         </v-row>
       </v-form>
@@ -83,6 +99,10 @@ export default {
     },
   },
   data: () => ({
+    isTaskLoadItems: [
+      { value: true, text: "是" },
+      { value: false, text: "否" },
+    ],
     submitDisabled: false,
     rules: {
       must: [(v) => !!v || "必填项"],
@@ -93,10 +113,12 @@ export default {
     object: {
       name: "",
       pushMoneyPercentages: 0,
+      minPushMoneyPercentages: 0,
       pushMoneyPercentagesUp: 0,
       pushMoneyPercentagesDown: 0,
       businessMoneyPercentages: 0,
       businessMoneyPercentagesUp: 0,
+      isTaskLoad: true,
     },
   }),
   created() {

@@ -30,3 +30,10 @@ export const queryPayments = (contractUID) => {
         method: 'GET',
     })
 }
+
+export const queryPrePayments = (contractUID) => {
+    return request({
+        url: '/prePayments/' + contractUID,
+        method: 'GET',
+    })
+}

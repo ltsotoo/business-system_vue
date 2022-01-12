@@ -92,6 +92,12 @@ export default {
   data: () => ({
     headers: [
       {
+        text: "ID",
+        align: "center",
+        sortable: false,
+        value: "ID",
+      },
+      {
         text: "产品",
         align: "center",
         sortable: false,

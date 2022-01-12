@@ -5,7 +5,15 @@
       <v-form ref="queryForm">
         <v-row align="baseline">
           <v-spacer></v-spacer>
-          <v-col cols="4">
+          <v-col cols="3">
+            <v-text-field
+              label="合同编号"
+              v-model.trim="queryObject.contractNo"
+              clearable
+              maxlength="30"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
             <v-select
               v-model="queryObject.status"
               :items="statusItems"
@@ -41,6 +49,7 @@ export default {
   data: () => ({
     statusItems: [],
     queryObject: {
+      contractNo: "",
       status: null,
     },
   }),

@@ -12,7 +12,7 @@
         <v-btn
           text
           color="primary"
-          @click="openEditNameDialog(item)"
+          @click="openEditDialog(item)"
           v-if="nos.includes('08-01-03')"
         >
           <v-icon left> mdi-pencil </v-icon>
@@ -30,14 +30,14 @@
     </v-data-table>
 
     <v-dialog
-      v-model="editNameDialog"
-      v-if="editNameDialog"
-      width="600px"
+      v-model="editDialog"
+      v-if="editDialog"
+      width="1000px"
       persistent
-      @click:outside="closeEditNameDialog"
+      @click:outside="closeEditDialog"
     >
       <officeFormsEdit
-        :closeDialog="closeEditNameDialog"
+        :closeDialog="closeEditDialog"
         :refresh="getObject"
         :openUID="openUID"
       />
@@ -129,7 +129,7 @@ export default {
     object: [],
     openUID: "",
     delDialog: false,
-    editNameDialog: false,
+    editDialog: false,
   }),
   created() {
     if (localStorage.getItem("nos") != "") {
@@ -162,13 +162,13 @@ export default {
       this.delDialog = false;
     },
 
-    openEditNameDialog(item) {
+    openEditDialog(item) {
       this.openUID = item.UID;
-      this.editNameDialog = true;
+      this.editDialog = true;
     },
-    closeEditNameDialog() {
+    closeEditDialog() {
       this.openUID = "";
-      this.editNameDialog = false;
+      this.editDialog = false;
     },
   },
 };

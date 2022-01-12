@@ -14,9 +14,7 @@
     <settingRegion style="margin-top: 10px" v-if="nos.includes('08-05-01')" />
     <settingUnit style="margin-top: 10px" v-if="nos.includes('08-06-01')" />
 
-    <v-expansion-panels multiple style="margin-top: 30px">
-      <!-- <YearClearingPanel /> -->
-    </v-expansion-panels>
+    <settingMonthPlan style="margin-top: 10px" />
   </v-container>
 </template>
 
@@ -24,21 +22,21 @@
 import officePanel from "./OfficePanel";
 import departmentPanel from "./DepartmentPanel";
 import employeePanel from "./EmployeePanel";
-import YearClearingPanel from "./YearClearingPanel";
 
 import settingRole from "./SettingRole";
 import settingRegion from "./SettingRegion";
 import settingUnit from "./SettingUnit";
+import settingMonthPlan from "./SettingMonthPlan";
 export default {
   components: {
     officePanel,
     departmentPanel,
     employeePanel,
-    YearClearingPanel,
 
     settingRole,
     settingRegion,
     settingUnit,
+    settingMonthPlan,
   },
   data: () => ({
     nos: [],

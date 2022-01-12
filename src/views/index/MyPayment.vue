@@ -32,7 +32,7 @@
                   label="合同编号"
                   v-model.trim="queryObject.no"
                   clearable
-                  maxlength="20"
+                  maxlength="30"
                 ></v-text-field>
               </v-col>
               <v-col cols="3">
@@ -45,6 +45,21 @@
               </v-col>
             </v-row>
             <v-row>
+              <v-col cols="3">
+                <v-text-field
+                  label="客户单位"
+                  v-model.trim="queryObject.companyName"
+                  clearable
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  label="客户名称"
+                  v-model.trim="queryObject.customerName"
+                  clearable
+                  maxlength="20"
+                ></v-text-field>
+              </v-col>
               <v-col cols="3">
                 <v-menu
                   ref="startMenu"
@@ -103,6 +118,16 @@
                   </v-date-picker>
                 </v-menu>
               </v-col>
+              <v-col cols="3">
+                <v-select
+                  v-model="queryObject.isPreDeposit"
+                  :items="isPreDepositItems"
+                  item-text="text"
+                  item-value="value"
+                  label="预存款合同"
+                  clearable
+                ></v-select>
+              </v-col>
             </v-row>
           </v-col>
           <v-spacer></v-spacer>
@@ -152,7 +177,14 @@ export default {
       invoiceType: 0,
       startDate: "",
       endDate: "",
+      companyName: "",
+      customerName: "",
+      isPreDeposit: null,
     },
+    isPreDepositItems: [
+      { text: "是", value: 1 },
+      { text: "否", value: 2 },
+    ],
   }),
   created() {
     this.getCollectionStatusItems();

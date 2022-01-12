@@ -14,18 +14,6 @@
         </v-col>
       </v-row>
 
-      <v-row v-if="aRemarks != ''">
-        <v-col cols="12">
-          <v-textarea
-            label="审批人员备注"
-            readonly
-            auto-grow
-            rows="1"
-            v-model="aRemarks"
-          ></v-textarea>
-        </v-col>
-      </v-row>
-
       <v-row v-for="(taskRemark, i) in taskRemarks" :key="i" align="center">
         <v-col cols="12">
           <v-textarea
@@ -48,10 +36,6 @@ export default {
     taskRemarks: {
       type: Array,
       default: () => [],
-    },
-    aRemarks: {
-      type: String,
-      default: "",
     },
     remarks: {
       type: String,

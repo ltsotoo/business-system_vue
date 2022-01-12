@@ -4,7 +4,7 @@
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.number"
               label="编号"
@@ -13,11 +13,61 @@
             >
             </v-text-field>
           </v-col>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-text-field
               v-model.trim="object.name"
               label="名称"
               :rules="rules.must"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.money"
+              label="可提成金额(元)"
+              :rules="rules.money"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.moneyCold"
+              label="年底提成金额(元)"
+              :rules="rules.money"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.taskLoad"
+              label="今年目标量(元)"
+              :rules="rules.money"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.targetLoad"
+              label="今年完成量(元)"
+              :rules="rules.money"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model.number="object.businessMoney"
+              label="可用业务费金额(元)"
+              :rules="rules.money"
               counter
               maxlength="50"
             >
@@ -66,6 +116,9 @@ export default {
     },
     rules: {
       must: [(v) => !!v || "必填项"],
+      money: [
+        (v) => /^-?\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
+      ],
     },
   }),
   created() {

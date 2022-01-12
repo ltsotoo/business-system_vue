@@ -12,6 +12,10 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.isPreDeposit`]="{ item }">
+        <div v-if="item.isPreDeposit">是</div>
+        <div v-else>否</div>
+      </template>
       <template v-slot:[`item.payType`]="{ item }">
         {{ payTypeToText(item.payType) }}
       </template>
@@ -49,7 +53,7 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row v-if="nos.includes('00-04-02') && !item.isPreDeposit">
+          <v-row v-if="nos.includes('00-04-02')">
             <v-col>
               <v-btn text color="primary" @click="openAddPaymentDialog(item)">
                 <v-icon left> mdi-pencil </v-icon>
@@ -77,7 +81,12 @@
       @click:outside="closeViewDialog"
     >
       <invoiceViewForms :openItem="openItem" />
-      <paymentView :openItem="openItem" style="margin-top: 3px"/>
+      <paymentPreView
+        :openItem="openItem"
+        style="margin-top: 3px"
+        v-if="openItem.isPreDeposit"
+      />
+      <paymentView :openItem="openItem" style="margin-top: 3px" />
     </v-dialog>
 
     <v-dialog
@@ -88,9 +97,9 @@
       @click:outside="closeAddInvoiceDialog"
     >
       <v-card>
-        <v-card-title></v-card-title>
+        <v-card-title>业务员备注</v-card-title>
         <v-card-subtitle>
-          <v-form readonly>
+          <v-form disabled>
             <v-row>
               <v-col cols="4">
                 <div class="text-h5">
@@ -102,16 +111,17 @@
                   开票类型:{{ invoiceTypeToText(openItem.invoiceType) }}
                 </div>
               </v-col>
-              <v-col cols="4">
-                <div class="text-h5">发票总金额:{{ openItem.totalAmount }}</div>
+              <v-col cols="4" v-if="!openItem.isPreDeposit">
+                <div class="text-h5">合同总金额:{{ openItem.totalAmount }}</div>
               </v-col>
-              <v-col
-                cols="12"
-                v-if="
-                  openItem.invoiceContent && openItem.invoiceContent.length > 0
-                "
-              >
+              <v-col cols="4" v-if="openItem.isPreDeposit">
+                <div class="text-h5">
+                  合同预存款总金额:{{ openItem.preDepositRecord }}
+                </div>
+              </v-col>
+              <v-col cols="12">
                 <v-textarea
+                  class="text-h5"
                   v-model="openItem.invoiceContent"
                   label="开票备注"
                   rows="1"
@@ -126,6 +136,7 @@
       <invoiceViewForms
         :openItem="openItem"
         style="margin-top: 3px"
+        :openType="2"
       ></invoiceViewForms>
       <invoiceAddForms
         :openItem="openItem"
@@ -141,12 +152,70 @@
       persistent
       @click:outside="closeAddPaymentDialog"
     >
-      <paymentView :openItem="openItem"></paymentView>
+      <v-card>
+        <v-card-title>业务员备注</v-card-title>
+        <v-card-subtitle>
+          <v-form disabled>
+            <v-row>
+              <v-col cols="4" v-if="!openItem.isPreDeposit">
+                <v-text-field
+                  class="text-h5"
+                  label="合同总金额"
+                  v-model="openItem.totalAmount"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="4" v-if="openItem.isPreDeposit">
+                <v-text-field
+                  class="text-h5"
+                  label="合同预存款总金额"
+                  v-model="openItem.preDepositRecord"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  class="text-h5"
+                  v-model="openItem.paymentContent"
+                  label="回款方式"
+                  rows="1"
+                  auto-grow
+                >
+                </v-textarea>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-subtitle>
+      </v-card>
+      <paymentView
+        :openItem="openItem"
+        :openType="2"
+        :refresh="getObject"
+        :closeDialog="closeAddPaymentDialog"
+        style="margin-top: 3px"
+        v-if="!openItem.isPreDeposit"
+      ></paymentView>
       <paymentAddForms
         :openItem="openItem"
         :refresh="getObject"
         :closeDialog="closeAddPaymentDialog"
         style="margin-top: 3px"
+        v-if="!openItem.isPreDeposit"
+      />
+      <prePaymentView
+        :openItem="openItem"
+        :openType="2"
+        :refresh="getObject"
+        :closeDialog="closeAddPaymentDialog"
+        style="margin-top: 3px"
+        v-if="openItem.isPreDeposit"
+      ></prePaymentView>
+      <prePaymentAddForms
+        :openItem="openItem"
+        :refresh="getObject"
+        :closeDialog="closeAddPaymentDialog"
+        style="margin-top: 3px"
+        v-if="openItem.isPreDeposit"
       />
     </v-dialog>
 
@@ -175,8 +244,11 @@ import { changeCollectionStatus } from "@/api/payment";
 
 import invoiceViewForms from "@/components/invoice/ViewForms";
 import invoiceAddForms from "@/components/invoice/AddForms";
-import paymentAddForms from "@/components/payment/AddFroms";
+import paymentAddForms from "@/components/payment/AddForms";
+import paymentPreView from "@/components/payment/PreView";
 import paymentView from "@/components/payment/View";
+import prePaymentAddForms from "@/components/payment/PreAddForms";
+import prePaymentView from "@/components/payment/PreView";
 
 export default {
   components: {
@@ -184,7 +256,10 @@ export default {
     invoiceAddForms,
 
     paymentAddForms,
+    paymentPreView,
     paymentView,
+    prePaymentAddForms,
+    prePaymentView,
   },
   props: {
     queryObject: {
@@ -241,6 +316,12 @@ export default {
         text: "付款类型",
         align: "center",
         value: "payType",
+        sortable: false,
+      },
+      {
+        text: "是否预存款",
+        align: "center",
+        value: "isPreDeposit",
         sortable: false,
       },
       {

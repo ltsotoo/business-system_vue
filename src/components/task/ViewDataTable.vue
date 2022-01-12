@@ -9,12 +9,8 @@
         class="elevation-1"
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
-          <div v-if="payType == 1">
-            {{ item.standardPrice }} (元)
-          </div>
-          <div v-if="payType == 2">
-            {{ item.standardPriceUSD }} (美元)
-          </div>
+          <div v-if="payType == 1">{{ item.standardPrice }} (元)</div>
+          <div v-if="payType == 2">{{ item.standardPriceUSD }} (美元)</div>
         </template>
         <template v-slot:[`item.startDate`]="{ item }">
           <div v-if="item.type == 3">设计：{{ item.technicianStartDate }}</div>
@@ -77,11 +73,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <viewTaskRemarks
-        :aRemarks="openItem.aRemarks"
-        :remarks="openItem.remarks"
-        :taskRemarks="taskRemarks"
-      />
+      <viewTaskRemarks :remarks="openItem.remarks" :taskRemarks="taskRemarks" />
     </v-dialog>
   </div>
 </template>
@@ -109,10 +101,20 @@ export default {
       type: Boolean,
       default: false,
     },
+    indexHeaders: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     statusItems: [],
     headers: [
+      {
+        text: "ID",
+        align: "center",
+        sortable: false,
+        value: "ID",
+      },
       {
         text: "产品",
         align: "center",
@@ -166,6 +168,9 @@ export default {
     taskRemarks: [],
   }),
   created() {
+    if (this.isIndex) {
+      this.headers = this.indexHeaders;
+    }
     this.getStatusItems();
   },
   methods: {

@@ -193,6 +193,11 @@
       v-if="object.tasks"
       :refresh="refreshAll"
     />
+    <preViewPayments
+      style="margin-top: 5px"
+      :openItem="openItem"
+      v-if="openItem.isPreDeposit"
+    ></preViewPayments>
     <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
 
     <v-card style="margin-top: 5px">
@@ -308,6 +313,7 @@
 
 <script>
 import editTaskDataTable from "../task/EditDataTable";
+import preViewPayments from "../payment/PreView";
 import viewPayments from "../payment/View";
 import { queryContract } from "@/api/contract";
 import {
@@ -319,6 +325,7 @@ import { changeCollectionStatus } from "@/api/payment";
 export default {
   components: {
     editTaskDataTable,
+    preViewPayments,
     viewPayments,
   },
   props: {

@@ -11,7 +11,7 @@
                   label="合同编号"
                   v-model.trim="queryObject.no"
                   clearable
-                  maxlength="20"
+                  maxlength="30"
                 ></v-text-field>
               </v-col>
               <v-col cols="3">

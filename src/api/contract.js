@@ -42,3 +42,10 @@ export const queryContracts = (queryObject, pageSize, pageNo) => {
     })
 }
 
+export const editPreContract = (contract) => {
+    return request({
+        url: '/preContract',
+        method: 'PUT',
+        data: contract
+    })
+}

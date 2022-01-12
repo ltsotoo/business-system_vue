@@ -8,6 +8,10 @@
         itemsPerPageOptions: [5, 10, 20],
       }"
     >
+      <template v-slot:[`item.isTaskLoad`]="{ item }">
+        <div v-if="item.isTaskLoad">是</div>
+        <div v-else>否</div>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           text
@@ -94,13 +98,19 @@ export default {
         sortable: false,
       },
       {
-        text: "提成上涨百分比(%)",
+        text: "最低提成百分比(%)",
+        align: "center",
+        value: "minPushMoneyPercentages",
+        sortable: false,
+      },
+      {
+        text: "高出价格的提成百分比(%)",
         align: "center",
         value: "pushMoneyPercentagesUp",
         sortable: false,
       },
       {
-        text: "提成下降百分比(%)",
+        text: "低价提成下降的百分比(%)",
         align: "center",
         value: "pushMoneyPercentagesDown",
         sortable: false,
@@ -112,9 +122,15 @@ export default {
         sortable: false,
       },
       {
-        text: "业务费用上涨百分比(%)",
+        text: "高出价格的业务费用百分比(%)",
         align: "center",
         value: "businessMoneyPercentagesUp",
+        sortable: false,
+      },
+      {
+        text: "是否计算任务量",
+        align: "center",
+        value: "isTaskLoad",
         sortable: false,
       },
       {

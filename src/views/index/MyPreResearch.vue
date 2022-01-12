@@ -89,12 +89,14 @@ export default {
     },
     statusItems: [],
     queryObject: {
+      employeeUID: "",
       status: 0,
     },
     remarks: "",
     createDialog: false,
   }),
   created() {
+    this.queryObject.employeeUID = localStorage.getItem("uid");
     this.getStatusItems();
   },
   methods: {

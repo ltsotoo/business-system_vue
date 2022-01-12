@@ -79,16 +79,7 @@
           </v-row>
         </v-form>
       </v-card-subtitle>
-      <v-card-actions v-if="object.status == 3">
-        <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="pass" :disabled="submitDisabled">
-          提交
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" rounded @click="closeDialog"> 取消 </v-btn>
-        <v-spacer></v-spacer>
-      </v-card-actions>
-      <v-card-actions v-else>
+      <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" rounded @click="pass" :disabled="submitDisabled">
           通过

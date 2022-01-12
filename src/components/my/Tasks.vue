@@ -91,14 +91,16 @@
         <v-row><v-col> </v-col></v-row>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="success" @click="openRemarksDialog(item)">
-          <v-icon left> mdi-eye </v-icon>
-          查看备注
-        </v-btn>
-
-        <v-btn
-          text
-          color="primary"
+        <v-row><v-col> </v-col></v-row>
+        <v-row>
+          <v-col>
+            <v-btn text color="success" @click="openRemarksDialog(item)">
+              <v-icon left> mdi-eye </v-icon>
+              查看备注
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row
           v-if="
             (item.status == 1 && item.technicianManUID == employeeUID) ||
             (item.status == 2 && item.purchaseManUID == employeeUID) ||
@@ -106,19 +108,20 @@
             (item.status == 4 && item.technicianManUID == employeeUID) ||
             (item.status == 5 && item.shipmentManUID == employeeUID)
           "
-          @click="openNextDialog(item)"
         >
-          <v-icon left> mdi-chevron-right-circle-outline </v-icon>
-          下一步
-        </v-btn>
+          <v-col>
+            <v-btn text color="primary" @click="openNextDialog(item)">
+              <v-icon left> mdi-chevron-right-circle-outline </v-icon>
+              下一步
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row><v-col> </v-col></v-row>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="remarksDialog" v-if="remarksDialog" width="1000px">
-      <viewTaskRemarks
-        :taskRemarks="taskRemarks"
-        :aRemarks="openItem.aRemarks"
-      />
+    <v-dialog v-model="remarksDialog" v-if="remarksDialog" width="1200px">
+      <viewTaskRemarks :taskRemarks="taskRemarks" />
     </v-dialog>
 
     <v-dialog v-model="nextDialog" width="1000px" persistent v-if="nextDialog">
@@ -164,6 +167,13 @@ export default {
   data: () => ({
     employeeUID: "",
     headers: [
+      { text: "ID", align: "center", sortable: false, value: "product.ID" },
+      {
+        text: "合同编号",
+        align: "center",
+        sortable: false,
+        value: "contract.no",
+      },
       { text: "产品", align: "center", sortable: false, value: "product.name" },
       { text: "需求数量", align: "center", value: "number", sortable: false },
       {
@@ -178,25 +188,29 @@ export default {
         align: "center",
         value: "employees",
         sortable: false,
+        width: "7%",
       },
-      { text: "状态", align: "center", value: "status", sortable: false },
+      { text: "状态", align: "center", value: "status", sortable: false,width: "7%", },
       {
         text: "开始时间",
         align: "center",
         value: "startDate",
         sortable: false,
+        width: "13%",
       },
       {
         text: "限时天数",
         align: "center",
         value: "days",
         sortable: false,
+        width: "9%",
       },
       {
         text: "实际提交时间",
         align: "center",
         value: "realEndDate",
         sortable: false,
+        width: "13%",
       },
       {
         text: "操作",

@@ -9,12 +9,8 @@
         class="elevation-1"
       >
         <template v-slot:[`item.standardPrice`]="{ item }">
-          <div v-if="payType == 1">
-            {{ item.standardPrice }} (元)
-          </div>
-          <div v-if="payType == 2">
-            {{ item.standardPriceUSD }} (美元)
-          </div>
+          <div v-if="payType == 1">{{ item.standardPrice }} (元)</div>
+          <div v-if="payType == 2">{{ item.standardPriceUSD }} (美元)</div>
         </template>
         <template v-slot:[`item.remarks`]="{ item }">
           <v-textarea
@@ -139,6 +135,12 @@ export default {
     submitDisabled: false,
     statusItems: [],
     headers: [
+      {
+        text: "ID",
+        align: "center",
+        sortable: false,
+        value: "ID",
+      },
       {
         text: "产品",
         align: "center",

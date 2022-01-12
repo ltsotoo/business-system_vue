@@ -209,7 +209,7 @@ export default {
         this.openItem.contractUID = this.contract.UID;
         this.openItem.totalPrice = this.openItem.number * this.openItem.price;
         if (this.contract.preDeposit < this.openItem.totalPrice) {
-          this.$message.error("预存款余额不足！");
+          this.$message.error("可用预存款余额不足！");
           this.submitDisabled = false;
         } else {
           addTask(this.openItem).then((res) => {

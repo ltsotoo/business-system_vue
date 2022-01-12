@@ -190,8 +190,10 @@
       :parentObject="object.tasks"
       :payType="object.payType"
       :isIndex="isIndex"
+      :indexHeaders="headers"
     />
     <viewInvoices style="margin-top: 5px" :openItem="openItem"></viewInvoices>
+    <preViewPayments style="margin-top: 5px" :openItem="openItem" v-if="openItem.isPreDeposit"></preViewPayments>
     <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
   </div>
 </template>
@@ -199,6 +201,7 @@
 <script>
 import taskDataTable from "../task/ViewDataTable";
 import viewPayments from "../payment/View";
+import preViewPayments from "../payment/PreView";
 import viewInvoices from "../invoice/ViewForms";
 import { queryContract } from "@/api/contract";
 import { queryContractInvoiceTypes } from "@/api/dictionary";
@@ -206,6 +209,7 @@ export default {
   components: {
     taskDataTable,
     viewPayments,
+    preViewPayments,
     viewInvoices,
   },
   props: {
@@ -242,6 +246,39 @@ export default {
     },
   },
   data: () => ({
+    headers: [
+      {
+        text: "ID",
+        align: "center",
+        sortable: false,
+        value: "ID",
+      },
+      {
+        text: "产品",
+        align: "center",
+        sortable: false,
+        value: "product.name",
+      },
+      { text: "数量", align: "center", value: "number", sortable: false },
+      { text: "单位", align: "center", value: "unit", sortable: false },
+      {
+        text: "标准价格",
+        align: "center",
+        value: "standardPrice",
+        sortable: false,
+      },
+      { text: "单价", value: "price", sortable: false },
+      { text: "总价", value: "totalPrice", sortable: false },
+      {
+        text: "负责人",
+        align: "center",
+        value: "employees",
+        sortable: false,
+      },
+      { text: "状态", align: "center", value: "status", sortable: false },
+      { text: "操作", align: "center", value: "actions", sortable: false },
+    ],
+
     invoiceTypeItems: [],
     object: {
       no: "",

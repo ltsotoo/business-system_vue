@@ -31,6 +31,16 @@
               </v-btn>
             </v-col>
             <v-spacer></v-spacer>
+            <v-col cols="auto">
+              <v-btn
+                rounded
+                color="success"
+                @click="openYearPlanStartDialog"
+                v-if="nos.includes('08-07-01')"
+              >
+                年度结算
+              </v-btn>
+            </v-col>
           </v-row>
         </v-form>
         <officeDataTable
@@ -52,10 +62,33 @@
         </v-dialog>
       </v-card-subtitle>
     </v-card>
+
+    <v-dialog
+      v-model="yearPlanStartDialog"
+      v-if="yearPlanStartDialog"
+      width="800px"
+      persistent
+      @click:outside="closeYearPlanStartDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定要开始年度结算吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="yearPlanStart">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeYearPlanStartDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import { start } from "@/api/yearPlan";
 import officeDataTable from "@/components/enterprise/OfficeDataTable";
 import officeFormsAdd from "@/components/enterprise/OfficeFormsAdd";
 export default {
@@ -70,6 +103,7 @@ export default {
       name: "",
     },
     addDialog: false,
+    yearPlanStartDialog: false,
   }),
   created() {
     if (localStorage.getItem("nos") != "") {
@@ -87,6 +121,19 @@ export default {
     },
     closeAddDialog() {
       this.addDialog = false;
+    },
+    yearPlanStart() {
+      start().then((res) => {
+        this.$message.success("开始了！");
+        this.closeYearPlanStartDialog();
+        this.$router.replace("systemSettlement");
+      });
+    },
+    openYearPlanStartDialog() {
+      this.yearPlanStartDialog = true;
+    },
+    closeYearPlanStartDialog() {
+      this.yearPlanStartDialog = false;
     },
   },
 };

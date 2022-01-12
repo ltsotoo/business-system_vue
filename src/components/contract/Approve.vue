@@ -147,7 +147,7 @@
       :openUID="openUID"
       :parentObject="object.tasks"
       :payType="object.payType"
-      v-if="object.tasks"
+      v-if="!object.isPreDeposit"
     />
 
     <v-card style="margin-top: 1px">
@@ -252,11 +252,16 @@ export default {
       });
     },
     pass() {
-      if (this.$refs.taskApproveDataTable.check()) {
+      if (this.object.isPreDeposit) {
         this.object.status = 2;
         this.submit();
       } else {
-        this.$message.error("该合同还有产品未分配！");
+        if (this.$refs.taskApproveDataTable.check()) {
+          this.object.status = 2;
+          this.submit();
+        } else {
+          this.$message.error("该合同还有产品未分配！");
+        }
       }
     },
     fail() {

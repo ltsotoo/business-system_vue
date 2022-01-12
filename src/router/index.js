@@ -60,14 +60,19 @@ const routes = [
         meta: { login_require: true, title: "中研环科-管理系统-供应商管理", no: 6 },
       },
       {
-        path: 'enterprise',
-        component: () => import('@/views/enterprise/Index.vue'),
-        meta: { login_require: true, title: "中研环科-管理系统-企业管理", no: 7 },
-      },
-      {
         path: 'expense',
         component: () => import('@/views/expense/Index.vue'),
-        meta: { login_require: true, title: "中研环科-管理系统-财务管理", no: 8 },
+        meta: { login_require: true, title: "中研环科-管理系统-财务管理", no: 7 },
+      },
+      {
+        path: 'enterprise',
+        component: () => import('@/views/enterprise/Index.vue'),
+        meta: { login_require: true, title: "中研环科-管理系统-企业管理", no: 8 },
+      },
+      {
+        path: 'systemSettlement',
+        component: () => import('@/views/enterprise/Settlement.vue'),
+        meta: { login_require: true, title: "中研环科-企业系统-年度审核", no: 0 },
       },
     ]
   },

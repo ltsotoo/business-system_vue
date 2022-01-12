@@ -12,9 +12,14 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.no`]="{ item }">
+        <v-chip :color="noColor(item)">
+          {{ item.no }}
+        </v-chip>
+      </template>
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
         <div v-if="item.status != 3">
-          <v-chip :color="compareColor(item.estimatedDeliveryDate)">
+          <v-chip :color="estimatedDeliveryDateColor(item)">
             {{ item.estimatedDeliveryDate }}
           </v-chip>
         </div>
@@ -25,6 +30,11 @@
       <template v-slot:[`item.totalAmount`]="{ item }">
         <div v-if="item.payType == 1">{{ item.totalAmount }}元</div>
         <div v-if="item.payType == 2">{{ item.totalAmount }}美元</div>
+      </template>
+      <template v-slot:[`item.preDeposit`]="{ item }">
+        <div v-if="item.isPreDeposit">
+          {{ item.preDeposit }}
+        </div>
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
@@ -50,10 +60,19 @@
           text
           color="primary"
           @click="openEditDialog(item)"
-          v-if="item.status == 2 && nos.includes('02-01-04')"
+          v-if="item.status >= 2 && nos.includes('02-01-04')"
         >
           <v-icon left> mdi-pencil </v-icon>
           编辑
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
+          @click="openEditPreDialog(item)"
+          v-if="item.status == 2 && item.isPreDeposit"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          预存款编辑
         </v-btn>
       </template>
     </v-data-table>
@@ -112,12 +131,27 @@
         :payTypeItems="payTypeItems"
       />
     </v-dialog>
+
+    <v-dialog
+      v-model="options.editPreDialog"
+      v-if="options.editPreDialog"
+      width="1000px"
+      persistent
+      @click:outside="closeEditPreDialog"
+    >
+      <contractEditPreForms
+        :openItem="options.openItem"
+        :refresh="getObject"
+        :closeDialog="closeEditPreDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import approve from "./Approve";
 import contractEditForms from "./EditForms";
+import contractEditPreForms from "./EditPreForms";
 import contractViewForms from "./ViewForms";
 import { queryContracts } from "@/api/contract";
 
@@ -125,6 +159,7 @@ export default {
   components: {
     approve,
     contractEditForms,
+    contractEditPreForms,
     contractViewForms,
   },
   props: {
@@ -189,7 +224,7 @@ export default {
         sortable: false,
       },
       {
-        text: "剩余预存款金额",
+        text: "预存款金额",
         align: "center",
         value: "preDeposit",
         sortable: false,
@@ -223,6 +258,7 @@ export default {
       approveDialog: false,
       viewDialog: false,
       editDialog: false,
+      editPreDialog: false,
     },
     object: [],
   }),
@@ -276,15 +312,41 @@ export default {
       this.options.openItem = {};
       this.options.editDialog = false;
     },
-    compareColor(date) {
-      //替换为‘/’转译为中国时间，‘-’转译为UTC
-      date = date.replace(/-/g, "/");
-      var nowDate = new Date().getTime();
-      var parseDate = Date.parse(date);
-      if (nowDate > parseDate) {
+    openEditPreDialog(item) {
+      this.options.openItem = item;
+      this.options.editPreDialog = true;
+    },
+    closeEditPreDialog() {
+      this.options.openItem = {};
+      this.options.editPreDialog = false;
+    },
+    noColor(item) {
+      if (item.endDeliveryDate != "") {
+        var endDeliveryDate = Date.parse(item.endDeliveryDate);
+        var endDate;
+        if (item.collectionStatus == 1) {
+          endDate = Date.parse(item.endDeliveryDate);
+        } else if (item.collectionStatus == 2) {
+          endDate = Date.parse(item.endPaymentDate);
+        }
+        if (endDeliveryDate + 60 * 24 * 60 * 60 * 1000 < endDate) {
+          return "red";
+        }
+      }
+      return "green";
+    },
+    estimatedDeliveryDateColor(item) {
+      var estimatedDeliveryDate = Date.parse(item.estimatedDeliveryDate);
+      var endDate;
+      if (item.endDeliveryDate != "") {
+        endDate = Date.parse(item.endDeliveryDate);
+      } else {
+        endDate = new Date().getTime();
+      }
+      if (endDate > estimatedDeliveryDate) {
         return "red";
       }
-      if (nowDate + 7 * 24 * 60 * 60 * 1000 > parseDate) {
+      if (endDate + 7 * 24 * 60 * 60 * 1000 > estimatedDeliveryDate) {
         return "orange";
       }
       return "green";
