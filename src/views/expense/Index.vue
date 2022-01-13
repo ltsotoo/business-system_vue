@@ -1,7 +1,10 @@
 <template>
   <v-container>
     <expensePanel v-if="nos.includes('07-01-01') || nos.includes('07-01-02')" />
-    <bidBondPanel style="margin-top: 30px" v-if="nos.includes('07-02-01')" />
+    <bidBondPanel
+      style="margin-top: 30px"
+      v-if="nos.includes('07-02-01') || nos.includes('07-01-05')"
+    />
   </v-container>
 </template>
 

@@ -92,7 +92,7 @@
             <v-col cols="3" v-if="object.isPreDeposit">
               <v-text-field
                 v-model="object.preDepositRecord"
-                label="预存款金额"
+                label="合同预存款金额"
               ></v-text-field>
             </v-col>
             <v-col cols="3" v-if="object.isPreDeposit">
@@ -149,6 +149,26 @@
           </v-row>
 
           <v-row>
+            <v-col cols="12">
+              <v-textarea
+                v-model="object.paymentContent"
+                label="付款方式"
+                auto-grow
+                rows="1"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-textarea
+                v-model="object.remarks"
+                label="备注（发货地址等）"
+                auto-grow
+                rows="1"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
             <v-col cols="3">
               <v-text-field
                 v-model="text.status"
@@ -168,19 +188,6 @@
               ></v-text-field>
             </v-col>
           </v-row>
-
-          <v-row
-            v-if="object.remarks != undefined && object.remarks.length > 0"
-          >
-            <v-col cols="12">
-              <v-textarea
-                v-model="object.remarks"
-                label="备注"
-                auto-grow
-                rows="1"
-              ></v-textarea>
-            </v-col>
-          </v-row>
         </v-form>
       </v-card-subtitle>
     </v-card>
@@ -193,7 +200,11 @@
       :indexHeaders="headers"
     />
     <viewInvoices style="margin-top: 5px" :openItem="openItem"></viewInvoices>
-    <preViewPayments style="margin-top: 5px" :openItem="openItem" v-if="openItem.isPreDeposit"></preViewPayments>
+    <preViewPayments
+      style="margin-top: 5px"
+      :openItem="openItem"
+      v-if="openItem.isPreDeposit"
+    ></preViewPayments>
     <viewPayments style="margin-top: 5px" :openItem="openItem"></viewPayments>
   </div>
 </template>

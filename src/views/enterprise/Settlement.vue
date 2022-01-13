@@ -106,19 +106,41 @@
           <v-row align="center">
             <v-spacer></v-spacer>
             <v-col cols="2">
-              <v-btn x-large color="primary" rounded> 提交 </v-btn>
+              <v-btn x-large color="primary" rounded @click="openYearPlanEndDialog"> 提交 </v-btn>
             </v-col>
             <v-spacer></v-spacer>
           </v-row>
         </v-form>
       </v-card-subtitle>
     </v-card>
+
+    <v-dialog
+      v-model="yearPlanEndDialog"
+      v-if="yearPlanEndDialog"
+      width="800px"
+      persistent
+      @click:outside="closeYearPlanEndDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定要结束年度结算吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="yearPlanEnd">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeYearPlanEndDialog"
+            >取消</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import { queryOffices } from "@/api/oadrp";
-import { editYearOffice } from "@/api/yearPlan";
+import { editYearOffice, end } from "@/api/yearPlan";
 export default {
   data: () => ({
     nos: [],
@@ -126,6 +148,8 @@ export default {
     labelOld: "去年",
     labelNew: "今年",
     object: [],
+
+    yearPlanEndDialog: false,
   }),
   created() {
     //权限检查
@@ -135,7 +159,7 @@ export default {
       );
     }
 
-    if(!this.nos.includes('08-07-01')){
+    if (!this.nos.includes("08-07-01")) {
       this.$router.replace("index");
     }
 
@@ -151,6 +175,20 @@ export default {
       editYearOffice(item).then((res) => {
         this.$message.success("办事处提交成功！");
         this.getObject();
+      });
+    },
+
+    openYearPlanEndDialog() {
+      this.yearPlanEndDialog = true;
+    },
+    closeYearPlanEndDialog() {
+      this.yearPlanEndDialog = false;
+    },
+
+    yearPlanEnd() {
+      end().then((res) => {
+        this.closeYearPlanEndDialog();
+        this.$router.replace("index");
       });
     },
   },

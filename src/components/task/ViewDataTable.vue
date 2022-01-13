@@ -51,7 +51,7 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <div v-if="isIndex && item.status == 6">
-            <v-btn text color="success" @click="openViewDialog(item)">
+            <v-btn text color="success" @click="openViewLastDialog(item)">
               <v-icon left> mdi-eye </v-icon>
               查看快递单号
             </v-btn>
@@ -74,6 +74,29 @@
       @click:outside="closeViewDialog"
     >
       <viewTaskRemarks :remarks="openItem.remarks" :taskRemarks="taskRemarks" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="viewDialog"
+      v-if="viewDialog"
+      width="1440px"
+      persistent
+      @click:outside="closeViewDialog"
+    >
+      <viewTaskRemarks :remarks="openItem.remarks" :taskRemarks="taskRemarks" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="viewLastDialog"
+      v-if="viewLastDialog"
+      width="1440px"
+      persistent
+      @click:outside="closeViewLastDialog"
+    >
+      <viewTaskRemarks
+        :taskRemarks="taskRemarks"
+        :openType="5"
+      />
     </v-dialog>
   </div>
 </template>
@@ -165,6 +188,7 @@ export default {
     },
     openItem: {},
     viewDialog: false,
+    viewLastDialog: false,
     taskRemarks: [],
   }),
   created() {
@@ -188,6 +212,15 @@ export default {
         }
       });
       return temp;
+    },
+    openViewLastDialog(item) {
+      queryTaskRemarks(item.UID).then((res) => {
+        this.taskRemarks = res.data;
+        this.viewLastDialog = true;
+      });
+    },
+    closeViewLastDialog() {
+      this.viewLastDialog = false;
     },
     openViewDialog(item) {
       this.openItem = item;

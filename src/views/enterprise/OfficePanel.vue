@@ -124,7 +124,6 @@ export default {
     },
     yearPlanStart() {
       start().then((res) => {
-        this.$message.success("开始了！");
         this.closeYearPlanStartDialog();
         this.$router.replace("systemSettlement");
       });

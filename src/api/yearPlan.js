@@ -7,6 +7,13 @@ export const start = () => {
     })
 }
 
+export const end = () => {
+    return request({
+        url: '/endYearPlan',
+        method: 'GET',
+    })
+}
+
 export const editYearOffice = (office) => {
     return request({
         url: '/yearOffice',

@@ -50,8 +50,7 @@
                     item-value="UID"
                     label="办事处"
                     :clearable="nos.includes('02-01-02')"
-                    :disabled="!nos.includes('02-01-02')
-                    "
+                    :disabled="!nos.includes('02-01-02')"
                   ></v-select>
                 </v-col>
                 <v-col cols="3">

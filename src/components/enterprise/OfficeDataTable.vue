@@ -18,6 +18,16 @@
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
+        <v-btn
+          text
+          color="primary"
+          @click="openEditMoneyDialog(item)"
+          v-if="nos.includes('08-01-03')"
+        >
+          <v-icon left> mdi-pencil </v-icon>
+          增加提成/业务费
+        </v-btn>
+
         <!-- <v-btn
           text
           color="error"
@@ -38,6 +48,20 @@
     >
       <officeFormsEdit
         :closeDialog="closeEditDialog"
+        :refresh="getObject"
+        :openUID="openUID"
+      />
+    </v-dialog>
+
+    <v-dialog
+      v-model="editMoneyDialog"
+      v-if="editMoneyDialog"
+      width="1000px"
+      persistent
+      @click:outside="closeEditMoneyDialog"
+    >
+      <officeFormsEditMoney
+        :closeDialog="closeEditMoneyDialog"
         :refresh="getObject"
         :openUID="openUID"
       />
@@ -69,9 +93,11 @@
 <script>
 import { queryOffices, delOffice } from "@/api/oadrp";
 import officeFormsEdit from "./OfficeFormsEdit";
+import officeFormsEditMoney from "./OfficeFormsEditMoney";
 export default {
   components: {
     officeFormsEdit,
+    officeFormsEditMoney,
   },
   props: {
     queryObject: {
@@ -130,6 +156,7 @@ export default {
     openUID: "",
     delDialog: false,
     editDialog: false,
+    editMoneyDialog: false,
   }),
   created() {
     if (localStorage.getItem("nos") != "") {
@@ -169,6 +196,15 @@ export default {
     closeEditDialog() {
       this.openUID = "";
       this.editDialog = false;
+    },
+
+    openEditMoneyDialog(item) {
+      this.openUID = item.UID;
+      this.editMoneyDialog = true;
+    },
+    closeEditMoneyDialog() {
+      this.openUID = "";
+      this.editMoneyDialog = false;
     },
   },
 };

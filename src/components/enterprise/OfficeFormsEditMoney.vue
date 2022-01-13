@@ -1,32 +1,13 @@
 <template>
   <v-card>
-    <v-card-title>公司(办事处)信息编辑</v-card-title>
+    <v-card-title>公司(办事处)提成/业务费增加</v-card-title>
     <v-card-subtitle>
       <v-form ref="form">
         <v-row>
           <v-col cols="12">
             <v-text-field
-              v-model.trim="object.number"
-              label="编号"
-              counter
-              maxlength="50"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-model.trim="object.name"
-              label="名称"
-              :rules="rules.must"
-              counter
-              maxlength="50"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
-              v-model.number="object.taskLoad"
-              label="今年目标量(元)"
+              v-model.number="object.money"
+              label="可提成金额(元)增加"
               :rules="rules.money"
               counter
               maxlength="50"
@@ -35,8 +16,18 @@
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model.number="object.targetLoad"
-              label="今年完成量(元)"
+              v-model.number="object.moneyCold"
+              label="年底提成金额(元)增加"
+              :rules="rules.money"
+              counter
+              maxlength="50"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model.number="object.businessMoney"
+              label="可用业务费金额(元)增加"
               :rules="rules.money"
               counter
               maxlength="50"
@@ -64,7 +55,7 @@
 </template>
 
 <script>
-import { queryOffice, editOffice } from "@/api/oadrp";
+import { editOfficeMoney } from "@/api/oadrp";
 export default {
   props: {
     openUID: {
@@ -81,29 +72,25 @@ export default {
   data: () => ({
     submitDisabled: false,
     object: {
-      number: "",
-      name: "",
+      UID: "",
+      money: 0,
+      moneyCold: 0,
+      businessMoney: 0,
     },
     rules: {
-      must: [(v) => !!v || "必填项"],
       money: [
         (v) => /^-?\d+(\.\d{1,3})?$/.test(v) || "大于零的数字且最多三位小数",
       ],
     },
   }),
   created() {
-    this.getObject();
+    this.object.UID = this.openUID;
   },
   methods: {
-    getObject() {
-      queryOffice(this.openUID).then((res) => {
-        this.object = res.data;
-      });
-    },
     submit() {
       this.submitDisabled = true;
       if (this.validateForm()) {
-        editOffice(this.object).then((res) => {
+        editOfficeMoney(this.object).then((res) => {
           this.$message.success("编辑成功了！");
           this.refresh();
           this.closeDialog();

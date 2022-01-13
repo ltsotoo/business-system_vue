@@ -217,7 +217,7 @@ export default {
         sortable: false,
       },
       {
-        text: "预存款金额",
+        text: "剩余预存款金额",
         align: "center",
         value: "preDeposit",
         sortable: false,

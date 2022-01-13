@@ -30,6 +30,14 @@ export const editOffice = (office) => {
     })
 }
 
+export const editOfficeMoney = (office) => {
+    return request({
+        url: '/officeMoney',
+        method: 'PUT',
+        data: office
+    })
+}
+
 export const queryOffice = (uid) => {
     return request({
         url: '/office/' + uid,

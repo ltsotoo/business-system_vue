@@ -14,7 +14,10 @@
     <settingRegion style="margin-top: 10px" v-if="nos.includes('08-05-01')" />
     <settingUnit style="margin-top: 10px" v-if="nos.includes('08-06-01')" />
 
-    <settingMonthPlan style="margin-top: 10px" />
+    <settingMonthPlan
+      style="margin-top: 10px"
+      v-if="nos.includes('08-08-01')"
+    />
   </v-container>
 </template>
 

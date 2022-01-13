@@ -30,6 +30,16 @@ export const queryTaskRemarks = (taskUID) => {
     })
 }
 
+export const queryLastTaskRemarks = (taskUID) => {
+    return request({
+        url: '/lastTaskRemarks',
+        method: 'GET',
+        params: {
+            "taskUID": taskUID,
+        }
+    })
+}
+
 export const rejectTask = (taskUID) => {
     return request({
         url: '/rejectTask/' + taskUID,

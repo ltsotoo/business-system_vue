@@ -8,7 +8,7 @@
       }"
     >
       <template v-slot:[`item.actions`]="{ item }">
-        <v-btn text color="primary" @click="openEditDialog(item)" class="mx-2">
+        <v-btn text color="primary" @click="openEditDialog(item)" class="mx-2" v-if="nos.includes('08-08-02')">
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -33,6 +33,8 @@ export default {
     monthPlanEditForms,
   },
   data: () => ({
+    nos: [],
+
     headers: [
       { text: "ID", align: "center", value: "no", sortable: false },
       { text: "月份", align: "center", value: "text", sortable: false },
@@ -45,6 +47,11 @@ export default {
     editDialog: false,
   }),
   created() {
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
     this.getObject();
   },
   methods: {

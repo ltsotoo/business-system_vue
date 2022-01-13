@@ -36,6 +36,14 @@
           {{ item.preDeposit }}
         </div>
       </template>
+      <template v-slot:[`item.notPaymentTotalAmount`]="{ item }">
+        <div v-if="item.payType == 1 && !item.isPreDeposit">
+          {{ item.totalAmount - item.paymentTotalAmount }}
+        </div>
+        <div v-if="item.payType == 1 && item.isPreDeposit">
+          {{ item.preDepositRecord - item.paymentTotalAmount }}
+        </div>
+      </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
         {{ item.isSpecial == true ? "是" : "否" }}
       </template>
@@ -69,7 +77,9 @@
           text
           color="primary"
           @click="openEditPreDialog(item)"
-          v-if="item.status == 2 && item.isPreDeposit"
+          v-if="
+            item.status == 2 && item.isPreDeposit && nos.includes('02-01-05')
+          "
         >
           <v-icon left> mdi-pencil </v-icon>
           预存款编辑
@@ -224,7 +234,7 @@ export default {
         sortable: false,
       },
       {
-        text: "预存款金额",
+        text: "剩余预存款金额",
         align: "center",
         value: "preDeposit",
         sortable: false,
@@ -239,6 +249,12 @@ export default {
         text: "状态",
         align: "center",
         value: "status",
+        sortable: false,
+      },
+      {
+        text: "未回款额(CNY)",
+        align: "center",
+        value: "notPaymentTotalAmount",
         sortable: false,
       },
       {

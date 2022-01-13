@@ -14,17 +14,22 @@
         </v-col>
       </v-row>
 
-      <v-row v-for="(taskRemark, i) in taskRemarks" :key="i" align="center">
-        <v-col cols="12">
-          <v-textarea
-            :label="statusToLabel(taskRemark.status)"
-            readonly
-            auto-grow
-            rows="1"
-            v-model="taskRemark.text"
-          ></v-textarea>
-        </v-col>
-      </v-row>
+      <div v-for="(taskRemark, i) in taskRemarks" :key="i">
+        <v-row
+          align="center"
+          v-if="openType != 5 || (openType == 5 && taskRemark.status == 5)"
+        >
+          <v-col>
+            <v-textarea
+              :label="statusToLabel(taskRemark.status)"
+              readonly
+              auto-grow
+              rows="1"
+              v-model="taskRemark.text"
+            ></v-textarea>
+          </v-col>
+        </v-row>
+      </div>
     </v-card-subtitle>
   </v-card>
 </template>
@@ -33,6 +38,10 @@
 import { queryTaskRemarksStatus } from "@/api/dictionary";
 export default {
   props: {
+    openType: {
+      type: Number,
+      default: 0,
+    },
     taskRemarks: {
       type: Array,
       default: () => [],
