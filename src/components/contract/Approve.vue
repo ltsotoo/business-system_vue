@@ -79,8 +79,8 @@
             </v-col>
             <v-col cols="3" v-if="object.isPreDeposit">
               <v-text-field
-                v-model="object.preDeposit"
-                label="预存款金额"
+                v-model="object.preDepositRecord"
+                label="合同预存款金额"
               ></v-text-field>
             </v-col>
           </v-row>

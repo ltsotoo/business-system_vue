@@ -15,12 +15,8 @@
       @update:items-per-page="getObject"
     >
       <template v-slot:[`item.standardPrice`]="{ item }">
-        <div v-if="payType == 1">
-            {{ item.standardPrice }} (元)
-          </div>
-          <div v-if="payType == 2">
-            {{ item.standardPriceUSD }} (美元)
-          </div>
+        <div v-if="payType == 1">{{ item.standardPrice }} (元)</div>
+        <div v-if="payType == 2">{{ item.standardPriceUSD }} (美元)</div>
       </template>
       <template v-slot:[`item.status`]="{ item }">
         {{ stautsToText(item.status) }}
@@ -96,53 +92,85 @@ export default {
         align: "center",
         sortable: false,
         value: "ID",
+        width: "5%",
+      },
+      {
+        text: "产品类型",
+        align: "center",
+        sortable: false,
+        value: "product.type.name",
+        width: "7%",
       },
       {
         text: "产品",
         align: "center",
         sortable: false,
         value: "product.name",
+        width: "10%",
       },
-      { text: "数量", align: "center", value: "number", sortable: false },
+      {
+        text: "数量",
+        align: "center",
+        value: "number",
+        sortable: false,
+        width: "5%",
+      },
       {
         text: "库存数量",
         align: "center",
         value: "product.number",
         sortable: false,
+        width: "7%",
       },
-      { text: "单位", align: "center", value: "unit", sortable: false },
+      {
+        text: "单位",
+        align: "center",
+        value: "unit",
+        sortable: false,
+        width: "5%",
+      },
       {
         text: "合同单价(元)",
         align: "center",
         value: "price",
         sortable: false,
+        width: "8%",
       },
       {
         text: "标准定价(元)",
         align: "center",
         value: "standardPrice",
         sortable: false,
+        width: "8%",
       },
       {
         text: "合同总位(元)",
         align: "center",
         value: "totalPrice",
         sortable: false,
+        width: "8%",
       },
       {
         text: "业务员备注",
         align: "center",
         value: "remarks",
         sortable: false,
-        width: "25%",
+        width: "20%",
       },
       {
         text: "负责人",
         align: "center",
         value: "employees",
         sortable: false,
+        width: "7%",
       },
-      { text: "状态", align: "center", value: "status", sortable: false },
+      {
+        text: "状态",
+        align: "center",
+        value: "status",
+        sortable: false,
+        width: "7%",
+      },
       { text: "操作", align: "center", value: "actions", sortable: false },
     ],
     options: {

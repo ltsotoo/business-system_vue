@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getObject() {
-      queryTasks(this.queryObject).then((res) => {
+      queryTasks({ contractUID: this.contractUID }).then((res) => {
         this.object = res.data;
       });
     },

@@ -221,7 +221,7 @@
               <v-text-field
                 v-if="object.isPreDeposit"
                 label="预存款金额"
-                v-model.number="object.preDeposit"
+                v-model.number="object.preDepositRecord"
                 :rules="rules.money"
               >
               </v-text-field>
@@ -249,11 +249,8 @@
             </v-col>
             <v-col cols="12">
               <v-textarea
-                v-if="object.invoiceType != 1"
-                label="开票内容"
+                label="开票内容和要求"
                 v-model.trim="object.invoiceContent"
-                :rules="rules.invoiceContent"
-                auto-grow
                 rows="3"
                 counter
                 maxlength="500"
@@ -261,8 +258,19 @@
             </v-col>
             <v-col cols="12">
               <v-textarea
-                label="备注"
+                label="付款方式"
+                v-model.trim="object.paymentContent"
+                :rules="rules.must"
+                rows="3"
+                counter
+                maxlength="500"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                label="备注（发货地址等）"
                 v-model.trim="object.remarks"
+                :rules="rules.must"
                 rows="3"
                 counter
                 maxlength="500"
@@ -493,7 +501,7 @@ export default {
       invoiceContent: "",
       isSpecial: false,
       isPreDeposit: false,
-      preDeposit: 0,
+      preDepositRecord: 0,
       remarks: "",
       status: null,
 

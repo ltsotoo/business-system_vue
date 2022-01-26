@@ -38,10 +38,10 @@
       </template>
       <template v-slot:[`item.notPaymentTotalAmount`]="{ item }">
         <div v-if="item.payType == 1 && !item.isPreDeposit">
-          {{ item.totalAmount - item.paymentTotalAmount }}
+          {{ (item.totalAmount - item.paymentTotalAmount).toFixed(3) }}
         </div>
         <div v-if="item.payType == 1 && item.isPreDeposit">
-          {{ item.preDepositRecord - item.paymentTotalAmount }}
+          {{ (item.preDepositRecord - item.paymentTotalAmount).toFixed(3) }}
         </div>
       </template>
       <template v-slot:[`item.isSpecial`]="{ item }">
