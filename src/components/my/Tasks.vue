@@ -121,31 +121,7 @@
     </v-data-table>
 
     <v-dialog v-model="remarksDialog" v-if="remarksDialog" width="1200px">
-      <v-card>
-        <v-card-title>业务员备注</v-card-title>
-        <v-card-subtitle>
-          <v-form disabled>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea
-                  class="text-h5"
-                  v-model="openItem.remarks"
-                  label="备注（发货地址等）"
-                  rows="1"
-                  auto-grow
-                >
-                </v-textarea
-              ></v-col>
-            </v-row>
-          </v-form>
-        </v-card-subtitle>
-      </v-card>
-      <taskViewContractDataTable
-        :contractUID="openItem.contractUID"
-        :statusItems="statusItems"
-        style="margin-top: 1px"
-      ></taskViewContractDataTable>
-      <viewTaskRemarks :taskRemarks="taskRemarks" style="margin-top: 3px" />
+      <viewIndexTaskRemarks :task="openItem" :statusItems="statusItems" />
     </v-dialog>
 
     <v-dialog v-model="nextDialog" width="1000px" persistent v-if="nextDialog">
@@ -172,11 +148,9 @@
 </template>
 
 <script>
-import { queryTasks, queryTaskRemarks } from "@/api/task";
+import { queryTasks } from "@/api/task";
 import { next } from "@/api/task_flow";
-import viewTaskRemarks from "@/components/task/ViewTaskRemarks";
-import taskViewContractDataTable from "@/components/task/ViewContractDataTable";
-import taskViewDataTable from "@/components/task/ViewDataTable";
+import viewIndexTaskRemarks from "@/components/task/ViewIndexTaskRemarks";
 export default {
   props: {
     queryObject: {
@@ -188,9 +162,7 @@ export default {
     },
   },
   components: {
-    viewTaskRemarks,
-    taskViewContractDataTable,
-    taskViewDataTable,
+    viewIndexTaskRemarks,
   },
   data: () => ({
     isIndex: true,
@@ -320,11 +292,6 @@ export default {
         this.stautsToText();
       });
     },
-    getTaskRemarks() {
-      queryTaskRemarks(this.openItem.UID).then((res) => {
-        this.taskRemarks = res.data;
-      });
-    },
     stautsToText(status) {
       var temp = "";
       this.statusItems.some((item) => {
@@ -337,10 +304,7 @@ export default {
     },
     openRemarksDialog(item) {
       this.openItem = item;
-      queryTaskRemarks(this.openItem.UID).then((res) => {
-        this.taskRemarks = res.data;
-        this.remarksDialog = true;
-      });
+      this.remarksDialog = true;
     },
     closeRemarksDialog() {
       this.openItem = {};

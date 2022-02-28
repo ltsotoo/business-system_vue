@@ -27,12 +27,43 @@
       <template v-slot:[`item.UpdatedAt`]="{ item }">
         <div v-if="item.status != 1">{{ item.UpdatedAt }}</div>
       </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-btn
+          text
+          color="error"
+          v-if="item.status == -1"
+          @click="openDeleteDialog(item.UID)"
+        >
+          <v-icon left> mdi-delete </v-icon>
+          删除
+        </v-btn>
+      </template>
     </v-data-table>
+
+    <v-dialog
+      v-model="deleteDialog"
+      v-if="deleteDialog"
+      width="800px"
+      persistent
+      @click:outside="closeDeleteDialog"
+    >
+      <v-card>
+        <v-card-title class="text-h5">您确定删除该报销记录吗?</v-card-title>
+        <v-card-subtitle></v-card-subtitle>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" rounded @click="deleteItem">确定</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" rounded @click="closeDeleteDialog">取消</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { queryExpenses } from "@/api/expense";
+import { delExpense, queryExpenses } from "@/api/expense";
 export default {
   props: {
     queryObject: {
@@ -99,6 +130,12 @@ export default {
         value: "status",
         sortable: false,
       },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
     ],
     options: {
       loading: false,
@@ -107,6 +144,7 @@ export default {
       itemsPerPage: 10,
       approvalDialog: false,
     },
+    deleteDialog: false,
     object: [],
     openItem: {},
   }),
@@ -116,7 +154,7 @@ export default {
   methods: {
     getObject() {
       this.options.loading = true;
-      this.queryObject.EmployeeUID = localStorage.getItem("uid") 
+      this.queryObject.EmployeeUID = localStorage.getItem("uid");
       queryExpenses(
         this.queryObject,
         this.options.itemsPerPage,
@@ -141,6 +179,21 @@ export default {
         }
       });
       return temp;
+    },
+    openDeleteDialog(uid) {
+      this.openUID = uid;
+      this.deleteDialog = true;
+    },
+    closeDeleteDialog() {
+      this.openUID = "";
+      this.deleteDialog = false;
+    },
+    deleteItem() {
+      delExpense(this.openUID).then((res) => {
+        this.$message.success("删除成功了！");
+        this.getObject();
+        this.closeDeleteDialog();
+      });
     },
   },
 };

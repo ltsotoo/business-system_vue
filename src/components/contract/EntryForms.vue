@@ -8,7 +8,7 @@
       <v-card-title></v-card-title>
       <v-card-subtitle>
         <v-form ref="form">
-          <v-row>
+          <!-- <v-row>
             <v-col cols="auto">
               <v-radio-group v-model="object.isOld" row>
                 <template v-slot:label>
@@ -28,7 +28,7 @@
               >
               </v-text-field>
             </v-col>
-          </v-row>
+          </v-row> -->
           <v-row align="center">
             <v-col cols="12" v-if="!object.isOld">
               <v-radio-group v-model="object.isEntryCustomer" row>
@@ -500,7 +500,7 @@ export default {
         phone: "",
       },
 
-      isOld: true,
+      isOld: false,
     },
     queryObject: {
       typeUID: "",

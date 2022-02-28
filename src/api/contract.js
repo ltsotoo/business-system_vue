@@ -30,6 +30,13 @@ export const queryContract = (uid) => {
     })
 }
 
+export const querySimpleContract = (uid) => {
+    return request({
+        url: '/simpleContract/' + uid,
+        method: 'GET',
+    })
+}
+
 export const queryContracts = (queryObject, pageSize, pageNo) => {
     return request({
         url: '/contracts',

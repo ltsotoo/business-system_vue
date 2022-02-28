@@ -146,7 +146,7 @@ export default {
     getTaskItems() {
       queryTasks({ contractUID: this.object.contractUID }).then((res) => {
         for (var i = 0; i < res.data.length; i++) {
-          res.data[i].name = res.data[i].product.name + "/id:" + res.data[i].ID;
+          res.data[i].name = res.data[i].product.name + "/id:" + res.data[i].ID + "/类型:" + res.data[i].product.type.name;
         }
         this.taskItems = res.data;
       });

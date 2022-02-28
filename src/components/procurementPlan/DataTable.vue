@@ -12,12 +12,29 @@
       @update:page="getObject"
       @update:items-per-page="getObject"
     >
+      <template v-slot:[`item.specification`]="{ item }">
+        <v-textarea v-model="item.specification" auto-grow rows="1" readonly></v-textarea>
+      </template>
+      <template v-slot:[`item.description`]="{ item }">
+        <v-textarea v-model="item.description" auto-grow rows="1" readonly></v-textarea>
+      </template>
+      <template v-slot:[`item.remarks`]="{ item }">
+        <v-textarea v-model="item.remarks" auto-grow rows="1" readonly></v-textarea>
+      </template>
+      <template v-slot:[`item.buyRemarks`]="{ item }">
+        <v-textarea v-model="item.buyRemarks" auto-grow rows="1" readonly></v-textarea>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
           查看
         </v-btn>
-        <v-btn text color="primary" @click="openEditDialog(item)" v-if="nos.includes('05-03-03')">
+        <v-btn
+          text
+          color="primary"
+          @click="openEditDialog(item)"
+          v-if="nos.includes('05-03-03')"
+        >
           <v-icon left> mdi-pencil </v-icon>
           编辑
         </v-btn>
@@ -75,84 +92,98 @@ export default {
         align: "center",
         value: "no",
         sortable: false,
+        width: "8%",
       },
       {
         text: "申请人",
         align: "center",
         value: "employee.name",
         sortable: false,
+        width: "5%",
       },
       {
         text: "申请时间",
         align: "center",
         value: "startDate",
         sortable: false,
+        width: "8%",
       },
       {
         text: "类别",
         align: "center",
         value: "type",
         sortable: false,
+        width: "5%",
       },
       {
         text: "物品",
         align: "center",
         value: "product",
         sortable: false,
+        width: "5%",
       },
       {
         text: "型号规格",
         align: "center",
         value: "specification",
         sortable: false,
+        width: "10%",
       },
       {
         text: "采购数量",
         align: "center",
         value: "buyNumber",
         sortable: false,
+        width: "5%",
       },
       {
         text: "单位",
         align: "center",
         value: "unit",
         sortable: false,
+        width: "5%",
       },
       {
         text: "要求描述/链接",
         align: "center",
         value: "description",
         sortable: false,
+        width: "12%",
       },
       {
         text: "技术备注",
         align: "center",
         value: "remarks",
         sortable: false,
+        width: "12%",
       },
       {
         text: "采购/下单日期",
         align: "center",
         value: "buyDate",
         sortable: false,
+        width: "8%",
       },
       {
         text: "到货日期",
         align: "center",
         value: "arriveDate",
         sortable: false,
+        width: "8%",
       },
       {
         text: "采购备注",
         align: "center",
         value: "buyRemarks",
         sortable: false,
+        width: "12%",
       },
       {
         text: "操作",
         align: "center",
         value: "actions",
         sortable: false,
+        width: "5%",
       },
     ],
     options: {

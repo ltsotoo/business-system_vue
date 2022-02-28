@@ -8,7 +8,7 @@
           <v-col cols="3">
             <v-text-field
               label="技术负责人"
-              v-model.trim="queryObject.employeeUID"
+              v-model.trim="queryObject.employeeName"
               clearable
               maxlength="20"
             ></v-text-field>
@@ -56,6 +56,7 @@ export default {
     statusItems: [],
     queryObject: {
       employeeUID: "",
+      employeeName: "",
       status: 0,
     },
   }),

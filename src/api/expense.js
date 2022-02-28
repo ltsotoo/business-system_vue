@@ -8,6 +8,13 @@ export const entryExpense = (expense) => {
     })
 }
 
+export const delExpense = (uid) => {
+    return request({
+        url: '/expense/' + uid,
+        method: 'DELETE',
+    })
+}
+
 export const approvalExpense = (expense) => {
     return request({
         url: '/expense',

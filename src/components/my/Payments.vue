@@ -16,6 +16,14 @@
         <div v-if="item.isPreDeposit">是</div>
         <div v-else>否</div>
       </template>
+      <template v-slot:[`item.notPaymentTotalAmount`]="{ item }">
+        <div v-if="item.payType == 1 && !item.isPreDeposit">
+          {{ (item.totalAmount - item.paymentTotalAmount).toFixed(3) }}
+        </div>
+        <div v-if="item.payType == 1 && item.isPreDeposit">
+          {{ (item.preDepositRecord - item.paymentTotalAmount).toFixed(3) }}
+        </div>
+      </template>
       <template v-slot:[`item.payType`]="{ item }">
         {{ payTypeToText(item.payType) }}
       </template>
@@ -334,6 +342,12 @@ export default {
         text: "总回款额(CNY)",
         align: "center",
         value: "paymentTotalAmount",
+        sortable: false,
+      },
+      {
+        text: "未回款额(CNY)",
+        align: "center",
+        value: "notPaymentTotalAmount",
         sortable: false,
       },
       {

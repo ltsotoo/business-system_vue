@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>备注信息</v-card-title>
+    <v-card-title>负责人备注信息</v-card-title>
     <v-card-subtitle>
       <v-row v-if="remarks != ''">
         <v-col cols="12">
