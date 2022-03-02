@@ -74,6 +74,11 @@ const routes = [
         component: () => import('@/views/enterprise/Settlement.vue'),
         meta: { login_require: true, title: "中研环科-企业系统-年度审核", no: 0 },
       },
+      {
+        path: 'history',
+        component: () => import('@/views/history/Index.vue'),
+        meta: { login_require: true, title: "中研环科-日志系统", no: 0 },
+      },
     ]
   },
   {

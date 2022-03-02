@@ -1,29 +1,30 @@
 <template>
-  <!-- 报销 -->
-  <v-container>
-    <myExpenseForms />
-    <v-card style="margin-top: 10px">
+  <div>
+    <v-card>
+      <v-card-title>个人补助额度变更历史记录</v-card-title>
       <v-card-subtitle>
         <v-form ref="queryForm">
-          <v-row align="baseline">
+          <v-row>
             <v-spacer></v-spacer>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.type"
-                :items="typeItems"
-                item-text="text"
+                v-model="queryObject.officeUID"
+                :items="officeItems"
+                item-text="name"
                 item-value="UID"
-                label="类型"
-                clearable
+                label="办事处"
+                @change="getEmployeeItems"
+                :clearable="nos.includes('09-02-02')"
+                :disabled="!nos.includes('09-02-02')"
               ></v-select>
             </v-col>
             <v-col cols="2">
               <v-select
-                v-model="queryObject.status"
-                :items="statusItems"
-                item-text="text"
-                item-value="value"
-                label="状态"
+                v-model="queryObject.userUID"
+                :items="employeeItems"
+                item-text="name"
+                item-value="UID"
+                label="员工"
                 clearable
               ></v-select>
             </v-col>
@@ -85,84 +86,80 @@
                 </v-date-picker>
               </v-menu>
             </v-col>
+            <v-col cols="2">
+              <v-text-field
+                label="备注"
+                v-model="queryObject.remarks"
+                clearable
+                maxlength="50"
+              ></v-text-field>
+            </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
             </v-col>
             <v-spacer></v-spacer>
-            <v-divider vertical></v-divider>
-            <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="openAddDialog">
-                发起
-              </v-btn>
-            </v-col>
           </v-row>
         </v-form>
-        <myExpenses
-          style="margin-top: 10px"
+        <div style="margin-top: 10px"></div>
+        <historyEmployeeDataTable
           :queryObject="queryObject"
-          :statusItems="statusItems"
-          ref="myExpenses"
-        />
+          ref="historyEmployeeDataTable"
+        ></historyEmployeeDataTable>
       </v-card-subtitle>
     </v-card>
-
-    <myHistoryEmplyee style="margin-top: 10px" />
-
-    <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
-      <expenseForms :refresh="query" :closeDialog="closAddDialog" />
-    </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>
-import myExpenseForms from "@/components/expense/MyExpenseForms";
-import myExpenses from "@/components/my/Expenses";
-import expenseForms from "@/components/expense/Forms";
-import myHistoryEmplyee from "./MyHistoryEmplyee";
-import { queryExpenseTypes, queryExpenseStatus } from "@/api/dictionary";
+import { queryOffices } from "@/api/oadrp";
+import { queryEmployees } from "@/api/employee";
+import historyEmployeeDataTable from "@/components/history/DataTableEmployee";
 export default {
   components: {
-    myExpenseForms,
-    myExpenses,
-    expenseForms,
-    myHistoryEmplyee,
+    historyEmployeeDataTable,
   },
   data: () => ({
-    typeItems: [],
-    statusItems: [],
+    nos: [],
+
     startMenu: false,
     endMenu: false,
+    officeItems: [],
+    employeeItems: [],
     queryObject: {
-      type: 0,
-      status: 0,
+      officeUID: "",
+      userUID: "",
       startDate: "",
       endDate: "",
+      remarks: "",
     },
-    addDialog: false,
   }),
   created() {
-    this.getTypeItems();
-    this.getStatusItems();
+    if (localStorage.getItem("nos") != "") {
+      this.nos = JSON.parse(
+        decodeURIComponent(window.atob(localStorage.getItem("nos")))
+      );
+    }
+    if (this.nos.includes("09-02-01") && !this.nos.includes("09-02-02")) {
+      this.queryObject.officeUID = localStorage.getItem("office");
+      this.getEmployeeItems();
+    }
+    this.getOfficeItems();
   },
   methods: {
-    getTypeItems() {
-      queryExpenseTypes().then((res) => {
-        this.typeItems = res.data;
-      });
-    },
-    getStatusItems() {
-      queryExpenseStatus().then((res) => {
-        this.statusItems = res.data;
-      });
-    },
     query() {
-      this.$refs.myExpenses.getObject();
+      this.$refs.historyEmployeeDataTable.getObject();
     },
-    openAddDialog() {
-      this.addDialog = true;
+    getOfficeItems() {
+      queryOffices().then((res) => {
+        this.officeItems = res.data;
+      });
     },
-    closAddDialog() {
-      this.addDialog = false;
+    getEmployeeItems() {
+      this.queryObject.userUID = "";
+      this.employeeItems = [];
+      queryEmployees({ officeUID: this.queryObject.officeUID }).then((res) => {
+        this.employeeItems = res.data;
+      });
     },
   },
 };

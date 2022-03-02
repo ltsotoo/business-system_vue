@@ -1,33 +1,12 @@
 <template>
-  <!-- 报销 -->
-  <v-container>
-    <myExpenseForms />
-    <v-card style="margin-top: 10px">
+  <div>
+    <v-card>
+      <v-card-title>补助额度变更历史记录</v-card-title>
       <v-card-subtitle>
         <v-form ref="queryForm">
-          <v-row align="baseline">
+          <v-row>
             <v-spacer></v-spacer>
-            <v-col cols="2">
-              <v-select
-                v-model="queryObject.type"
-                :items="typeItems"
-                item-text="text"
-                item-value="UID"
-                label="类型"
-                clearable
-              ></v-select>
-            </v-col>
-            <v-col cols="2">
-              <v-select
-                v-model="queryObject.status"
-                :items="statusItems"
-                item-text="text"
-                item-value="value"
-                label="状态"
-                clearable
-              ></v-select>
-            </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-menu
                 ref="startMenu"
                 v-model="startMenu"
@@ -56,7 +35,7 @@
                 </v-date-picker>
               </v-menu>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-menu
                 ref="endMenu"
                 v-model="endMenu"
@@ -89,80 +68,39 @@
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
             </v-col>
             <v-spacer></v-spacer>
-            <v-divider vertical></v-divider>
-            <v-col cols="auto">
-              <v-btn rounded color="success" dark @click="openAddDialog">
-                发起
-              </v-btn>
-            </v-col>
           </v-row>
         </v-form>
-        <myExpenses
-          style="margin-top: 10px"
+        <div style="margin-top: 10px"></div>
+        <historyEmployeeDataTable
           :queryObject="queryObject"
-          :statusItems="statusItems"
-          ref="myExpenses"
-        />
+          ref="historyEmployeeDataTable"
+        ></historyEmployeeDataTable>
       </v-card-subtitle>
     </v-card>
-
-    <myHistoryEmplyee style="margin-top: 10px" />
-
-    <v-dialog v-model="addDialog" v-if="addDialog" width="1000px" persistent>
-      <expenseForms :refresh="query" :closeDialog="closAddDialog" />
-    </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>
-import myExpenseForms from "@/components/expense/MyExpenseForms";
-import myExpenses from "@/components/my/Expenses";
-import expenseForms from "@/components/expense/Forms";
-import myHistoryEmplyee from "./MyHistoryEmplyee";
-import { queryExpenseTypes, queryExpenseStatus } from "@/api/dictionary";
+import historyEmployeeDataTable from "@/components/history/DataTableEmployee";
 export default {
   components: {
-    myExpenseForms,
-    myExpenses,
-    expenseForms,
-    myHistoryEmplyee,
+    historyEmployeeDataTable,
   },
   data: () => ({
-    typeItems: [],
-    statusItems: [],
     startMenu: false,
     endMenu: false,
     queryObject: {
-      type: 0,
-      status: 0,
+      userUID: "",
       startDate: "",
       endDate: "",
     },
-    addDialog: false,
   }),
   created() {
-    this.getTypeItems();
-    this.getStatusItems();
+    this.queryObject.userUID = localStorage.getItem("uid");
   },
   methods: {
-    getTypeItems() {
-      queryExpenseTypes().then((res) => {
-        this.typeItems = res.data;
-      });
-    },
-    getStatusItems() {
-      queryExpenseStatus().then((res) => {
-        this.statusItems = res.data;
-      });
-    },
     query() {
-      this.$refs.myExpenses.getObject();
-    },
-    openAddDialog() {
-      this.addDialog = true;
-    },
-    closAddDialog() {
-      this.addDialog = false;
+      this.$refs.historyEmployeeDataTable.getObject();
     },
   },
 };
