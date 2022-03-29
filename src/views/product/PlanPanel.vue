@@ -4,25 +4,75 @@
       <v-card-title>采购计划</v-card-title>
       <v-card-subtitle>
         <v-form ref="queryForm">
-          <v-row align="baseline">
+          <v-row align="center">
             <v-spacer></v-spacer>
-            <v-col cols="3">
-              <v-text-field
-                label="合同编号"
-                v-model="queryObject.no"
-                maxlength="40"
-                clearable
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                label="物品名称"
-                v-model="queryObject.product"
-                maxlength="20"
-                clearable
-              >
-              </v-text-field>
+            <v-col cols="10">
+              <v-row>
+                <v-col cols="3">
+                  <v-text-field
+                    label="合同编号"
+                    v-model="queryObject.no"
+                    maxlength="40"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="类别"
+                    v-model="queryObject.type"
+                    maxlength="20"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="物品名称"
+                    v-model="queryObject.product"
+                    maxlength="20"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="规格型号"
+                    v-model="queryObject.specification"
+                    maxlength="20"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <v-text-field
+                    label="采购数量"
+                    v-model.number="queryObject.buyNumber"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-text-field
+                    label="单位"
+                    v-model="queryObject.unit"
+                    maxlength="20"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    label="要求描述（或链接）"
+                    v-model="queryObject.description"
+                    maxlength="50"
+                    clearable
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
             </v-col>
             <v-col cols="auto">
               <v-btn rounded color="primary" dark @click="query"> 查询 </v-btn>
@@ -149,7 +199,12 @@ export default {
 
     queryObject: {
       no: "",
+      type: "",
       product: "",
+      specification: "",
+      buyNumber: null,
+      unit: "",
+      description: "",
     },
 
     object: {
@@ -198,7 +253,7 @@ export default {
     },
 
     uploadExcel() {
-      var _this = this
+      var _this = this;
       if (this.excel && this.excel != null) {
         var fromData = new FormData();
         fromData.append("file", this.excel);
