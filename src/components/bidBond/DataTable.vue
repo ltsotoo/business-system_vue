@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
+      :headers="dataTableHeaders"
       :items="object"
       :items-per-page="5"
       :server-items-length="options.total"
@@ -120,66 +120,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    dataTableHeaders: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     nos: [],
 
-    headers: [
-      {
-        text: "录入时间",
-        align: "center",
-        value: "CreatedAt",
-        sortable: false,
-      },
-      {
-        text: "办事处",
-        align: "center",
-        value: "salesman.office.name",
-        sortable: false,
-      },
-      {
-        text: "业务员",
-        align: "center",
-        value: "salesman.name",
-        sortable: false,
-      },
-      {
-        text: "录入财务",
-        align: "center",
-        value: "employee.name",
-        sortable: false,
-      },
-      {
-        text: "回款确认财务",
-        align: "center",
-        value: "finalEmployee.name",
-        sortable: false,
-      },
-      {
-        text: "金额(元)",
-        align: "center",
-        value: "money",
-        sortable: false,
-      },
-      {
-        text: "备注",
-        align: "center",
-        value: "remarks",
-        sortable: false,
-      },
-      {
-        text: "状态",
-        align: "center",
-        value: "status",
-        sortable: false,
-      },
-      {
-        text: "操作",
-        align: "center",
-        value: "actions",
-        sortable: false,
-      },
-    ],
     options: {
       loading: false,
       total: 0,

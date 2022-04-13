@@ -39,7 +39,7 @@
       persistent
       @click:outside="closeViewDialog"
     >
-      <viewForms :uid="openUID" :statusItems="statusItems" />
+      <viewForms :uid="openUID" :statusItems="statusItems" :taskStatusItems="taskStatusItems"/>
     </v-dialog>
 
     <v-dialog
@@ -76,6 +76,10 @@ export default {
       type: Function,
     },
     statusItems: {
+      type: Array,
+      default: () => [],
+    },
+    taskStatusItems: {
       type: Array,
       default: () => [],
     },

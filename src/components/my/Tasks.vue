@@ -90,6 +90,11 @@
         </v-row>
         <v-row><v-col> </v-col></v-row>
       </template>
+      <template v-slot:[`item.contract.estimatedDeliveryDate`]="{ item }">
+        <v-chip :color="estimatedDeliveryDateColor(item)">
+          {{ item.contract.estimatedDeliveryDate }}
+        </v-chip>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-row><v-col> </v-col></v-row>
         <v-row>
@@ -102,11 +107,12 @@
         </v-row>
         <v-row
           v-if="
-            (item.status == 1 && item.technicianManUID == employeeUID) ||
-            (item.status == 2 && item.purchaseManUID == employeeUID) ||
-            (item.status == 3 && item.inventoryManUID == employeeUID) ||
-            (item.status == 4 && item.technicianManUID == employeeUID) ||
-            (item.status == 5 && item.shipmentManUID == employeeUID)
+            item.contract.status == 2 &&
+            ((item.status == 1 && item.technicianManUID == employeeUID) ||
+              (item.status == 2 && item.purchaseManUID == employeeUID) ||
+              (item.status == 3 && item.inventoryManUID == employeeUID) ||
+              (item.status == 4 && item.technicianManUID == employeeUID) ||
+              (item.status == 5 && item.shipmentManUID == employeeUID))
           "
         >
           <v-col>
@@ -169,13 +175,6 @@ export default {
     employeeUID: "",
     headers: [
       {
-        text: "ID",
-        align: "center",
-        sortable: false,
-        value: "product.ID",
-        width: "2%",
-      },
-      {
         text: "合同编号",
         align: "center",
         sortable: false,
@@ -189,6 +188,7 @@ export default {
         value: "product.name",
         width: "10%",
       },
+      { text: "总价", value: "totalPrice", sortable: false, width: "4%" },
       {
         text: "需求数量",
         align: "center",
@@ -209,6 +209,13 @@ export default {
         value: "unit",
         sortable: false,
         width: "4%",
+      },
+      {
+        text: "合同交货时间",
+        align: "center",
+        value: "contract.estimatedDeliveryDate",
+        sortable: false,
+        width: "13%",
       },
       {
         text: "负责人",
@@ -325,6 +332,22 @@ export default {
         this.getObject();
         this.closeNextDialog();
       });
+    },
+    estimatedDeliveryDateColor(item) {
+      var estimatedDeliveryDate = Date.parse(item.contract.estimatedDeliveryDate);
+      var endDate;
+      if (item.shipmentRealEndDate != "") {
+        endDate = Date.parse(item.endDeliveryDate);
+      } else {
+        endDate = new Date().getTime();
+      }
+      if (endDate > estimatedDeliveryDate) {
+        return "red";
+      }
+      if (endDate + 7 * 24 * 60 * 60 * 1000 > estimatedDeliveryDate) {
+        return "orange";
+      }
+      return "green";
     },
   },
 };

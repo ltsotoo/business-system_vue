@@ -24,7 +24,7 @@
           text
           color="error"
           @click="openDeleteDialog(item.UID)"
-          v-if="item.status == 1"
+          v-if="item.status == -1 || item.status == 1"
         >
           <v-icon left> mdi-delete </v-icon>
           删除

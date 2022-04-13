@@ -25,6 +25,7 @@
       style="margin-top: 10px"
       v-if="nos.includes('00-05-02')"
     />
+    <myBidBond style="margin-top: 10px" v-if="nos.includes('00-02-01')" />
   </v-container>
 </template>
 
@@ -36,6 +37,7 @@ import myPreResearch from "./MyPreResearch.vue";
 import myTask from "./MyTask.vue";
 import myPreResearchTask from "./MyPreResearchTask.vue";
 import myPayment from "./MyPayment.vue";
+import myBidBond from "./MyBidBond.vue";
 export default {
   components: {
     topList,
@@ -45,6 +47,7 @@ export default {
     myTask,
     myPreResearchTask,
     myPayment,
+    myBidBond,
   },
   data: () => ({
     nos: [],

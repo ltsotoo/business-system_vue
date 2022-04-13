@@ -15,6 +15,17 @@
       <template v-slot:[`item.status`]="{ item }">
         {{ statusToText(item.status) }}
       </template>
+      <template v-slot:[`item.startDate`]="{ item }">
+        {{ item.startDate.substr(0, item.startDate.lastIndexOf(" ")) }}
+      </template>
+      <template v-slot:[`item.endDate`]="{ item }">
+        <v-chip :color="endDateColor(item)">
+          {{ item.endDate.substr(0, item.endDate.lastIndexOf(" ")) }}
+        </v-chip>
+      </template>
+      <template v-slot:[`item.realEndDate`]="{ item }">
+        {{ item.realEndDate.substr(0, item.realEndDate.lastIndexOf(" ")) }}
+      </template>
       <template v-slot:[`item.actions`]="{ item }" v-if="!(openType == 1)">
         <v-btn text color="success" @click="openViewDialog(item)">
           <v-icon left> mdi-eye </v-icon>
@@ -93,12 +104,6 @@ export default {
         text: "开始时间",
         align: "center",
         value: "startDate",
-        sortable: false,
-      },
-      {
-        text: "分配工作天数",
-        align: "center",
-        value: "days",
         sortable: false,
       },
       {
@@ -202,6 +207,22 @@ export default {
     closeApproveDialog() {
       this.openUID = "";
       this.approveDialog = false;
+    },
+    endDateColor(item) {
+      var endDate = Date.parse(item.endDate);
+      var realEndDate;
+      if (item.realEndDate != "") {
+        realEndDate = Date.parse(item.realEndDate);
+      } else {
+        realEndDate = new Date().getTime();
+      }
+      if (realEndDate > endDate) {
+        return "red";
+      }
+      if (realEndDate + 2 * 24 * 60 * 60 * 1000 > endDate) {
+        return "orange";
+      }
+      return "green";
     },
   },
 };

@@ -16,12 +16,21 @@
                   </v-col>
                   <v-col cols="4">
                     <v-text-field
-                      label="任务产品"
+                      label="产品"
                       v-model="item.task.product.name"
                     />
                   </v-col>
-                  <v-col cols="3">
-                    <v-text-field label="录入员工" v-model="item.employee.name" />
+                  <v-col cols="2">
+                    <v-text-field
+                      label="类型"
+                      v-model="item.task.product.type.name"
+                    />
+                  </v-col>
+                  <v-col cols="2">
+                    <v-text-field
+                      label="录入员工"
+                      v-model="item.employee.name"
+                    />
                   </v-col>
                 </v-row>
                 <v-row>

@@ -93,10 +93,7 @@
       persistent
       @click:outside="closeViewLastDialog"
     >
-      <viewTaskRemarks
-        :taskRemarks="taskRemarks"
-        :openType="5"
-      />
+      <viewTaskRemarks :taskRemarks="taskRemarks" :openType="5" />
     </v-dialog>
   </div>
 </template>
@@ -133,53 +130,84 @@ export default {
     statusItems: [],
     headers: [
       {
-        text: "ID",
-        align: "center",
-        sortable: false,
-        value: "ID",
-      },
-      {
         text: "产品",
         align: "center",
         sortable: false,
         value: "product.name",
+        width: "15%",
       },
-      { text: "数量", align: "center", value: "number", sortable: false },
-      { text: "单位", align: "center", value: "unit", sortable: false },
+      {
+        text: "产品规格",
+        align: "center",
+        sortable: false,
+        value: "product.specification",
+        width: "10%",
+      },
+      {
+        text: "数量",
+        align: "center",
+        value: "number",
+        sortable: false,
+        width: "5%",
+      },
+      {
+        text: "单位",
+        align: "center",
+        value: "unit",
+        sortable: false,
+        width: "5%",
+      },
       {
         text: "标准价格",
         align: "center",
         value: "standardPrice",
         sortable: false,
+        width: "8%",
       },
-      { text: "单价", value: "price", sortable: false },
-      { text: "总价", value: "totalPrice", sortable: false },
+      { text: "单价", value: "price", sortable: false, width: "4%" },
+      { text: "总价", value: "totalPrice", sortable: false, width: "4%" },
       {
         text: "负责人",
         align: "center",
         value: "employees",
         sortable: false,
+        width: "10%",
       },
       {
         text: "开始时间",
         align: "center",
         value: "startDate",
         sortable: false,
+        width: "10%",
       },
       {
         text: "限时天数",
         align: "center",
         value: "days",
         sortable: false,
+        width: "10%",
       },
       {
         text: "实际提交时间",
         align: "center",
         value: "realEndDate",
         sortable: false,
+        width: "10%",
       },
-      { text: "状态", align: "center", value: "status", sortable: false },
-      { text: "操作", align: "center", value: "actions", sortable: false },
+      {
+        text: "状态",
+        align: "center",
+        value: "status",
+        sortable: false,
+        width: "5%",
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+        width: "4%",
+      },
     ],
     options: {
       total: 1,

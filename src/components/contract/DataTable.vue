@@ -18,14 +18,17 @@
         </v-chip>
       </template>
       <template v-slot:[`item.estimatedDeliveryDate`]="{ item }">
-        <div v-if="item.status != 3">
+        <v-chip :color="estimatedDeliveryDateColor(item)">
+          {{ item.estimatedDeliveryDate }}
+        </v-chip>
+        <!-- <div v-if="item.status != 3">
           <v-chip :color="estimatedDeliveryDateColor(item)">
             {{ item.estimatedDeliveryDate }}
           </v-chip>
         </div>
         <div v-else>
           {{ item.estimatedDeliveryDate }}
-        </div>
+        </div> -->
       </template>
       <template v-slot:[`item.totalAmount`]="{ item }">
         <div v-if="item.payType == 1">{{ item.totalAmount }}元</div>

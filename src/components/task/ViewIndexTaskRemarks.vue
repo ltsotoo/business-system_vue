@@ -50,7 +50,18 @@
             <v-col cols="12">
               <v-textarea
                 v-model="task.product.remarks"
-                label="产品备注"
+                label="产品备注（产品库）"
+                rows="1"
+                auto-grow
+              >
+              </v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-textarea
+                v-model="task.remarks"
+                label="产品备注（销售）"
                 rows="1"
                 auto-grow
               >

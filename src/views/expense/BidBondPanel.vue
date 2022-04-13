@@ -59,6 +59,7 @@
         ref="bidBondDataTable"
         :queryObject="queryObject"
         :statusItems="statusItems"
+        :dataTableHeaders="dataTableHeaders"
       />
     </v-card>
 
@@ -90,6 +91,63 @@ export default {
     },
 
     addDialog: false,
+
+    dataTableHeaders: [
+      {
+        text: "录入时间",
+        align: "center",
+        value: "CreatedAt",
+        sortable: false,
+      },
+      {
+        text: "办事处",
+        align: "center",
+        value: "salesman.office.name",
+        sortable: false,
+      },
+      {
+        text: "业务员",
+        align: "center",
+        value: "salesman.name",
+        sortable: false,
+      },
+      {
+        text: "录入人员",
+        align: "center",
+        value: "employee.name",
+        sortable: false,
+      },
+      {
+        text: "回款确认人",
+        align: "center",
+        value: "finalEmployee.name",
+        sortable: false,
+      },
+      {
+        text: "金额(元)",
+        align: "center",
+        value: "money",
+        sortable: false,
+      },
+      {
+        text: "备注",
+        align: "center",
+        value: "remarks",
+        sortable: false,
+      },
+      {
+        text: "状态",
+        align: "center",
+        value: "status",
+        sortable: false,
+      },
+      {
+        text: "操作",
+        align: "center",
+        value: "actions",
+        sortable: false,
+      },
+    ],
   }),
   created() {
     if (localStorage.getItem("nos") != "") {

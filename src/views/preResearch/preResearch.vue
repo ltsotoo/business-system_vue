@@ -35,13 +35,17 @@
         ref="preResearchDataTable"
         :refresh="refresh"
         :statusItems="statusItems"
+        :taskStatusItems="taskStatusItems"
       />
     </v-card-subtitle>
   </v-card>
 </template>
 
 <script>
-import { queryPreResearchStatus } from "@/api/dictionary";
+import {
+  queryPreResearchStatus,
+  queryPreResearchTaskStatus,
+} from "@/api/dictionary";
 import preResearchDataTable from "@/components/preResearch/DataTable";
 export default {
   components: {
@@ -54,6 +58,7 @@ export default {
   },
   data: () => ({
     statusItems: [],
+    taskStatusItems: [],
     queryObject: {
       employeeName: "",
       status: 0,
@@ -61,11 +66,17 @@ export default {
   }),
   created() {
     this.getStatusItems();
+    this.getTaskStatusItems();
   },
   methods: {
     getStatusItems() {
       queryPreResearchStatus().then((res) => {
         this.statusItems = res.data;
+      });
+    },
+    getTaskStatusItems() {
+      queryPreResearchTaskStatus().then((res) => {
+        this.taskStatusItems = res.data;
       });
     },
     query() {
